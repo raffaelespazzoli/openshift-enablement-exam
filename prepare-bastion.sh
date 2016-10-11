@@ -29,6 +29,6 @@ ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'ec
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` sudo systemctl restart sshd
 
 # disable host check on ssh connections
-ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'sudo echo StrictHostKeyChecking no >> /etc/ssh/ssh_config'	
+ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo StrictHostKeyChecking no | sudo tee -a /etc/ssh/ssh_config > /dev/null'	
 # download git
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` git clone https://github.com/raffaelespazzoli/openshift-enablement-exam
