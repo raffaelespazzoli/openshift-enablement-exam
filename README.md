@@ -19,6 +19,7 @@ In order to run this provisioning script you may need to increase your [resource
 
 ```
 export GCLOUD_PROJECT=<your project>
+export SSH_PUB_KEY=<the ssh pub key you want to use>
 ```
 
 Run the provisioning script.
