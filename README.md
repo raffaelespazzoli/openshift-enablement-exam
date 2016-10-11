@@ -2,7 +2,7 @@
 
 ## Gcloud provisioning
 
-Download this project
+Clone this project
 
 ```
 git clone https://github.com/raffaelespazzoli/openshift-enablement-exam
@@ -15,8 +15,11 @@ install the [command line tool](https://cloud.google.com/sdk/downloads).
 
 [initialize and authenticate in gcloud](https://cloud.google.com/sdk/docs/authorizing).
 
-In order to run this provisioning script you may need to increase your [resource quota](https://cloud.google.com/compute/docs/resource-quotas).
+In order to run this provisioning script you will need to be able to run 34vCPU in the US central region. You may need to increase your [resource quota](https://cloud.google.com/compute/docs/resource-quotas).
 
+Enable your project to use the compute api by visiting the [compute engine](https://console.cloud.google.com/home) menu item (there is probably a better way to do it).
+
+Set you google project configurations
 ```
 export GCLOUD_PROJECT=<your project>
 export SSH_PUB_KEY=<the ssh pub key you want to use>
