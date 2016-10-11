@@ -27,7 +27,6 @@ Enable your project to use the compute api by visiting the [compute engine](http
 Set you google project configurations
 ```
 export GCLOUD_PROJECT=<your project>
-export SSH_PUB_KEY=<the ssh pub key you want to use> #usually $HOME/.ssh/id_rsa.pub
 ```
 
 Run the provisioning script.
@@ -44,6 +43,10 @@ Set you RHN account credentials.
 export RHN_USERNAME=rhn-gps-rspazzol
 export RHN_PASSWORD=xxx 
 ```
+define which key you want to use, this key must be available to the following ssh commands
+```
+export SSH_PUB_KEY=<the ssh pub key you want to use> #usually $HOME/.ssh/id_rsa.pub
+```
 Run the prepare bastion script.
 ```
 ./prepare-bastion.sh
@@ -53,7 +56,7 @@ Run the prepare bastion script.
 
 Shell in the bastion host
 ```
-ssh -o SendEnv RHN_USERNAME -o SendEnv RHN_PASSWORD \`gcloud compute instance describe ose-bastion region us-central1 | grep address: | awk '{print $2}'\`
+ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
 ```
 Run the prepare cluster script
 ```

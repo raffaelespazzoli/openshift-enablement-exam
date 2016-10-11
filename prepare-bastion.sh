@@ -1,6 +1,13 @@
 #!/bin/bash
 
 set -e
+# set the ssh key
+cp $SSH_PUB_KEY ./my_id.pub 
+a=`whoami` 
+sed -i "s/^/$a:/" ./my_id.pub
+
+gcloud compute project-info add-metadata --metadata-from-file sshKeys=./my_id.pub
+
 #install subcription manager and clean
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'sudo yum install -y subscription-manager && sudo subscription-manager clean'
 #subscribe
@@ -10,6 +17,13 @@ ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'su
 #update install packages
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'sudo yum update -y && sudo yum install -y git ansible atomic-openshift-utils'
 # generate and add keys
-ssh `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` ssh-keygen -t rsa -f .ssh/id_rsa -N ''
+ssh `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'ssh-keygen -t rsa -f .ssh/id_rsa -N ""'
 # set the key in gcloud metadata
-ssh `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` cat /home/rspazzol/.ssh/id_rsa.pub | gcloud compute project-info add-metadata --metadata-from-file sshKeys=-
+ssh `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'cat /home/rspazzol/.ssh/id_rsa.pub' >  ./id_rsa.pub
+sed -i "s/^/$a:/" ./id_rsa.pub
+cat id_rsa.pub >> my_id.pub
+gcloud compute project-info add-metadata --metadata-from-file sshKeys=./my_id.pub
+
+# prepare host to receive variables
+ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo AcceptEnv RHN_USERNAME RHN_PASSWORD | sudo tee -a /etc/ssh/sshd_config > /dev/null'
+ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` sudo systemctl restart sshd

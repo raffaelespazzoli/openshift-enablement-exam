@@ -2,7 +2,6 @@
 
 set -e
 gcloud config set project $GCLOUD_PROJECT
-gcloud compute project-info add-metadata --metadata-from-file sshKeys=$SSH_PUB_KEY
 
 #create docker disks
 gcloud compute disks create "infranode1-docker" --size "200" --zone "us-central1-a" --type "pd-standard" &
