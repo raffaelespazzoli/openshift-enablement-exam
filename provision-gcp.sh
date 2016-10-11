@@ -43,11 +43,33 @@ gcloud compute target-pools add-instances master-pool --instances master3 --zone
 gcloud compute target-pools add-instances infranode-pool --instances infranode1 --zone us-central1-a &
 gcloud compute target-pools add-instances infranode-pool --instances infranode2 --zone us-central1-c &
 wait
-#create load balancers
-gcloud compute forwarding-rules create master-external --region us-central1 --ports=8443 --address=https://www.googleapis.com/compute/v1/projects/$GCLOUD_PROJECT/us-central1/addresses/master-external --target-pool=master-pool &
-gcloud compute forwarding-rules create infranode-external-443 --region us-central1 --ports 443 --address https://www.googleapis.com/compute/v1/projects/$GCLOUD_PROJECT/regions/us-central1/addresses/infranode-external --target-pool infranode-pool &
-gcloud compute forwarding-rules create infranode-external-80 --region us-central1 --ports 80 --address https://www.googleapis.com/compute/v1/projects/$GCLOUD_PROJECT/regions/us-central1/addresses/infranode-external  --target-pool infranode-pool &
-gcloud compute forwarding-rules create master-internal --region us-central1 --ports 8443 --target-pool master-pool &
+
+#create instance groups
+gcloud compute instance-groups unmanaged create master1 --zone us-central1-a &
+gcloud compute instance-groups unmanaged create master2 --zone us-central1-b &
+gcloud compute instance-groups unmanaged create master3 --zone us-central1-c &
 wait
+
+gcloud compute instance-groups unmanaged add-instances master1 --instances master1 --zone us-central1-a &
+gcloud compute instance-groups unmanaged add-instances master2 --instances master2 --zone us-central1-b &
+gcloud compute instance-groups unmanaged add-instances master3 --instances master3 --zone us-central1-c &
+wait
+
+#create back-end service
+gcloud beta compute health-checks create tcp master-health-check --port 80
+gcloud beta compute backend-services create master-internal --load-balancing-scheme internal --region us-central1 --protocol tcp --port 8443 --health-checks master-health-check
+
+gcloud beta compute backend-services add-backend master-internal --instance-group master1 --instance-group-zone us-central1-a --region us-central1 
+gcloud beta compute backend-services add-backend master-internal --instance-group master2 --instance-group-zone us-central1-b --region us-central1 
+gcloud beta compute backend-services add-backend master-internal --instance-group master3 --instance-group-zone us-central1-c --region us-central1 
+
+
+#create load balancers
+gcloud compute forwarding-rules create master-external --region us-central1 --ports 8443 --address `gcloud compute addresses list | grep master-external | awk '{print $3}'` --target-pool master-pool &
+gcloud compute forwarding-rules create infranode-external-443 --region us-central1 --ports 443 --address `gcloud compute addresses list | grep infranode-internal | awk '{print $3}'` --target-pool infranode-pool &
+gcloud compute forwarding-rules create infranode-external-80 --region us-central1 --ports 80 --address `gcloud compute addresses list | grep infranode-external | awk '{print $3}'`  --target-pool infranode-pool &
+gcloud beta compute forwarding-rules create master-internal --load-balancing-scheme internal --ports 8443 --region us-central1 --backend-service master-internal &
+wait
+
 #ose-bastion
-gcloud compute instances create "ose-bastion" --zone "us-central1-a" --machine-type "n1-standard-2" --subnet "default" --maintenance-policy "MIGRATE" --scopes default="https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly" --image "/rhel-cloud/rhel-7-v20160921" --boot-disk-size "20" --boot-disk-type "pd-standard" --boot-disk-device-name "ose-bastion" --address https://www.googleapis.com/compute/v1/projects/$GCLOUD_PROJECT/regions/us-central1/addresses/ose-bastion
+gcloud compute instances create "ose-bastion" --zone "us-central1-a" --machine-type "n1-standard-2" --subnet "default" --maintenance-policy "MIGRATE" --scopes default="https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly" --image "/rhel-cloud/rhel-7-v20160921" --boot-disk-size "20" --boot-disk-type "pd-standard" --boot-disk-device-name "ose-bastion" --address `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
