@@ -1,8 +1,0 @@
-[cluster]
-master[1:3] openshift_schedulable=false
-node[1:3] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
-infranode[1:2] openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-
-[nodes]
-node[1:3] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
-infranode[1:2] openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
