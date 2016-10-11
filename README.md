@@ -52,6 +52,13 @@ Run the prepare cluster script
 
 ## Setup openshift
 
+prepare the inventory file by running the following:
+```
+sed -i -- 's/master.10.128.0.10.xip.io/master.\`gcloud compute instance describe master-internal region us-central1 | grep address: | awk '{print $2}'\`.xip.io/g' hosts
+sed -i -- 's/master.104.197.199.131.xip.io/master.\`gcloud compute instance describe master-external region us-central1 | grep address: | awk '{print $2}'\`.xip.io/g' hosts
+sed -i -- 's/apps.104.198.35.122.xip.io/apps.\`gcloud compute instance describe infranode-external region us-central1 | grep address: | awk '{print $2}'\`.xip.io/g' hosts
+```
+
 Run the ansible playbook
 ```
 ansible-playbook -v -i hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml

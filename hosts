@@ -583,18 +583,18 @@ os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
 
 # host group for masters
 [masters]
-master[1:3].c.openshift-enablement-exam.internal
+master[1:3]
 
 [etcd]
-master[1:3].c.openshift-enablement-exam.internal
+master[1:3]
 
 [nfs]
-ose-bastion.c.openshift-enablement-exam.internal
+ose-bastion
 
 # NOTE: Currently we require that masters be part of the SDN which requires that they also be nodes
 # However, in order to ensure that your masters are not burdened with running pods you should
 # make them unschedulable by adding openshift_schedulable=False any node that's also a master.
 [nodes]
-master[1:3].c.openshift-enablement-exam.internal openshift_schedulable=false
-node[1:3].c.openshift-enablement-exam.internal openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
-infranode[1:2].c.openshift-enablement-exam.internal openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+master[1:3] openshift_schedulable=false
+node[1:3] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+infranode[1:2] openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
