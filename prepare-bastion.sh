@@ -24,6 +24,11 @@ sed -i "s/^/$a:/" ./id_rsa.pub
 cat id_rsa.pub >> my_id.pub
 gcloud compute project-info add-metadata --metadata-from-file sshKeys=./my_id.pub
 
-# prepare host to receive variables
+# prepare bastion to receive variables
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo AcceptEnv RHN_USERNAME RHN_PASSWORD | sudo tee -a /etc/ssh/sshd_config > /dev/null'
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` sudo systemctl restart sshd
+
+# disable host check on ssh connections
+ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'sudo echo StrictHostKeyChecking no >> /etc/ssh/ssh_config'	
+# download git
+ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` git clone https://github.com/raffaelespazzoli/openshift-enablement-exam
