@@ -19,11 +19,15 @@ for i in $(gcloud compute addresses list | awk 'NR>1 {print $1}'); do
 done
 
 #delete VMs
-for i in $(gcloud compute instances list | awk 'NR>1 {print $1}'); do
-	gcloud compute instances delete -q $i --region "us-central1";
-done
+for k in us-central1-a us-central1-b us-central1-c; do
+ for i in $(gcloud compute instances list --zones $k| awk 'NR>1 {print $1}'); do
+gcloud compute instances delete $i -q --zone "$k";
+ done;
+done	
+
 
 #delete disks
-for i in $(gcloud compute disks list | awk 'NR>1 {print $1}'); do
-	gcloud compute disks delete -q $i --region "us-central1";
+for k in us-central1-a us-central1-b us-central1-c; do
+for i in $(gcloud compute disks list --zones $k | awk 'NR>1 {print $1}'); do
+	gcloud compute disks delete -q $i --zone k;
 done
