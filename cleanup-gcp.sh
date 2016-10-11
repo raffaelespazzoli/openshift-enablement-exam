@@ -25,12 +25,14 @@ done
 
 #delete health checks
 for i in $(gcloud compute health-checks list | awk 'NR>1 {print $1}'); do
-	gcloud compute health-checks delete -q $i --region "us-central1";
+	gcloud compute health-checks delete -q $i;
 done
 
 #delete instance-groups
-for i in $(gcloud compute instance-groups list | awk 'NR>1 {print $1}'); do
-	gcloud compute instance-groups delete -q $i --region "us-central1";
+for k in us-central1-a us-central1-b us-central1-c; do
+for i in $(gcloud compute instance-groups unmanaged list --zones $k | awk 'NR>1 {print $1}'); do
+ gcloud compute instance-groups unmanaged delete -q $i --zone $k;
+ done;
 done
 
 #delete VMs
