@@ -1,6 +1,11 @@
 # openshift-enablement-exam
 
+The following instructions will setup an OpenShift OCP 3.3 environment on Google Cloud compliant with the following reference architecture.
+
+![GCP reference architecture](/media/OSE-on-GCE-Architecture v0.3.png)
+
 ## Gcloud provisioning
+
 
 Clone this project
 
@@ -68,4 +73,9 @@ Run the ansible playbook
 ```
 ansible-playbook -v -i hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 ```
+## Clean up
 
+To clean up your Google Cloud project type the following:
+```
+./cleanup-gcp.sh
+```
