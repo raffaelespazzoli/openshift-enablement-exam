@@ -28,6 +28,7 @@ done
 
 #delete disks
 for k in us-central1-a us-central1-b us-central1-c; do
-for i in $(gcloud compute disks list --zones $k | awk 'NR>1 {print $1}'); do
-	gcloud compute disks delete -q $i --zone k;
+ for i in $(gcloud compute disks list --zones $k | awk 'NR>1 {print $1}'); do
+gcloud compute disks delete -q $i --zone $k;
+ done;
 done
