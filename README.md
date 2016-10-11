@@ -22,7 +22,7 @@ Enable your project to use the compute api by visiting the [compute engine](http
 Set you google project configurations
 ```
 export GCLOUD_PROJECT=<your project>
-export SSH_PUB_KEY=<the ssh pub key you want to use>
+export SSH_PUB_KEY=<the ssh pub key you want to use> #usually $HOME/.ssh/id_rsa.pub
 ```
 
 Run the provisioning script.
@@ -30,6 +30,7 @@ Run the provisioning script.
 ```
 ./provision-gcp.sh
 ```
+This will take some time.
 
 ## Prepare the bastion host
 

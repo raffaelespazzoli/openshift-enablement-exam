@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 git clone https://github.com/raffaelespazzoli/openshift-enablement-exam
 cd openshift-enablement-exam
 
