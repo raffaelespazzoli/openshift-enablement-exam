@@ -16,15 +16,15 @@ cd openshift-enablement-exam
 
 Create a [new google cloud project](https://cloud.google.com/resource-manager/docs/creating-project).
 
-install the [command line tool](https://cloud.google.com/sdk/downloads).
+Install the [command line tool](https://cloud.google.com/sdk/downloads).
 
-[initialize and authenticate in gcloud](https://cloud.google.com/sdk/docs/authorizing).
+[Initialize and authenticate in gcloud](https://cloud.google.com/sdk/docs/authorizing).
 
 In order to run this provisioning script you will need to be able to run 34vCPU in the US central region. You may need to increase your [resource quota](https://cloud.google.com/compute/docs/resource-quotas).
 
 Enable your project to use the compute api by visiting the [compute engine](https://console.cloud.google.com/home) menu item (there is probably a better way to do it).
 
-Set you google project configurations
+Set your google project configurations
 ```
 export GCLOUD_PROJECT=<your project>
 ```
@@ -70,7 +70,7 @@ Prepare the inventory file by running the following:
 ```
 sed -i -- 's/master.10.128.0.10.xip.io/master.`gcloud compute forwarding-rules list master-internal | awk 'NR>1 {print $3}'`.xip.io/g' hosts
 sed -i -- 's/master.104.197.199.131.xip.io/master.`gcloud compute addresses list | grep master-external | awk '{print $3}'`.xip.io/g' hosts
-sed -i -- 's/apps.104.198.35.122.xip.io/apps.`gcloud compute addresses list | grep infranode-external | awk '{print $3}`.xip.io/g' hosts
+sed -i -- 's/apps.104.198.35.122.xip.io/apps.`gcloud compute addresses list | grep infranode-external | awk '{print $3}'`.xip.io/g' hosts
 ```
 
 Run the ansible playbook
@@ -83,3 +83,4 @@ To clean up your Google Cloud project type the following:
 ```
 ./cleanup-gcp.sh
 ```
+This may take some time.
