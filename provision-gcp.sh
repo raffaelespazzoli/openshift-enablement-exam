@@ -36,11 +36,11 @@ wait
 gcloud compute target-pools create master-pool --region us-central1 &
 gcloud compute target-pools create infranode-pool --region us-central1 &
 wait
-gcloud compute target-pools add-instances master-pool --instances master1 --zone us-central1-a &
-gcloud compute target-pools add-instances master-pool --instances master2 --zone us-central1-b &
-gcloud compute target-pools add-instances master-pool --instances master3 --zone us-central1-c &
-gcloud compute target-pools add-instances infranode-pool --instances infranode1 --zone us-central1-a &
-gcloud compute target-pools add-instances infranode-pool --instances infranode2 --zone us-central1-c &
+gcloud compute target-pools add-instances master-pool --instances master1 --intances-zone us-central1-a &
+gcloud compute target-pools add-instances master-pool --instances master2 --intances-zone us-central1-b &
+gcloud compute target-pools add-instances master-pool --instances master3 --intances-zone us-central1-c &
+gcloud compute target-pools add-instances infranode-pool --instances infranode1 --intances-zone us-central1-a &
+gcloud compute target-pools add-instances infranode-pool --instances infranode2 --intances-zone us-central1-c &
 wait
 
 #create instance groups
@@ -69,6 +69,9 @@ gcloud compute forwarding-rules create infranode-external-443 --region us-centra
 gcloud compute forwarding-rules create infranode-external-80 --region us-central1 --ports 80 --address `gcloud compute addresses list | grep infranode-external | awk '{print $3}'`  --target-pool infranode-pool &
 gcloud beta compute forwarding-rules create master-internal --load-balancing-scheme internal --ports 8443 --region us-central1 --backend-service master-internal &
 wait
+
+#create firewall rules
+gcloud compute firewall-rules create "allow-8443-443-80" --allow tcp:80,tcp:443,tcp:8443 --network "default" --source-ranges "0.0.0.0/0"
 
 #ose-bastion
 gcloud compute instances create "ose-bastion" --zone "us-central1-a" --machine-type "n1-standard-2" --subnet "default" --maintenance-policy "MIGRATE" --scopes default="https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/compute.readonly","https://www.googleapis.com/auth/compute" --image "/rhel-cloud/rhel-7-v20160921" --boot-disk-size "20" --boot-disk-type "pd-standard" --boot-disk-device-name "ose-bastion" --address `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`

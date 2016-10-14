@@ -77,6 +77,21 @@ Run the ansible playbook
 ```
 ansible-playbook -v -i hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 ```
+
+There seems to be an [issue](https://github.com/openshift/openshift-ansible/issues/2553) with the standard ansible script. if you experience it, the latest from the openshift-ansible github works. 
+Type the following:
+
+```
+cd ..
+git clone https://github.com/openshift/openshift-ansible
+ansible-playbook -v -i ./openshift-enablement-exam/hosts ./openshift-ansible/playbooks/byo/config.yml
+```
+## creating new users
+
+From the bastion host run the following
+```
+ansible 'masters' -i hosts -b -m shell -a "htpasswd -b /etc/origin/master/htpasswd <username> <password>"
+```
 ## Clean up
 
 To clean up your Google Cloud project type the following:
