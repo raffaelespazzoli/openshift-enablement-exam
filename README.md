@@ -78,15 +78,15 @@ Run the ansible playbook
 ansible-playbook -v -i hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 ```
 
-There seems to be an [issue](https://github.com/openshift/openshift-ansible/issues/2553) with the standard ansible script. if you experience it, the latest from the openshift-ansible github works. 
-Type the following:
+There seems to be an [issue](https://github.com/openshift/openshift-ansible/issues/2553) with the standard ansible script. If you experience it, the latest from the openshift-ansible github works. 
+Reprovision your cluster and then type the following:
 
 ```
 cd ..
 git clone https://github.com/openshift/openshift-ansible
 ansible-playbook -v -i ./openshift-enablement-exam/hosts ./openshift-ansible/playbooks/byo/config.yml
 ```
-## creating new users
+## Creating new users
 
 From the bastion host run the following
 ```
