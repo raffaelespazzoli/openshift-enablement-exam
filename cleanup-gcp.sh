@@ -3,6 +3,16 @@
 set -e
 gcloud config set project $GCLOUD_PROJECT
 
+#delete google storage buckets
+for i in $(gsutil ls); do
+	gsutil rm -r $i;
+done
+
+#delete firewall rules
+for i in $(gcloud compute firewall-rules list | awk 'NR>1 {print $1}'); do
+	gcloud compute firewall-rules delete -q $i;
+done
+
 #delete forwarding rules
 for i in $(gcloud compute forwarding-rules list | awk 'NR>1 {print $1}'); do
 	gcloud compute forwarding-rules delete -q $i --region "us-central1";
@@ -49,3 +59,4 @@ for k in us-central1-a us-central1-b us-central1-c; do
 gcloud compute disks delete -q $i --zone $k;
  done;
 done
+
