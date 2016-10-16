@@ -10,7 +10,7 @@ done;
 wait
 
 #delete firewall rules
-for i in $(gcloud compute firewall-rules list -r oc | awk 'NR>1 {print $1}'); do
+for i in $(gcloud compute firewall-rules list -r ^oc-.* | awk 'NR>1 {print $1}'); do
 	gcloud compute firewall-rules delete -q $i &
 done;
 wait
