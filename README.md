@@ -24,7 +24,7 @@ In order to run this provisioning script you will need to be able to run 34vCPU 
 
 Enable your project to use the compute api by visiting the [compute engine](https://console.cloud.google.com/home) menu item (there is probably a better way to do it).
 
-Set your google project configurations
+Set your google project configuration
 ```
 export GCLOUD_PROJECT=<your project>
 ```
@@ -86,6 +86,13 @@ cd ..
 git clone https://github.com/openshift/openshift-ansible
 ansible-playbook -v -i ./openshift-enablement-exam/hosts ./openshift-ansible/playbooks/byo/config.yml
 ```
+## Logging in to your cluster
+
+After having created some users type the following
+```
+oc login https://`gcloud compute addresses list | grep master-external | awk '{print $3}'`:8443
+```
+
 ## Creating new users
 
 From the bastion host run the following
