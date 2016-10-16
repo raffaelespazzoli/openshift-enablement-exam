@@ -41,15 +41,15 @@ gcloud compute target-pools create master-pool --http-health-check master-health
 gcloud compute target-pools create infranode-pool --http-health-check router-health-check --region us-central1 &
 wait
 
-gcloud compute target-pools add-instances master-pool --instances master1 --intances-zone us-central1-a &
-gcloud compute target-pools add-instances master-pool --instances master2 --intances-zone us-central1-b &
-gcloud compute target-pools add-instances master-pool --instances master3 --intances-zone us-central1-c &
-gcloud compute target-pools add-instances infranode-pool --instances infranode1 --intances-zone us-central1-a &
-gcloud compute target-pools add-instances infranode-pool --instances infranode2 --intances-zone us-central1-c &
+gcloud compute target-pools add-instances master-pool --instances master1 --instances-zone us-central1-a &
+gcloud compute target-pools add-instances master-pool --instances master2 --instances-zone us-central1-b &
+gcloud compute target-pools add-instances master-pool --instances master3 --instances-zone us-central1-c &
+gcloud compute target-pools add-instances infranode-pool --instances infranode1 --instances-zone us-central1-a &
+gcloud compute target-pools add-instances infranode-pool --instances infranode2 --instances-zone us-central1-c &
 wait
 
 #create instance groups
-gcloud compute instance-groups unman aged create master1 --zone us-central1-a &
+gcloud compute instance-groups unmanaged create master1 --zone us-central1-a &
 gcloud compute instance-groups unmanaged create master2 --zone us-central1-b &
 gcloud compute instance-groups unmanaged create master3 --zone us-central1-c &
 wait
@@ -75,8 +75,8 @@ gcloud beta compute forwarding-rules create master-internal --load-balancing-sch
 wait
 
 #create firewall rules
-gcloud compute firewall-rules create "oc-master" --tcp:8443 --network "default" --source-ranges "0.0.0.0/0" --target-tags "master"
-gcloud compute firewall-rules create "oc-infranode" --allow tcp:80,tcp:443 --network "default" --source-ranges "0.0.0.0/0" target-tags "infranode"
+gcloud compute firewall-rules create "oc-master" --allow tcp:8443 --network "default" --source-ranges "0.0.0.0/0" --target-tags "master"
+gcloud compute firewall-rules create "oc-infranode" --allow tcp:80,tcp:443 --network "default" --source-ranges "0.0.0.0/0" --target-tags "infranode"
 
 #ose-bastion
 gcloud compute instances create "ose-bastion" --zone "us-central1-a" --machine-type "n1-standard-2" --subnet "default" --maintenance-policy "MIGRATE" --scopes default="https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/compute.readonly","https://www.googleapis.com/auth/compute" --image "/rhel-cloud/rhel-7-v20160921" --boot-disk-size "20" --boot-disk-type "pd-standard" --boot-disk-device-name "ose-bastion" --address `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
