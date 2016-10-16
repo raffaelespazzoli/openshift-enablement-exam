@@ -33,8 +33,8 @@ gcloud compute addresses create "ose-bastion" --region "us-central1" &
 wait
 
 # create health checks
-gcloud beta compute health-checks create https master-health-check --port 8443 --request-path /healthz
-gcloud beta compute health-checks create http router-health-check --port 80 --request-path /
+gcloud compute health-checks create https master-health-check --port 8443 --request-path /healthz
+gcloud compute health-checks create http router-health-check --port 80 --request-path /
 
 # create target pools
 gcloud compute target-pools create master-pool --http-health-check master-health-check --region us-central1 &
