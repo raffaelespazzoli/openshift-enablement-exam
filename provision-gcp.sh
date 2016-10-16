@@ -75,8 +75,8 @@ gcloud beta compute forwarding-rules create master-internal --load-balancing-sch
 wait
 
 #create firewall rules
-gcloud compute firewall-rules create "master" --tcp:8443 --network "default" --source-ranges "0.0.0.0/0" --target-tags "master"
-gcloud compute firewall-rules create "infranode" --allow tcp:80,tcp:443 --network "default" --source-ranges "0.0.0.0/0" target-tags "infranode"
+gcloud compute firewall-rules create "oc-master" --tcp:8443 --network "default" --source-ranges "0.0.0.0/0" --target-tags "master"
+gcloud compute firewall-rules create "oc-infranode" --allow tcp:80,tcp:443 --network "default" --source-ranges "0.0.0.0/0" target-tags "infranode"
 
 #ose-bastion
 gcloud compute instances create "ose-bastion" --zone "us-central1-a" --machine-type "n1-standard-2" --subnet "default" --maintenance-policy "MIGRATE" --scopes default="https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/compute.readonly","https://www.googleapis.com/auth/compute" --image "/rhel-cloud/rhel-7-v20160921" --boot-disk-size "20" --boot-disk-type "pd-standard" --boot-disk-device-name "ose-bastion" --address `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
