@@ -37,8 +37,8 @@ gcloud compute health-checks create https master-health-check --port 8443 --requ
 gcloud compute health-checks create http router-health-check --port 80 --request-path /
 
 # create target pools
-gcloud compute target-pools create master-pool --http-health-check master-health-check --region us-central1 &
-gcloud compute target-pools create infranode-pool --http-health-check router-health-check --region us-central1 &
+gcloud compute target-pools create master-pool --region us-central1 &
+gcloud compute target-pools create infranode-pool --region us-central1 &
 wait
 
 gcloud compute target-pools add-instances master-pool --instances master1 --instances-zone us-central1-a &
