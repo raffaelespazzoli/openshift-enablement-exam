@@ -83,3 +83,12 @@ gcloud compute instances create "ose-bastion" --zone "us-central1-a" --machine-t
 
 #create storage for registry
 gsutil mb -c Standard -l us-central1 -p $GCLOUD_PROJECT gs://$GCLOUD_PROJECT-registry
+
+#create dns zone
+gcloud dns managed-zones create --dns-name="$DNS_NAME" --description="A zone" "$GCLOUD_PROJECT"
+
+# add record to dns zone
+gcloud dns record-sets transaction add -z="$GCLOUD_PROJECT" --name="master.$DNS_DOMAIN" --type=A --ttl=300 “`gcloud compute addresses list | grep master-external | awk '{print $3}'`”
+gcloud dns record-sets transaction add -z="$GCLOUD_PROJECT" --name="*.apps.$DNS_DOMAIN" --type=A --ttl=300 “`gcloud compute addresses list | grep infranode-external | awk '{print $3}'`”
+gcloud dns record-sets transaction add -z="$GCLOUD_PROJECT" --name="master-internal.$DNS_DOMAIN" --type=A --ttl=300 “`gcloud compute addresses list | grep master-internal | awk '{print $3}'`”
+

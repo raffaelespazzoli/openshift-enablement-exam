@@ -70,3 +70,9 @@ for k in us-central1-a us-central1-b us-central1-c; do
 done
 wait
 
+#delete dns zone
+touch empty-file
+gcloud dns record-sets import -z "$GCLOUD_PROJECT" --delete-all-existing empty-file
+rm empty-file
+gcloud dns managed-zones delete "$GCLOUD_PROJECT"
+

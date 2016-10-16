@@ -28,7 +28,12 @@ Set your google project configuration
 ```
 export GCLOUD_PROJECT=<your project>
 ```
-
+set you dns domain (es: example.com)
+your master will be available at master.example.com and the routes will have the form *.apps.example.com
+you need to externally configure your registrar to point to google cloud dns. more explanations [here] (https://cloud.google.com/dns/quickstart)
+```
+export DNS_DOMAIN=<your domain>
+```
 Run the provisioning script.
 
 ```
@@ -66,12 +71,19 @@ Run the prepare cluster script
 
 ## Setup openshift
 
-Prepare the inventory file by running the following:
+If you're using xip.io, prepare the inventory file by running the following:
 ```
 sed -i "s/master.10.128.0.10.xip.io/master.`gcloud compute forwarding-rules list master-internal | awk 'NR>1 {print $3}'`.xip.io/g" hosts
 sed -i "s/master.104.197.199.131.xip.io/master.`gcloud compute addresses list | grep master-external | awk '{print $3}'`.xip.io/g" hosts
 sed -i "s/apps.104.198.35.122.xip.io/apps.`gcloud compute addresses list | grep infranode-external | awk '{print $3}'`.xip.io/g" hosts
 ```
+if you're using a real dns server do the following:
+```
+sed -i "s/master.10.128.0.10.xip.io/master-internal.$DNS_DOMAIN/g" hosts
+sed -i "s/master.104.197.199.131.xip.io/master.$DNS_DOMAIN.xip.io/g" hosts
+sed -i "s/apps.104.198.35.122.xip.io/apps.$DNS_DOMAIN/g" hosts
+```
+
 
 Run the ansible playbook
 ```
