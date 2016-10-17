@@ -28,9 +28,10 @@ Set your google project configuration
 ```
 export GCLOUD_PROJECT=<your project>
 ```
-set you dns domain (es: example.com)
-your master will be available at master.example.com and the routes will have the form *.apps.example.com
-you need to externally configure your registrar to point to google cloud dns. more explanations [here] (https://cloud.google.com/dns/quickstart)
+set your dns zone (es: exam.example.com)
+your master will be available at `master.exam.example.com` and the routes will have the form `*.apps.exam.example.com`.
+
+you need to externally configure your domain to point to google cloud dns. More explanations [here] (https://cloud.google.com/dns/update-name-servers)
 ```
 export DNS_DOMAIN=<your domain>
 ```
@@ -80,7 +81,7 @@ sed -i "s/apps.104.198.35.122.xip.io/apps.`gcloud compute addresses list | grep 
 if you're using a real dns server do the following:
 ```
 sed -i "s/master.10.128.0.10.xip.io/master-internal.$DNS_DOMAIN/g" hosts
-sed -i "s/master.104.197.199.131.xip.io/master.$DNS_DOMAIN.xip.io/g" hosts
+sed -i "s/master.104.197.199.131.xip.io/master.$DNS_DOMAIN/g" hosts
 sed -i "s/apps.104.198.35.122.xip.io/apps.$DNS_DOMAIN/g" hosts
 ```
 
@@ -97,12 +98,6 @@ Reprovision your cluster and then type the following:
 cd ..
 git clone https://github.com/openshift/openshift-ansible
 ansible-playbook -v -i ./openshift-enablement-exam/hosts ./openshift-ansible/playbooks/byo/config.yml
-```
-## Logging in to your cluster
-
-After having created some users type the following
-```
-oc login https://`gcloud compute addresses list | grep master-external | awk '{print $3}'`:8443
 ```
 
 ## Creating new users
