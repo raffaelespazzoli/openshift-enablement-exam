@@ -25,7 +25,7 @@ cat id_rsa.pub >> my_id.pub
 gcloud compute project-info add-metadata --metadata-from-file sshKeys=./my_id.pub
 
 # prepare bastion to receive variables
-ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo AcceptEnv RHN_USERNAME RHN_PASSWORD | sudo tee -a /etc/ssh/sshd_config > /dev/null'
+ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo AcceptEnv RHN_USERNAME RHN_PASSWORD DNS_DOMAIN | sudo tee -a /etc/ssh/sshd_config > /dev/null'
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` sudo systemctl restart sshd
 
 # disable host check on ssh connections

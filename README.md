@@ -62,7 +62,7 @@ Run the prepare bastion script.
 
 Shell in the bastion host
 ```
-ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
+ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
 cd openshift-enablement-exam
 ```
 Run the prepare cluster script

@@ -84,8 +84,10 @@ gcloud compute instances create "ose-bastion" --zone "us-central1-a" --machine-t
 #create storage for registry
 gsutil mb -c Standard -l us-central1 -p $GCLOUD_PROJECT gs://$GCLOUD_PROJECT-registry
 
-#create dns zone
+#create dns zone only if it already does not exists
+if [ `gcloud dns managed-zones list | grep $DNS_DOMAIN | wc -l` -ne 1  ]; then
 gcloud dns managed-zones create --dns-name="$DNS_DOMAIN" --description="A zone" "$GCLOUD_PROJECT"
+fi
 
 # add records to dns zone
 gcloud dns record-sets transaction start -z="$GCLOUD_PROJECT"
