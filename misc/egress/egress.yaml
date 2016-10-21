@@ -14,7 +14,7 @@ objects:
     - name: egress-router
       image: openshift/origin-egress-router
       securityContext:
-        privileged: "true"
+        privileged: true
       env:
       - name: EGRESS_SOURCE 
         value: ${EGRESS_SOURCE}
@@ -35,11 +35,11 @@ objects:
       name: egress-pod        
 parameters:
   - name: EGRESS_SOURCE 
-    description: ip from node cidr that is available for node. 
-    required: "true" 
+    description: "IP from node cidr that is available for node." 
+    required: true 
   - name: EGRESS_GATEWAY
-    description: ip of the gateway, must be the same as the node gateway
-    required: "true"
+    description: "IP of the gateway, must be the same as the node gateway."
+    required: true
   - name: EGRESS_DESTINATION
-    description: ip of the destination
-    required: "true"    
+    description: "IP of the destination."
+    required: true    
