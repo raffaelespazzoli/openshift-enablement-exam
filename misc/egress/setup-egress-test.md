@@ -17,8 +17,10 @@ oc patch svc egress-test -p '
 ```
 create the egress pod
 ```
+oc adm policy add-scc-to-user privileged system:serviceaccount:egress-test:default
 BASTION_IP=`gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
 oc process -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/egress/egress.yaml -v EGRESS_SOURCE=10.128.0.12,EGRESS_GATEWAY=`ssh $BASTION_IP /usr/sbin/ip route show 0.0.0.0/0 | awk '{print $3}'`,EGRESS_DESTINATION=`oc get service | grep egress-test | awk '{print $3}'` | oc create -f -
 ```
+
 
 

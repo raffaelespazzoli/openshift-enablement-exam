@@ -8,7 +8,7 @@ objects:
     labels:
       name: egress-pod
     annotations:
-      pod.network.openshift.io/assign-macvlan: true
+      pod.network.openshift.io/assign-macvlan: "true"
   spec:
     containers:
     - name: egress-router
