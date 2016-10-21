@@ -15,6 +15,14 @@ oc patch svc egress-test -p '
   "type": "LoadBalancer"
   }'
 ```
+this is all I need to do for ingress because I'm running on a cloud provider.
+if you were on premise, would have to:
+
+1. inspect the external ip that was assigned to you and configure a routing rule so that ip is served by one of the cluster nodes
+2. assign a name to that ip in your dns.
+3. if you want HA, you can use ip failover pods. follow this [instructions](https://docs.openshift.com/container-platform/3.3/admin_guide/high_availability.html#ip-failover) replacing the IP with the one that was assigned to your service.
+
+
 create the egress pod
 ```
 oc adm policy add-scc-to-user privileged system:serviceaccount:egress-test:default
