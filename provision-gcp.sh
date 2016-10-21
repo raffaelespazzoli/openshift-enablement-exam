@@ -75,6 +75,7 @@ gcloud beta compute forwarding-rules create master-internal --load-balancing-sch
 wait
 
 #create firewall rules
+gcloud compute firewall-rules create "oc-ssh" --allow tcp:22 --network "default" --source-ranges "0.0.0.0/0"
 gcloud compute firewall-rules create "oc-master" --allow tcp:8443 --network "default" --source-ranges "0.0.0.0/0" --target-tags "master"
 gcloud compute firewall-rules create "oc-infranode" --allow tcp:80,tcp:443 --network "default" --source-ranges "0.0.0.0/0" --target-tags "infranode"
 
