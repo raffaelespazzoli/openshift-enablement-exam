@@ -34,12 +34,12 @@ objects:
     selector:
       name: egress-pod        
 parameters:
-  - name: EGRESS_SOURCE 
-    description: "IP from node cidr that is available for node." 
-    required: true 
-  - name: EGRESS_GATEWAY
-    description: "IP of the gateway, must be the same as the node gateway."
-    required: true
-  - name: EGRESS_DESTINATION
-    description: "IP of the destination."
-    required: true    
+- name: EGRESS_SOURCE 
+  description: "IP from node cidr that is available for node." 
+  required: true 
+- name: EGRESS_GATEWAY
+  description: "IP of the gateway, must be the same as the node gateway."
+  required: true
+- name: EGRESS_DESTINATION
+  description: "IP of the destination."
+  required: true    
