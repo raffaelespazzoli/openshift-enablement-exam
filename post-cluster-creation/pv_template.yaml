@@ -1,0 +1,23 @@
+kind: Template
+apiVersion: v1
+objects:
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: $PV_NAME
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Gi
+    nfs:
+      path: /exports/$NFS_EXPORT
+      server: ose-bastion
+    persistentVolumeReclaimPolicy: Recycle
+parameters:
+- name: PV_NAME
+  description: name of the persistent volume  
+  required: true 
+- name: NFS_EXPORT
+  description: name of the nfs export  
+  required: true  
