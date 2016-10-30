@@ -4,14 +4,14 @@ objects:
 - apiVersion: v1
   kind: PersistentVolume
   metadata:
-    name: $PV_NAME
+    name: ${PV_NAME}
   spec:
     accessModes:
     - ReadWriteOnce
     capacity:
       storage: 10Gi
     nfs:
-      path: /exports/$NFS_EXPORT
+      path: /exports/${NFS_EXPORT}
       server: ose-bastion
     persistentVolumeReclaimPolicy: Recycle
 parameters:
