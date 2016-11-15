@@ -1,0 +1,45 @@
+kind: Template
+apiVersion: v1
+objects:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    name: egress-pod
+    labels:
+      name: egress-pod
+    annotations:
+      pod.network.openshift.io/assign-macvlan: "true"
+  spec:
+    containers:
+    - name: egress-router
+      image: openshift/origin-egress-router
+      securityContext:
+        privileged: true
+      env:
+      - name: EGRESS_SOURCE 
+        value: ${EGRESS_SOURCE}
+      - name: EGRESS_GATEWAY 
+        value: ${EGRESS_GATEWAY}
+      - name: EGRESS_DESTINATION 
+        value: ${EGRESS_DESTINATION}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: egress-svc
+  spec:
+    ports:
+    - name: test
+      port: 9999
+    type: ClusterIP
+    selector:
+      name: egress-pod        
+parameters:
+- name: EGRESS_SOURCE 
+  description: "IP from node cidr that is available for node." 
+  required: true 
+- name: EGRESS_GATEWAY
+  description: "IP of the gateway, must be the same as the node gateway."
+  required: true
+- name: EGRESS_DESTINATION
+  description: "IP of the destination."
+  required: true    

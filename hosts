@@ -327,6 +327,7 @@ openshift_hosted_registry_storage_volume_size=10Gi
 #
 # By default metrics are not automatically deployed, set this to enable them
 openshift_hosted_metrics_deploy=true
+#openshift_hosted_metrics_deployer_version=3.3.0
 #
 # Storage Options
 # If openshift_hosted_metrics_storage_kind is unset then metrics will be stored
@@ -371,6 +372,7 @@ openshift_hosted_metrics_storage_volume_size=10Gi
 #
 # Currently logging deployment is disabled by default, enable it by setting this
 openshift_hosted_logging_deploy=true
+#openshift_hosted_logging_deployer_version=3.3.0 
 #
 # Logging storage config
 # Option A - NFS Host Group
