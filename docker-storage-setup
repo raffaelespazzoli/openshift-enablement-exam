@@ -1,3 +1,2 @@
 DEVS=/dev/sdb
 VG=docker-vg
-DATA_SIZE=100%VG
