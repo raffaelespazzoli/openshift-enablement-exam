@@ -79,7 +79,7 @@ openshift_release=v3.3
 #openshift_docker_disable_push_dockerhub=True
 # Items added, as is, to end of /etc/sysconfig/docker OPTIONS
 # Default value: "--log-driver=json-file --log-opt max-size=50m"
-#openshift_docker_options="-l warn --ipv6=false"
+openshift_docker_options="--log-driver=json-file --log-opt max-size=50m --log-opt max-file=100"
 
 # Specify exact version of Docker to configure or upgrade to.
 # Downgrades are not supported and will error out. Be careful when upgrading docker from < 1.10 to > 1.10.
@@ -428,7 +428,7 @@ os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
 # network blocks should be private and should not conflict with network blocks
 # in your infrastructure that pods may require access to. Can not be changed
 # after deployment.
-#osm_cluster_network_cidr=10.1.0.0/16
+osm_cluster_network_cidr=10.1.0.0/16
 #openshift_portal_net=172.30.0.0/16
 
 
