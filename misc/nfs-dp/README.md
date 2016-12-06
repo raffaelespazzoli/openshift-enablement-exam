@@ -5,5 +5,5 @@ this will create an NFS server with dynamic provisiong enabled running on a pod 
 ```
 oc create sa nfs-provisioner
 oc create -f ???
-
+o
 
