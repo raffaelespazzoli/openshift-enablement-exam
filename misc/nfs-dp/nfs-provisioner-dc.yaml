@@ -43,6 +43,7 @@ spec:
               containerPort: 111
               protocol: UDP
           securityContext:
+            privileged: true
             capabilities:
               add:
                 - DAC_READ_SEARCH
@@ -62,7 +63,8 @@ spec:
           imagePullPolicy: "IfNotPresent"
           volumeMounts:
             - name: export-volume
-              mountPath: /export
+              mountPath: /export      
+      serviceAccount: nfs-provisioner
       volumes:
         - name: export-volume
           hostPath:
