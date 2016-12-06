@@ -4,6 +4,8 @@ this will create an NFS server with dynamic provisiong enabled running on a pod 
 
 ```
 oc create sa nfs-provisioner
-oc create -f ???
-o
+oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-class.yaml
+oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-dc.yaml
+oc create -f https://github.com/raffaelespazzoli/openshift-enablement-exam/blob/master/misc/nfs-dp/nfs-provisioner-pvc.yaml
+```
 
