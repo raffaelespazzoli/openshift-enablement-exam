@@ -11,3 +11,5 @@ oc label node infranode2.c.openshift-enablement-exam2.internal region=infra zone
 oc label node node1.c.openshift-enablement-exam2.internal region=primary zone=default --overwrite
 oc label node node2.c.openshift-enablement-exam2.internal region=primary zone=default --overwrite
 oc label node node3.c.openshift-enablement-exam2.internal region=primary zone=default --overwrite
+
+ansible nodes -b -i hosts -m shell -a "systemctl restart atomic-openshift-node.service"

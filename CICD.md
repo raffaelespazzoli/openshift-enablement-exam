@@ -7,33 +7,9 @@ you need 10 pvs or dynamic pv enabled
 ```
 oc new-project sonarqube
 oc new-app --template postgresql-persistent --param=POSTGRESQL_USER=sonar  --param=POSTGRESQL_PASSWORD=sonar --param=POSTGRESQL_DATABASE=sonar -l app=sonarqube
-cat << EOF  | oc create -f - -n sonarqube
----
-apiVersion: "v1"
-kind: "PersistentVolumeClaim"
-metadata:
-  name: "sonarqube-extensions"
-spec:
-  accessModes:
-    - "ReadWriteOnce"
-  resources:
-    requests:
-      storage: "1Gi"
----
-apiVersion: "v1"
-kind: "PersistentVolumeClaim"
-metadata:
-  name: "sonarqube-data"
-spec:
-  accessModes:
-    - "ReadWriteOnce"
-  resources:
-    requests:
-      storage: "1Gi"
-EOF
 oc new-app https://github.com/OpenShiftDemos/sonarqube-openshift-docker --strategy=docker --name=sonarqube -e SONARQUBE_JDBC_USERNAME=sonar,SONARQUBE_JDBC_PASSWORD=sonar,SONARQUBE_JDBC_URL=jdbc:postgresql://postgresql:5432/sonar -l app=sonarqube -n sonarqube
-oc volume dc/sonarqube --add -m /opt/sonarqube/data --claim-name=sonarqube-data -n sonarqube
-oc volume dc/sonarqube --add -m /opt/sonarqube/extensions --claim-name=sonarqube-extensions -n sonarqube
+oc set volume dc/sonarqube --add -m /opt/sonarqube/data --name=sonarqube-data -t pvc --claim-name=sonarqube-data --claim-size=1G
+oc set volume dc/sonarqube --add -m /opt/sonarqube/extensions --name=sonarqube-extensions -t pvc --claim-name=sonarqube-extensions --claim-size=1G
 oc expose service sonarqube -n sonarqube
 ```
 
@@ -41,21 +17,8 @@ oc expose service sonarqube -n sonarqube
 
 ```
 oc new-project nexus
-cat << EOF  | oc create -f - -n nexus
-apiVersion: "v1"
-kind: "PersistentVolumeClaim"
-metadata:
-  name: "sonatype-work"
-spec:
-  accessModes:
-    - "ReadWriteOnce"
-  resources:
-    requests:
-      storage: "1Gi"
-EOF
 oc new-app https://github.com/OpenShiftDemos/nexus-openshift-docker --strategy=docker --name=nexus -l app=nexus -n nexus
-
-oc volume dc/nexus --add -m /sonatype-work --claim-name=sonatype-work --overwrite=true -n nexus
+oc set volume dc/nexus --add -m /sonatype-work --name=sonatype-work -t pvc --claim-name=sonatype-work --claim-size=1G --overwrite=true 
 oc expose svc nexus -n nexus
 ```
 
@@ -238,44 +201,12 @@ Deploy in prod
 #artifactory
 https://www.jfrog.com/confluence/display/RTF/Running+Artifactory+OSS 
 ``` 
-cat << EOF | oc create -f - 
-{
-  "apiVersion": "v1",
-  "kind": "ServiceAccount",
-  "metadata": {
-    "name": "artifactory"
-  }
-}
-EOF
-cat << EOF  | oc create -f - -n artifactory
----
-apiVersion: "v1"
-kind: "PersistentVolumeClaim"
-metadata:
-  name: "artifactory-etc"
-spec:
-  accessModes:
-    - "ReadWriteOnce"
-  resources:
-    requests:
-      storage: "1Gi"
----
-apiVersion: "v1"
-kind: "PersistentVolumeClaim"
-metadata:
-  name: "artifactory-data"
-spec:
-  accessModes:
-    - "ReadWriteOnce"
-  resources:
-    requests:
-      storage: "1Gi"
-EOF
+oc create sa artifactory
 oc adm policy add-scc-to-user anyuid -z artifactory -n artifactory
 oc new-app --docker-image=docker.bintray.io/jfrog/artifactory-oss:latest --name=artifactory
 oc patch dc/artifactory --patch '{"spec":{"template":{"spec":{"serviceAccountName": "artifactory"}}}}'
-oc volume dc/artifactory --add -m /var/opt/jfrog/artifactory/data --claim-name=artifactory-data -n artifactory
-oc volume dc/artifactory --add -m /var/opt/jfrog/artifactory/etc --claim-name=artifactory-etc -n artifactory
+oc set volume dc/artifactory --add -m var/opt/jfrog/artifactory/data --name=artifactory-data -t pvc --claim-name=artifactory-data --claim-size=1G
+oc set volume dc/artifactory --add -m /var/opt/jfrog/artifactory/etc --name=artifactory-etc -t pvc --claim-name=artifactory-etc --claim-size=1G
 oc expose svc artifactory
 ```
 add persistent storage
