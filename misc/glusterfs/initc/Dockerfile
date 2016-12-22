@@ -1,4 +1,4 @@
-FROM rhgs3/rhgs-server-rhel7
+FROM registry.access.redhat.com/rhgs3/rhgs-server-rhel7
 
 COPY annotate-pod /usr/bin
 
