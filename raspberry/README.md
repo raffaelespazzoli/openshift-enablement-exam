@@ -29,3 +29,11 @@ make release
 docker login
 
 for i in `docker images | grep 'raffaelespazzoli/origin-' | grep latest | awk '{print $1}'`; do docker push $i:latest; done; 
+
+
+#host preparation
+setup ssh keys
+setup dnsmasq for forward and reverse name resolution
+boostrap ansible-needed packages
+dnf install -y python2 python2-dnf libselinux-python libsemanage-python python2-firewall pyOpenSSL python-cryptography
+

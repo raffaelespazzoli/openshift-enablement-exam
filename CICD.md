@@ -114,6 +114,9 @@ clair will take several minutes to download the vulnerability definitions
 
 
 # Install jenkins
+
+this is old, now there is a jenkins 2 image
+
 ```
 Create pre-configured jenkins image
 oc project openshift
@@ -147,11 +150,12 @@ Make sure you install openshift pipeline jenkins plugin
 Make sure you install the Pipeline Maven Integration Plugin
 
 #install hygieia
+```
 oc new-project hygieia
 oc create -f https://raw.githubusercontent.com/raffaelespazzoli/aloha/master/src/main/openshift/hygieia-mongo.yaml -n hygieia
 oc process -f https://raw.githubusercontent.com/raffaelespazzoli/aloha/master/src/main/openshift/hygieia.yaml | oc create -f -  -n hygieia
 oc expose service hygieia-ui -n hygieia
-
+```
 # Application creation
 oc new-project helloworld-msa-dev
 oc new-project helloworld-msa-qa
