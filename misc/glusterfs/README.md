@@ -12,9 +12,14 @@ when you are ready run the following commands.
 
 ```
 oc project glusterfs
+oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --strategy=docker --context-dir=misc/glusterfs/initc --name=glusterfs
 oc adm policy add-scc-to-user privileged -z default
-oc process -f glusterfs.yaml -v GLUSTER_NODE_LABEL_VALUE=yes | oc create -f -
-oc process -f heketi2.yaml -v HEKETI_KUBE_NAMESPACE=glusterfs HEKETI_KUBE_APIHOST='https://10.1.2.2:8443' HEKETI_KUBE_INSECURE=y HEKETI_KUBE_USER=admin HEKETI_KUBE_PASSWORD=admin | oc create -f -
+oc process -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/glusterfs/glusterfs.yaml -v GLUSTER_NODE_LABEL_VALUE=yes | oc create -f -
+oc process -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/glusterfs/heketi.yaml -v HEKETI_KUBE_NAMESPACE=glusterfs HEKETI_KUBE_APIHOST='https://kubernetes.default.svc.cluster.local:443' HEKETI_KUBE_INSECURE=y HEKETI_KUBE_USER=admin HEKETI_KUBE_PASSWORD=admin | oc create -f -
+```
+
+ensure the topology file reflects your environment and then execute the following:
+```
 export  HEKETI_CLI_SERVER=http://`oc get route heketi | grep heketi | awk '{print $2}'`
 heketi-cli topology load --json=topology.json
 ```  

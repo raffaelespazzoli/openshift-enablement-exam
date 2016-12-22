@@ -71,7 +71,7 @@ objects:
           lifecycle: 
             podStart:
               exec: 
-                command: bash curl annotate-pod | bash - 
+                command: /usr/bin/bash /usr/bin/annotate-pod
         hostNetwork: true
         volumes:
         - hostPath:
