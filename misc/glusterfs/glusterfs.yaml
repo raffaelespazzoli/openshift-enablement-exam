@@ -29,8 +29,13 @@ objects:
         nodeSelector: 
           gluster: ${GLUSTER_NODE_LABEL_VALUE}
         containers:
-        - image: rhgs3/rhgs-server-rhel7
+        - image: 172.30.144.245:5000/glusterfs/glusterfs:latest
           imagePullPolicy: Always
+          env:
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
           livenessProbe:
             exec:
               command:
@@ -97,7 +102,7 @@ objects:
             path: /sys/fs/cgroup
           name: glusterfs-cgroup
 parameters:
-- description: Node name to run GlusterFS container
-  displayName: Storage node name
+- description: The value of the 'gluster' node label to be used as a selector for this deployment
+  displayName: Value of the 'gluster' node label
   name: GLUSTER_NODE_LABEL_VALUE
   required: true
