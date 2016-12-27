@@ -12,7 +12,7 @@ nfs
 # SSH user, this user should allow ssh based auth without requiring a
 # password. If using ssh key based auth, then the key should be managed by an
 # ssh agent.
-ansible_ssh_user=BATION_USERNAME
+ansible_ssh_user=BASTION_USERNAME
 
 # If ansible_ssh_user is not root, ansible_become must be set to true and the
 # user must be configured for passwordless sudo
