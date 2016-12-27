@@ -53,6 +53,19 @@ define which key you want to use, this key must be available to the following ss
 ```
 export SSH_PUB_KEY=<the ssh pub key you want to use> #usually $HOME/.ssh/id_rsa.pub
 ```
+Set the RHEL pool you want to use:
+```
+export RHN_SUB_POOL=8a85f9843e3d687a013e3ddd471a083e
+```
+I reccomed having a script that sets up all your variables:
+```
+export GCLOUD_PROJECT=openshift-enablement-exam2
+export DNS_DOMAIN=gc2.raffa.systems
+export RHN_USERNAME=rhn-gps-rspazzol
+export RHN_PASSWORD=XXXX
+export SSH_PUB_KEY=$HOME/.ssh/id_rsa.pub
+export RHN_SUB_POOL=8a85f9843e3d687a013e3ddd471a083e
+```
 Run the prepare bastion script.
 ```
 ./prepare-bastion.sh
@@ -62,7 +75,7 @@ Run the prepare bastion script.
 
 Shell in the bastion host
 ```
-ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
+ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=BASTION_USERNAME `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
 cd openshift-enablement-exam
 ```
 Run the prepare cluster script
@@ -72,32 +85,9 @@ Run the prepare cluster script
 
 ## Setup openshift
 
-If you're using xip.io, prepare the inventory file by running the following:
-```
-sed -i "s/master.10.128.0.10.xip.io/master.`gcloud compute forwarding-rules list master-internal | awk 'NR>1 {print $3}'`.xip.io/g" hosts
-sed -i "s/master.104.197.199.131.xip.io/master.`gcloud compute addresses list | grep master-external | awk '{print $3}'`.xip.io/g" hosts
-sed -i "s/apps.104.198.35.122.xip.io/apps.`gcloud compute addresses list | grep infranode-external | awk '{print $3}'`.xip.io/g" hosts
-```
-if you're using a real dns server do the following:
-```
-sed -i "s/master.10.128.0.10.xip.io/master-internal.$DNS_DOMAIN/g" hosts
-sed -i "s/master.104.197.199.131.xip.io/master.$DNS_DOMAIN/g" hosts
-sed -i "s/apps.104.198.35.122.xip.io/apps.$DNS_DOMAIN/g" hosts
-```
-
-
 Run the ansible playbook
 ```
 ansible-playbook -v -i hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
-```
-
-There seems to be an [issue](https://github.com/openshift/openshift-ansible/issues/2553) with the standard ansible script. If you experience it, the latest from the openshift-ansible github works. 
-Reprovision your cluster and then type the following:
-
-```
-cd ..
-git clone https://github.com/openshift/openshift-ansible
-ansible-playbook -v -i ./openshift-enablement-exam/hosts ./openshift-ansible/playbooks/byo/config.yml
 ```
 
 ## Creating new users

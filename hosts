@@ -12,7 +12,7 @@ nfs
 # SSH user, this user should allow ssh based auth without requiring a
 # password. If using ssh key based auth, then the key should be managed by an
 # ssh agent.
-ansible_ssh_user=rspazzol
+ansible_ssh_user=BATION_USERNAME
 
 # If ansible_ssh_user is not root, ansible_become must be set to true and the
 # user must be configured for passwordless sudo
@@ -147,7 +147,7 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 #openshift_cloudprovider_openstack_lb_subnet_id=subnet_id
 #
 # GCE
-openshift_cloudprovider_kind=gce
+# openshift_cloudprovider_kind=gce
 
 # Project Configuration
 #osm_project_request_message=''
