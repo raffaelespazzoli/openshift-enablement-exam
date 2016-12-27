@@ -1,4 +1,4 @@
 #!/bin/bash
 token=`cat /var/run/secrets/kubernetes.io/serviceaccount/token`
-hostip=`oc -t $token describe pod $MY_POD_NAME | grep "IP:" | awk '{print $2}'`
-oc -t $token label pod $MY_POD_NAME glusterfs-node=$hostip 
+hostip=`oc --token=$token describe pod $MY_POD_NAME | grep "IP:" | awk '{print $2}'`
+oc --token=$token label pod $MY_POD_NAME glusterfs-node=$hostip --overwrite=true

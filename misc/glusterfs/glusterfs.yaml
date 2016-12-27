@@ -74,9 +74,11 @@ objects:
           - mountPath: /sys/fs/cgroup
             name: glusterfs-cgroup
           lifecycle: 
-            podStart:
+            postStart:
               exec: 
-                command: /usr/bin/bash /usr/bin/annotate-pod
+                command:
+                - /usr/bin/bash 
+                - /usr/bin/annotate-pod
         hostNetwork: true
         volumes:
         - hostPath:
