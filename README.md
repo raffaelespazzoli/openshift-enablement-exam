@@ -4,8 +4,7 @@ The following instructions will setup an OpenShift OCP 3.3 environment on Google
 
 ![GCP reference architecture](/media/OSE-on-GCE-Architecture v0.3.png)
 
-## Gcloud provisioning
-
+## Setup
 
 Clone this project
 
@@ -35,15 +34,6 @@ you need to externally configure your domain to point to google cloud dns. More 
 ```
 export DNS_DOMAIN=<your domain>
 ```
-Run the provisioning script.
-
-```
-./provision-gcp.sh
-```
-This will take some time.
-
-## Prepare the bastion host
-
 Set you RHN account credentials.
 ```
 export RHN_USERNAME=rhn-gps-rspazzol
@@ -57,7 +47,7 @@ Set the RHEL pool you want to use:
 ```
 export RHN_SUB_POOL=8a85f9843e3d687a013e3ddd471a083e
 ```
-I reccomed having a script that sets up all your variables:
+I recommed having a script that sets up all your variables:
 ```
 export GCLOUD_PROJECT=openshift-enablement-exam2
 export DNS_DOMAIN=gc2.raffa.systems
@@ -65,7 +55,26 @@ export RHN_USERNAME=rhn-gps-rspazzol
 export RHN_PASSWORD=XXXX
 export SSH_PUB_KEY=$HOME/.ssh/id_rsa.pub
 export RHN_SUB_POOL=8a85f9843e3d687a013e3ddd471a083e
+
+if you are courageous you can just run:
 ```
+./allinone.sh
+```
+but at least the first time O recommend following the below scripts
+
+## Gcloud provisioning
+
+Run the provisioning script.
+
+```
+./provision-gcp.sh
+```
+This will take some time.
+
+## Prepare the bastion host
+
+I've switched to preemptible instances and preemptible instances don't always start when provisioned (a bug?). Go to your google console and make sure all the instances are stared.
+
 Run the prepare bastion script.
 ```
 ./prepare-bastion.sh

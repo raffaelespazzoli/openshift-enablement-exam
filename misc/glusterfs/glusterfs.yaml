@@ -29,7 +29,7 @@ objects:
         nodeSelector: 
           gluster: ${GLUSTER_NODE_LABEL_VALUE}
         containers:
-        - image: 172.30.144.245:5000/glusterfs/glusterfs:latest
+        - image: 172.30.201.40:5000/glusterfs/glusterfs:latest
           imagePullPolicy: Always
           env:
           - name: MY_POD_NAME

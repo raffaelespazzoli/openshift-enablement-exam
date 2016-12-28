@@ -6,7 +6,6 @@ metadata:
   annotations:
     description: Heketi service deployment template
     tags: glusterfs,heketi
-  creationTimestamp: null
   labels:
     glusterfs: heketi-template
   name: heketi
@@ -100,9 +99,7 @@ objects:
           - mountPath: /var/lib/heketi
             name: db
         volumes:
-        - glusterfs:
-            endpoints: heketi-storage-endpoints
-            path: heketidbstorage
+        - emptyDir:
           name: db
       strategy:
         type: Recreate

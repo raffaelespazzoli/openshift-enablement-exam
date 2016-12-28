@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: heketi-storage-pv
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi  
+  glusterfs:
+    endpoints: heketi-storage-endpoints
+    path: heketidbstorage
+  persistentVolumeReclaimPolicy: Retain
