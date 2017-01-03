@@ -12,7 +12,7 @@ When you are ready run the following commands to setup Gluster and Heketi in Ope
 
 ```
 oc new-project glusterfs
-oc patch project glusterfs --patch '{ "metadata":{"annotation": { "openshift.io/node-selector": "" }}}'
+oc patch namespace glusterfs --patch '{ "metadata":{"annotations": { "openshift.io/node-selector": "" }}}'
 oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --strategy=docker --context-dir=misc/glusterfs/initc --name=glusterfs
 oc adm policy add-scc-to-user privileged -z default
 oc policy add-role-to-user edit -z default
