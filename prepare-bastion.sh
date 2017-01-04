@@ -27,7 +27,7 @@ ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'su
 # generate and add keys
 ssh `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'ssh-keygen -t rsa -f .ssh/id_rsa -N ""'
 # set the key in gcloud metadata
-ssh `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'cat /home/rspazzol/.ssh/id_rsa.pub' >  ./id_rsa.pub
+ssh `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'cat $SSH_PUB_KEY' >  ./id_rsa.pub
 sed -i "s/^/$a:/" ./id_rsa.pub
 cat id_rsa.pub >> my_id.pub
 gcloud compute project-info add-metadata --metadata-from-file sshKeys=./my_id.pub
