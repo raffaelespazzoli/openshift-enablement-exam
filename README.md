@@ -45,7 +45,7 @@ export SSH_PUB_KEY=<the ssh pub key you want to use> #usually $HOME/.ssh/id_rsa.
 ```
 Set the RHEL pool you want to use:
 ```
-export RHN_SUB_POOL=8a85f9843e3d687a013e3ddd471a083e
+export RHN_SUB_POOL=8a85f98144844aff014488d059f61625
 ```
 I recommed having a script that sets up all your variables:
 ```
@@ -54,7 +54,7 @@ export DNS_DOMAIN=gc2.raffa.systems
 export RHN_USERNAME=rhn-gps-rspazzol
 export RHN_PASSWORD=XXXX
 export SSH_PUB_KEY=$HOME/.ssh/id_rsa.pub
-export RHN_SUB_POOL=8a85f9843e3d687a013e3ddd471a083e
+export RHN_SUB_POOL=8a85f98144844aff014488d059f61625
 
 if you are courageous you can just run:
 ```
