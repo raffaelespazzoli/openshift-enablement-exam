@@ -27,7 +27,7 @@ Set your google project configuration
 ```
 export GCLOUD_PROJECT=<your project>
 ```
-set your dns zone (es: exam.example.com)
+set your dns zone (es: exam.example.com). The name of the zone should be the same name of your google project.
 your master will be available at `master.exam.example.com` and the routes will have the form `*.apps.exam.example.com`.
 
 you need to externally configure your domain to point to google cloud dns. More explanations [here] (https://cloud.google.com/dns/update-name-servers)
