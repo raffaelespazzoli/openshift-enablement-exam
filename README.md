@@ -55,12 +55,18 @@ export RHN_USERNAME=rhn-gps-rspazzol
 export RHN_PASSWORD=XXXX
 export SSH_PUB_KEY=$HOME/.ssh/id_rsa.pub
 export RHN_SUB_POOL=8a85f9843e3d687a013e3ddd471a083e
-
-if you are courageous you can just run:
+```
+If you are courageous you can just run:
 ```
 ./allinone.sh
 ```
-but at least the first time O recommend following the below scripts
+but at least the first time, I recommend following the below scripts.
+
+Another option is to deploy using google cloud deployment (a declarative way of creating resources).
+This is still a work in progress. Cd to `cloud-deployment` and run:
+```
+./gcp-cloud-provision.sh
+```
 
 ## Gcloud provisioning
 
