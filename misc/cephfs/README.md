@@ -1,4 +1,10 @@
-# create a ceph cluster
+# hyperconverged storage with ceph installed in openshift
+this tutorial will explore the various aspects of ceph installed in openshift.
+
+*credits*:  this is a porting to openshift of the excellent work done here: https://github.com/ceph/ceph-docker
+
+
+# Create a ceph cluster
 
 export your network config (use your SDN netowrk cidr), this is necessary only during the secret creation
 ```
@@ -48,6 +54,8 @@ test the cluster health
 ```
 oc rsh <mon_pod> ceph -s
 ```
+# Provisioning rbd volumes
+
 create a statically provisioned rbd persistent volume
 ```
 oc project ceph
@@ -61,8 +69,9 @@ oc create -f rbd-pvc-pod.yaml
 ```
 create a dynamically provisioned rbd persistent volume
 ```
-
+TBD
 ```
+# Provisioning the cephfs volumes
 
 install the file server mds
 ```
@@ -77,20 +86,27 @@ oc create secret generic ceph-admin-secret --from-literal=key="${ADMIN_KEYRING}"
 oc create -f cephfs-pv.yaml
 oc create -f cephfs-pv-claim.yaml
 oc create -f cephfs-pvc-pod.yaml
-
 ```
 create a dynamically provisioned cephfs persistent volume
 ```
-
+TBD
 ```
+# Object store server
 
 install the object store gateway
 ```
 oc create -f ceph-rgw-v1-svc.yaml -f ceph-rgw-v1-dp.yaml
 ```
+test the object store
+```
+TBD
+```
+set the regristry to use the ceph object store
+```
+TDB
+```
 
-
-
+# Monitoring
 install the calamari management console
 ```
 oc new-app --docker-image=minshenglin/calamari-docker --name=calamari
@@ -99,7 +115,8 @@ oc new-app --docker-image=kairen/docker-calamari-server:1.3.1 --name=calamari
 oc expose svc calamari
 ```
 
-More notes:
+# My  notes
+
 https://access.redhat.com/articles/2184551
 
 ```
