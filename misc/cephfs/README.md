@@ -1,7 +1,7 @@
 # hyperconverged storage with ceph installed in openshift
 this tutorial will explore the various aspects of ceph installed in openshift.
 
-*credits*:  this is a porting to openshift of the excellent work done here: https://github.com/ceph/ceph-docker
+*credits*:  this is a porting to openshift of the excellent work done [here](https://github.com/ceph/ceph-docker)
 
 
 # Create a ceph cluster
