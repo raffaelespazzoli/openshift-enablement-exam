@@ -95,6 +95,7 @@ cd openshift-enablement-exam
 ```
 Run the prepare cluster script
 ```
+cd openshift-enablement-exam
 ./prepare-cluster.sh
 ```
 
