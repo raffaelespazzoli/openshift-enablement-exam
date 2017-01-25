@@ -42,8 +42,9 @@ oc adm policy add-scc-to-user privileged -z ceph
 oc adm policy add-scc-to-user anyuid -z default
 oc policy add-role-to-user view -z default
 oc policy add-role-to-user view -z ceph
-oc create imagestream ceph-rh7
-oc tag docker.io/ceph/daemon:latest ceph-rh7:latest
+oc create secret docker-registry default-internal-registry --docker-server=docker-registry.default.svc.cluster.local:5000 --docker-username=ceph --docker-password=`oc serviceaccounts get-token default` --docker-email=default@ceph.com
+oc secrets link ceph default-internal-registry --for=pull
+
 
 oc create -f ceph-mon-v1-svc.yaml
 oc create -f ceph-mon-v1-dp.yaml
@@ -56,7 +57,7 @@ oc rsh <mon_pod> ceph -s
 ```
 # Provisioning rbd volumes
 
-create a statically provisioned rbd persistent volume
+##create a statically provisioned rbd persistent volume
 ```
 oc project ceph
 ADMIN_KEYRING=$(kubectl exec <mon-pod> -- ceph auth get client.admin 2>&1 | awk '/key =/ {print$3}')
@@ -67,10 +68,33 @@ oc create -f rbd-pv.yaml
 oc create -f rbd-pv-claim.yaml
 oc create -f rbd-pvc-pod.yaml
 ```
-create a dynamically provisioned rbd persistent volume
+##create a dynamically provisioned rbd persistent volume
+
+create the admin keyring and secret (this is used by kubernetes to create volumes)
 ```
-TBD
+oc project ceph
+ADMIN_KEYRING=$(kubectl exec <mon-pod> -- ceph auth get client.admin 2>&1 | awk '/key =/ {print$3}')
+oc create secret generic ceph-admin-secret --type=kubernetes.io/rbd --from-literal=key="${ADMIN_KEYRING}"
 ```
+create a pool, a user that can mount that volumes from that pool and that user keyring
+```
+oc rsh ${MON_POD_NAME} ceph osd pool create kube 64
+oc rsh ${MON_POD_NAME} ceph auth get-or-create client.kube mon 'allow r' osd 'allow rwx pool=kube'
+KUBE_KEYRING=$(oc rsh ${MON_POD_NAME} ceph auth get client.kube 2>&1 | awk '/key =/ {print$3}')
+
+```
+create the storage class, in this case we create a default storage class
+```
+oc create -f rbd-storage-class.yaml
+```
+create a new project, create a secret with the previous keyring. this secret must exists in the namespace of the pod that is trying to use the volume.
+```
+oc new-project test-dynamic-pv-ceph
+oc create secret generic ceph-secret-user --from-literal=key="${KUBE_KEYRING}" --type=kubernetes.io/rbd
+
+```
+now you can start PVCs
+
 # Provisioning the cephfs volumes
 
 install the file server mds

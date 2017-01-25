@@ -41,9 +41,11 @@ spec:
           emptyDir: {}
 #          hostPath:
 #            path: /home/core/data/ceph/osd
+      imagePullSecrets:
+      - name: default-internal-registry
       containers:
         - name: osd-pod
-          image: 172.30.195.2:5000/ceph/ceph-daemon:latest
+          image: docker-registry.default.svc.cluster.local:5000/ceph/ceph-daemon:latest
           imagePullPolicy: Always
           volumeMounts:
             - name: devices
