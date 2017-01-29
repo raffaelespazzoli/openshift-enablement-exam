@@ -2,8 +2,8 @@
 
 set -e
 # set the ssh key
-cp $SSH_PUB_KEY ./my_id.pub 
-a=`whoami` 
+cp $SSH_PUB_KEY ./my_id.pub
+a=`whoami`
 sed -i "s/^/$a:/" ./my_id.pub
 export BASTION_USERNAME=$a
 
@@ -13,7 +13,7 @@ gcloud compute project-info add-metadata --metadata-from-file sshKeys=./my_id.pu
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo AcceptEnv RHN_USERNAME RHN_PASSWORD DNS_DOMAIN BASTION_USERNAME RHN_SUB_POOL | sudo tee -a /etc/ssh/sshd_config > /dev/null'
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` sudo systemctl restart sshd
 # disable host check on ssh connections
-ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo StrictHostKeyChecking no | sudo tee -a /etc/ssh/ssh_config > /dev/null'	
+ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo StrictHostKeyChecking no | sudo tee -a /etc/ssh/ssh_config > /dev/null'
 
 
 #install subcription manager and clean
@@ -21,7 +21,7 @@ ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'su
 #subscribe
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` sudo subscription-manager register --username=$RHN_USERNAME --password=$RHN_PASSWORD
 # configure subscriptions
-ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL -o SendEnv=BASTION_USERNAME 'sudo subscription-manager attach --pool=$RHN_SUB_POOL && sudo subscription-manager refresh && sudo subscription-manager repos --disable="*" && sudo subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-optional-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.3-rpms"'
+ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL -o SendEnv=BASTION_USERNAME 'sudo subscription-manager attach --pool=$RHN_SUB_POOL && sudo subscription-manager refresh && sudo subscription-manager repos --disable="*" && sudo subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-optional-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.4-rpms"'
 #update install packages
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'sudo yum update -y && sudo yum install -y git ansible atomic-openshift-utils screen bind-utils'
 # generate and add keys

@@ -12,7 +12,7 @@ export osd_cluster_network=10.1.0.0/16
 export osd_public_network=10.1.0.0/16
 ```
 
-generate keyrings and import as secrets 
+generate keyrings and import as secrets
 ```
 cd generator
 ./generate_secrets.sh all `./generate_secrets.sh fsid`
@@ -133,10 +133,11 @@ TDB
 # Monitoring
 install the calamari management console
 ```
-oc new-app --docker-image=minshenglin/calamari-docker --name=calamari
- 
-oc new-app --docker-image=kairen/docker-calamari-server:1.3.1 --name=calamari
-oc expose svc calamari
+oc new-build --strategy=docker --name=calamari
+oc new-app
+#oc new-app --docker-image=minshenglin/calamari-docker --name=calamari-server
+#oc new-app --docker-image=kairen/docker-calamari-server:1.3.1 --name=calamari
+#oc expose svc calamari-server
 ```
 
 # My  notes
