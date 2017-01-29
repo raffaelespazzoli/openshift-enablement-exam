@@ -37,7 +37,7 @@ export DNS_DOMAIN=<your domain>
 Set you RHN account credentials.
 ```
 export RHN_USERNAME=rhn-gps-rspazzol
-export RHN_PASSWORD=xxx 
+export RHN_PASSWORD=xxx
 ```
 define which key you want to use, this key must be available to the following ssh commands
 ```
@@ -91,7 +91,6 @@ Run the prepare bastion script.
 Shell in the bastion host
 ```
 ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
-cd openshift-enablement-exam
 ```
 Run the prepare cluster script
 ```
