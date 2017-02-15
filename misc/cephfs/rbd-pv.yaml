@@ -10,11 +10,11 @@ spec:
   rbd:
     monitors:
       - ceph-mon.ceph.svc.cluster.local:6789
-    pool: rbd
+    pool: kube
     image: ceph-rbd-pv-test
-    user: admin
+    user: kube
     secretRef:
-      name: ceph-admin-secret
+      name: ceph-kube-secret
     fsType: ext4
     readOnly: false
   persistentVolumeReclaimPolicy: Recycle

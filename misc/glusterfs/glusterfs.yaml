@@ -26,10 +26,10 @@ objects:
           name: glusterfs
         name: glusterfs
       spec:
-        nodeSelector: 
+        nodeSelector:
           gluster: ${GLUSTER_NODE_LABEL_VALUE}
         containers:
-        - image: 172.30.201.40:5000/glusterfs/glusterfs:latest
+        - image: docker-registry.default.svc.cluster.local:5000/gluster/glusterfs:latest
           imagePullPolicy: Always
           env:
           - name: MY_POD_NAME
@@ -73,11 +73,11 @@ objects:
             name: glusterfs-dev
           - mountPath: /sys/fs/cgroup
             name: glusterfs-cgroup
-          lifecycle: 
+          lifecycle:
             postStart:
-              exec: 
+              exec:
                 command:
-                - /usr/bin/bash 
+                - /usr/bin/bash
                 - /usr/bin/annotate-pod
         hostNetwork: true
         volumes:
