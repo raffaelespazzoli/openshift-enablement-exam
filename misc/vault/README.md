@@ -5,7 +5,9 @@ create a new project
 oc new-project vault-controller
 ```
 If you have 3.4 or later skip this step (we are going to use this feature https://docs.openshift.com/container-platform/3.4/dev_guide/secrets.html#service-serving-certificate-secrets).
-generate a self-signed certificate.
+
+Generate a self-signed certificate.
+
 You can skip this step and bring your own otherwise-signed certificate
 ```
 openssl req -new -x509 -days 365 -nodes -out vault.pem -keyout vault.key
@@ -13,9 +15,7 @@ oc create secret tls vault-cert --cert=vault.pem --key=vault.key
 rm vault.key vault.pem 
 
 ```
-
-
-install vault
+Install vault
 ```
 oc adm policy add-scc-to-user anyuid -z default
 oc create configmap vault-config --from-file=vault-config=./vault-config.json
@@ -29,15 +29,23 @@ vault init -tls-skip-verify -key-shares=1 -key-threshold=1
 ```
 Save the generated key and token. 
 
-Unseal the Vault 
-You have to repeat this step every time you start vault. Don't try to automate this step, this is manual by design. You can make the initial seal stronger by increasing the number of keys. We will assume that the KEYS environment variable contains the key necessary to unseal the vault and that ROOT_TOKEN contains the root token
-for example:
+Unseal Vault.
+ 
+You have to repeat this step every time you start vault. 
+
+Don't try to automate this step, this is manual by design. 
+
+You can make the initial seal stronger by increasing the number of keys. 
+
+We will assume that the KEYS environment variable contains the key necessary to unseal the vault and that ROOT_TOKEN contains the root token.
+
+For example:
 `export KEYS=6qvlf7Sdhq7JuKr5fuyAuBzSZq3FcOE8FCjf7b/5OcE=`
 `export ROOT_TOKEN=9ca20590-d705-a5f2-635d-6329c342bc1d`
 ```
 vault unseal -tls-skip-verify $KEYS
 ```
-configure vault (bootstrap flow)
+#configure vault (bootstrap flow)
 ```
 vault auth -tls-skip-verify $ROOT_TOKEN
 vault mount -tls-skip-verify -path=root-ca -max-lease-ttl=87600h pki
@@ -69,8 +77,7 @@ oc new-project sample-app-vault
 oc create -f sample-app.yaml
 ```
 
-configure vault (kingsley flow)
-
+#Configure vault (kingsley flow)
 
 deploy the vault controller
 ```
