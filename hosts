@@ -29,7 +29,7 @@ deployment_type=openshift-enterprise
 # use this to lookup the latest exact version of the container images, which is the tag actually used to configure
 # the cluster. For RPM installations we just verify the version detected in your configured repos matches this
 # release.
-openshift_release=v3.3
+openshift_release=v3.4
 
 # Specify an exact container image tag to install or configure.
 # WARNING: This value will be used for all hosts in containerized environments, even those that have another version installed.
@@ -73,7 +73,7 @@ openshift_release=v3.3
 # For enterprise deployment types we ensure that registry.access.redhat.com is
 # included if you do not include it
 #openshift_docker_additional_registries=registry.example.com
-#openshift_docker_insecure_registries=registry.example.com
+openshift_docker_insecure_registries=docker-registry.default.svc.cluster.local:5000, docker-registry.default.svc:5000
 #openshift_docker_blocked_registries=registry.hacker.com
 # Disable pushing to dockerhub
 #openshift_docker_disable_push_dockerhub=True
@@ -147,7 +147,7 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 #openshift_cloudprovider_openstack_lb_subnet_id=subnet_id
 #
 # GCE
-# openshift_cloudprovider_kind=gce
+openshift_cloudprovider_kind=gce
 
 # Project Configuration
 #osm_project_request_message=''
@@ -372,7 +372,7 @@ openshift_hosted_metrics_storage_volume_size=10Gi
 #
 # Currently logging deployment is disabled by default, enable it by setting this
 openshift_hosted_logging_deploy=true
-#openshift_hosted_logging_deployer_version=3.3.0 
+#openshift_hosted_logging_deployer_version=3.3.0
 #
 # Logging storage config
 # Option A - NFS Host Group

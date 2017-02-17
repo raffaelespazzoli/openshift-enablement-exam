@@ -6,7 +6,6 @@ metadata:
     app: ceph
     daemon: rgw
   name: ceph-rgw
-  namespace: ceph
 spec:
   triggers:
   - type: ImageChange

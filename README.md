@@ -4,8 +4,7 @@ The following instructions will setup an OpenShift OCP 3.3 environment on Google
 
 ![GCP reference architecture](/media/OSE-on-GCE-Architecture v0.3.png)
 
-## Gcloud provisioning
-
+## Setup
 
 Clone this project
 
@@ -28,13 +27,49 @@ Set your google project configuration
 ```
 export GCLOUD_PROJECT=<your project>
 ```
-set your dns zone (es: exam.example.com)
+set your dns zone (es: exam.example.com). The name of the zone should be the same name of your google project.
 your master will be available at `master.exam.example.com` and the routes will have the form `*.apps.exam.example.com`.
 
 you need to externally configure your domain to point to google cloud dns. More explanations [here] (https://cloud.google.com/dns/update-name-servers)
 ```
 export DNS_DOMAIN=<your domain>
 ```
+Set you RHN account credentials.
+```
+export RHN_USERNAME=rhn-gps-rspazzol
+export RHN_PASSWORD=xxx
+```
+define which key you want to use, this key must be available to the following ssh commands
+```
+export SSH_PUB_KEY=<the ssh pub key you want to use> #usually $HOME/.ssh/id_rsa.pub
+```
+Set the RHEL pool you want to use:
+```
+export RHN_SUB_POOL=8a85f9843e3d687a013e3ddd471a083e
+```
+I recommed having a script that sets up all your variables:
+```
+export GCLOUD_PROJECT=openshift-enablement-exam2
+export DNS_DOMAIN=gc2.raffa.systems
+export RHN_USERNAME=rhn-gps-rspazzol
+export RHN_PASSWORD=XXXX
+export SSH_PUB_KEY=$HOME/.ssh/id_rsa.pub
+export RHN_SUB_POOL=8a85f9843e3d687a013e3ddd471a083e
+```
+If you are courageous you can just run:
+```
+./allinone.sh
+```
+but at least the first time, I recommend following the below scripts.
+
+Another option is to deploy using google cloud deployment (a declarative way of creating resources).
+This is still a work in progress. Cd to `cloud-deployment` and run:
+```
+./gcp-cloud-provision.sh
+```
+
+## Gcloud provisioning
+
 Run the provisioning script.
 
 ```
@@ -44,15 +79,8 @@ This will take some time.
 
 ## Prepare the bastion host
 
-Set you RHN account credentials.
-```
-export RHN_USERNAME=rhn-gps-rspazzol
-export RHN_PASSWORD=xxx 
-```
-define which key you want to use, this key must be available to the following ssh commands
-```
-export SSH_PUB_KEY=<the ssh pub key you want to use> #usually $HOME/.ssh/id_rsa.pub
-```
+I've switched to preemptible instances and preemptible instances don't always start when provisioned (a bug?). Go to your google console and make sure all the instances are stared.
+
 Run the prepare bastion script.
 ```
 ./prepare-bastion.sh
@@ -62,42 +90,19 @@ Run the prepare bastion script.
 
 Shell in the bastion host
 ```
-ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL -o SendEnv=BASTION_USERNAME `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
-cd openshift-enablement-exam
+ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
 ```
 Run the prepare cluster script
 ```
+cd openshift-enablement-exam
 ./prepare-cluster.sh
 ```
 
 ## Setup openshift
 
-If you're using xip.io, prepare the inventory file by running the following:
-```
-sed -i "s/master.10.128.0.10.xip.io/master.`gcloud compute forwarding-rules list master-internal | awk 'NR>1 {print $3}'`.xip.io/g" hosts
-sed -i "s/master.104.197.199.131.xip.io/master.`gcloud compute addresses list | grep master-external | awk '{print $3}'`.xip.io/g" hosts
-sed -i "s/apps.104.198.35.122.xip.io/apps.`gcloud compute addresses list | grep infranode-external | awk '{print $3}'`.xip.io/g" hosts
-```
-if you're using a real dns server do the following:
-```
-sed -i "s/master.10.128.0.10.xip.io/master-internal.$DNS_DOMAIN/g" hosts
-sed -i "s/master.104.197.199.131.xip.io/master.$DNS_DOMAIN/g" hosts
-sed -i "s/apps.104.198.35.122.xip.io/apps.$DNS_DOMAIN/g" hosts
-```
-
-
 Run the ansible playbook
 ```
 ansible-playbook -v -i hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
-```
-
-There seems to be an [issue](https://github.com/openshift/openshift-ansible/issues/2553) with the standard ansible script. If you experience it, the latest from the openshift-ansible github works. 
-Reprovision your cluster and then type the following:
-
-```
-cd ..
-git clone https://github.com/openshift/openshift-ansible
-ansible-playbook -v -i ./openshift-enablement-exam/hosts ./openshift-ansible/playbooks/byo/config.yml
 ```
 
 ## Creating new users

@@ -3,11 +3,14 @@
 set -e
 gcloud config set project $GCLOUD_PROJECT
 
-project_number = `gcloud projects describe $GCLOUD_PROJECT | grep projectNumber | awk '{print $2}' | sed "s/^\([\"']\)\(.*\)\1\$/\2/g"`
+project_number=`gcloud projects describe $GCLOUD_PROJECT | grep projectNumber | awk '{print $2}' | sed "s/^\([\"']\)\(.*\)\1\$/\2/g"`
 
-! gcloud deployment-manager deployments delete openshift -q
+if [ `gcloud deployment-manager deployments list 2>&1 | grep openshift-$project_number | awk '{print $1}'` ]; then
+gcloud deployment-manager deployments delete openshift-$project_number -q;
+fi
 
-gcloud deployment-manager deployments create openshift --config openshift-gcloud.yaml --properties=project_number=$project_number
+#gcloud deployment-manager deployments create openshift-$project_number --config openshift-gcloud.yaml --properties project_number=$project_number
+gcloud deployment-manager deployments create openshift-$project_number --config openshift-gcloud.yaml
 
 
 gcloud compute instance-groups unmanaged add-instances master1 --instances master1 --zone us-central1-a &
