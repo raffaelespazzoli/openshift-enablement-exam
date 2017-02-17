@@ -1,0 +1,88 @@
+{
+    "clusters": [
+        {
+            "nodes": [
+                {
+                    "node": {
+                        "hostnames": {
+                            "manage": [
+                                "10.128.0.6"
+                            ],
+                            "storage": [
+                                "10.128.0.6"
+                            ]
+                        },
+                        "zone": 1
+                    },
+                    "devices": [
+                        "/dev/sdc"
+                    ]
+                },
+                {
+                    "node": {
+                        "hostnames": {
+                            "manage": [
+                                "10.128.0.5"
+                            ],
+                            "storage": [
+                                "10.128.0.5"
+                            ]
+                        },
+                        "zone": 1
+                    },
+                    "devices": [
+                        "/dev/sdc"
+                    ]
+                },
+                {
+                    "node": {
+                        "hostnames": {
+                            "manage": [
+                                "10.128.0.2"
+                            ],
+                            "storage": [
+                                "10.128.0.2"
+                            ]
+                        },
+                        "zone": 1
+                    },
+                    "devices": [
+                        "/dev/sdc"
+                    ]
+                },
+                {
+                    "node": {
+                        "hostnames": {
+                            "manage": [
+                                "10.128.0.9"
+                            ],
+                            "storage": [
+                                "10.128.0.9"
+                            ]
+                        },
+                        "zone": 1
+                    },
+                    "devices": [
+                        "/dev/sdc"
+                    ]
+                },
+                {
+                    "node": {
+                        "hostnames": {
+                            "manage": [
+                                "10.128.0.3"
+                            ],
+                            "storage": [
+                                "10.128.0.3"
+                            ]
+                        },
+                        "zone": 1
+                    },
+                    "devices": [
+                        "/dev/sdc"
+                    ]
+                }                
+            ]    
+        }
+    ]
+}

@@ -7,33 +7,9 @@ you need 10 pvs or dynamic pv enabled
 ```
 oc new-project sonarqube
 oc new-app --template postgresql-persistent --param=POSTGRESQL_USER=sonar  --param=POSTGRESQL_PASSWORD=sonar --param=POSTGRESQL_DATABASE=sonar -l app=sonarqube
-cat << EOF  | oc create -f - -n sonarqube
----
-apiVersion: "v1"
-kind: "PersistentVolumeClaim"
-metadata:
-  name: "sonarqube-extensions"
-spec:
-  accessModes:
-    - "ReadWriteOnce"
-  resources:
-    requests:
-      storage: "1Gi"
----
-apiVersion: "v1"
-kind: "PersistentVolumeClaim"
-metadata:
-  name: "sonarqube-data"
-spec:
-  accessModes:
-    - "ReadWriteOnce"
-  resources:
-    requests:
-      storage: "1Gi"
-EOF
 oc new-app https://github.com/OpenShiftDemos/sonarqube-openshift-docker --strategy=docker --name=sonarqube -e SONARQUBE_JDBC_USERNAME=sonar,SONARQUBE_JDBC_PASSWORD=sonar,SONARQUBE_JDBC_URL=jdbc:postgresql://postgresql:5432/sonar -l app=sonarqube -n sonarqube
-oc volume dc/sonarqube --add -m /opt/sonarqube/data --claim-name=sonarqube-data -n sonarqube
-oc volume dc/sonarqube --add -m /opt/sonarqube/extensions --claim-name=sonarqube-extensions -n sonarqube
+oc set volume dc/sonarqube --add -m /opt/sonarqube/data --name=sonarqube-data -t pvc --claim-name=sonarqube-data --claim-size=1G
+oc set volume dc/sonarqube --add -m /opt/sonarqube/extensions --name=sonarqube-extensions -t pvc --claim-name=sonarqube-extensions --claim-size=1G
 oc expose service sonarqube -n sonarqube
 ```
 
@@ -41,21 +17,8 @@ oc expose service sonarqube -n sonarqube
 
 ```
 oc new-project nexus
-cat << EOF  | oc create -f - -n nexus
-apiVersion: "v1"
-kind: "PersistentVolumeClaim"
-metadata:
-  name: "sonatype-work"
-spec:
-  accessModes:
-    - "ReadWriteOnce"
-  resources:
-    requests:
-      storage: "1Gi"
-EOF
 oc new-app https://github.com/OpenShiftDemos/nexus-openshift-docker --strategy=docker --name=nexus -l app=nexus -n nexus
-
-oc volume dc/nexus --add -m /sonatype-work --claim-name=sonatype-work --overwrite=true -n nexus
+oc set volume dc/nexus --add -m /sonatype-work --name=sonatype-work -t pvc --claim-name=sonatype-work --claim-size=1G --overwrite=true 
 oc expose svc nexus -n nexus
 ```
 
@@ -151,6 +114,9 @@ clair will take several minutes to download the vulnerability definitions
 
 
 # Install jenkins
+
+this is old, now there is a jenkins 2 image
+
 ```
 Create pre-configured jenkins image
 oc project openshift
@@ -184,11 +150,12 @@ Make sure you install openshift pipeline jenkins plugin
 Make sure you install the Pipeline Maven Integration Plugin
 
 #install hygieia
+```
 oc new-project hygieia
 oc create -f https://raw.githubusercontent.com/raffaelespazzoli/aloha/master/src/main/openshift/hygieia-mongo.yaml -n hygieia
 oc process -f https://raw.githubusercontent.com/raffaelespazzoli/aloha/master/src/main/openshift/hygieia.yaml | oc create -f -  -n hygieia
 oc expose service hygieia-ui -n hygieia
-
+```
 # Application creation
 oc new-project helloworld-msa-dev
 oc new-project helloworld-msa-qa
@@ -234,3 +201,82 @@ Approval step
 Create dc for production if not there
 Create hpa if not there
 Deploy in prod
+
+#artifactory
+https://www.jfrog.com/confluence/display/RTF/Running+Artifactory+OSS 
+``` 
+oc create sa artifactory
+oc adm policy add-scc-to-user anyuid -z artifactory -n artifactory
+oc new-app --docker-image=docker.bintray.io/jfrog/artifactory-oss:latest --name=artifactory
+oc patch dc/artifactory --patch '{"spec":{"template":{"spec":{"serviceAccountName": "artifactory"}}}}'
+oc set volume dc/artifactory --add -m var/opt/jfrog/artifactory/data --name=artifactory-data -t pvc --claim-name=artifactory-data --claim-size=1G
+oc set volume dc/artifactory --add -m /var/opt/jfrog/artifactory/etc --name=artifactory-etc -t pvc --claim-name=artifactory-etc --claim-size=1G
+oc expose svc artifactory
+```
+add persistent storage
+
+#cassandra
+https://hub.docker.com/r/anderssv/openshift-cassandra/
+```
+oc policy add-role-to-user view system:serviceaccount:cassandra:default
+
+cat << EOF | oc create -f -
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cassandra
+  name: cassandra
+spec:
+  ports:
+    - port: 9042
+  selector:
+    app: cassandra
+EOF
+
+cat << EOF | oc create -f -
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: cassandra
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: cassandra
+    spec:
+      containers:
+        - command:
+            - /run.sh
+          resources:
+            limits:
+              cpu: 0.1
+          env:
+            - name: MAX_HEAP_SIZE
+              value: 512M
+            - name: HEAP_NEWSIZE
+              value: 100M
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          image: anderssv/openshift-cassandra
+          name: cassandra
+          ports:
+            - containerPort: 9042
+              name: cql
+            - containerPort: 9160
+              name: thrift
+          volumeMounts:
+            - mountPath: /cassandra_data
+              name: cassandra-data
+      volumes:
+        - name: cassandra-data
+          emptyDir: {}
+EOF
+```
