@@ -1,0 +1,142 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: skydive
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: skydive-analyzer
+    name: skydive-analyzer
+  spec:
+    ports:
+    - name: api
+      port: 8082
+      protocol: TCP
+      targetPort: 8082
+    - name: protobuf
+      port: 8082
+      protocol: UDP
+      targetPort: 8082
+    - name: etcd
+      port: 2379
+      protocol: TCP
+      targetPort: 2379
+    - name: es
+      port: 9200
+      protocol: TCP
+      targetPort: 9200
+    selector:
+      app: skydive
+      tier: analyzer
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: skydive-analyzer
+  spec:
+    replicas: 1
+    selector:
+      app: skydive
+      tier: analyzer
+    strategy:
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: skydive
+          tier: analyzer
+      spec:
+        containers:
+        - args:
+          - analyzer
+          - --listen=0.0.0.0:8082
+          env:
+          - name: SKYDIVE_ANALYZER_STORAGE
+            value: elasticsearch
+          - name: SKYDIVE_GRAPH_BACKEND
+            value: elasticsearch
+          - name: SKYDIVE_LOG_LEVEL
+            value: DEBUG             
+          image: skydive/skydive
+          imagePullPolicy: Always
+          name: skydive-analyzer
+          ports:
+          - containerPort: 8082
+            protocol: TCP
+          - containerPort: 8082
+            protocol: UDP
+          - containerPort: 2379
+            protocol: TCP
+        - image: elasticsearch:2
+          imagePullPolicy: IfNotPresent
+          name: skydive-elasticsearch
+          ports:
+          - containerPort: 9200
+            protocol: TCP
+          securityContext:
+            privileged: true
+- apiVersion: extensions/v1beta1
+  kind: DaemonSet
+  metadata:
+    labels:
+      app: skydive
+      tier: agent
+    name: skydive-agent
+  spec:
+    selector:
+      matchLabels:
+        app: skydive
+        tier: agent
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: skydive
+          tier: agent
+      spec:
+        containers:
+        - args:
+          - agent
+#          env:
+#          - name: ANALYZER_PORT
+#            value: skydive-analyzer:8082
+#          - name: SKYDIVE_LOG_LEVEL
+#            value: DEBUG 
+#          - name: SKYDIVE_ANALYZER_PORT_2379_ADDR
+#            value: skydive-analyzer:2379   
+#          - name: ELASTICSEARCH_PORT
+#            value: skydive-analyzer:9200                                
+          image: skydive/skydive
+          imagePullPolicy: Always
+          name: skydive-agent
+          ports:
+          - containerPort: 8081
+            hostPort: 8081
+            protocol: TCP
+          securityContext:
+            privileged: true
+          volumeMounts:
+          - mountPath: /var/run/docker.sock
+            name: docker
+          - mountPath: /var/run/openvswitch
+            name: var
+          - mountPath: /host/run
+            name: run   
+          - mountPath: /etc
+            name: skydive-config                                  
+#        hostNetwork: true
+#        hostPID: true
+        volumes:
+        - hostPath:
+            path: /var/run/docker.sock
+          name: docker
+        - hostPath:
+            path: /var/run/openvswitch
+          name: var
+        - hostPath:
+            path: /var/run/netns
+          name: run  
+        - name: skydive-config
+          configMap:
+            name: skydive-config                          

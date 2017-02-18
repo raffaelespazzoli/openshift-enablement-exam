@@ -40,8 +40,8 @@ You can make the initial seal stronger by increasing the number of keys.
 We will assume that the KEYS environment variable contains the key necessary to unseal the vault and that ROOT_TOKEN contains the root token.
 
 For example:
-`export KEYS=6qvlf7Sdhq7JuKr5fuyAuBzSZq3FcOE8FCjf7b/5OcE=`
-`export ROOT_TOKEN=9ca20590-d705-a5f2-635d-6329c342bc1d`
+`export KEYS=C++3Dixywe9a/JxB4U0LXS95GHidQI2962tLx76nR78=`
+`export ROOT_TOKEN=b635dc6e-a98a-e89d-6839-0e6279bc6a86`
 ```
 vault unseal -tls-skip-verify $KEYS
 ```
@@ -82,6 +82,7 @@ oc create -f sample-app.yaml
 deploy the vault controller
 ```
 oc create secret generic vault-controller --from-literal vault-token=$ROOT_TOKEN
+oc policy add-role-to-user edit -z default
 oc process -f vault-controller-template2.yaml | oc apply -f -
 ```
 deploy the example
