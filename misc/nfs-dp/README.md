@@ -24,15 +24,20 @@ oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enable
 
 # Adding NFS DP to cdk 3.0
 
-oc cluster up --host-data-dir=/var/lib/origin/openshift.data.dir --image="registry.access.redhat.com/openshift3/ose" --version=v3.4
-
-
-# Adding NFS DP to minishift
-
-create an host folder pointing to a folder on your laptop 
+after configuring minishift run
 ```
-minishift hostfolder add nfsdp
+minishift --username rhn-gps-rspazzol --password <your_pwd> start
 ```
-start the minishift cluster
-minishift start --cpus 2 --memory 12288 --vm-driver virtualbox
+```
+oc new-project nfs-provisioner
+oc create sa nfs-provisioner
+oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-scc.yaml
+oc adm policy add-scc-to-user nfs-provisioner -z nfs-provisioner
+oc adm policy add-cluster-role-to-user cluster-reader system:serviceaccount:nfs-provisioner:nfs-provisioner
+oc adm policy add-cluster-role-to-user system:pv-provisioner-controller system:serviceaccount:nfs-provisioner:nfs-provisioner
+oc adm policy add-cluster-role-to-user system:pv-binder-controller system:serviceaccount:nfs-provisioner:nfs-provisioner
+oc adm policy add-cluster-role-to-user system:pv-recycler-controller system:serviceaccount:nfs-provisioner:nfs-provision
+oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-dc-cdk.yaml
+oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-class-default.yaml
+```
 
