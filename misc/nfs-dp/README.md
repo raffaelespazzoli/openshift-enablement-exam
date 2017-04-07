@@ -22,3 +22,17 @@ if you want to create a default storage class for your cluster run
 oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-class-default.yaml
 ```
 
+# Adding NFS DP to cdk 3.0
+
+oc cluster up --host-data-dir=/var/lib/origin/openshift.data.dir --image="registry.access.redhat.com/openshift3/ose" --version=v3.4
+
+
+# Adding NFS DP to minishift
+
+create an host folder pointing to a folder on your laptop 
+```
+minishift hostfolder add nfsdp
+```
+start the minishift cluster
+minishift start --cpus 2 --memory 12288 --vm-driver virtualbox
+

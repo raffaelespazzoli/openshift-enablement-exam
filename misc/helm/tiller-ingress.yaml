@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: tiller-deploy
+spec:
+  rules:
+  - host: tiller-deploy-tiller.rhel-cdk.10.1.2.2.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tiller-deploy
+          servicePort: tiller

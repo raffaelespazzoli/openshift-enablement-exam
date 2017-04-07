@@ -23,6 +23,15 @@ export HELM_HOST=localhost:44134
 helm version
 ```
 
+#using helm with an http2 capable ingress controller
+deploy an http2 capable ingress controller, for example traefik (https://github.com/raffaelespazzoli/openshift-enablement-exam/tree/master/misc/traefik)
+deploy an the tiller ingress:
+```
+oc create -f tiller-ingress.yaml
+export HELM_HOST=`oc get ingress | grep tiller-deploy | awk '{print $2}'`:<ingress controller port>
+helm version
+```
+
 #testing helm
 tiller is not able to create openshift project so you have to create them for it
 ```

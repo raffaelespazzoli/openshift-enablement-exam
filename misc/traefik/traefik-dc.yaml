@@ -1,14 +1,11 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: v1
+kind: DeploymentConfig
 metadata:
   name: traefik-ingress-controller
   labels:
     k8s-app: traefik-ingress-lb
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      k8s-app: traefik-ingress-lb
   template:
     metadata:
       creationTimestamp: null
@@ -49,3 +46,15 @@ spec:
       dnsPolicy: ClusterFirst
       serviceAccountName: traefik
       serviceAccount: traefik
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-web-ui
+spec:
+  selector:
+    k8s-app: traefik-ingress-lb
+  ports:
+  - name: web
+    port: 8080
+    targetPort: 8080      
