@@ -11,7 +11,7 @@ oc adm policy add-scc-to-user nfs-provisioner -z nfs-provisioner
 oc adm policy add-cluster-role-to-user cluster-reader system:serviceaccount:nfs-provisioner:nfs-provisioner
 oc adm policy add-cluster-role-to-user system:pv-provisioner-controller system:serviceaccount:nfs-provisioner:nfs-provisioner
 oc adm policy add-cluster-role-to-user system:pv-binder-controller system:serviceaccount:nfs-provisioner:nfs-provisioner
-oc adm policy add-cluster-role-to-user system:pv-recycler-controller system:serviceaccount:nfs-provisioner:nfs-provision
+oc adm policy add-cluster-role-to-user system:pv-recycler-controller system:serviceaccount:nfs-provisioner:nfs-provisioner
 oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-class.yaml
 oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-dc.yaml
 oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-pvc.yaml
@@ -38,7 +38,7 @@ oc adm policy add-scc-to-user nfs-provisioner -z nfs-provisioner
 oc adm policy add-cluster-role-to-user cluster-reader system:serviceaccount:nfs-provisioner:nfs-provisioner
 oc adm policy add-cluster-role-to-user system:pv-provisioner-controller system:serviceaccount:nfs-provisioner:nfs-provisioner
 oc adm policy add-cluster-role-to-user system:pv-binder-controller system:serviceaccount:nfs-provisioner:nfs-provisioner
-oc adm policy add-cluster-role-to-user system:pv-recycler-controller system:serviceaccount:nfs-provisioner:nfs-provision
+oc adm policy add-cluster-role-to-user system:pv-recycler-controller system:serviceaccount:nfs-provisioner:nfs-provisioner
 oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-dc-cdk.yaml
 oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-class-default.yaml
 ```
