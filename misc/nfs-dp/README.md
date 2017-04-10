@@ -27,6 +27,8 @@ oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enable
 after configuring minishift run
 ```
 minishift --username rhn-gps-rspazzol --password <your_pwd> start
+minishift ssh 
+sudo yum install nfs-utils
 ```
 ```
 oc new-project nfs-provisioner
