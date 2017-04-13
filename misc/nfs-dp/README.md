@@ -29,6 +29,9 @@ after configuring minishift run
 minishift --username rhn-gps-rspazzol --password <your_pwd> start
 minishift ssh 
 sudo yum install nfs-utils
+sudo setsebool -P virt_use_nfs 1
+sudo setsebool -P virt_sandbox_use_nfs 1
+
 ```
 ```
 oc new-project nfs-provisioner
