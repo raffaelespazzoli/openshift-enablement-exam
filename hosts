@@ -5,7 +5,7 @@
 masters
 nodes
 etcd
-nfs
+#nfs
 
 # Set variables common for all OSEv3 hosts
 [OSEv3:vars]
