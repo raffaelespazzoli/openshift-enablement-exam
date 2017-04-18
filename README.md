@@ -2,7 +2,7 @@
 
 The following instructions will setup an OpenShift OCP 3.3 environment on Google Cloud compliant with the following reference architecture.
 
-[GCP reference architecture](./media/OSE-on-GCE-Architecture v0.3.png)
+![GCP reference architecture](./media/OSE-on-GCE-Architecture-v0.3.png)
 
 ## Setup
 
