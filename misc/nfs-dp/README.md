@@ -27,10 +27,11 @@ oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enable
 after configuring minishift run
 ```
 minishift --username rhn-gps-rspazzol --password <your_pwd> start
-minishift ssh 
-sudo yum install nfs-utils
+minishift ssh
 sudo setsebool -P virt_use_nfs 1
-sudo setsebool -P virt_sandbox_use_nfs 1
+sudo setsebool -P virt_sandbox_use_nfs 1 
+sudo yum install -y nfs-utils
+
 
 ```
 ```
