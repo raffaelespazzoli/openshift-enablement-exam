@@ -434,8 +434,8 @@ openshift_hosted_logging_storage_kind=dynamic
 #openshift_hosted_logging_deployer_version=3.3.0
 
 # Configure the multi-tenant SDN plugin (default is 'redhat/openshift-ovs-subnet')
-#os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
-os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
+os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+#os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
 
 
 # Disable the OpenShift SDN plugin

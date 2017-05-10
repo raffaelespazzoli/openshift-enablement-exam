@@ -46,7 +46,7 @@ done;
 wait
 
 #delete instance-groups
-for k in us-central1-a us-central1-b us-central1-c; do
+for k in us-central1-a us-central1-b us-central1-f; do
 	for i in $(gcloud compute instance-groups unmanaged list --zones $k | awk 'NR>1 {print $1}'); do
 		gcloud compute instance-groups unmanaged delete -q $i --zone $k &
 	done;
@@ -54,7 +54,7 @@ done;
 wait
 
 #delete VMs
-for k in us-central1-a us-central1-b us-central1-c; do
+for k in us-central1-a us-central1-b us-central1-f; do
 	for i in $(gcloud compute instances list --zones $k| awk 'NR>1 {print $1}'); do
 		gcloud compute instances delete $i -q --zone "$k" &
 	done;
@@ -63,7 +63,7 @@ wait
 
 
 #delete disks
-for k in us-central1-a us-central1-b us-central1-c; do
+for k in us-central1-a us-central1-b us-central1-f; do
 	for i in $(gcloud compute disks list --zones $k | awk 'NR>1 {print $1}'); do
 		gcloud compute disks delete -q $i --zone $k &
 	done;

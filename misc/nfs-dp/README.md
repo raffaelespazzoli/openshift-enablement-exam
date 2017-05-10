@@ -26,11 +26,18 @@ oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enable
 
 after configuring minishift run
 ```
-minishift --username rhn-gps-rspazzol --password <your_pwd> start
-minishift ssh
-sudo setsebool -P virt_use_nfs 1
-sudo setsebool -P virt_sandbox_use_nfs 1 
-sudo yum install -y nfs-utils
+minishift setup-cdk
+minishift config set vm-driver virtualbox
+minishift config set cpus 2
+minishift config set memory 12288
+
+minishift --metrics --username rhn-gps-rspazzol --password <your_pwd> start
+echo "
+  sudo setsebool -P virt_use_nfs 1
+  sudo setsebool -P virt_sandbox_use_nfs 1
+  sudo yum install -y nfs-utils
+  " | minishift ssh
+
 
 
 ```
