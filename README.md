@@ -19,7 +19,7 @@ Install the [command line tool](https://cloud.google.com/sdk/downloads).
 
 [Initialize and authenticate in gcloud](https://cloud.google.com/sdk/docs/authorizing).
 
-In order to run this provisioning script you will need to be able to run 34vCPU in the US central region. You may need to increase your [resource quota](https://cloud.google.com/compute/docs/resource-quotas).
+In order to run this provisioning script you will need to be able to run 34vCPU, 3 global static IP addresses, and 10 in-use IP addresses in the US central region. You may need to increase your [resource quota](https://cloud.google.com/compute/docs/resource-quotas).
 
 Enable your project to use the compute api by visiting the [compute engine](https://console.cloud.google.com/home) menu item (there is probably a better way to do it).
 
