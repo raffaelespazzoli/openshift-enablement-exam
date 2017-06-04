@@ -57,12 +57,14 @@ ansible nodes -b -i hosts -m shell -a "systemctl start atomic-openshift-node.ser
 
 # building the image in openshift
 
-open your browser at http://www.oracle.com/technetwork/database/enterprise-edition/downloads/database12c-linux-download-2240591.html accept the license and export the cookies in a file called cookies.txt
+open your browser at http://www.oracle.com/technetwork/database/enterprise-edition/downloads/database12c-linux-download-2240591.html accept the license and export the cookies in a file called `cookies.txt`
+In chrome you can use this [extension](https://chrome.google.com/webstore/detail/cookietxt-export/lopabhfecdfhgogdbojmaicoicjekelh) to export the cookies.
+remember the exported cookies are valid for 20 minutes.
 
 ```
 oc new-project oracle-rac
 oc secrets new cookies cookies.txt=cookies.txt
-oc new-build -n oracle-rac-base --build-secret “cookies:/root" -D Dockerfile.ee.openshift https://github.com/raffaelespazzoli/openshift-enablement-exam/tree/master/misc/oracle-rac
+oc new-build --name=oracle-rac-base --build-secret="cookies:/root" --dockerfile=Dockerfile.ee.openshift --strategy=docker --context-dir=misc/oracle-rac https://github.com/raffaelespazzoli/openshift-enablement-exam 
 ```
 
 # notes
