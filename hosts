@@ -79,7 +79,7 @@ openshift_docker_insecure_registries=docker-registry.default.svc.cluster.local:5
 #openshift_docker_disable_push_dockerhub=True
 # Items added, as is, to end of /etc/sysconfig/docker OPTIONS
 # Default value: "--log-driver=json-file --log-opt max-size=50m"
-openshift_docker_options="--log-driver=json-file --log-opt max-size=50m --log-opt max-file=100"
+openshift_docker_options="--log-driver=json-file --log-opt max-size=50m --log-opt max-file=100 --storage-opt dm.basesize=15G"
 
 # Specify exact version of Docker to configure or upgrade to.
 # Downgrades are not supported and will error out. Be careful when upgrading docker from < 1.10 to > 1.10.
