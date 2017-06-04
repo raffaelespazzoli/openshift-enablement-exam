@@ -1,4 +1,4 @@
-FROM oraclelinux:7-slim
+
 # LICENSE CDDL 1.0 + GPL 2.0
 #
 # Copyright (c) 1982-2017 Oracle and/or its affiliates. All rights reserved.
@@ -23,7 +23,7 @@ FROM oraclelinux:7-slim
 # Pull base image
 # ---------------
 
-
+FROM oraclelinux:7-slim
 # Maintainer
 # ----------
 MAINTAINER Gerald Venzl <gerald.venzl@oracle.com>

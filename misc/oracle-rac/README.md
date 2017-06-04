@@ -64,7 +64,7 @@ remember the exported cookies are valid for 20 minutes.
 ```
 oc new-project oracle-rac
 oc secrets new cookies cookies.txt=cookies.txt
-oc new-build --name=oracle-rac-base --build-secret="cookies:/root" --dockerfile=Dockerfile.ee.openshift --strategy=docker --context-dir=misc/oracle-rac https://github.com/raffaelespazzoli/openshift-enablement-exam 
+oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-base --build-secret="cookies:/root" --dockerfile=Dockerfile.ee.openshift --strategy=docker --context-dir=misc/oracle-rac  
 ```
 
 # notes
