@@ -57,7 +57,7 @@ ENV INSTALL_DIR=$ORACLE_BASE/install \
 VOLUME ["$ORACLE_BASE/oradata", "$INSTALL_DIR_BINARIES"]    
 
 # download install binaries
-RUN yum -y install unzip
+RUN yum -y install unzip && \
     curl --location --cookie ./cookies/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip && \
     curl --location --cookie ./cookies/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_2of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip && \
     curl --location --cookie ./cookies/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_grid_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_1of2.zip && \
