@@ -57,167 +57,62 @@ ansible nodes -b -i hosts -m shell -a "systemctl start atomic-openshift-node.ser
 
 # building the image in openshift
 
-open your browser at http://www.oracle.com/technetwork/database/enterprise-edition/downloads/database12c-linux-download-2240591.html accept the license and export the cookies in a file called `cookies.txt`
+In order to download the oracle binaries you need to login to OTN and accept the license. This setp has not been automated.
+Open your browser at http://www.oracle.com/technetwork/database/enterprise-edition/downloads/database12c-linux-download-2240591.html, login in oracle, accept the license and export the cookies in a file called `cookies.txt`
 In chrome you can use this [extension](https://chrome.google.com/webstore/detail/cookietxt-export/lopabhfecdfhgogdbojmaicoicjekelh) to export the cookies.
 remember the exported cookies are valid for 20 minutes.
+
+The exported cookies should look like the following:
+
+```
+# Cookies for domains related to oracle.com.
+# This content may be pasted into a cookies.txt file and used by wget
+# Example:  wget -x --load-cookies cookies.txt http://www.oracle.com/technetwork/database/enterprise-edition/downloads/database12c-linux-download-2240591.html
+#
+www.oracle.com  FALSE /technetwork/database/enterprise-edition/downloads  FALSE 0 testSessionCookie Enabled
+.oracle.com TRUE  / FALSE 0 xdVisitorId 1207vAfAwRiqxHS4YGj1cL6BuPrY-jtS-4nAzaXIIMv470A1CF3
+.oracle.com TRUE  / FALSE 2145916800  atgRecVisitorId 1207vAfAwRiqxHS4YGj1cL6BuPrY-jtS-4nAzaXIIMv470A1CF3
+.oracle.com TRUE  / FALSE 0 atgRecSessionId O8KG8QX68dfMb-PcNt4k8aToJBNkhj3Ye2Zbq71C0GoDiy-5B-X0!293417707!-907077496
+.oracle.com TRUE  / FALSE 1650384003  s_fid 1255C49F6E8840C5-37DC7BC34C5968FA
+.oracle.com TRUE  / FALSE 1497377447  s_nr  1494785447773
+docs.oracle.com FALSE / FALSE 0 ORA_E11882_01_NAV e48294idm140205046485520,e18951idm140205087322016,e41134idm140205094826208
+docs.oracle.com FALSE / FALSE 0 ORA_B28359_01_NAV b31207idm139751918565728
+community.oracle.com  FALSE / FALSE 0 jive.login.ts 1494968157860
+community.oracle.com  FALSE / FALSE 0 BIGipServer~Public~community_engage_prod_pool_8080  rd2o00000000000000000000ffff89fe12a9o8080
+docs.oracle.com FALSE / FALSE 0 ORA_E50529_01_NAV CWLINidm139859782340992,LADBIidm139859713601744
+docs.oracle.com FALSE / FALSE 1558121675  __atuvc 17%7C20
+docs.oracle.com FALSE / FALSE 1558121675  __atssc google%3B9
+community.oracle.com  FALSE / FALSE 0 X-JCAPI-Token IUBuoXkq
+community.oracle.com  FALSE / FALSE 0 jive.security.context mIf1Krg+UOZAlqeoJonhu///////////SwS5HjI4wM1qsbR1r8XTOGYSUWKjvL7g6RmG4NCmCBEckCD6TVfgb4Q6SxtEP++OxStDvSR7wNv/rzs1HgXJLKi4hS3fVMwD
+community.oracle.com  FALSE / FALSE 0 JSESSIONID  B7212F937BA6D790F8760A8DD8CCB9B2
+login.oracle.com  FALSE / FALSE 0 login-ext-prod_iper rd2o00000000000000000000ffff89fe1202o7777
+www.oracle.com  FALSE / FALSE 0 JSESSIONID  ACF1fixx1C6NO3qB8LA2xcFgj8eEPhawoif0KsJS2UYUFgK2IZH8!2049917411!-63830852
+.oracle.com TRUE  / FALSE 1496624666.604265 ak_bmsc 2370406CFEC89E416374E503F459EC4217C967D421550000FA9134592B971A1D~plHpg24ClfUi61NIgHsSUI59mDh1U3hrxBpUzXeqosONYvO9+9tixLzWEhJ4zwiFC/etPuk8jsW3Xbqgd0ohpHkCzGUpKhCjtjOmreHUjA02LfmkulVIecsil8xBsAXmHIkGiroaBYGxIZZt8A/iX+ziuoIRZ4y7Uv2rT/Iv3m7DIGNCwpkYSYzuEN745k6BN21zxiCQB5MRL1zq6KlqFzUw==
+.oracle.com TRUE  / FALSE 1504397246.864913 ORA_WWW_MRKT  v:1~g:D3AD7338FB3FB021E0401490B1AA496A~t:NOT_FOUND~c:LP05
+.oracle.com TRUE  / FALSE 1504397246.865213 ORA_WWW_PERSONALIZE v:1~i:NOT_FOUND~r:NOT_FOUND~g:LAD~l:en~cs:NOT_FOUND~cn:NOT_FOUND
+.oracle.com TRUE  / FALSE 1528157246.865356 ORASSO_AUTH_HINT  v1.0~20170605080726
+.oracle.com TRUE  / FALSE 1504397246.865479 ORA_UCM_INFO  3~D3AD7338FB3FB021E0401490B1AA496A~Raffaele~Spazzoli~raffaele.spazzoli@gmail.com
+login.oracle.com  FALSE / TRUE  0 OAM_ID  VERSION_4~gYX8nnXHqYn+mxI9+XcYJQ==~NyChLa91+larh3kJHOnb/ED3dEh2VnMIF1nRm//PqyR5yvCCcKj1eyL726e4QsGnZyD8xmnPrSQQpsUl+/ualzdnbGJx2i+Rz7IVI5NO0jKTO/yeobPKDgFFNZCPmjd0GAz0aL3FpOz43imPMDBXBokncT6p1tUrccdCQtcPai2XjGftqh+/+1onQ2eSHqW/9fDaOH/2Zv61Z2y9Z4xa4UrLBtL3qNwAkhIF+oblsOSrzSuPOhRx1xL2wm7ppuxklBARiVfXl5b1SfsqhPTSxwWupTUh1aiO14JGLZjPkpypztFRyyAwIkOt5vF+A3nzzWGSWohLioUzMof98iHTIQ==
+login.oracle.com  FALSE / FALSE 0 TS0198f255  016b044584974680287afe7bae1d48069071aabd197f90db4a5b8e97c18b74bda9400769078a01f54965ed322f17c1b4a1770561e510b4ef13aba67483dda0f4342613a60f073eb56bafeae87ec773d87e4c026a67
+.oracle.com TRUE  / FALSE 0 TS01e9147f  016b044584baf04b485a31b7e5e4d13c271014320b876b2201f0aa8c9812b9ccc1310ac38e7f7c68c956ce267addffdc4fe4293023f24346c6b4491cacbd64490ece1aeed1ab6f498a484d7d87dd339db68317c8141028003192812821f107c503a83b4dc6d99b75ac09c547011e70e403b9982ef2e255c616e998be18a63be854a7ac2a51
+edelivery.oracle.com  FALSE / FALSE 0 OHS-edelivery.oracle.com-443  81710027816D9E0AAC79937BDFCEC0DF7A7D8C555DA28A84B038ADDAEB8EF948842A41C03638712DA83AB678D008E19DD637DB55F0768775C92A67B572C682EAEEFE1E12513F9BF50E497B8BDBD530A72847B0936BA7677648628DD6E7FABEC4D4253CEFABF49CEC0E236037FF2559E7A2528501FF4525A2A31BEC3A03A0DB481EFCF05A1BA6530853B4DDE782832A15C23E140EBEF7338BBA230084A4A8A7914B184EB54411D5D4E8163964617488B585C6A56CB101AC9F44B66A206A695E0A887042D3662ECBBB39D27E202A868F38853C6DFAF88CDA1E2658ADDFF9A3FED531ABC5801B5A77061496A87D0EAD1A394AA960AEFDBA7A0AF1CB24B0AF7F55396843DC6A0E9201CA~
+.oracle.com TRUE  / FALSE 1528157256  mmapi.store.p.0 %7B%22mmparams.d%22%3A%7B%7D%2C%22mmparams.p%22%3A%7B%22pd%22%3A%221528157256885%7C%5C%22-1720664346%7CHAAAAApVAgDiy5Zq1g4AARAAAUIU41IMCgDpem7fpqvUSOz0i5nWo9RIAAAAAP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FAAZEaXJlY3QB3g4JAAEAAAAAAAAA%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FAAAAAAAAAAFF%5C%22%22%2C%22srv%22%3A%221528157256904%7C%5C%22nycvwcgus04%5C%22%22%7D%7D
+.oracle.com TRUE  / FALSE 0 mmapi.store.s.0 %7B%22mmparams.d%22%3A%7B%7D%2C%22mmparams.p%22%3A%7B%7D%7D
+.oracle.com TRUE  / FALSE 0 s_cc  true
+.oracle.com TRUE  / FALSE 1496623059  oraclelicense accept-database_111060_linx8664-cookie
+.oracle.com TRUE  / FALSE 1496623059  gpw_e24 http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fdatabase%2Fenterprise-edition%2Fdownloads%2Fdatabase12c-linux-download-2240591.html
+.oracle.com TRUE  / FALSE 0 s_sq  oracleotnlive%2Coracleglobal%3D%2526pid%253Dotn%25253Aen-us%25253A%25252Fdatabase%25252Fenterprise-edition%25252Fdownloads%25252Fdatabase12c-linux-download-2240591.html%2526pidt%253D1%2526oid%253Dfunctiononclick(event)%25257BacceptAgreement(window.self)%25253B%25257D%2526oidt%253D2%2526ot%253DRADIO
+```
+Once you have the cookie file proceed with the build.
 
 ```
 oc new-project oracle-rac
 oc secrets new cookies cookies.txt=cookies.txt
 oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-base --build-secret="cookies:./cookies" --strategy=docker --context-dir=misc/oracle-rac  
+oc patch bc/oracle-rac-base --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Docker.openshift.step1" }}}}' 
 ```
 
 # notes
 https://github.com/Seth-Miller/12c-rac-docker
 https://github.com/s4ragent/rac_on_xx
 
-
-
-
------------
-
-
-function disableAnchor(obj, disable){
-  if(disable){
-  var href = obj.getAttribute("href");
-  if(href && href != "" && href != null){
-     obj.setAttribute('href_bak', href);
-  }
-  // obj.setAttribute('href', 'http://www.oracle.com/technetwork/licenses/sorry-150381.html');
-  obj.removeAttribute('href');
-  obj.setAttribute('class', 'boldbodylink');
-  } else {
-  obj.setAttribute('href', obj.getAttribute('href_bak'));
-  obj.setAttribute('class', 'boldbodylink');
-  }
-}
-
-function disableAnchorByName(anchorname, disable){
-//  var use_gebi=false;
-  var o=null;
-  // if (document.getElementById) { use_gebi=true; }
-  // Logic to find position
-  // if (use_gebi) {
-  //  o=document.getElementById(anchorname);
-  // } else {
-  for (var i=0; i<document.anchors.length; i++) {
-    if (document.anchors[i].name==anchorname) { o=document.anchors[i]; break; }
-  }
-  disableAnchor(o, disable);
-}
-
-function disableAnchorByName(doc, anchorname, disable, enabledHref, onclickFtn){
-  var use_gebi=false;
-  var o=null;
-  for (var i=0; i<doc.anchors.length; i++) {
-    if (doc.anchors[i].name==anchorname) { o=doc.anchors[i]; break; }
-  }
-  disableAnchor(o, disable, enabledHref, onclickFtn);
-}
-
-function disableAnchor( obj, disable, enabledHref, onclickFtn ){
-  if(disable){
-  obj.onclick = onclickFtn;
-  // obj.setAttribute('onclick', disabledHref );
-  // obj.removeAttribute('href');
-  // obj.setAttribute('href', onclickFtn );
-  obj.setAttribute('class', 'boldbodylink');
-  } else {
-  obj.setAttribute('href', enabledHref );
-  obj.onclick = null;
-  obj.setAttribute('class', 'boldbodylink');
-  }
-}
-
-function disableDownloadAnchors(doc, disabled){
-
-  // NOTE: These vars are being passed to the methods below, so the var name  should
-  //       match the parameter passed to the method. Customize var names for download(s) involved
-  var file1 = 'http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_1of2.zip';
-  var file2 = 'http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_2of2.zip';
-  var file3 = 'http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_grid_1of2.zip'; 
-  var file4 = 'http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_grid_2of2.zip';
-  var file5 = 'http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_gsm.zip';
-  var file6 = 'http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_gateways.zip';
-  var file7 = 'http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_examples.zip';
-  var file8 = 'http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_client.zip';
-  var file9 = 'http://download.oracle.com/otn/linux/oracle12c/121020/linux_12102_client32.zip';
-  var file10 = 'http://download.oracle.com/otn/linux/middleware/11g/111170/ofm_webtier_linux_11.1.1.7.0_64_disk1_1of1.zip';
-  
-
-  var agreementPrompt = new Function( "alert('Sorry, you must accept the License Agreement before downloading.');" );
-  disableAnchorByName(doc, 'file1', disabled, file1, agreementPrompt);
-  disableAnchorByName(doc, 'file2', disabled, file2, agreementPrompt);  
-  disableAnchorByName(doc, 'file3', disabled, file3, agreementPrompt);
-  disableAnchorByName(doc, 'file4', disabled, file4, agreementPrompt);
-  disableAnchorByName(doc, 'file5', disabled, file5, agreementPrompt);
-  disableAnchorByName(doc, 'file6', disabled, file6, agreementPrompt);
-  disableAnchorByName(doc, 'file7', disabled, file7, agreementPrompt);
-  disableAnchorByName(doc, 'file8', disabled, file8, agreementPrompt);
-  disableAnchorByName(doc, 'file9', disabled, file9, agreementPrompt);
-  disableAnchorByName(doc, 'file10', disabled, file10, agreementPrompt);
-      
-}
-
-function youMustAgreePrompt(){
-  alert('Sorry, you must accept the License Agreement before downloading.');
-}
-
-function acceptAgreement(windowRef){
-  var doc = windowRef.document;
-  disableDownloadAnchors(doc, false);
-  hideAgreementDiv(doc);
-  writeSessionCookie( 'oraclelicense', 'accept-database_111060_linx8664-cookie' );
-}
-
-function declineAgreement(windowRef){
-  var doc = windowRef.document;
-  disableDownloadAnchors(doc, true);
-  writeSessionCookie( 'oraclelicense', 'decline' );
-  // forward();
-}
-
-function showAgreement(){
-  window.open('/technetwork/licenses/standard-license-152015.html','LicenseAgreement','status=1,scrollbars=1,width=500,height=400,top=150,left=400');
-}
-
-function forward(){
-  location.href="http://www.oracle.com/technetwork/licenses/sorry-150381.html";
-}
-
-function hideAgreementDiv(doc) {
-  if (doc.getElementById) { // DOM3 = IE5, NS6
-    doc.getElementById('agreementDiv').style.visibility = 'hidden';
-    doc.getElementById('thankYouDiv').style.visibility = 'visible';
-  } else {
-    if (doc.layers) { // Netscape 4
-      doc.agreementDiv.visibility = 'hidden';
-      doc.thankYouDiv.visibility = 'visible';
-    } else { // IE 4
-      doc.all.agreementDiv.style.visibility = 'hidden';
-      doc.all.thankYouDiv.style.visibility = 'visible';
-    }
-  }
-}
-
-function agreementToSign(){
-  alert('Ooooo ... you are about to sign some really big agreement!');
-}
-
-function resetAgreementForm(){
-  //alert('here 1');
-  var cookie = getCookieValue('oraclelicense');
-  var myRadios = document.agreementForm['agreement'];
-  
-  if(cookie == null){
-    document.agreementForm.reset();
-  } else if(cookie == 'accept-database_111060_linx8664-cookie') {
-    myRadios[0].checked = 'true';
-    acceptAgreement();
-  } else if(cookie == 'decline'){
-    myRadios[1].checked = 'true';
-  }
-}
-
-
-----------

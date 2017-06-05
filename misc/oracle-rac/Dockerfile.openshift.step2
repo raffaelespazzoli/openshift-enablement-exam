@@ -1,0 +1,54 @@
+
+# LICENSE CDDL 1.0 + GPL 2.0
+#
+# Copyright (c) 1982-2017 Oracle and/or its affiliates. All rights reserved.
+#
+# ORACLE DOCKERFILES PROJECT
+# --------------------------
+# This is the Dockerfile for Oracle Database 12c Release 1 Enterprise Edition
+# 
+# REQUIRED FILES TO BUILD THIS IMAGE
+# ----------------------------------
+# (1) linuxamd64_12102_database_1of2.zip
+#     linuxamd64_12102_database_2of2.zip
+#     Download Oracle Database 12c Release 1 Enterprise Edition for Linux x64
+#     from http://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html
+#
+# HOW TO BUILD THIS IMAGE
+# -----------------------
+# Put all downloaded files in the same directory as this Dockerfile
+# Run: 
+#      $ docker build -t oracle/database:12.1.0.2-ee . 
+#
+# Pull base image
+# ---------------
+
+FROM oraclelinux:7-slim  
+    
+VOLUME ["$INSTALL_DIR_BINARIES"]
+
+# Copy binaries
+# -------------
+COPY $COOKIES_DIR/cookies.txt $INSTALL_DIR/
+
+# install orcale software
+USER oracle
+RUN curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip && \
+    curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_2of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_2of2.zip && \
+    unzip $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip  -d $INSTALL_DIR_BINARIES && \
+    unzip $INSTALL_DIR_BINARIES/linuxamd64_12102_database_2of2.zip -d $INSTALL_DIR_BINARIES && \   
+    $INSTALL_DIR/$INSTALL_DB_BINARIES_FILE EE
+
+USER root
+RUN $ORACLE_BASE/oraInventory/orainstRoot.sh && \
+    $ORACLE_HOME/root.sh
+
+USER oracle
+WORKDIR /home/oracle
+
+VOLUME ["$ORACLE_BASE/oradata"]
+
+EXPOSE 1521 5500
+    
+# Define default command to start Oracle Database. 
+CMD $ORACLE_BASE/$RUN_FILE
