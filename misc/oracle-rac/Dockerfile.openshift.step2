@@ -23,7 +23,7 @@
 # Pull base image
 # ---------------
 
-FROM oraclelinux:7-slim  
+FROM docker-registry.default.svc.cluster.local:5000/oracle-rac/oracle-rac-base-1:latest  
     
 VOLUME ["$INSTALL_DIR_BINARIES"]
 

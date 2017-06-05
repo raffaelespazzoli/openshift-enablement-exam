@@ -108,9 +108,19 @@ Once you have the cookie file proceed with the build.
 ```
 oc new-project oracle-rac
 oc secrets new cookies cookies.txt=cookies.txt
-oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-base --build-secret="cookies:./cookies" --strategy=docker --context-dir=misc/oracle-rac  
-oc patch bc/oracle-rac-base --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Docker.openshift.step1" }}}}' 
+oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-base-1 --build-secret="cookies:./cookies" --strategy=docker --context-dir=misc/oracle-rac -D "FROM oraclelinux:7-slim"
+oc patch bc/oracle-rac-base-1 --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.openshift.step1" }}, "source" : { "dockerfile" : ""}}}'
+oc start-build oracle-rac-base-1 -F 
 ```
+after the build completes, create another delete the old cookie.txt file and create a new one with fresh cookie to support the second step of the build
+```
+oc delete secret cookies
+oc secrets new cookies cookies.txt=cookies.txt
+oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-base-2 --build-secret="cookies:./cookies" --strategy=docker --context-dir=misc/oracle-rac -D "FROM oracle-rac-base-1"
+oc patch bc/oracle-rac-base-2 --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.openshift.step2" }}, "source" : { "dockerfile" : ""}}}'
+oc start-build oracle-rac-base-1 -F  
+```
+
 
 # notes
 https://github.com/Seth-Miller/12c-rac-docker
