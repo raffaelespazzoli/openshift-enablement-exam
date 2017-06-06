@@ -99,6 +99,8 @@ RUN yum install -y sudo unzip && \
     useradd --create-home --uid 54321 --gid oinstall --groups dba,asmdba,oper,backupdba,dgdba,kmdba,racdba oracle || \
       (RES=$? && ( [ $RES -eq 9 ] && exit 0 || exit $RES)) && \
     usermod --uid 54321 --gid oinstall --groups dba,asmdba,oper,backupdba,dgdba,kmdba,racdba oracle  && \
+ 
+# prepare dirs
     mkdir -p $GRID_BASE && \
     chgrp -R oinstall $GRID_BASE && \
     chmod -R 0775 $GRID_BASE && \
@@ -107,11 +109,7 @@ RUN yum install -y sudo unzip && \
     chmod -R 0775 $ORACLE_BASE && \
     mkdir -p $ORACLE_INVENTORY_DIR && \
     chgrp -R oinstall $ORACLE_INVENTORY_DIR && \
-    chmod -R 0775 $ORACLE_INVENTORY_DIR && \       
-    
-# prepare install dir
-    mkdir -p $INSTALL_DIR_BINARIES && \
-    chmod -R a+rwx /stage   
+    chmod -R 0775 $ORACLE_INVENTORY_DIR && \        
 
 #install grid  
 #USER grid
