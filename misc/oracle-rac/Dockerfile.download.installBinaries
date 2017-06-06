@@ -4,8 +4,8 @@ ENV INSTALL_DIR_BINARIES=/stage/12.1.0.2 \
     COOKIES_DIR=cookies
 COPY $COOKIES_DIR/cookies.txt $INSTALL_DIR_BINARIES/
 
-RUN curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_grid_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_1of2.zip && \
-    curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_grid_2of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_2of2.zip && \
-    curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip && \
-    curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_2of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_2of2.zip 
+RUN curl --location -c $INSTALL_DIR_BINARIES/cookies.txt -b $INSTALL_DIR_BINARIES/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_grid_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_1of2.zip && \
+    curl --location -c $INSTALL_DIR_BINARIES/cookies.txt -b $INSTALL_DIR_BINARIES/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_grid_2of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_2of2.zip && \
+    curl --location -c $INSTALL_DIR_BINARIES/cookies.txt -b $INSTALL_DIR_BINARIES/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip && \
+    curl --location -c $INSTALL_DIR_BINARIES/cookies.txt -b $INSTALL_DIR_BINARIES/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_2of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_2of2.zip 
     
