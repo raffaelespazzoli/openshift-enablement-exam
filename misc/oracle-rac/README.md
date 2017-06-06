@@ -109,7 +109,7 @@ Once you have the cookie file proceed with the build.
 oc new-project oracle-rac
 oc secrets new cookies cookies.txt=cookies.txt
 oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-binaries --build-secret="cookies:./cookies" --strategy=docker --context-dir=misc/oracle-rac -D "FROM oraclelinux:7-slim"
-oc patch bc/oracle-rac-base-1 --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.download.installBinaries" }}, "source" : { "dockerfile" : ""}}}'
+oc patch bc/oracle-rac-binaries --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.download.installBinaries" }}, "source" : { "dockerfile" : ""}}}'
 oc start-build oracle-rac-binaries -F 
 
 ```
