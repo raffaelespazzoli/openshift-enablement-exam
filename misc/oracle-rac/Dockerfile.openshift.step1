@@ -107,7 +107,7 @@ RUN yum install -y sudo unzip && \
     
 # prepare install dir
     mkdir -p $INSTALL_DIR_BINARIES && \
-    chmod a+rwx $INSTALL_DIR_BINARIES   
+    chmod -R a+rwx /stage   
 
 #install grid  
 #USER grid

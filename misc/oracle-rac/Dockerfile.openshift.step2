@@ -30,6 +30,7 @@ VOLUME ["$INSTALL_DIR_BINARIES"]
 # Copy binaries
 # -------------
 COPY $COOKIES_DIR/cookies.txt $INSTALL_DIR/
+RUN chmod -R a+rwx /stage
 
 # install orcale software
 USER oracle
