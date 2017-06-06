@@ -47,7 +47,7 @@ UNIX_GROUP_NAME=oinstall
 # This is an optional parameter if installing on
 # Windows based Operating System.
 #-------------------------------------------------------------------------------
-INVENTORY_LOCATION=###ORACLE_BASE###/oraInventory
+INVENTORY_LOCATION=/opt/oraInventory
 #-------------------------------------------------------------------------------
 # Specify the languages in which the components will be installed.             
 # 

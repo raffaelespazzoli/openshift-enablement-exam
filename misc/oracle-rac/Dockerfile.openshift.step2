@@ -44,7 +44,7 @@ RUN sudo chmod -R a+rwx /stage && \
     $INSTALL_DIR/$INSTALL_DB_BINARIES_FILE EE
 
 USER root
-RUN $ORACLE_BASE/oraInventory/orainstRoot.sh && \
+RUN $ORACLE_INVENTORY_DIR/orainstRoot.sh && \
     $ORACLE_HOME/root.sh
 
 USER oracle

@@ -34,6 +34,7 @@ MAINTAINER Gerald Venzl <gerald.venzl@oracle.com>
 # -------------------------------------------------------------
 ENV GRID_BASE=/opt/grid \
     GRID_HOME=/opt/grid/product/12.1.0.2/grid \
+    ORACLE_INVENTORY_DIR=/opt/oraInventory
     ORACLE_BASE=/opt/oracle \
     ORACLE_HOME=/opt/oracle/product/12.1.0.2/dbhome_1 \
     INSTALL_RSP="db_inst.rsp" \
@@ -117,7 +118,7 @@ RUN curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --in
     unzip $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_2of2.zip -d $INSTALL_DIR_BINARIES && \ 
     sudo -E -u grid $INSTALL_DIR_BINARIES/grid/runInstaller -waitforcompletion \
     -ignoreSysPrereqs -ignoreprereq -silent -force \
-    INVENTORY_LOCATION=$ORACLE_BASE/oraInventory \
+    INVENTORY_LOCATION=$ORACLE_INVENTORY_DIR \
     UNIX_GROUP_NAME=oinstall \
     ORACLE_HOME=$GRID_HOME \
     ORACLE_BASE=$GRID_BASE \
@@ -125,3 +126,7 @@ RUN curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --in
     oracle.install.asm.OSDBA=asmdba \
     oracle.install.asm.OSOPER=asmoper \
     oracle.install.asm.OSASM=asmadmin
+
+USER root  
+RUN $ORACLE_INVENTORY_DIR/orainstRoot.sh && \
+    $GRID_HOME/root.sh    
