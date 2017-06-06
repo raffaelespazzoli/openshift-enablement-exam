@@ -30,11 +30,13 @@ VOLUME ["$INSTALL_DIR_BINARIES"]
 # Copy binaries
 # -------------
 COPY $COOKIES_DIR/cookies.txt $INSTALL_DIR/
-RUN chmod -R a+rwx /stage
+RUN usermod -a -G wheel oracle
 
 # install orcale software
 USER oracle
-RUN curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip && \
+RUN echo oracle | sudo chmod -R a+rwx /stage && \
+    ls -la /stage && \
+    curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip && \
     curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_2of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_2of2.zip && \
     unzip $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip  -d $INSTALL_DIR_BINARIES && \
     unzip $INSTALL_DIR_BINARIES/linuxamd64_12102_database_2of2.zip -d $INSTALL_DIR_BINARIES && \   
