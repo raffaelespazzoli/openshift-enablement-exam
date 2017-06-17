@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: download-binaries
-        image: docker-registry.default.svc.cluster.local:5000/oracle-rac/download-binaries:latest
+        image:  172.30.243.149:5000/oracle-rac/download-binaries:latest
         env:
         - name: COOKIES_DIR
           value: /cookies
@@ -62,11 +62,12 @@ spec:
         imagePullPolicy: "IfNotPresent"
         volumeMounts:
         - name: http-volume
-          mountPath: /usr/share/nginx/html      
+          mountPath: /usr/share/nginx/html       
       volumes:
         - name: http-volume
           persistentVolumeClaim:
             claimName: binaries
+      serviceAccountName: nginx         
 ---
 kind: Service
 apiVersion: v1

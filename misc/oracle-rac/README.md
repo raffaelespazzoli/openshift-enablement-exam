@@ -111,6 +111,8 @@ oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --nam
 oc patch bc/download-binaries --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.download.installBinaries" }}, "source" : { "dockerfile" : ""}}}'
 oc start-build download-binaries -F
 oc secrets new cookies cookies.txt=cookies.txt
+oc create sa nginx
+oc adm policy add-scc-to-user anyuid -z nginx
 oc apply -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/oracle-rac/openshift/downloadBinaries.yaml
 
 ```
