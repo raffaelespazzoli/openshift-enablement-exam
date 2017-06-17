@@ -104,17 +104,13 @@ edelivery.oracle.com  FALSE / FALSE 0 OHS-edelivery.oracle.com-443  81710027816D
 .oracle.com TRUE  / FALSE 0 s_sq  oracleotnlive%2Coracleglobal%3D%2526pid%253Dotn%25253Aen-us%25253A%25252Fdatabase%25252Fenterprise-edition%25252Fdownloads%25252Fdatabase12c-linux-download-2240591.html%2526pidt%253D1%2526oid%253Dfunctiononclick(event)%25257BacceptAgreement(window.self)%25253B%25257D%2526oidt%253D2%2526ot%253DRADIO
 ```
 Once you have the cookie file proceed with downloading the binaries.
-```
-oc new-project oracle-rac
-oc secrets new cookies cookies.txt=cookies.txt
-oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-binaries --build-secret="cookies:./cookies" --strategy=docker --context-dir=misc/oracle-rac -D "FROM oraclelinux:7-slim"
 
 ```
 oc new-project oracle-rac
-oc secrets new cookies cookies.txt=cookies.txt
 oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=download-binaries --strategy=docker --context-dir=misc/oracle-rac -D "FROM registry.access.redhat.com/rhel7-atomic:latest"
 oc patch bc/download-binaries --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.download.installBinaries" }}, "source" : { "dockerfile" : ""}}}'
 oc start-build download-binaries -F
+oc secrets new cookies cookies.txt=cookies.txt
 oc apply -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/oracle-rac/openshift/downloadBinaries.yaml
 
 ```
