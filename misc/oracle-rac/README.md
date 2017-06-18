@@ -1,7 +1,7 @@
-# preparing openshift to run the image
-the resulting image is about 12GB so it can be run by a default docker configuration. Again we need to change the base size ofr the file system of docker containers
+# Preparing openshift to run the image
+The resulting image is about 12GB so it can be run by a default docker configuration. We need to change the base size ofr the file system of docker containers
 
-Add `--storage-opt dm.basesize=15G` to your docker daemon config
+Add `--storage-opt dm.basesize=20G` to your docker daemon config
 For it to take effect you also have to run
 ```
 sudo docker rm `docker ps -a -q` && sudo docker rmi -f `docker images -q`
@@ -23,10 +23,10 @@ ansible nodes -b -i hosts -m shell -a "systemctl start docker"
 ansible nodes -b -i hosts -m shell -a "systemctl start atomic-openshift-node.service"
 ```
 
-If you have the luxury of creating an openshift cluster from scratch you can simple add `--storage-opt dm.basesize=20G` to the docker options in your ansible file.
+If you have the luxury of creating an OpenShift cluster from scratch you can simple add `--storage-opt dm.basesize=20G` to the docker options in your ansible file.
 
 
-# building the image in openshift
+# Building the image in openshift
 
 In order to download the oracle binaries you need to login to OTN and accept the license. This setp has not been automated.
 Open your browser at http://www.oracle.com/technetwork/database/enterprise-edition/downloads/database12c-linux-download-2240591.html, login in oracle, accept the license and export the cookies in a file called `cookies.txt`
@@ -108,7 +108,7 @@ docker volume rm `docker volume ls | grep local | awk '{print $2}'`
 ```
 
 
-# build the image locally
+# Build the image locally -- not tested anymore
 This build requires containers with at least 12GB, the deafult is 10GB
 Add `--storage-opt dm.basesize=15G` to your docker daemon config
 For it to take effect you also have to run
@@ -131,7 +131,7 @@ docker build -t raffaelespazzoli/oracledb -v $ORACLE_DATA/stage:/stage:ro -f Doc
 notice that the `-v` option for a `docker build` command is available only in the redhat family of OSes (Fedora or RHEL).
 
 
-# pushing the image to a registry
+# pushing the image to a registry -- not tested anymore
 
 ```
 docker login -u ciao -p `oc whoami -t` docker-registry-default.192.168.99.100.xip.io:443
