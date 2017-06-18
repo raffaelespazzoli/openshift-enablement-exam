@@ -55,14 +55,14 @@ spec:
     spec:
       containers:
       - name: binaries-http-server
-        image: nginx:latest
+        image: registry.access.redhat.com/rhscl/httpd-24-rhel7:latest
         ports:
         - name: http
           containerPort: 8080
         imagePullPolicy: "IfNotPresent"
         volumeMounts:
         - name: http-volume
-          mountPath: /usr/share/nginx/html       
+          mountPath: /opt/rh/httpd24/root/var/www/html    
       volumes:
         - name: http-volume
           persistentVolumeClaim:
