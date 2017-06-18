@@ -37,8 +37,8 @@ RUN usermod -a -G wheel oracle
 USER oracle
 RUN sudo chmod -R a+rwx /stage && \
     ls -la /stage && \
-    curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip && \
-    curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_database_2of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_2of2.zip && \
+    curl "http://$DOWNLOAD_URL/linuxamd64_12102_database_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip && \
+    curl "http://$DOWNLOAD_URL/linuxamd64_12102_database_2of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_database_2of2.zip && \
     unzip $INSTALL_DIR_BINARIES/linuxamd64_12102_database_1of2.zip  -d $INSTALL_DIR_BINARIES && \
     unzip $INSTALL_DIR_BINARIES/linuxamd64_12102_database_2of2.zip -d $INSTALL_DIR_BINARIES && \   
     $INSTALL_DIR/$INSTALL_DB_BINARIES_FILE EE

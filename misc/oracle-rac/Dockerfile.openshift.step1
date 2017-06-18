@@ -48,7 +48,7 @@ ENV GRID_BASE=/opt/grid \
     CHECK_SPACE_FILE="checkSpace.sh" \
     INSTALL_DB_BINARIES_FILE="installDBBinaries.sh" \
     INSTALL_DIR_BINARIES=/stage/12.1.0.2 \
-    COOKIES_DIR=cookies
+    DOWNLOAD_URL=http://binaries-http-server:8080
 
 # Use second ENV so that variable get substituted
 ENV INSTALL_DIR=$ORACLE_BASE/install \
@@ -60,7 +60,7 @@ VOLUME ["$INSTALL_DIR_BINARIES"]
 
 # Copy binaries
 # -------------
-COPY $COOKIES_DIR/cookies.txt $INSTALL_RSP $PERL_INSTALL_FILE $SETUP_LINUX_FILE $CHECK_SPACE_FILE $INSTALL_DB_BINARIES_FILE $INSTALL_DIR/
+COPY $INSTALL_RSP $PERL_INSTALL_FILE $SETUP_LINUX_FILE $CHECK_SPACE_FILE $INSTALL_DB_BINARIES_FILE $INSTALL_DIR/
 COPY $RUN_FILE $START_FILE $CREATE_DB_FILE $CONFIG_RSP $PWD_FILE $ORACLE_BASE/
 
 RUN yum install -y sudo unzip && \
@@ -113,8 +113,8 @@ RUN yum install -y sudo unzip && \
 
 #install grid  
 #USER grid
-RUN curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_grid_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_1of2.zip && \
-    curl --location -c $INSTALL_DIR/cookies.txt -b $INSTALL_DIR/cookies.txt --insecure "http://download.oracle.com/otn/linux/oracle12c/121020/linuxamd64_12102_grid_2of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_2of2.zip && \
+RUN curl "http://$DOWNLOAD_URL/linuxamd64_12102_grid_1of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_1of2.zip && \
+    curl "http://$DOWNLOAD_URL/linuxamd64_12102_grid_2of2.zip" -o $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_2of2.zip && \
     unzip $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_1of2.zip -d $INSTALL_DIR_BINARIES && \
     unzip $INSTALL_DIR_BINARIES/linuxamd64_12102_grid_2of2.zip -d $INSTALL_DIR_BINARIES && \ 
     sudo -E -u grid $INSTALL_DIR_BINARIES/grid/runInstaller -waitforcompletion \
