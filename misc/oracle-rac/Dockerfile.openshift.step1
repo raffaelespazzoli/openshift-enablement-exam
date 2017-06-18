@@ -109,7 +109,7 @@ RUN yum install -y sudo unzip && \
     chmod -R 0775 $ORACLE_BASE && \
     mkdir -p $ORACLE_INVENTORY_DIR && \
     chgrp -R oinstall $ORACLE_INVENTORY_DIR && \
-    chmod -R 0775 $ORACLE_INVENTORY_DIR && \        
+    chmod -R 0775 $ORACLE_INVENTORY_DIR        
 
 #install grid  
 #USER grid
