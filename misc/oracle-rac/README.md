@@ -119,15 +119,13 @@ oc apply -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablem
 execute the first step of the build
 
 ```
-oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-base-1 --build-secret="cookies:./cookies" --strategy=docker --context-dir=misc/oracle-rac -D "FROM oraclelinux:7-slim" -e DOWNLOAD-URL=binaries-http-server.oracle-rac.svc.cluster.local:8080
+oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-base-1 --strategy=docker --context-dir=misc/oracle-rac -D "FROM oraclelinux:7-slim" -e DOWNLOAD_URL=binaries-http-server.oracle-rac.svc.cluster.local:8080
 oc patch bc/oracle-rac-base-1 --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.openshift.step1" }}, "source" : { "dockerfile" : ""}}}'
 oc start-build oracle-rac-base-1 -F 
 ```
-after the build completes, create another delete the old cookie.txt file and create a new one with fresh cookie to support the second step of the build
+after the build completes, execute the second step of the build
 ```
-oc delete secret cookies
-oc secrets new cookies cookies.txt=cookies.txt
-oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-base-2 --build-secret="cookies:./cookies" --strategy=docker --context-dir=misc/oracle-rac -D "FROM oracle-rac-base-1:latest"
+oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-base-2 --strategy=docker --context-dir=misc/oracle-rac -D "FROM oracle-rac-base-1:latest" -e DOWNLOAD_URL=binaries-http-server.oracle-rac.svc.cluster.local:8080
 oc patch bc/oracle-rac-base-2 --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.openshift.step2" }}, "source" : { "dockerfile" : ""}}}'
 oc start-build oracle-rac-base-2 -F  
 ```

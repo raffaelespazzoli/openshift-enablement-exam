@@ -29,7 +29,6 @@ VOLUME ["$INSTALL_DIR_BINARIES"]
 
 # Copy binaries
 # -------------
-COPY $COOKIES_DIR/cookies.txt $INSTALL_DIR/
 COPY sudoers /etc
 RUN usermod -a -G wheel oracle
 
