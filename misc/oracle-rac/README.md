@@ -1,35 +1,3 @@
-# build the image locally
-This build requires containers with at least 12GB, the deafult is 10GB
-Add `--storage-opt dm.basesize=15G` to your docker daemon config
-For it to take effect you also have to run
-```
-docker rm `docker ps -a -q` && docker rmi -f `docker images -q`
-sudo systemctl stop docker
-sudo rm -rf /var/lib/docker
-sudo systemctl start docker
-```
-download the [grid and oracle](http://www.oracle.com/technetwork/database/enterprise-edition/downloads/database12c-linux-download-2240591.html) zip files and unzip them in a dir that we will call $ORACLE_DATA/stage/12.1.0.2
-
-```
-ls $ORACLE_DATA/stage/12.1.0.2
-database  grid
-``` 
-to build the image run
-```
-docker build -t raffaelespazzoli/oracledb -v $ORACLE_DATA/stage:/stage:ro -f Dockerfile.ee .
-```
-notice that the `-v` option for a `docker build` command is available only in the redhat family of OSes (Fedora or RHEL).
-
-
-# pushing the image to a registry
-
-```
-docker login -u ciao -p `oc whoami -t` docker-registry-default.192.168.99.100.xip.io:443
-docker tag raffaelespazzoli/oracledb:latest docker-registry-default.192.168.99.100.xip.io:443/oracle-rac/oracle-rac:0.0.1
-docker push docker-registry-default.192.168.99.100.xip.io:443/oracle-rac/oracle-rac:0.0.1
-
-```      
-
 # preparing openshift to run the image
 the resulting image is about 12GB so it can be run by a default docker configuration. Again we need to change the base size ofr the file system of docker containers
 
@@ -48,12 +16,15 @@ If you created your cluster with an ansible file you can do the following (this 
 ansible nodes -b -i hosts -m shell -a "systemctl stop atomic-openshift-node.service"
 ansible nodes -b -i hosts -m shell -a 'docker stop `docker ps -q` && docker rm `docker ps -a -q` && docker rmi -f `docker images -q`'
 ansible nodes -b -i hosts -m shell -a "systemctl stop docker"
-ansible -vv nodes -b -i hosts -m replace -a "dest=/etc/sysconfig/docker regexp=\"OPTIONS='\" replace=\"OPTIONS=' --storage-opt dm.basesize=15G \" backup=yes"
+ansible -vv nodes -b -i hosts -m replace -a "dest=/etc/sysconfig/docker regexp=\"OPTIONS='\" replace=\"OPTIONS=' --storage-opt dm.basesize=20G \" backup=yes"
 ansible nodes -b -i hosts -m shell -a "rm -rf /var/lib/docker"
 ansible nodes:!masters -b -i hosts -m shell -a "lvremove -f docker-vg/docker-pool && vgremove -f docker-vg"
 ansible nodes -b -i hosts -m shell -a "systemctl start docker"
 ansible nodes -b -i hosts -m shell -a "systemctl start atomic-openshift-node.service"
 ```
+
+If you have the luxury of creating an openshift cluster from scratch you can simple add `--storage-opt dm.basesize=20G` to the docker options in your ansible file.
+
 
 # building the image in openshift
 
@@ -103,7 +74,8 @@ edelivery.oracle.com  FALSE / FALSE 0 OHS-edelivery.oracle.com-443  81710027816D
 .oracle.com TRUE  / FALSE 1496623059  gpw_e24 http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fdatabase%2Fenterprise-edition%2Fdownloads%2Fdatabase12c-linux-download-2240591.html
 .oracle.com TRUE  / FALSE 0 s_sq  oracleotnlive%2Coracleglobal%3D%2526pid%253Dotn%25253Aen-us%25253A%25252Fdatabase%25252Fenterprise-edition%25252Fdownloads%25252Fdatabase12c-linux-download-2240591.html%2526pidt%253D1%2526oid%253Dfunctiononclick(event)%25257BacceptAgreement(window.self)%25253B%25257D%2526oidt%253D2%2526ot%253DRADIO
 ```
-Once you have the cookie file proceed with downloading the binaries.
+Write the cookies in a file `cookies.txt`
+Once you have the cookie file proceed with downloading the binaries. You will need a persistent volume (or dynamic volume provisioing) to run the below command.
 
 ```
 oc new-project oracle-rac
@@ -129,6 +101,44 @@ oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --nam
 oc patch bc/oracle-rac-base-2 --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.openshift.step2" }}, "source" : { "dockerfile" : ""}}}'
 oc start-build oracle-rac-base-2 -F  
 ```
+
+these builds take a lot of local space on the nodes that is not garbage collected by openshift. you can clean that space by running the following
+```
+docker volume rm `docker volume ls | grep local | awk '{print $2}'`
+```
+
+
+# build the image locally
+This build requires containers with at least 12GB, the deafult is 10GB
+Add `--storage-opt dm.basesize=15G` to your docker daemon config
+For it to take effect you also have to run
+```
+docker rm `docker ps -a -q` && docker rmi -f `docker images -q`
+sudo systemctl stop docker
+sudo rm -rf /var/lib/docker
+sudo systemctl start docker
+```
+download the [grid and oracle](http://www.oracle.com/technetwork/database/enterprise-edition/downloads/database12c-linux-download-2240591.html) zip files and unzip them in a dir that we will call $ORACLE_DATA/stage/12.1.0.2
+
+```
+ls $ORACLE_DATA/stage/12.1.0.2
+database  grid
+``` 
+to build the image run
+```
+docker build -t raffaelespazzoli/oracledb -v $ORACLE_DATA/stage:/stage:ro -f Dockerfile.ee .
+```
+notice that the `-v` option for a `docker build` command is available only in the redhat family of OSes (Fedora or RHEL).
+
+
+# pushing the image to a registry
+
+```
+docker login -u ciao -p `oc whoami -t` docker-registry-default.192.168.99.100.xip.io:443
+docker tag raffaelespazzoli/oracledb:latest docker-registry-default.192.168.99.100.xip.io:443/oracle-rac/oracle-rac:0.0.1
+docker push docker-registry-default.192.168.99.100.xip.io:443/oracle-rac/oracle-rac:0.0.1
+
+```      
 
 
 # notes
