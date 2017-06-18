@@ -119,7 +119,7 @@ oc apply -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablem
 execute the first step of the build
 
 ```
-oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-base-1 --build-secret="cookies:./cookies" --strategy=docker --context-dir=misc/oracle-rac -D "FROM oraclelinux:7-slim"
+oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac-base-1 --build-secret="cookies:./cookies" --strategy=docker --context-dir=misc/oracle-rac -D "FROM oraclelinux:7-slim" -e DOWNLOAD-URL=binaries-http-server.oracle-rac.svc.cluster.local:8080
 oc patch bc/oracle-rac-base-1 --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.openshift.step1" }}, "source" : { "dockerfile" : ""}}}'
 oc start-build oracle-rac-base-1 -F 
 ```

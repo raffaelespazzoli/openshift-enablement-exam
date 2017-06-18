@@ -47,8 +47,7 @@ ENV GRID_BASE=/opt/grid \
     SETUP_LINUX_FILE="setupLinuxEnv.sh" \
     CHECK_SPACE_FILE="checkSpace.sh" \
     INSTALL_DB_BINARIES_FILE="installDBBinaries.sh" \
-    INSTALL_DIR_BINARIES=/stage/12.1.0.2 \
-    DOWNLOAD_URL=binaries-http-server:8080
+    INSTALL_DIR_BINARIES=/stage/12.1.0.2
 
 # Use second ENV so that variable get substituted
 ENV INSTALL_DIR=$ORACLE_BASE/install \
