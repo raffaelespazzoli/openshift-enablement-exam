@@ -52,6 +52,6 @@ echo "DEDICATED_THROUGH_BROKER_LISTENER=ON"  >> $ORACLE_HOME/network/admin/liste
 echo "DIAG_ADR_ENABLED = off"  >> $ORACLE_HOME/network/admin/listener.ora;
 
 # Check whether Perl is working
-chmod ug+x $INSTALL_DIR/installPerl.sh && \
-$ORACLE_HOME/perl/bin/perl -v || \
-$INSTALL_DIR/installPerl.sh
+#chmod ug+x $INSTALL_DIR/installPerl.sh && \
+#$ORACLE_HOME/perl/bin/perl -v || \
+#$INSTALL_DIR/installPerl.sh
