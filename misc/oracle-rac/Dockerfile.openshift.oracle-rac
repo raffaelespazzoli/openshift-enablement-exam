@@ -24,8 +24,6 @@
 # ---------------
 
 FROM docker-registry.default.svc.cluster.local:5000/oracle-rac/oracle-rac-base-2:latest  
-    
-VOLUME ["$INSTALL_DIR_BINARIES"]
 
 # Copy binaries
 # -------------
