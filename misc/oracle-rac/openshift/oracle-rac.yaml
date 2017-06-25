@@ -60,7 +60,7 @@ spec:
       containers:
       - name: oracle-rac
         imagePullPolicy: Always
-        image: 172.30.243.149:5000/oracle-rac/oracle-rac-base-2:latest
+        image: 172.30.243.149:5000/oracle-rac/oracle-rac:latest
         ports:
         - containerPort: 1521
           name: oracle  
