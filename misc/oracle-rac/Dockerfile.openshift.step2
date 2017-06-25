@@ -47,6 +47,10 @@ RUN $ORACLE_INVENTORY_DIR/orainstRoot.sh && \
     $ORACLE_HOME/root.sh
 
 USER oracle
+
+RUN make -f $ORACLE_HOME/rdbms/lib/ins_rdbms.mk rac_on && \
+    make -f $ORACLE_HOME/rdbms/lib/ins_rdbms.mk ioracle
+
 WORKDIR /home/oracle
 
 VOLUME ["$ORACLE_BASE/oradata"]

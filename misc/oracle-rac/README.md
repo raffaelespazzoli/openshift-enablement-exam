@@ -106,6 +106,17 @@ these builds take a lot of local space on the nodes that is not garbage collecte
 ```
 docker volume rm `docker volume ls | grep local | awk '{print $2}'`
 ```
+# Run oracle rac
+
+to start orcale-rac, run the following commads:
+```
+oc create sa oracle-rac
+oc adm policy add-scc-to-user anyuid -z oracle-rac
+oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac --strategy=docker --context-dir=misc/oracle-rac -D "FROM oracle-rac-base-2:latest" 
+oc patch bc/oracle-rac-base-2 --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.openshift.oracle-rac" }}, "source" : { "dockerfile" : ""}}}'
+oc start-build oracle-rac-base-2 -F
+oc apply -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/oracle-rac/openshift/oracle-rac.yaml
+``` 
 
 
 # Build the image locally -- not tested anymore

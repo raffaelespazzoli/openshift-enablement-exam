@@ -12,3 +12,8 @@ oadm create-bootstrap-project-template -o yaml > template.yaml
 ```
 
 If you want deny all as your default
+
+
+# how to switch from one plugin to another
+
+ansible nodes -b -i hosts -m service -a name=
