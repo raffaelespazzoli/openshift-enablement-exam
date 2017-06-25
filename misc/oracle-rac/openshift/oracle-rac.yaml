@@ -57,6 +57,16 @@ spec:
       labels:
         app: oracle-rac
     spec:
+      volumes:
+      - name: rac1
+        persistentVolumeClaim:
+          claimName: rac1   
+      - name: rac2
+        persistentVolumeClaim:
+          claimName: rac2
+      - name: rac3
+        persistentVolumeClaim:
+          claimName: rac3
       containers:
       - name: oracle-rac
         imagePullPolicy: Always
@@ -116,22 +126,12 @@ spec:
 #          capabilities:
 #            add: 
 #            - ALL  
-  serviceAccountName: oracle-rac        
-  volumes:
-  - name: rac1
-    persistentVolumeClaim:
-      claimName: rac1   
-  - name: rac2
-    persistentVolumeClaim:
-      claimName: rac2
-  - name: rac3
-    persistentVolumeClaim:
-      claimName: rac3                                               
+  serviceAccountName: oracle-rac                                                       
   volumeClaimTemplates:
   - metadata:
       name: oracledata
     spec:
-      storageClassName: iscsi
+#      storageClassName: iscsi
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:

@@ -23,11 +23,12 @@
 # Pull base image
 # ---------------
 
-FROM docker-registry.default.svc.cluster.local:5000/oracle-rac/oracle-rac-base-2:latest  
+FROM 172.30.243.149:5000/oracle-rac/oracle-rac-base-2:latest  
 
 # Copy binaries
 # -------------
 COPY setuprac.sh $INSTALL_DIR/
+RUN chmod +x $INSTALL_DIR/setuprac.sh
     
 # Define default command to start Oracle Database. 
 CMD $INSTALL_DIR/setuprac.sh
