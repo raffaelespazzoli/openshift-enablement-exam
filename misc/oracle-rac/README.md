@@ -112,6 +112,7 @@ to start orcale-rac, run the following commads:
 ```
 oc create sa oracle-rac
 oc adm policy add-scc-to-user anyuid -z oracle-rac
+oc adm policy add-scc-to-user hostaccess -z oracle-rac
 oc new-build https://github.com/raffaelespazzoli/openshift-enablement-exam --name=oracle-rac --strategy=docker --context-dir=misc/oracle-rac -D "FROM oracle-rac-base-2:latest" 
 oc patch bc/oracle-rac --patch '{"spec" : { "strategy" : { "dockerStrategy" : { "dockerfilePath" : "Dockerfile.openshift.oracle-rac" }}, "source" : { "dockerfile" : ""}}}'
 oc start-build oracle-rac -F

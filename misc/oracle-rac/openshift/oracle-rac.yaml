@@ -57,6 +57,7 @@ spec:
       labels:
         app: oracle-rac
     spec:
+      serviceAccountName: oracle-rac
       volumes:
       - name: rac1
         persistentVolumeClaim:
@@ -67,8 +68,13 @@ spec:
       - name: rac3
         persistentVolumeClaim:
           claimName: rac3
+      - name: cgroups
+        hostPath:
+          path: /sys/fs/cgroup    
       containers:
       - name: oracle-rac
+        securityContext:
+          runAsUser: 0
         imagePullPolicy: Always
         image: 172.30.243.149:5000/oracle-rac/oracle-rac:latest
         ports:
@@ -120,13 +126,16 @@ spec:
         - name: rac2
           mountPath: /oraclenfs/asm2
         - name: rac3
-          mountPath: /oraclenfs/asm3 
+          mountPath: /oraclenfs/asm3
+        - name: cgroups
+          mountPath: /sys/fs/cgroup
+          readOnly: true   
 #        securityContext:
 #          privileged: true
 #          capabilities:
 #            add: 
 #            - ALL  
-  serviceAccountName: oracle-rac                                                       
+                                                       
   volumeClaimTemplates:
   - metadata:
       name: oracledata

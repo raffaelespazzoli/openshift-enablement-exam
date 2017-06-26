@@ -2,12 +2,13 @@
 
 
 echo running systemd
-/usr/lib/systemd/systemd --system --unit=multi-user.target
+/usr/lib/systemd/systemd --system --unit=multi-user.target &
+
+sleep 5
 
 echo
 echo running grid config
-sudo -E -u grid ' \
-/u01/app/12.1.0/grid/crs/config/config.sh -waitforcompletion \
+sudo -E -u grid '/u01/app/12.1.0/grid/crs/config/config.sh -waitforcompletion \
 -ignoreSysPrereqs -ignoreprereq -silent \
 "INVENTORY_LOCATION=$ORACLE_INVENTORY_DIR" \
 "oracle.install.option=CRS_CONFIG" \
