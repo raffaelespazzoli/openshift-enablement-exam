@@ -1,7 +1,11 @@
 set -e
 
+
+echo running systemd
 /usr/lib/systemd/systemd --system --unit=multi-user.target
 
+echo
+echo running grid config
 sudo -E -u grid ' \
 /u01/app/12.1.0/grid/crs/config/config.sh -waitforcompletion \
 -ignoreSysPrereqs -ignoreprereq -silent \
@@ -33,11 +37,17 @@ sudo -E -u grid ' \
 "oracle.install.asm.diskGroup.diskDiscoveryString=/dev/asmdisks/*,/oraclenfs/asm*" \
 "oracle.install.asm.useExistingDiskGroup=false"'
 
+echo
+echo running root.sh
 sh $GRID_HOME/root.sh
 
+echo
+echo running configToAllCommands
 sudo -E -u grid $GRID_HOME/cfgtoollogs/configToolAllCommands \
 RESPONSE_FILE=$GRID_BASE/tools_config.rsp
 
+echo
+echo running oracle config
 sudo -E -u oracle $ORACLE_BASE/$RUN_FILE
 
 wait
