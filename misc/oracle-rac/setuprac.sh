@@ -8,7 +8,8 @@ sleep 5
 
 echo
 echo running grid config
-sudo -E -u grid '$GRID_HOME/crs/config/config.sh -waitforcompletion \
+
+sudo -E -u grid $GRID_HOME/crs/config/config.sh -waitforcompletion \
 -ignoreSysPrereqs -ignoreprereq -silent \
 "INVENTORY_LOCATION=$ORACLE_INVENTORY_DIR" \
 "oracle.install.option=CRS_CONFIG" \
@@ -36,7 +37,7 @@ sudo -E -u grid '$GRID_HOME/crs/config/config.sh -waitforcompletion \
 "oracle.install.asm.diskGroup.redundancy=EXTERNAL" \
 "oracle.install.asm.diskGroup.disks=/dev/asmdisks/asm-clu-121-DATA-disk1,/dev/asmdisks/asm-clu-121-DATA-disk2,/dev/asmdisks/asm-clu-121-DATA-disk3" \
 "oracle.install.asm.diskGroup.diskDiscoveryString=/dev/asmdisks/*,/oraclenfs/asm*" \
-"oracle.install.asm.useExistingDiskGroup=false"'
+"oracle.install.asm.useExistingDiskGroup=false"
 
 echo
 echo running root.sh
