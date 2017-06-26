@@ -1,3 +1,5 @@
+set -e
+
 /usr/lib/systemd/systemd --system --unit=multi-user.target
 
 sudo -E -u grid ' \
@@ -36,4 +38,6 @@ sh $GRID_HOME/root.sh
 sudo -E -u grid $GRID_HOME/cfgtoollogs/configToolAllCommands \
 RESPONSE_FILE=$GRID_BASE/tools_config.rsp
 
-$ORACLE_BASE/$RUN_FILE
+sudo -E -u oracle $ORACLE_BASE/$RUN_FILE
+
+wait
