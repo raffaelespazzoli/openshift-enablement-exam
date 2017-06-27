@@ -53,3 +53,4 @@ echo running oracle config
 sudo -E -u oracle $ORACLE_BASE/$RUN_FILE
 
 wait
+pause
