@@ -41,6 +41,8 @@ spec:
   ports:
   - port: 1521
     name: oracle
+  - port: 22
+    name: ssh    
   clusterIP: None
   selector:
     app: oracle-rac
@@ -95,7 +97,9 @@ spec:
         image: 172.30.243.149:5000/oracle-rac/oracle-rac:latest
         ports:
         - containerPort: 1521
-          name: oracle  
+          name: oracle-db
+        - containerPort: 22
+          name: ssh            
         env:
         - name: POD_NAME
           valueFrom:
