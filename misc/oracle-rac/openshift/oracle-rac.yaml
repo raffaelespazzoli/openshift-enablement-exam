@@ -45,6 +45,19 @@ spec:
   selector:
     app: oracle-rac
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oracle-rac-svc
+  labels:
+    app: oracle-rac
+spec:
+  ports:
+  - port: 1521
+    name: oracle
+  selector:
+    app: oracle-rac    
+---
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
