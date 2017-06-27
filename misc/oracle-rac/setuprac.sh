@@ -1,10 +1,10 @@
 # set -e
 
 
-echo running systemd
-/usr/lib/systemd/systemd --system --unit=multi-user.target &
+#echo running systemd
+#/usr/lib/systemd/systemd --system --unit=multi-user.target &
 
-sleep 5
+#sleep 5
 
 echo
 echo running grid config
