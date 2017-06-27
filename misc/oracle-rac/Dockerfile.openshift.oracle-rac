@@ -27,7 +27,7 @@ FROM docker-registry.default.svc.cluster.local:5000/oracle-rac/oracle-rac-base-2
 
 
 RUN make -f $ORACLE_HOME/rdbms/lib/ins_rdbms.mk rac_on && \
-    make -f $ORACLE_HOME/rdbms/lib/ins_rdbms.mk ioracle'
+    make -f $ORACLE_HOME/rdbms/lib/ins_rdbms.mk ioracle
 
 USER root
 # Copy binaries
