@@ -6,6 +6,9 @@
 
 #sleep 5
 
+echo starting sshd
+sshd
+
 echo
 echo running grid config
 
