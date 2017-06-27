@@ -25,10 +25,14 @@
 
 FROM docker-registry.default.svc.cluster.local:5000/oracle-rac/oracle-rac-base-2:latest  
 
+
+RUN make -f $ORACLE_HOME/rdbms/lib/ins_rdbms.mk rac_on && \
+    make -f $ORACLE_HOME/rdbms/lib/ins_rdbms.mk ioracle'
+
+USER root
 # Copy binaries
 # -------------
 COPY setuprac.sh $INSTALL_DIR/
-USER root
 RUN chmod +x $INSTALL_DIR/setuprac.sh
     
 # Define default command to start Oracle Database. 

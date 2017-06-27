@@ -75,6 +75,9 @@ spec:
       - name: oracle-rac
         securityContext:
           runAsUser: 0
+          capabilities:
+            add:
+            - SYS_ADMIN
         imagePullPolicy: Always
         image: 172.30.243.149:5000/oracle-rac/oracle-rac:latest
         ports:
@@ -129,13 +132,7 @@ spec:
           mountPath: /oraclenfs/asm3
         - name: cgroups
           mountPath: /sys/fs/cgroup
-          readOnly: true   
-#        securityContext:
-#          privileged: true
-#          capabilities:
-#            add: 
-#            - ALL  
-                                                       
+          readOnly: true                                
   volumeClaimTemplates:
   - metadata:
       name: oracledata
