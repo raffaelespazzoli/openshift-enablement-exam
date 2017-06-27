@@ -27,7 +27,7 @@ sudo -E -u grid $GRID_HOME/crs/config/config.sh -waitforcompletion \
 "oracle.install.crs.config.gpnp.gnsOption=CREATE_NEW_GNS" \
 "oracle.install.crs.config.gpnp.gnsSubDomain=oracle-rac.svc.cluster.local" \
 "oracle.install.crs.config.gpnp.gnsVIPAddress=oracle-rac-svc.oracle-rac.svc.cluster.local" \
-"oracle.install.crs.config.clusterNodes=rac1:AUTO" \
+"oracle.install.crs.config.clusterNodes=oracle-rac-0.oracle-rac.oracle-rac.svc.cluster.local:AUTO" \
 "oracle.install.crs.config.networkInterfaceList=eth-pub:$POD_IP:1,eth-priv:POD_IP:2" \
 "oracle.install.crs.config.storageOption=LOCAL_ASM_STORAGE" \
 "oracle.install.crs.config.useIPMI=false" \
