@@ -157,3 +157,21 @@ docker push docker-registry-default.192.168.99.100.xip.io:443/oracle-rac/oracle-
 https://github.com/Seth-Miller/12c-rac-docker
 https://github.com/s4ragent/rac_on_xx
 
+adding a nic:
+https://access.redhat.com/solutions/8672
+
+```
+See an example below of an alias interface with IP address 172.31.33.1/255.255.255.0
+
+Raw
+# cat /etc/sysconfig/network-scripts/ifcfg-eth0\:1 
+DEVICE=eth0:1
+ONPARENT=yes
+IPADDR=172.31.33.1
+NETMASK=255.255.255.0
+Then bring up the interface to make the changes take effect:
+
+Raw
+# ifup eth0:1
+```
+
