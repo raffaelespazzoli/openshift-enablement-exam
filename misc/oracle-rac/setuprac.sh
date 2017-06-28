@@ -8,11 +8,12 @@
 
 echo starting sshd
 /usr/sbin/sshd
+sudo -i -E -u grid ssh $POD_NAME date
 
 echo
 echo running grid config
 
-sudo -E -u grid $GRID_HOME/crs/config/config.sh -waitforcompletion \
+sudo -i -E -u grid $GRID_HOME/crs/config/config.sh -waitforcompletion \
 -ignoreSysPrereqs -ignoreprereq -silent \
 "INVENTORY_LOCATION=$ORACLE_INVENTORY_DIR" \
 "oracle.install.option=CRS_CONFIG" \
@@ -31,7 +32,7 @@ sudo -E -u grid $GRID_HOME/crs/config/config.sh -waitforcompletion \
 "oracle.install.crs.config.gpnp.gnsSubDomain=oracle-rac.svc.cluster.local" \
 "oracle.install.crs.config.gpnp.gnsVIPAddress=oracle-rac-svc.oracle-rac.svc.cluster.local" \
 "oracle.install.crs.config.clusterNodes=oracle-rac-0.oracle-rac.oracle-rac.svc.cluster.local:AUTO" \
-"oracle.install.crs.config.networkInterfaceList=eth-pub:$POD_IP:1,eth-priv:POD_IP:2" \
+"oracle.install.crs.config.networkInterfaceList=eth-pub:$POD_IP:1,eth-priv:$POD_IP:2" \
 "oracle.install.crs.config.storageOption=LOCAL_ASM_STORAGE" \
 "oracle.install.crs.config.useIPMI=false" \
 "oracle.install.asm.SYSASMPassword=oracle_4U" \
