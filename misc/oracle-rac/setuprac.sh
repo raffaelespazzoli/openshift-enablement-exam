@@ -7,7 +7,7 @@
 #sleep 5
 
 echo starting sshd
-sshd
+/usr/sbin/sshd
 
 echo
 echo running grid config

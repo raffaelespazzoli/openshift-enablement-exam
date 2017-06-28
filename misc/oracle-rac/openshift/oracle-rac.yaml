@@ -85,7 +85,11 @@ spec:
           claimName: rac3
       - name: cgroups
         hostPath:
-          path: /sys/fs/cgroup    
+          path: /sys/fs/cgroup
+      - name: ssh-secret
+        secret:
+          defaultMode: 0600
+          secretName: ssh-secret        
       containers:
       - name: oracle-rac
         securityContext:
@@ -149,7 +153,10 @@ spec:
           mountPath: /oraclenfs/asm3
         - name: cgroups
           mountPath: /sys/fs/cgroup
-          readOnly: true                                
+          readOnly: true
+        - name: ssh-secret
+          mountPath: /home/grid/.ssh
+          readOnly: true                                          
   volumeClaimTemplates:
   - metadata:
       name: oracledata

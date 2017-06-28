@@ -108,6 +108,17 @@ docker volume rm `docker volume ls | grep local | awk '{print $2}'`
 ```
 # Run oracle rac
 
+create a ssh secret to e used for inter-pod communication
+```
+mkdir tmp 
+cd tmp
+ssh-keygen -t rsa -N '' -f ./id_rsa
+cp id_rsa.pub authorized_keys
+oc create secret generic ssh-secret --from-file=.
+cd ..
+rm -rf tmp
+```
+
 to start orcale-rac, run the following commads:
 ```
 oc create sa oracle-rac

@@ -31,10 +31,14 @@ RUN make -f $ORACLE_HOME/rdbms/lib/ins_rdbms.mk rac_on && \
 
 USER root
 RUN yum install -y openssh-server && \
-    yum clean all
+    yum clean all && \
+    mkdir -p /var/run/sshd && \
+    ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
+    
 # Copy binaries
 # -------------
 COPY setuprac.sh $INSTALL_DIR/
+COPY sshd_config ssh_config /etc/ssh
 RUN chmod +x $INSTALL_DIR/setuprac.sh
 
 EXPOSE 22
