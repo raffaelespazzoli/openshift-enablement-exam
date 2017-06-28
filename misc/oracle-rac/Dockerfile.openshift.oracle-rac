@@ -38,7 +38,7 @@ RUN yum install -y openssh-server && \
 # Copy binaries
 # -------------
 COPY setuprac.sh $INSTALL_DIR/
-COPY sshd_config ssh_config /etc/ssh
+COPY sshd_config ssh_config /etc/ssh/
 RUN chmod +x $INSTALL_DIR/setuprac.sh
 
 EXPOSE 22
