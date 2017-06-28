@@ -47,7 +47,7 @@ SyslogFacility AUTHPRIV
 
 #LoginGraceTime 2m
 PermitRootLogin without-password
-#StrictModes yes
+StrictModes no
 #MaxAuthTries 6
 #MaxSessions 10
 
