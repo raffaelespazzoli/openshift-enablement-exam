@@ -166,3 +166,28 @@ spec:
       resources:
         requests:
           storage: 1Gi
+---
+kind: DeploymentConfig
+apiVersion: v1
+metadata:
+  name: scan-forwarder
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: scan-forwarder
+    spec:
+      containers:
+        - name: scan-forwarder
+          image: netroby/docker-gotcpforward
+          ports:
+            - name: scan-port
+              containerPort: 1521
+          cmd:
+          - "/go/bin/gotcpforward"
+          - "-l"
+          - ":1521"
+          - "-r"
+          - oracle-rac-svc:1521  
+          imagePullPolicy: "IfNotPresent"         

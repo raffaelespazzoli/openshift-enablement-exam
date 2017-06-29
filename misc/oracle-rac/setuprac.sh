@@ -6,6 +6,13 @@
 
 #sleep 5
 
+# echo configuring priv and scan
+# cat /etc/sysconfig/network-scripts/ifcfg-eth0-priv << EOF
+# DEVICE=eth0-priv
+# ONPARENT=yes
+# IPADDR=172.31.33.1
+# NETMASK=255.255.255.0
+
 echo starting sshd
 /usr/sbin/sshd
 sudo -i -E -u grid ssh $POD_NAME date
@@ -24,7 +31,7 @@ sudo -i -E -u grid $GRID_HOME/crs/config/config.sh -waitforcompletion \
 "oracle.install.asm.OSDBA=asmdba" \
 "oracle.install.asm.OSOPER=asmoper" \
 "oracle.install.asm.OSASM=asmadmin" \
-"oracle.install.crs.config.gpnp.scanName=oracle-rac-0.oracle-rac.oracle-rac.svc.cluster.local" \
+"oracle.install.crs.config.gpnp.scanName=scan-forwarder.oracle-rac.oracle-rac.svc.cluster.local" \
 "oracle.install.crs.config.gpnp.scanPort=1521 " \
 "oracle.install.crs.config.ClusterType=STANDARD" \
 "oracle.install.crs.config.clusterName=oracle-rac" \
