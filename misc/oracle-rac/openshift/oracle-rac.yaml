@@ -167,11 +167,12 @@ spec:
         requests:
           storage: 1Gi
 ---
-kind: DeploymentConfig
-apiVersion: v1
+kind: StatefulSet
+apiVersion: apps/v1beta1
 metadata:
   name: scan-forwarder
 spec:
+  serviceName: scan-forwarder
   replicas: 1
   template:
     metadata:
@@ -184,10 +185,24 @@ spec:
           ports:
             - name: scan-port
               containerPort: 1521
-          cmd:
+          command:
           - "/go/bin/gotcpforward"
           - "-l"
           - ":1521"
           - "-r"
           - oracle-rac-svc:1521  
-          imagePullPolicy: "IfNotPresent"         
+          imagePullPolicy: "IfNotPresent"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scan-forwarder
+  labels:
+    app: scan-forwarder
+spec:
+  clusterIP: None
+  ports:
+  - port: 1521
+    name: scan-port
+  selector:
+    app: scan-forwarder           
