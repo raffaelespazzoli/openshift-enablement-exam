@@ -96,6 +96,7 @@ spec:
           capabilities:
             add:
             - SYS_ADMIN
+            - NET_ADMIN
         imagePullPolicy: Always
         image: 172.30.243.149:5000/oracle-rac/oracle-rac:latest
         ports:
@@ -145,11 +146,11 @@ spec:
         - name: oracledata
           mountPath: /opt/oracle/oradata
         - name: rac1
-          mountPath: /oraclenfs/asm1
-        - name: rac2
-          mountPath: /oraclenfs/asm2
-        - name: rac3
-          mountPath: /oraclenfs/asm3
+          mountPath: /oraclenfs
+#        - name: rac2
+#          mountPath: /oraclenfs/asm2
+#        - name: rac3
+#          mountPath: /oraclenfs/asm3
         - name: cgroups
           mountPath: /sys/fs/cgroup
           readOnly: true

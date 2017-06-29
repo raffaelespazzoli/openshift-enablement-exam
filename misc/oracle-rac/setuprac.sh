@@ -9,6 +9,8 @@
 echo starting sshd
 /usr/sbin/sshd
 sudo -i -E -u grid ssh $POD_NAME date
+sudo -i -E -u grid ssh $POD_IP date
+sudo -i -E -u grid ssh oracle-rac-0.oracle-rac.oracle-rac.svc.cluster.local date
 
 echo
 echo running grid config
@@ -22,17 +24,17 @@ sudo -i -E -u grid $GRID_HOME/crs/config/config.sh -waitforcompletion \
 "oracle.install.asm.OSDBA=asmdba" \
 "oracle.install.asm.OSOPER=asmoper" \
 "oracle.install.asm.OSASM=asmadmin" \
-"oracle.install.crs.config.gpnp.scanName=oracle-rac.oracle-rac.svc.cluster.local" \
+"oracle.install.crs.config.gpnp.scanName=oracle-rac-svc.oracle-rac.svc.cluster.local" \
 "oracle.install.crs.config.gpnp.scanPort=1521 " \
 "oracle.install.crs.config.ClusterType=STANDARD" \
 "oracle.install.crs.config.clusterName=oracle-rac" \
-"oracle.install.crs.config.gpnp.configureGNS=true" \
-"oracle.install.crs.config.autoConfigureClusterNodeVIP=true" \
+"oracle.install.crs.config.gpnp.configureGNS=false" \
+"oracle.install.crs.config.autoConfigureClusterNodeVIP=false" \
 "oracle.install.crs.config.gpnp.gnsOption=CREATE_NEW_GNS" \
 "oracle.install.crs.config.gpnp.gnsSubDomain=oracle-rac.svc.cluster.local" \
 "oracle.install.crs.config.gpnp.gnsVIPAddress=oracle-rac-svc.oracle-rac.svc.cluster.local" \
 "oracle.install.crs.config.clusterNodes=oracle-rac-0.oracle-rac.oracle-rac.svc.cluster.local:AUTO" \
-"oracle.install.crs.config.networkInterfaceList=eth-pub:$POD_IP:1,eth-priv:$POD_IP:2" \
+"oracle.install.crs.config.networkInterfaceList=eth0:$POD_IP:1,eth0:$POD_IP:2" \
 "oracle.install.crs.config.storageOption=LOCAL_ASM_STORAGE" \
 "oracle.install.crs.config.useIPMI=false" \
 "oracle.install.asm.SYSASMPassword=oracle_4U" \
