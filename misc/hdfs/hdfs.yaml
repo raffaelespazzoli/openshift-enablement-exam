@@ -1,0 +1,256 @@
+#---
+#kind: DeploymentConfig
+#apiVersion: v1
+#metadata:
+#  labels:
+#    app: resourcemanager
+#  name: resourcemanager
+#spec:
+#  replicas: 1
+#  template:
+#    metadata:
+#      name: resourcemanager
+#      labels:
+#        app: resourcemanager
+#    spec:
+#      serviceAccount: default
+#      volumes:
+#        - name: conf
+#          configMap:
+#            name: hadoopenv
+#      containers:
+#        - name: namenode
+#          image: bde2020/hadoop-resourcemanager:1.1.0-hadoop2.7.1-java8
+#          env:
+#            - name: CORE_CONF_fs_defaultFS
+#              value: hdfs://namenode:8020
+#            - name: CORE_CONF_hadoop_http_staticuser_user
+#              value: root
+#            - name: CORE_CONF_hadoop_proxyuser_hue_hosts
+#              value: "*"
+#            - name: CORE_CONF_hadoop_proxyuser_hue_groups
+#              value: "*" 
+#            - name: YARN_CONF_yarn_log___aggregation___enable
+#              value: "true"
+#            - name: YARN_CONF_yarn_resourcemanager_recovery_enabled
+#              value: "true"
+#            - name: YARN_CONF_yarn_resourcemanager_store_class
+#              value: "org.apache.hadoop.yarn.server.resourcemanager.recovery.FileSystemRMStateStore"
+#            - name: YARN_CONF_yarn_resourcemanager_fs_state___store_uri
+#              value: "/rmstate"  
+#            - name: YARN_CONF_yarn_nodemanager_remote___app___log___dir
+#              value: /app-logs
+#            - name: YARN_CONF_yarn_log_server_url
+#              value: http://historyserver:8188/applicationhistory/logs/
+#            - name: YARN_CONF_yarn_timeline___service_enabled
+#              value: "true"
+#            - name: YARN_CONF_yarn_timeline___service_generic___application___history_enabled
+#              value: "true"  
+#            - name: YARN_CONF_yarn_resourcemanager_system___metrics___publisher_enabled
+#              value: "true"
+#            - name: YARN_CONF_yarn_resourcemanager_hostname
+#              value: resourcemanager
+#            - name: YARN_CONF_yarn_timeline___service_hostname
+#              value: historyserver
+#            - name: YARN_CONF_yarn_resourcemanager_address
+#              value: resourcemanager:8032 
+#            - name: YARN_CONF_yarn_resourcemanager_scheduler_address
+#              value: resourcemanager:8030
+#            - name: YARN_CONF_yarn_resourcemanager_resource__tracker_address
+#              value: resourcemanager:8031 
+#          ports:
+#            - containerPort: 8030
+#            - containerPort: 8031
+#            - containerPort: 8032
+#            - containerPort: 8033
+#            - containerPort: 8088            
+#          envFrom:
+#          - configMapRef:
+#              name: conf
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: resourcemanager
+#  labels:
+#    app: resourcemanager
+#spec:
+#  ports:
+#  - port: 8088
+#    targetPort: 8088
+#  selector:
+#    app: resourcemanager
+---
+kind: DeploymentConfig
+apiVersion: v1
+metadata:
+  labels:
+    app: namenode
+  name: namenode
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: namenode
+      labels:
+        app: namenode
+    spec:
+      serviceAccount: default
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: conf
+          configMap:
+            name: hadoopenv
+      containers:
+        - name: namenode
+          image: bde2020/hadoop-namenode:1.1.0-hadoop2.8-java8
+          ports:
+            - containerPort: 50070
+            - containerPort: 8020
+          env:
+            - name: CLUSTER_NAME
+              value: test
+            - name: CORE_CONF_fs_defaultFS
+              value: hdfs://namenode:8020
+            - name: CORE_CONF_hadoop_http_staticuser_user
+              value: root
+            - name: CORE_CONF_hadoop_proxyuser_hue_hosts
+              value: "*"
+            - name: CORE_CONF_hadoop_proxyuser_hue_groups
+              value: "*"                                                        
+            - name: HDFS_CONF_dfs_webhdfs_enabled
+              value: "true"
+            - name: HDFS_CONF_dfs_permissions_enabled
+              value: "false"               
+#            - name: HDFS_CONF_dfs_namenode_datanode_registration_ip-hostname-check
+#              value: "false"                    
+          envFrom:
+          - configMapRef:
+              name: conf                
+          volumeMounts:
+            - name: data
+              mountPath: /hadoop/dfs/name 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: namenode
+  labels:
+    app: namenode
+spec:
+  ports:
+  - name: ipc
+    port: 8020
+    targetPort: 8020
+  - name: http
+    port: 50070
+    targetPort: 50070    
+  selector:
+    app: namenode
+---
+kind: StatefulSet
+apiVersion: apps/v1beta1
+metadata:
+  labels:
+    app: datanode
+  name: datanode
+spec:
+  serviceName: datanode
+  replicas: 1
+  template:
+    metadata:
+      name: datanode
+      labels:
+        app: datanode
+    spec:
+      serviceAccount: default
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: conf
+          configMap:
+            name: hadoopenv
+      containers:
+        - name: datanode
+          image: bde2020/hadoop-datanode:1.1.0-hadoop2.8-java8
+          ports:
+            - containerPort: 50075
+          env:
+            - name: CORE_CONF_fs_defaultFS
+              value: hdfs://namenode:8020
+            - name: CORE_CONF_hadoop_http_staticuser_user
+              value: root
+            - name: CORE_CONF_hadoop_proxyuser_hue_hosts
+              value: "*"
+            - name: CORE_CONF_hadoop_proxyuser_hue_groups
+              value: "*"                                                        
+            - name: HDFS_CONF_dfs_webhdfs_enabled
+              value: "true"
+            - name: HDFS_CONF_dfs_permissions_enabled
+              value: "false"              
+          envFrom:
+          - configMapRef:
+              name: conf                
+          volumeMounts:
+            - name: data
+              mountPath: /hadoop/dfs/name
+#        - name: nodemanager    
+#          image: bde2020/hadoop-nodemanager:1.1.0-hadoop2.7.1-java8
+#          ports:
+#            - containerPort: 8042
+#          env:
+#            - name: CORE_CONF_fs_defaultFS
+#              value: hdfs://namenode:8020
+#            - name: CORE_CONF_hadoop_http_staticuser_user
+#              value: root
+#            - name: CORE_CONF_hadoop_proxyuser_hue_hosts
+#              value: "*"
+#            - name: CORE_CONF_hadoop_proxyuser_hue_groups
+#              value: "*" 
+#            - name: YARN_CONF_yarn_log___aggregation___enable
+#              value: "true"
+#            - name: YARN_CONF_yarn_resourcemanager_recovery_enabled
+#              value: "true"
+#            - name: YARN_CONF_yarn_resourcemanager_store_class
+#              value: "org.apache.hadoop.yarn.server.resourcemanager.recovery.FileSystemRMStateStore"
+#            - name: YARN_CONF_yarn_resourcemanager_fs_state___store_uri
+#              value: "/rmstate"  
+#            - name: YARN_CONF_yarn_nodemanager_remote___app___log___dir
+#              value: /app-logs
+#            - name: YARN_CONF_yarn_log_server_url
+#              value: http://historyserver:8188/applicationhistory/logs/
+#            - name: YARN_CONF_yarn_timeline___service_enabled
+#              value: "true"
+#            - name: YARN_CONF_yarn_timeline___service_generic___application___history_enabled
+#              value: "true"  
+#            - name: YARN_CONF_yarn_resourcemanager_system___metrics___publisher_enabled
+#              value: "true"
+#            - name: YARN_CONF_yarn_resourcemanager_hostname
+#              value: resourcemanager
+#            - name: YARN_CONF_yarn_timeline___service_hostname
+#              value: historyserver
+#            - name: YARN_CONF_yarn_resourcemanager_address
+#              value: resourcemanager:8032 
+#            - name: YARN_CONF_yarn_resourcemanager_scheduler_address
+#              value: resourcemanager:8030
+#            - name: YARN_CONF_yarn_resourcemanager_resource__tracker_address
+#              value: resourcemanager:8031                                                     
+#          envFrom:
+#          - configMapRef:
+#              name: conf          
+---              
+apiVersion: v1
+kind: Service
+metadata:
+  name: datanode
+  labels:
+    app: datanode
+spec:
+  ports:
+  - port: 50075
+    name: hdfs
+  clusterIP: None
+  selector:
+    app: datanode              
+              

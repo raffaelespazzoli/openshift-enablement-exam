@@ -29,7 +29,7 @@ deployment_type=openshift-enterprise
 # use this to lookup the latest exact version of the container images, which is the tag actually used to configure
 # the cluster. For RPM installations we just verify the version detected in your configured repos matches this
 # release.
-openshift_release=v3.5
+openshift_release=v3.6
 
 # Specify an exact container image tag to install or configure.
 # WARNING: This value will be used for all hosts in containerized environments, even those that have another version installed.
@@ -386,7 +386,7 @@ openshift_hosted_metrics_storage_kind=dynamic
 # Logging deployment
 #
 # Currently logging deployment is disabled by default, enable it by setting this
-openshift_hosted_logging_deploy=true
+openshift_hosted_logging_deploy=false
 #openshift_hosted_logging_deployer_version=3.3.0
 #
 # Logging storage config
@@ -414,7 +414,7 @@ openshift_hosted_logging_deploy=true
 #
 # Option C - Dynamic -- If openshift supports dynamic volume provisioning for
 # your cloud platform use this.
-openshift_hosted_logging_storage_kind=dynamic
+#openshift_hosted_logging_storage_kind=dynamic
 #
 # Option D - none -- Logging will use emptydir volumes which are destroyed when
 # pods are deleted
@@ -599,6 +599,20 @@ osm_cluster_network_cidr=10.1.0.0/16
 
 # Enable API service auditing, available as of 3.2
 #openshift_master_audit_config={"basicAuditEnabled": true}
+
+#service brocker settings
+
+openshift_enable_service_catalog=true
+openshift_template_service_broker_namespaces=['openshift']
+
+openshift_hosted_etcd_storage_kind=nfs
+openshift_hosted_etcd_storage_nfs_options="*(rw,root_squash,sync,no_wdelay)"
+openshift_hosted_etcd_storage_nfs_directory=/exports 
+openshift_hosted_etcd_storage_volume_name=etcd-vol2 
+openshift_hosted_etcd_storage_access_modes=["ReadWriteOnce"]
+openshift_hosted_etcd_storage_volume_size=1G
+openshift_hosted_etcd_storage_labels={'storage': 'etcd'}
+
 
 # host group for masters
 [masters]
