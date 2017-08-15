@@ -6,5 +6,5 @@ ansible nodes -b -i hosts -m shell -a "yum install -y subscription-manager && su
 ansible 'nodes:!masters' -i hosts -b -m copy -a "src=docker-storage-setup dest=/etc/sysconfig/docker-storage-setup"
 #this is non-idempotent
 ansible 'nodes:!masters' -i hosts -b -m shell -a "yum install -y docker && docker-storage-setup"
-ansible nodes -b -i hosts -m service -a "name=dockerd, enabled=true, state=started"
+ansible nodes -b -i hosts -m service -a "name=docker enabled=true state=started"
 ansible nodes -b -i hosts -m shell -a "reboot"
