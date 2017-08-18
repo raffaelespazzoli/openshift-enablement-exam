@@ -614,6 +614,10 @@ openshift_hosted_etcd_storage_volume_size=1G
 openshift_hosted_etcd_storage_labels={'storage': 'etcd'}
 
 
+# checks
+
+openshift_disable_check=docker_storage,memory_availability
+
 # host group for masters
 [masters]
 master[1:3]
