@@ -602,7 +602,7 @@ osm_cluster_network_cidr=10.1.0.0/16
 
 #service brocker settings
 
-openshift_enable_service_catalog=true
+openshift_enable_service_catalog=false
 openshift_template_service_broker_namespaces=['openshift']
 
 openshift_hosted_etcd_storage_kind=nfs
@@ -616,7 +616,7 @@ openshift_hosted_etcd_storage_labels={'storage': 'etcd'}
 
 # checks
 
-openshift_disable_check=docker_storage,memory_availability
+openshift_disable_check=docker_storage,memory_availability,disk_availability
 
 # host group for masters
 [masters]
