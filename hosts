@@ -105,12 +105,12 @@ openshift_hosted_manage_registry=true
 openshift_hosted_metrics_deploy=true
 #openshift_hosted_metrics_deployer_version=3.3.0
 openshift_hosted_metrics_storage_kind=dynamic
-openshift_hosted_metrics_storage_volume_size: 10Gi
+openshift_hosted_metrics_storage_volume_size= 10Gi
 openshift_metrics_hawkular_replicas=2
 openshift_metrics_cassandra_replicas=3
-openshift_metrics_hawkular_nodeselector: {"region":"infra"}
-openshift_metrics_cassandra_nodeselector: {"region":"infra"}
-openshift_metrics_heapster_nodeselector: {"region":"infra"}
+openshift_metrics_hawkular_nodeselector= {"region":"infra"}
+openshift_metrics_cassandra_nodeselector= {"region":"infra"}
+openshift_metrics_heapster_nodeselector= {"region":"infra"}
 
 
 # Logging deployment
@@ -181,6 +181,7 @@ openshift_template_service_broker_namespaces=['openshift']
 
 
 #cloudforms settings
+openshift_cfme_install_app=true
 
 # checks
 
