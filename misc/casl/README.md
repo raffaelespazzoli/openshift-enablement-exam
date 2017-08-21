@@ -1,6 +1,6 @@
 
 cd /home/rspazzol/git/casl-ansible/docker/control-host-openstack
-docker-compose up -d
+077333
 docker exec -it controlhostopenstack_control-host_1 bash
 openstack stack delete -y env1.casl.raffa.com
 ansible-playbook -vv -i /root/code/casl-ansible/inventory/raffa.casl.example.com/inventory /root/code/casl-ansible/playbooks/openshift/end-to-end.yml -e openstack_ssh_public_key=rspazzol-etl --private-key=.ssh/rspazzol-etl.pem
@@ -33,7 +33,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: nfs-dpv-pvc
 spec:
-  accessModes:
+  accessModes:232418
   - ReadWriteOnce
   resources:
     requests:
