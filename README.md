@@ -4,6 +4,13 @@ The following instructions will setup an OpenShift OCP 3.3 environment on Google
 
 ![GCP reference architecture](./media/OSE-on-GCE-Architecture-v0.3.png)
 
+## 3.6 changes
+
+updated to 3.6
+service catalog does not seem to install so it's disabled
+you can now choose to install gluster with the following variable GLUSTER=yes
+
+
 ## Setup
 
 Clone this project
@@ -47,7 +54,7 @@ Set the RHEL pool you want to use:
 ```
 export RHN_SUB_POOL=8a85f9843e3d687a013e3ddd471a083e
 ```
-I recommed having a script that sets up all your variables:
+I recommend having a script that sets up all your variables:
 ```
 export GCLOUD_PROJECT=openshift-enablement-exam2
 export DNS_DOMAIN=gc2.raffa.systems
@@ -67,6 +74,15 @@ This is still a work in progress. Cd to `cloud-deployment` and run:
 ```
 ./gcp-cloud-provision.sh
 ```
+
+Provisioning Gluster CNS
+
+if you desire to provision Gluster CNS export the following variable
+```
+export GLUSTER=yes
+```
+This will create an addtional disk of 200GB in each of the nodes and deploy Gluster CNS there.
+
 
 ## Gcloud provisioning
 
@@ -90,7 +106,7 @@ Run the prepare bastion script.
 
 Shell in the bastion host
 ```
-ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
+ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL -o SendEnv=GLUSTER `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
 ```
 Run the prepare cluster script
 ```

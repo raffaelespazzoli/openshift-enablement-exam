@@ -6,7 +6,9 @@ masters
 nodes
 etcd
 nfs
+{% if {{ env[GLUSTER] }} equals 'yes' %}
 glusterfs
+{% endif %}
 
 # Set variables common for all OSEv3 hosts
 [OSEv3:vars]
@@ -193,9 +195,12 @@ openshift_cfme_install_app=true
 # checks
 openshift_disable_check=docker_storage,memory_availability,disk_availability
 
+{% if {{ env[GLUSTER] }} equals = 'yes' %}
 #gluster
 openshift_storage_glusterfs_namespace=glusterfs 
 openshift_storage_glusterfs_name=storage
+{% endif %}
+
 
 # host group for masters
 [masters]
@@ -215,5 +220,9 @@ master[1:3] openshift_schedulable=false openshift_node_labels="{'region': 'prima
 node[1:3] openshift_node_labels="{'region': 'primary'}" 
 infranode[1:3] openshift_node_labels="{'region': 'infra'}"
 
+
+{% if {{ env[GLUSTER] }} equals 'yes' %}
 [glusterfs] 
 node[1:3] glusterfs_ip="{{ ansible_default_ipv4.address }}" glusterfs_devices='[ "/dev/sdc" ]'
+{% endif %}
+

@@ -10,7 +10,7 @@ export BASTION_USERNAME=$a
 gcloud compute project-info add-metadata --metadata-from-file sshKeys=./my_id.pub
 
 # prepare bastion to receive variables
-ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo AcceptEnv RHN_USERNAME RHN_PASSWORD DNS_DOMAIN BASTION_USERNAME RHN_SUB_POOL | sudo tee -a /etc/ssh/sshd_config > /dev/null'
+ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo AcceptEnv RHN_USERNAME RHN_PASSWORD DNS_DOMAIN BASTION_USERNAME RHN_SUB_POOL GLUSTER | sudo tee -a /etc/ssh/sshd_config > /dev/null'
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` sudo systemctl restart sshd
 # disable host check on ssh connections
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo StrictHostKeyChecking no | sudo tee -a /etc/ssh/ssh_config > /dev/null'
