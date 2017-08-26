@@ -56,7 +56,7 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 # or
 #openshift_master_ldap_ca_file=<path to local ca file to use>
 
-
+osm_default_node_selector='region=primary'
 
 
 # GCE
@@ -114,9 +114,10 @@ openshift_hosted_metrics_storage_kind=dynamic
 openshift_hosted_metrics_storage_volume_size= 10Gi
 openshift_metrics_hawkular_replicas=2
 openshift_metrics_cassandra_replicas=3
-openshift_metrics_hawkular_nodeselector= {"region":"infra"}
-openshift_metrics_cassandra_nodeselector= {"region":"infra"}
-openshift_metrics_heapster_nodeselector= {"region":"infra"}
+openshift_metrics_hawkular_nodeselector='{"region":"infra"}'
+openshift_metrics_cassandra_nodeselector='{"region":"infra"}'
+openshift_metrics_heapster_nodeselector='{"region":"infra"}'
+openshift_metrics_selector="region=infra"
 
 
 # Logging deployment
@@ -128,9 +129,9 @@ openshift_hosted_logging_deploy=false
 #openshift_logging_es_pvc_size= 100Gi
 #openshift_logging_es_cluster_size= 3
 #openshift_logging_kibana_replica_count=2
-#openshift_logging_es_nodeselector= {"region":"infra"}
-#openshift_logging_kibana_nodeselector= {"region":"infra"}
-#openshift_logging_curator_nodeselector= {"region":"infra"}
+#openshift_logging_es_nodeselector='{"region":"infra"}'
+#openshift_logging_kibana_nodeselector='{"region":"infra"}'
+#openshift_logging_curator_nodeselector='{"region":"infra"}'
 
 # Configure the multi-tenant SDN plugin (default is 'redhat/openshift-ovs-subnet')
 os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
@@ -172,7 +173,7 @@ openshift_node_kubelet_args={'pods-per-core': ['10'], 'max-pods': ['250'], 'imag
 #logrotate_scripts=[{"name": "syslog", "path": "/var/log/cron\n/var/log/maillog\n/var/log/messages\n/var/log/secure\n/var/log/spooler\n", "options": ["daily", "rotate 7", "compress", "sharedscripts", "missingok"], "scripts": {"postrotate": "/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true"}}]
 
 
-#service brocker settings
+#service broker settings
 
 openshift_enable_service_catalog=false
 openshift_template_service_broker_namespaces=['openshift']
@@ -216,4 +217,3 @@ infranode[1:3] openshift_node_labels="{'region': 'infra'}"
 
 [glusterfs] 
 node[1:3] glusterfs_ip="{{ ansible_default_ipv4.address }}" glusterfs_devices='[ "/dev/sdc" ]'
-infranode[1:3] glusterfs_ip="{{ ansible_default_ipv4.address }}" glusterfs_devices='[ "/dev/sdc" ]'

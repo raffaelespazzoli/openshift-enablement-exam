@@ -15,12 +15,9 @@ wait
 if [ $GLUSTER == "yes" ]; then 
 
 	#create gluster disks
-	gcloud compute disks create "infranode1-gluster" --size "100" --zone "us-central1-a" --type "pd-standard" &
-	gcloud compute disks create "infranode2-gluster" --size "100" --zone "us-central1-b" --type "pd-standard" &
-	gcloud compute disks create "infranode3-gluster" --size "100" --zone "us-central1-f" --type "pd-standard" &
-	gcloud compute disks create "node1-gluster" --size "100" --zone "us-central1-a" --type "pd-standard" &
-	gcloud compute disks create "node2-gluster" --size "100" --zone "us-central1-b" --type "pd-standard" &
-	gcloud compute disks create "node3-gluster" --size "100" --zone "us-central1-f" --type "pd-standard" &
+	gcloud compute disks create "node1-gluster" --size "200" --zone "us-central1-a" --type "pd-standard" &
+	gcloud compute disks create "node2-gluster" --size "200" --zone "us-central1-b" --type "pd-standard" &
+	gcloud compute disks create "node3-gluster" --size "200" --zone "us-central1-f" --type "pd-standard" &
 	wait
 fi
 
@@ -30,11 +27,6 @@ gcloud compute instances create "master2" --zone "us-central1-b" --machine-type 
 gcloud compute instances create "master3" --zone "us-central1-f" --machine-type "n1-standard-2" --preemptible --subnet "default" --maintenance-policy "TERMINATE" --scopes default="https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append","https://www.googleapis.com/auth/compute","https://www.googleapis.com/auth/devstorage.read_write" --image-project "rhel-cloud" --image "rhel-7-v20170816" --boot-disk-size "50" --boot-disk-type "pd-standard" --boot-disk-device-name "master3" --tags "master" &
 
 if [ $GLUSTER == "yes" ]; then 
-
-	#infranodes
-	gcloud compute instances create "infranode1" --zone "us-central1-a" --machine-type "n1-standard-2" --preemptible --subnet "default" --maintenance-policy "TERMINATE" --scopes default="https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append","https://www.googleapis.com/auth/compute","https://www.googleapis.com/auth/devstorage.read_write" --disk "name=infranode1-docker,device-name=disk-1,mode=rw,boot=no" --disk "name=infranode1-gluster,device-name=disk-2,mode=rw,boot=no" --image-project "rhel-cloud" --image "rhel-7-v20170816" --boot-disk-size "50" --boot-disk-type "pd-standard" --boot-disk-device-name "infranode1" --tags "infranode" &
-	gcloud compute instances create "infranode2" --zone "us-central1-b" --machine-type "n1-standard-2" --preemptible --subnet "default" --maintenance-policy "TERMINATE" --scopes default="https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append","https://www.googleapis.com/auth/compute","https://www.googleapis.com/auth/devstorage.read_write" --disk "name=infranode2-docker,device-name=disk-1,mode=rw,boot=no" --disk "name=infranode2-gluster,device-name=disk-2,mode=rw,boot=no" --image-project "rhel-cloud" --image "rhel-7-v20170816" --boot-disk-size "50" --boot-disk-type "pd-standard" --boot-disk-device-name "infranode2" --tags "infranode" &
-	gcloud compute instances create "infranode3" --zone "us-central1-f" --machine-type "n1-standard-2" --preemptible --subnet "default" --maintenance-policy "TERMINATE" --scopes default="https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append","https://www.googleapis.com/auth/compute","https://www.googleapis.com/auth/devstorage.read_write" --disk "name=infranode3-docker,device-name=disk-1,mode=rw,boot=no" --disk "name=infranode3-gluster,device-name=disk-2,mode=rw,boot=no" --image-project "rhel-cloud" --image "rhel-7-v20170816" --boot-disk-size "50" --boot-disk-type "pd-standard" --boot-disk-device-name "infranode3" --tags "infranode" &
 	
 	#nodes
 	gcloud compute instances create "node1" --zone "us-central1-a" --machine-type "n1-standard-2" --preemptible --subnet "default" --maintenance-policy "TERMINATE" --scopes default="https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append","https://www.googleapis.com/auth/compute","https://www.googleapis.com/auth/devstorage.read_write" --disk "name=node1-docker,device-name=disk-1,mode=rw,boot=no" --disk "name=node1-gluster,device-name=disk-2,mode=rw,boot=no" --image-project "rhel-cloud" --image "rhel-7-v20170816" --boot-disk-size "50" --boot-disk-type "pd-standard" --boot-disk-device-name "node1" &
