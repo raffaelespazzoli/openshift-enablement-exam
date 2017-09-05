@@ -15,7 +15,6 @@ move oauth proxy to graphana
 oc process -f kubernetes/kube-state-metrics-template.yaml -p NAMESPACE=prometheus | oc apply -f -
 oc adm policy add-cluster-role-to-user cluster-reader -z kube-state-metrics
 ```
-fix namespace
 
 #install Grafana
 ```
