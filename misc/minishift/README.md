@@ -10,7 +10,7 @@ minishift config set memory 12288
 # starting minishift
 
 ```
-minishift --metrics --username rhn-gps-rspazzol --password <your_pwd> start
+minishift start --metrics --username rhn-gps-rspazzol --password <your_pwd> 
 ```
 
 # configuring minishift VM

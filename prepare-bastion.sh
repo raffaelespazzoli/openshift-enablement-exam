@@ -42,6 +42,8 @@ ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` -o 
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL -o SendEnv=BASTION_USERNAME 'sed -i "s/apps.104.198.35.122.xip.io/apps.$DNS_DOMAIN/g" /home/$BASTION_USERNAME/openshift-enablement-exam/hosts'
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL -o SendEnv=BASTION_USERNAME 'sed -i "s/BASTION_USERNAME/$BASTION_USERNAME/g" /home/$BASTION_USERNAME/openshift-enablement-exam/hosts'
 
+
+
 #delete temporary key files
 rm id_rsa.pub my_id.pub
 
