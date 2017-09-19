@@ -10,37 +10,14 @@ ansible-playbook -vv -i /root/code/casl-ansible/inventory/raffa.casl.example.com
 
 
 
+developing with git
 
+git checkout master
+git fetch upstream
+git rebase upstream/master
+git push
 
-
-
-
-cat << EOF | oc create -f -
-  apiVersion: v1
-  kind: PersistentVolume
-  metadata:
-    name: nfs-dvp-pv
-  spec:
-    capacity:
-      storage: 100G
-    accessModes:
-      - ReadWriteOnce
-    persistentVolumeReclaimPolicy: Retain
-    hostPath:
-      path: /exports/exports
-EOF
-
-cat << EOF | oc create -f -
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nfs-dpv-pvc
-spec:
-  accessModes:232418
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100G
-  volumeName: nfs-dvp-pv
-EOF
+git checkout <branch>
+git rebase master
+git push --force
 
