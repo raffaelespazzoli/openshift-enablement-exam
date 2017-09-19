@@ -50,6 +50,4 @@ sum(kube_pod_container_resource_limits_memory_bytes)
 
 sum (kube_pod_container_resource_requests_cpu_cores)
 sum(kube_node_status_allocatable_cpu_bytes)
-container_cpu_cfs_periods_total - (container_cpu_cfs_periods_total offset 1s )
-sum (avg_over_time( container_cpu_usage_seconds_total {container_name=~".+"} [5m] )) by (container_name) - sum (avg_over_time( container_cpu_usage_seconds_total {container_name=~".+"} [5m] offset 5m )) by (container_name) 
-sum (avg_over_time( container_cpu_usage_seconds_total {container_name=~".+", container_name!="POD"} [5m] )) by (container_name) - sum (avg_over_time( container_cpu_usage_seconds_total {container_name=~".+", container_name!="POD"} [5m] offset 5m )) by (container_name) 
+sum (rate (container_cpu_usage_seconds_total {container_name=~".+", container_name!="POD"} [5m])) by (container_name)
