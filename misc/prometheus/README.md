@@ -1,10 +1,11 @@
 # Install all in one
+```
 oc new-project prometheus
 oc create configmap grafana --from-file=grafana.ini
 oc create configmap prometheus --from-file=prometheus.yaml
 oc process -f all-in-one.yaml -p NAMESPACE=prometheus | oc apply -f -
 oc adm policy add-cluster-role-to-user cluster-reader -z prometheus
-
+```
 
 # Install Prometheus
 
