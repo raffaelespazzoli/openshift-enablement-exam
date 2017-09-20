@@ -49,7 +49,7 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": "${DS_PROMETHEUS}",
-          "fill": 1,
+          "fill": 0,
           "id": 1,
           "legend": {
             "alignAsTable": true,
@@ -63,7 +63,7 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
@@ -152,7 +152,7 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": "${DS_PROMETHEUS}",
-          "fill": 1,
+          "fill": 0,
           "id": 2,
           "legend": {
             "alignAsTable": true,
@@ -166,7 +166,7 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
@@ -189,8 +189,9 @@
               "step": 40
             },
             {
-              "expr": "sum(container_cpu_usage_seconds_total{container_name=~\".+\"})",
+              "expr": "sum (rate (container_cpu_usage_seconds_total {container_name=~\".+\", container_name!=\"POD\"} [5m]))",
               "format": "time_series",
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "current CPU usage",
               "metric": "",
@@ -268,7 +269,7 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": "${DS_PROMETHEUS}",
-          "fill": 1,
+          "fill": 0,
           "id": 3,
           "legend": {
             "alignAsTable": true,
@@ -282,7 +283,7 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
@@ -371,7 +372,7 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": "${DS_PROMETHEUS}",
-          "fill": 1,
+          "fill": 0,
           "id": 4,
           "legend": {
             "alignAsTable": true,
@@ -385,7 +386,7 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
@@ -476,17 +477,6 @@
       "showTitle": false,
       "title": "Dashboard Row",
       "titleSize": "h6"
-    },
-    {
-      "collapse": false,
-      "height": 250,
-      "panels": [],
-      "repeat": null,
-      "repeatIteration": null,
-      "repeatRowId": null,
-      "showTitle": false,
-      "title": "Dashboard Row",
-      "titleSize": "h6"
     }
   ],
   "schemaVersion": 14,
@@ -526,5 +516,5 @@
   },
   "timezone": "",
   "title": "mydash",
-  "version": 6
+  "version": 3
 }

@@ -1,11 +1,43 @@
 # Install all in one
+This will install promethues, grafana and the additional kube-metrics prometheus scraper
 ```
 oc new-project prometheus
+oc create sa prometheus
+oc adm policy add-cluster-role-to-user cluster-reader -z prometheus
 oc create configmap grafana --from-file=grafana.ini
 oc create configmap prometheus --from-file=prometheus.yaml
+oc create configmap grafana-dashboards --from-file=./dashboards
 oc process -f all-in-one.yaml -p NAMESPACE=prometheus | oc apply -f -
-oc adm policy add-cluster-role-to-user cluster-reader -z prometheus
+
 ```
+
+# Configure Grafana
+Unfortunately I couldn't find a simple way to automate the following steps
+
+## configure the Prometheus datasource
+
+* Log into Grafana using the Route provided in the Template and using default account `admin` with password `admin` (maybe it would be a good idea to change the password after this...).
+* On the Home Dashboard click *Add data source*
+* Use the following values for the datasource *Config*:
+** Name: `prometheus`
+** Type: `prometheus`
+** Url: `http://prometheus:9090`
+** Access: proxy
+* Click `Add`
+* Click `Save & Test`. You should see a message that the data source is working.
+
+## create the dashboards
+
+repeat the followig steps for each of the dashboard in the `dashboards` directory
+* In Grafana select the Icon on the top left and then select `Dashboards / Import`.
+* Either copy/paste the contents of the JSON File (make sure to keep the correct formatting) or click the `Upload .json File` button selecting the .json file.
+* In the next dialog enter `OpenShift` as the name and select the previously created datasource `prometheus` for *Prometheus*.
+* Click *Import*
+
+
+
+
+# Notes....
 
 # Install Prometheus
 

@@ -65,7 +65,7 @@
           "lines": true,
           "linewidth": 2,
           "links": [],
-          "minSpan": 3,
+          "minSpan": 6,
           "nullPointMode": "null",
           "percentage": false,
           "pointradius": 5,
@@ -74,7 +74,7 @@
           "repeat": "node",
           "seriesOverrides": [],
           "spaceLength": 10,
-          "span": 3,
+          "span": 6,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -84,7 +84,7 @@
               "intervalFactor": 2,
               "legendFormat": "allocatable memory",
               "refId": "A",
-              "step": 60
+              "step": 40
             },
             {
               "expr": "sum(kube_pod_container_resource_requests_memory_bytes {node=~\"$node\"})",
@@ -92,7 +92,7 @@
               "intervalFactor": 2,
               "legendFormat": "total requests",
               "refId": "B",
-              "step": 60
+              "step": 40
             },
             {
               "expr": "sum (container_memory_usage_bytes {instance=~\"$node\", container_name=~\".+\", container_name!=\"POD\"})",
@@ -100,7 +100,7 @@
               "intervalFactor": 2,
               "legendFormat": "currrent memory usage",
               "refId": "C",
-              "step": 60
+              "step": 40
             },
             {
               "expr": "sum(kube_pod_container_resource_limits_memory_bytes {node=~\"$node\"})",
@@ -109,13 +109,132 @@
               "intervalFactor": 2,
               "legendFormat": "total limits",
               "refId": "D",
-              "step": 60
+              "step": 40
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Node $node Capacity",
+          "title": "Node $node Memory Capacity",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": null,
+      "repeatRowId": null,
+      "showTitle": false,
+      "title": "Dashboard Row",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
+      "height": 250,
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_PROMETHEUS}",
+          "fill": 0,
+          "id": 5,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "minSpan": 6,
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "repeat": "node",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum (rate (container_cpu_usage_seconds_total {container_name=~\".+\", container_name!=\"POD\", instance=~\"$node\"} [5m]))",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "CPU Usage",
+              "refId": "A",
+              "step": 40
+            },
+            {
+              "expr": "kube_node_status_allocatable_cpu_cores{node=~\"$node\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "Allocatable CPUs",
+              "refId": "B",
+              "step": 40
+            },
+            {
+              "expr": "sum (kube_pod_container_resource_requests_cpu_cores{node=~\"$node\"})",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "CPU request",
+              "refId": "C",
+              "step": 40
+            },
+            {
+              "expr": "sum (kube_pod_container_resource_limits_cpu_cores{node=~\"$node\"})",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "CPU Limits",
+              "refId": "D",
+              "step": 40
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Node $node CPU capacity",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -164,45 +283,23 @@
     "list": [
       {
         "allValue": null,
-        "current": {
-          "tags": [],
-          "text": "All",
-          "value": "$__all"
-        },
+        "current": {},
+        "datasource": "${DS_PROMETHEUS}",
         "hide": 0,
         "includeAll": true,
         "label": null,
         "multi": false,
         "name": "node",
-        "options": [
-          {
-            "selected": true,
-            "text": "All",
-            "value": "$__all"
-          },
-          {
-            "selected": false,
-            "text": "app-node-0.env1.casl.raffa.com",
-            "value": "app-node-0.env1.casl.raffa.com"
-          },
-          {
-            "selected": false,
-            "text": "app-node-1.env1.casl.raffa.com",
-            "value": "app-node-1.env1.casl.raffa.com"
-          },
-          {
-            "selected": false,
-            "text": "infranode-0.env1.casl.raffa.com",
-            "value": "infranode-0.env1.casl.raffa.com"
-          },
-          {
-            "selected": false,
-            "text": "master-0.env1.casl.raffa.com",
-            "value": "master-0.env1.casl.raffa.com"
-          }
-        ],
-        "query": "app-node-0.env1.casl.raffa.com,app-node-1.env1.casl.raffa.com,infranode-0.env1.casl.raffa.com,master-0.env1.casl.raffa.com",
-        "type": "custom"
+        "options": [],
+        "query": "label_values(kube_node_info, node)",
+        "refresh": 1,
+        "regex": "",
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
       }
     ]
   },
@@ -237,5 +334,5 @@
   },
   "timezone": "",
   "title": "nodes",
-  "version": 1
+  "version": 5
 }
