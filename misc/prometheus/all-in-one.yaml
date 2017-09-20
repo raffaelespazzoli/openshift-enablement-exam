@@ -191,18 +191,18 @@ objects:
             name: grafana-lib-volume
           - mountPath: /var/log/grafana
             name: grafana-log-volume
-          - mountPath: /var/lib/grafana/dashboards
-            name: grafana-dashboard-volume  
+#          - mountPath: /var/lib/grafana/dashboards
+#            name: grafana-dashboard-volume  
         restartPolicy: Always
         volumes:
         - configMap:
             defaultMode: 420
             name: grafana
           name: grafana-etc-volume
-        - configMap:
-            defaultMode: 420
-            name: grafana-dashboards
-          name: grafana-dashboard-volume          
+#        - configMap:
+#            defaultMode: 420
+#            name: grafana-dashboards
+#          name: grafana-dashboard-volume          
         - name: grafana-lib-volume
           emptyDir: {}
           #persistentVolumeClaim:

@@ -6,7 +6,6 @@ oc create sa prometheus
 oc adm policy add-cluster-role-to-user cluster-reader -z prometheus
 oc create configmap grafana --from-file=grafana.ini
 oc create configmap prometheus --from-file=prometheus.yaml
-oc create configmap grafana-dashboards --from-file=./dashboards
 oc process -f all-in-one.yaml -p NAMESPACE=prometheus | oc apply -f -
 
 ```
