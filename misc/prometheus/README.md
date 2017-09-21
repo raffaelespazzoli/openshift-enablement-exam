@@ -74,6 +74,27 @@ https://github.com/openshift/oauth-proxy
 
 # useful metrics
 
+memory estimation
+sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )
+sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*1.2
+sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*0.8
+sum(container_memory_usage_bytes{container_name=~".+", container_name!="POD"})
+
+memory sizing
+sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))
+sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))
+sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*0.8
+sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*0.4
+
+cpu estimation
+sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )
+sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )*1.2
+sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )*0.8
+sum (rate (container_cpu_usage_seconds_total {container_name=~".+", container_name!="POD"} [5m]))
+
+cpu sizing
+
+
 sum(kube_pod_container_resource_requests_memory_bytes)
 sum(kube_node_status_allocatable_memory_bytes)
 sum(container_memory_usage_bytes)

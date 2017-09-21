@@ -77,7 +77,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(kube_pod_container_resource_requests_memory_bytes)",
+              "expr": "sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "total memory request",
@@ -85,7 +85,7 @@
               "step": 40
             },
             {
-              "expr": "sum(kube_pod_container_resource_requests_memory_bytes)*1.2",
+              "expr": "sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*1.2",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "underestimation threshold",
@@ -93,7 +93,7 @@
               "step": 40
             },
             {
-              "expr": "sum(kube_pod_container_resource_requests_memory_bytes)*0.8",
+              "expr": "sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*0.8",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "overestimation threshold",
@@ -101,11 +101,12 @@
               "step": 40
             },
             {
-              "expr": "sum(kube_pod_container_resource_limits_memory_bytes {container=~\".+\"} )",
+              "expr": "sum(container_memory_usage_bytes{container_name=~\".+\", container_name!=\"POD\"})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "current memory usage",
+              "legendFormat": "total memory usage",
+              "metric": "",
               "refId": "D",
               "step": 40
             }
@@ -180,7 +181,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum (kube_pod_container_resource_requests_cpu_cores)",
+              "expr": "sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "total requested CPU",
@@ -199,7 +200,7 @@
               "step": 40
             },
             {
-              "expr": "sum (kube_pod_container_resource_requests_cpu_cores)*1.2",
+              "expr": "sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )*1.2",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "undestimated threshold",
@@ -207,8 +208,9 @@
               "step": 40
             },
             {
-              "expr": "sum (kube_pod_container_resource_requests_cpu_cores)*0.8",
+              "expr": "sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )*0.8",
               "format": "time_series",
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "overestimated threshold",
               "refId": "D",
@@ -297,7 +299,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(kube_pod_container_resource_requests_memory_bytes)",
+              "expr": "sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "total memory request",
@@ -305,7 +307,7 @@
               "step": 40
             },
             {
-              "expr": "sum(kube_node_status_allocatable_memory_bytes)",
+              "expr": "sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "total allocatable memory",
@@ -313,7 +315,7 @@
               "step": 40
             },
             {
-              "expr": "sum(kube_node_status_allocatable_memory_bytes)*0.8",
+              "expr": "sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*0.8",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "scale-up  threshold",
@@ -321,7 +323,7 @@
               "step": 40
             },
             {
-              "expr": "sum(kube_node_status_allocatable_memory_bytes)*0.4",
+              "expr": "sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*0.4",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -400,7 +402,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum (kube_pod_container_resource_requests_cpu_cores)",
+              "expr": "sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "total cpu requests",
@@ -408,7 +410,7 @@
               "step": 40
             },
             {
-              "expr": "sum(kube_node_status_allocatable_cpu_cores)",
+              "expr": "sum(sum(kube_node_status_allocatable_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -418,7 +420,7 @@
               "step": 40
             },
             {
-              "expr": "sum(kube_node_status_allocatable_cpu_cores)*0.8",
+              "expr": "sum(sum(kube_node_status_allocatable_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )*0.8",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "scale-up threshold",
@@ -426,7 +428,7 @@
               "step": 40
             },
             {
-              "expr": "sum(kube_node_status_allocatable_cpu_cores)*0.4",
+              "expr": "sum(sum(kube_node_status_allocatable_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )*0.4",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "scale-down threshold",
@@ -515,6 +517,6 @@
     ]
   },
   "timezone": "",
-  "title": "mydash",
+  "title": "mydash1",
   "version": 3
 }
