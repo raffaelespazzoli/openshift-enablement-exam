@@ -38,7 +38,7 @@ Repeat the following steps for each of the dashboard in the `dashboards` directo
 Here is the list of the PromQL queries I used to generate the graphs
 
 | Description  | Query  |
-|:-:|:-:|
+| | |
 | Total Requested Memory (*)  | `sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )`  |
 | Total Current Memory used (**) | `sum(container_memory_usage_bytes{container_name=~".+", container_name!="POD"})`  |
 | Total Allocatable Memory (*) | `sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))`  |
@@ -55,6 +55,7 @@ Here is the list of the PromQL queries I used to generate the graphs
 | Node Limit CPU, parametric by node  | `sum (kube_pod_container_resource_limits_cpu_cores{node=~"$node"})`  |
 
 (*): adjusted for non schedulable nodes
+
 (**): I couldn't find a way to adjust it for non schedulable nodes, but it shouldn't significantly impact the metrics
 
 
