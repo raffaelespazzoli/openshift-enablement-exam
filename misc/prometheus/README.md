@@ -1,5 +1,5 @@
 # Install all in one
-This will install promethues, grafana and the additional kube-metrics prometheus scraper
+This will install Prometheus, Grafana and the additional kube-metrics prometheus scraper
 ```
 oc new-project prometheus
 oc create sa prometheus
@@ -13,7 +13,7 @@ oc process -f all-in-one.yaml -p NAMESPACE=prometheus | oc apply -f -
 # Configure Grafana
 Unfortunately I couldn't find a simple way to automate the following steps
 
-## configure the Prometheus datasource
+## Configure the Prometheus Datasource
 
 * Log into Grafana using the Route provided in the Template and using default account `admin` with password `admin` (maybe it would be a good idea to change the password after this...).
 * On the Home Dashboard click *Add data source*
@@ -25,7 +25,7 @@ Unfortunately I couldn't find a simple way to automate the following steps
 * Click `Add`
 * Click `Save & Test`. You should see a message that the data source is working.
 
-## create the dashboards
+## Create the Dashboards
 
 Repeat the following steps for each of the dashboard in the `dashboards` directory: `OpenShiftCapacityDashboard.json` and `NodeOvercommittment.json`
 * In Grafana select the Icon on the top left and then select `Dashboards / Import`.
@@ -34,7 +34,7 @@ Repeat the following steps for each of the dashboard in the `dashboards` directo
 * Click *Import*
 
 
-# useful PromQL queries
+# Useful PromQL Queries
 Here is the list of the PromQL queries I used to generate the graphs
 
 | Description  | Query  |
@@ -59,11 +59,11 @@ Here is the list of the PromQL queries I used to generate the graphs
 (**): I couldn't find a way to adjust it for non schedulable nodes, but it shouldn't significantly impact the metrics
 
 
-# relevant projects:
-https://github.com/wkulhanek/OpenShift-Prometheus
-https://github.com/kubernetes/kube-state-metrics
-https://github.com/minishift/minishift-addons/tree/master/add-ons/prometheus
-https://github.com/coreos/prometheus-operator
-https://github.com/prometheus/prometheus/tree/master/documentation/examples
-https://github.com/openshift/oauth-proxy
+# Relevant Projects:
+* https://github.com/wkulhanek/OpenShift-Prometheus
+* https://github.com/kubernetes/kube-state-metrics
+* https://github.com/minishift/minishift-addons/tree/master/add-ons/prometheus
+* https://github.com/coreos/prometheus-operator
+* https://github.com/prometheus/prometheus/tree/master/documentation/examples
+* https://github.com/openshift/oauth-proxy
 
