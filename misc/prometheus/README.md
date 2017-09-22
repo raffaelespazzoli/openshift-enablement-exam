@@ -27,44 +27,38 @@ Unfortunately I couldn't find a simple way to automate the following steps
 
 ## create the dashboards
 
-repeat the followig steps for each of the dashboard in the `dashboards` directory
+Repeat the following steps for each of the dashboard in the `dashboards` directory: `OpenShiftCapacityDashboard.json` and `NodeOvercommittment.json`
 * In Grafana select the Icon on the top left and then select `Dashboards / Import`.
 * Either copy/paste the contents of the JSON File (make sure to keep the correct formatting) or click the `Upload .json File` button selecting the .json file.
 * In the next dialog enter `OpenShift` as the name and select the previously created datasource `prometheus` for *Prometheus*.
 * Click *Import*
 
 
+# useful PromQL queries
+Here is the list of the PromQL queries I used to generate the graphs
+
+| Description  | Query  |
+|:-:|:-:|
+| Total Requested Memory (*)  | `sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )`  |
+| Total Current Memory used (**) | `sum(container_memory_usage_bytes{container_name=~".+", container_name!="POD"})`  |
+| Total Allocatable Memory (*) | `sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))`  |
+| Total Requested CPU (*)  | `sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )`  |
+| Total Current CPU Used (**) | `sum (rate (container_cpu_usage_seconds_total {container_name=~".+", container_name!="POD"} [5m]))`  |
+| Total Allocatable CPU (*)  |  `sum(sum(kube_node_status_allocatable_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )` |
+| Node Allocatable Memory, parametric by node  | `kube_node_status_allocatable_memory_bytes {node=~"$node"}`  |
+| Node Requested Memory, parametric by node  | `sum(kube_pod_container_resource_requests_memory_bytes {node=~"$node"})`  |
+| Node Used Memory, parametric by node  | `sum (container_memory_usage_bytes {instance=~"$node", container_name=~".+", container_name!="POD"})`  |
+| Node Limit Memory, parametric by node  | `sum(kube_pod_container_resource_limits_memory_bytes {node=~"$node"})`  |
+| Node Allocatable CPU, parametric by node  | `kube_node_status_allocatable_cpu_cores{node=~"$node"}`  |
+| Node used CPU, parametric by node  | `sum (rate (container_cpu_usage_seconds_total {container_name=~".+", container_name!="POD", instance=~"$node"} [5m]))`  |
+| Node Requested CPU, parametric by node  | `sum (kube_pod_container_resource_requests_cpu_cores{node=~"$node"})`  |
+| Node Limit CPU, parametric by node  | `sum (kube_pod_container_resource_limits_cpu_cores{node=~"$node"})`  |
+
+(*): adjusted for non schedulable nodes
+(**): I couldn't find a way to adjust it for non schedulable nodes, but it shouldn't significantly impact the metrics
 
 
-# Notes....
-
-# Install Prometheus
-
-```
-oc new-project prometheus
-oc process -f https://raw.githubusercontent.com/minishift/minishift-addons/master/add-ons/prometheus/prometheus.yaml -p NAMESPACE=prometheus | oc apply -f -
-oc delete configmap prometheus
-oc create configmap prometheus --from-file=prometheus.yml=prometheus-kubernetes.yaml
-oc rollout latest deployment/prometheus
-```
-move oauth proxy to graphana
-
-
-# Install kube-state-metrics
-```
-oc process -f kubernetes/kube-state-metrics-template.yaml -p NAMESPACE=prometheus | oc apply -f -
-oc adm policy add-cluster-role-to-user cluster-reader -z kube-state-metrics
-```
-
-#install Grafana
-```
-oc process -f https://raw.githubusercontent.com/wkulhanek/docker-openshift-grafana/master/grafana.yaml -p NAMESPACE=prometheus | oc apply -f -
-```
-add oauth proxy
-
-
-
-relevant projects:
+# relevant projects:
 https://github.com/wkulhanek/OpenShift-Prometheus
 https://github.com/kubernetes/kube-state-metrics
 https://github.com/minishift/minishift-addons/tree/master/add-ons/prometheus
@@ -72,34 +66,3 @@ https://github.com/coreos/prometheus-operator
 https://github.com/prometheus/prometheus/tree/master/documentation/examples
 https://github.com/openshift/oauth-proxy
 
-# useful metrics
-
-memory estimation
-sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )
-sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*1.2
-sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*0.8
-sum(container_memory_usage_bytes{container_name=~".+", container_name!="POD"})
-
-memory sizing
-sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))
-sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))
-sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*0.8
-sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1))*0.4
-
-cpu estimation
-sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )
-sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )*1.2
-sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) )*0.8
-sum (rate (container_cpu_usage_seconds_total {container_name=~".+", container_name!="POD"} [5m]))
-
-cpu sizing
-
-
-sum(kube_pod_container_resource_requests_memory_bytes)
-sum(kube_node_status_allocatable_memory_bytes)
-sum(container_memory_usage_bytes)
-sum(kube_pod_container_resource_limits_memory_bytes)
-
-sum (kube_pod_container_resource_requests_cpu_cores)
-sum(kube_node_status_allocatable_cpu_bytes)
-sum (rate (container_cpu_usage_seconds_total {container_name=~".+", container_name!="POD"} [5m])) by (container_name)
