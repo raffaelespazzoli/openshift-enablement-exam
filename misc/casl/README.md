@@ -6,7 +6,7 @@ sudo setenforce 0
 docker-compose up -d
 docker exec -it controlhostopenstack_control-host_1 bash
 openstack stack delete -y env1.casl.raffa.com
-ansible-playbook -vv -i /root/code/casl-ansible/inventory/raffa.casl.example.com/inventory /root/code/casl-ansible/playbooks/openshift/end-to-end.yml -e openstack_ssh_public_key=rspazzol-etl --private-key=.ssh/rspazzol-etl.pem
+ansible-playbook -vv -i /root/code/casl-ansible/inventory/raffa.casl.example.com/inventory /root/code/casl-ansible/playbooks/openshift/end-to-end.yml -e openstack_ssh_public_key=rspazzol-etl2 --private-key=.ssh/rspazzol-etl2.pem
 
 
 

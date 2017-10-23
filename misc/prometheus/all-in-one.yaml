@@ -263,7 +263,7 @@ objects:
         serviceAccountName: prometheus
         containers:
         - name: kube-state-metrics
-          image: gcr.io/google_containers/kube-state-metrics:v1.0.1
+          image: gcr.io/google_containers/kube-state-metrics:v1.1.0
           ports:
           - name: http-metrics
             containerPort: 8080

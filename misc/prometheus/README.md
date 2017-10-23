@@ -53,6 +53,8 @@ Here is the list of the PromQL queries I used to generate the graphs
 | Node used CPU, parametric by node  | `sum (rate (container_cpu_usage_seconds_total {container_name=~".+", container_name!="POD", instance=~"$node"} [5m]))`  |
 | Node Requested CPU, parametric by node  | `sum (kube_pod_container_resource_requests_cpu_cores{node=~"$node"})`  |
 | Node Limit CPU, parametric by node  | `sum (kube_pod_container_resource_limits_cpu_cores{node=~"$node"})`  |
+| Total memory quota granted | `sum (kube_resourcequota {resource="requests.memory", type="hard"})` | 
+| Total cpu quota granted | `sum (kube_resourcequota {resource="requests.cpu", type="hard"})` |
 
 (*): adjusted for non schedulable nodes
 
