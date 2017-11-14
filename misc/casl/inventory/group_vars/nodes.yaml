@@ -1,0 +1,10 @@
+iscsi_initiator_name: "iqn.2003-03.env1.raffa:{{ ansible_hostname }}"
+openshift_node_kubelet_args:
+  kube-reserved: 
+  - cpu: "{{ ansible_processor_vcpus * 50 }}m"
+  - memory: "{{ ansible_processor_vcpus * 50 }}M"
+  system-reserved: 
+  - cpu: "{{ ansible_processor_vcpus * 50 }}m"
+  - memory: "{{ ansible_processor_vcpus * 100 }}M"
+  eviction-hard: 
+  - memory_available: 256Mi 

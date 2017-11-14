@@ -1,0 +1,4 @@
+glusterfs_devices:
+- '/dev/vdc'
+glusterfs_device_sizes:
+- '50GB'

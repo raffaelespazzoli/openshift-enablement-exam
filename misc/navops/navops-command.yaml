@@ -1,0 +1,144 @@
+# The following PersistentVolume can be replaced with any
+# supported backend supported by your cluster.  Using
+# the following PersistentVolume does not support host
+# failover of Navops Command as the volume is host local.
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: navops-testing-1
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 5Gi
+  persistentVolumeReclaimPolicy: Recycle
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/navops-data/testing-1"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: navops-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Secret
+
+metadata:
+  name: navops-demo-registry
+type: kubernetes.io/dockercfg
+data:
+  .dockercfg: ewogICAgICAgICJkZW1vLm5hdm9wcy5pbyI6IHsKICAgICAgICAgICAgICAgICJhdXRoIjogImNuTndZWHA2YjJ4QWNtVmthR0YwTG1OdmJUb3pOakkyTnpJek1UST0iLAogICAgICAgICAgICAgICAgImVtYWlsIjogIm5vdEB1cy5lZCIKICAgICAgICB9LAogICAgICAgICJodHRwczovL2RlbW8ubmF2b3BzLmlvIjogewogICAgICAgICAgICAgICAgImF1dGgiOiAiY25Od1lYcDZiMnhBY21Wa2FHRjBMbU52YlRvek5qSTJOekl6TVRJPSIKICAgICAgICB9Cn0= 
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: navops-command
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        navops: command
+        name: navops-command
+    spec:
+      imagePullSecrets:
+      - name: navops-demo-registry
+      containers:
+      - name: uge
+        image: demo.navops.io/uge:v1.3.0 
+        imagePullPolicy: Always
+        env:
+        - name: UGE_MODE
+          value: "navops-command"
+        - name: EVENT_HANDLER_URL
+          value: "http://localhost:8080/static/v1/binder"
+        volumeMounts:
+        - mountPath: "/srv"
+          name: data-volume
+      - name: backend
+        image: demo.navops.io/navops-command-backend-limited:v1.3.0 
+        imagePullPolicy: Always
+        env:
+        - name: NAVOPS_DEFAULT_SCHEDULER
+          value: "false"
+        - name: NAVOPS_JSON_LOG_FILE
+          value: "/srv/backend.log"
+        volumeMounts:
+        - mountPath: "/srv"
+          name: data-volume
+      - name: etcd
+        image: quay.io/coreos/etcd:v2.3.3
+        env:
+        - name: ETCD_DATA_DIR
+          value: "/srv/etcd"
+        volumeMounts:
+        - mountPath: "/srv"
+          name: data-volume
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: navops-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: navops-api
+  labels:
+      name: navops-command
+spec:
+  selector:
+    name: navops-command
+  type: NodePort
+  ports:
+  - name: http
+    port: 8080
+    nodePort: 31001
+    protocol: TCP
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: navops-command-webui
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: navops-command-webui
+    spec:
+      imagePullSecrets:
+      - name: navops-demo-registry
+      containers:
+      - name: webui
+        image: demo.navops.io/navops-command-webui:v1.3.0 
+        imagePullPolicy: Always
+        env:
+        - name: API_URL
+          value: http://navops-api:8080
+        - name: ROOT_URL
+          value: http://127.0.0.1:5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: navops-command-webui
+  labels:
+      name: navops-command-webui
+spec:
+  selector:
+    name: navops-command-webui
+  type: NodePort
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+    nodePort: 31000
+    protocol: TCP
