@@ -2,7 +2,14 @@
 
 The following instructions will setup an OpenShift OCP 3.3 environment on Google Cloud compliant with the following reference architecture.
 
-![GCP reference architecture](/media/OSE-on-GCE-Architecture v0.3.png)
+![GCP reference architecture](./media/OSE-on-GCE-Architecture-v0.3.png)
+
+## 3.6 changes
+
+updated to 3.6
+service catalog does not seem to install so it's disabled
+you can now choose to install gluster with the following variable GLUSTER=yes
+
 
 ## Setup
 
@@ -19,7 +26,7 @@ Install the [command line tool](https://cloud.google.com/sdk/downloads).
 
 [Initialize and authenticate in gcloud](https://cloud.google.com/sdk/docs/authorizing).
 
-In order to run this provisioning script you will need to be able to run 34vCPU in the US central region. You may need to increase your [resource quota](https://cloud.google.com/compute/docs/resource-quotas).
+In order to run this provisioning script you will need to be able to run 34vCPU, 3 global static IP addresses, and 10 in-use IP addresses in the US central region. You may need to increase your [resource quota](https://cloud.google.com/compute/docs/resource-quotas).
 
 Enable your project to use the compute api by visiting the [compute engine](https://console.cloud.google.com/home) menu item (there is probably a better way to do it).
 
@@ -47,7 +54,7 @@ Set the RHEL pool you want to use:
 ```
 export RHN_SUB_POOL=8a85f9843e3d687a013e3ddd471a083e
 ```
-I recommed having a script that sets up all your variables:
+I recommend having a script that sets up all your variables:
 ```
 export GCLOUD_PROJECT=openshift-enablement-exam2
 export DNS_DOMAIN=gc2.raffa.systems
@@ -67,6 +74,15 @@ This is still a work in progress. Cd to `cloud-deployment` and run:
 ```
 ./gcp-cloud-provision.sh
 ```
+
+Provisioning Gluster CNS
+
+if you desire to provision Gluster CNS export the following variable
+```
+export GLUSTER=yes
+```
+This will create an addtional disk of 200GB in each of the nodes and deploy Gluster CNS there.
+
 
 ## Gcloud provisioning
 
@@ -90,7 +106,7 @@ Run the prepare bastion script.
 
 Shell in the bastion host
 ```
-ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
+ssh -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL -o SendEnv=GLUSTER `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'`
 ```
 Run the prepare cluster script
 ```

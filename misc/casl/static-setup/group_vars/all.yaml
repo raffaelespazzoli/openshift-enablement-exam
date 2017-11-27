@@ -1,0 +1,78 @@
+---
+osp_networks:
+- name: "raffa-static"
+  description: "Raffa static network"
+
+osp_subnets:
+- name: "raffa-subnet"
+  network: "raffa-static"
+  allocation_pool: "start=192.168.10.2,end=192.168.10.254"
+  dns_nameservers:
+  - "10.9.48.31"
+  - "10.9.48.32"
+  subnet_range: "192.168.10.0/24"
+  gateway: "192.168.10.1"
+
+osp_routers:  
+- name: "raffa-router"
+  external_gateway: "external"
+  subnet: "raffa-subnet"
+  
+  
+ansible_user: cloud-user
+ansible_become: True
+
+osp_volumes:
+- name: "raffa-iscsi"
+  display_description: "raffa - iscsi"
+  display_name: "raffa-iscsi"
+  size: 40
+
+osp_security_groups:
+- name: "ssh-sec-group"
+  description: "My SSH Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0  
+- name: "icmp-sec-group"
+  description: "ICMP Security Group"
+  rules:
+  - protocol: icmp
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0 
+- name: "iscsi-sec-group"
+  description: "ISCSI Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 3260
+    port_range_max: 3260
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: udp
+    port_range_min: 3260
+    port_range_max: 3260
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0    
+  - protocol: tcp
+    port_range_min: 18700
+    port_range_max: 18700
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0       
+
+osp_instances:
+- name: "iscsi-raffa"
+  meta:
+    group: osp_instances
+  image: "rhel-server-7.4-x86_64"
+  key_name: "rspazzol-etl2"
+  flavor: "m1.small"
+  network: "raffa-static"
+  security_groups:
+  - ssh-sec-group
+  - icmp-sec-group
+  - iscsi-sec-group
+  volumes:
+  - raffa-iscsi

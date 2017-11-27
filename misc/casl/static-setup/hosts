@@ -1,0 +1,4 @@
+localhost ansible_connection=local
+[osp_instances]
+
+

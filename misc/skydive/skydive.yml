@@ -1,0 +1,37 @@
+analyzers:
+  - skydive-analyzer:8082
+agent:
+  listen: 0.0.0.0:8081
+  topology:
+    probes:
+#      - netlink
+      - netns
+      - ovsdb
+      - docker
+#      - neutron
+  flow:
+    probes:
+      - ovssflow
+      - gopacket
+analyzer:
+  listen: 0.0.0.0:8082
+  storage: elasticsearch
+  flowtable_update: 10
+  flowtable_expire: 300
+etcd:
+  embedded: true
+  servers:
+    - http://skydive-analyzer:2379
+storage:
+  elasticsearch:
+    host: skydive-analyzer:9200
+    maxconns: 10
+    retry: 60
+ovs:
+  ovsdb: unix:///var/run/openvswitch/db.sock
+docker:
+  url: unix:///var/run/docker.sock
+netns:
+  run_path: /host/run
+logging:
+  default: DEBUG

@@ -1,0 +1,83 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: download-binaries
+spec:
+  parallelism: 1    
+  completions: 1    
+  template:         
+    metadata:
+      name: download-binaries
+    spec:
+      containers:
+      - name: download-binaries
+        image:  172.30.243.149:5000/oracle-rac/download-binaries:latest
+        env:
+        - name: COOKIES_DIR
+          value: /cookies
+        - name: INSTALL_DIR_BINARIES
+          value: /binaries  
+        volumeMounts:
+        - name: cookies
+          mountPath: /cookies
+        - name: binaries
+          mountPath: /binaries  
+      volumes: 
+      - name: binaries
+        persistentVolumeClaim:
+          claimName: binaries
+      - name: cookies
+        secret:
+          secretName: cookies        
+      restartPolicy: Never
+---
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: "binaries"
+spec:
+  accessModes:
+    - "ReadWriteMany"
+  resources:
+    requests:
+      storage: "10Gi"
+---
+kind: DeploymentConfig
+apiVersion: v1
+metadata:
+  name: binaries-http-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: binaries-http-server
+    spec:
+      containers:
+      - name: binaries-http-server
+        image: registry.access.redhat.com/rhscl/httpd-24-rhel7:latest
+        ports:
+        - name: http
+          containerPort: 8080
+        imagePullPolicy: "IfNotPresent"
+        volumeMounts:
+        - name: http-volume
+          mountPath: /opt/rh/httpd24/root/var/www/html    
+      volumes:
+        - name: http-volume
+          persistentVolumeClaim:
+            claimName: binaries
+      serviceAccountName: nginx         
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: binaries-http-server
+  labels:
+    app: binaries-http-server
+spec:
+  ports:
+    - name: http
+      port: 8080
+  selector:
+    app: binaries-http-server                

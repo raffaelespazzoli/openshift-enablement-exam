@@ -1,0 +1,299 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: prometheus
+  annotations:
+    "openshift.io/display-name": Prometheus
+    description: |
+      A monitoring solution for an OpenShift cluster - collect and gather metrics from nodes, services, and the infrastructure. This is a tech preview feature.
+    iconClass: icon-cogs
+    tags: "monitoring,prometheus,time-series"
+parameters:
+- description: The namespace to instantiate prometheus under. Defaults to 'kube-system'.
+  name: NAMESPACE
+  value: kube-system
+- description: The location of the prometheus image
+  name: IMAGE_PROMETHEUS
+  value: openshift/prometheus:latest
+- description: The session secret for the proxy
+  name: SESSION_SECRET
+  generate: expression
+  from: "[a-zA-Z0-9]{43}"
+- name: IMAGE_GRAFANA
+  displayName: Grafana Image
+  description: The location of the grafana image
+  value: wkulhanek/grafana:latest
+  required: true
+- name: IMAGE_KUBE_STATE_METRICS
+  displayName: Kube State Metrics Image
+  description: The location of the Kube State Metrics Image
+  value: gcr.io/google_containers/kube-state-metrics:latest
+  required: true  
+- name: VOLUME_CAPACITY
+  displayName: Volume Capacity
+  description: Volume space available for data, e.g. 512Mi, 2Gi.
+  value: 4Gi
+  required: true  
+objects:
+
+# Authorize the prometheus service account to read data about the cluster
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/scheme: http      
+    labels:
+      name: prometheus
+    name: prometheus
+    namespace: "${NAMESPACE}"
+  spec:
+    ports:
+    - name: prometheus
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    selector:
+      app: prometheus
+
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      app: prometheus
+    name: prometheus
+    namespace: "${NAMESPACE}"
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: prometheus
+    template:
+      metadata:
+        labels:
+          app: prometheus
+        name: prometheus
+      spec:
+        serviceAccountName: prometheus
+        containers:
+        - name: prometheus
+          args:
+          - --storage.tsdb.retention=6h
+          - --config.file=/etc/prometheus/prometheus.yaml
+          - --web.listen-address=0.0.0.0:9090
+          ports:
+          - containerPort: 9090
+            name: api          
+          image: ${IMAGE_PROMETHEUS}
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - mountPath: /etc/prometheus
+            name: config-volume
+          - mountPath: /prometheus
+            name: data-volume
+        restartPolicy: Always
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: prometheus
+          name: config-volume
+        - emptyDir: {}
+          #persistentVolumeClaim:
+            #claimName: prometheus-data
+          name: data-volume
+      
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: grafana-http
+    namespace: "${NAMESPACE}"
+  spec:
+    to:
+      name: grafana
+    port:  
+      targetPort: grafana-http                    
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      name: grafana
+    name: grafana
+    namespace: "${NAMESPACE}"
+  spec:
+    ports:
+    - name: grafana-http
+      port: 3000
+      protocol: TCP
+      targetPort: 3000      
+    selector:
+      app: grafana
+
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      app: grafana
+    name: grafana
+    namespace: "${NAMESPACE}"
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: grafana
+    template:
+      metadata:
+        labels:
+          app: grafana
+        name: grafana
+      spec:
+        serviceAccountName: prometheus
+        containers:        
+        - name: grafana
+          image: ${IMAGE_GRAFANA}
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 3000
+            name: web          
+          livenessProbe:
+            exec:
+              command:
+              - curl
+              - http://localhost:3000
+            failureThreshold: 3
+#            httpGet:
+#              path: /login
+#              port: 3000
+#              scheme: HTTP
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            exec:
+              command:
+              - curl
+              - http://localhost:3000
+#            httpGet:
+#              path: /login
+#              port: 3000
+#              scheme: HTTP
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          volumeMounts:
+          - mountPath: /etc/grafana
+            name: grafana-etc-volume
+          - mountPath: /var/lib/grafana
+            name: grafana-lib-volume
+          - mountPath: /var/log/grafana
+            name: grafana-log-volume
+#          - mountPath: /var/lib/grafana/dashboards
+#            name: grafana-dashboard-volume  
+        restartPolicy: Always
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: grafana
+          name: grafana-etc-volume
+#        - configMap:
+#            defaultMode: 420
+#            name: grafana-dashboards
+#          name: grafana-dashboard-volume          
+        - name: grafana-lib-volume
+          emptyDir: {}
+          #persistentVolumeClaim:
+          #  claimName: grafana-lib-pvc
+        - name: grafana-log-volume
+          emptyDir: {}
+          #persistentVolumeClaim:
+          #  claimName: grafana-log-pvc            
+
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: grafana-lib-pvc
+    namespace: "${NAMESPACE}"
+  spec:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: "${VOLUME_CAPACITY}"               
+
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: grafana-log-pvc
+    namespace: "${NAMESPACE}"
+  spec:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: "${VOLUME_CAPACITY}"
+        
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: prometheus-data
+    namespace: "${NAMESPACE}"
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: "${VOLUME_CAPACITY}"  
+        
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    name: kube-state-metrics
+    namespace: ${NAMESPACE}
+  spec:
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          k8s-app: kube-state-metrics
+      spec:
+        serviceAccountName: prometheus
+        containers:
+        - name: kube-state-metrics
+          image: gcr.io/google_containers/kube-state-metrics:v1.1.0
+          ports:
+          - name: http-metrics
+            containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 100m
+            limits:
+              memory: 200Mi
+              cpu: 200m        
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: kube-state-metrics
+    namespace: ${NAMESPACE}
+    labels:
+      k8s-app: kube-state-metrics
+    annotations:
+      prometheus.io/scrape: 'true'
+  spec:
+    ports:
+    - name: http-metrics
+      port: 8080
+      targetPort: http-metrics
+      protocol: TCP
+    selector:
+      k8s-app: kube-state-metrics                    
