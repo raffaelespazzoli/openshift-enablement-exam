@@ -10,6 +10,7 @@ export BASTION_USERNAME=$a
 gcloud compute project-info add-metadata --metadata-from-file sshKeys=./my_id.pub
 
 # prepare bastion to receive variables
+ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'sudo yum -y --disablerepo=rhui* install google-rhui-client-rhel7'
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` 'echo AcceptEnv RHN_USERNAME RHN_PASSWORD DNS_DOMAIN BASTION_USERNAME RHN_SUB_POOL GLUSTER | sudo tee -a /etc/ssh/sshd_config > /dev/null'
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` sudo systemctl restart sshd
 # disable host check on ssh connections
@@ -34,7 +35,7 @@ gcloud compute project-info add-metadata --metadata-from-file sshKeys=./my_id.pu
 
 
 # download git
-ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` git clone https://github.com/raffaelespazzoli/openshift-enablement-exam
+ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` https://github.com/sully6768/openshift-enablement-exam
 
 # prepare hostfile
 ssh -t `gcloud compute addresses list | grep ose-bastion | awk '{print $3}'` -o SendEnv=RHN_USERNAME -o SendEnv=RHN_PASSWORD -o SendEnv=DNS_DOMAIN -o SendEnv=RHN_SUB_POOL -o SendEnv=BASTION_USERNAME 'sed -i "s/master.10.128.0.10.xip.io/mi.$DNS_DOMAIN/g" /home/$BASTION_USERNAME/openshift-enablement-exam/hosts'
