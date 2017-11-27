@@ -9,7 +9,7 @@ objects:
     accessModes:
     - ReadWriteOnce
     capacity:
-      storage: 10Gi
+      storage: 100Gi
     nfs:
       path: /exports/${NFS_EXPORT}
       server: ose-bastion

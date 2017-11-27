@@ -7,7 +7,7 @@ nodes
 etcd
 nfs
 #{% if {{ env[GLUSTER] }} equals 'yes' %}
-glusterfs
+#glusterfs
 #{% endif %}
 
 # Set variables common for all OSEv3 hosts
@@ -15,7 +15,7 @@ glusterfs
 # SSH user, this user should allow ssh based auth without requiring a
 # password. If using ssh key based auth, then the key should be managed by an
 # ssh agent.
-ansible_ssh_user=BASTION_USERNAME
+ansible_ssh_user=scottes
 
 # If ansible_ssh_user is not root, ansible_become must be set to true and the
 # user must be configured for passwordless sudo
@@ -80,11 +80,11 @@ osm_cockpit_plugins=['cockpit-kubernetes']
 # or to one or all of the masters defined in the inventory if no load
 # balancer is present.
 openshift_master_cluster_method=native
-openshift_master_cluster_hostname=master.10.128.0.10.xip.io
-openshift_master_cluster_public_hostname=master.104.197.199.131.xip.io
+openshift_master_cluster_hostname=mi.ocp.scottes.io
+openshift_master_cluster_public_hostname=master.ocp.scottes.io
 
 # default subdomain to use for exposed routes
-openshift_master_default_subdomain=apps.104.198.35.122.xip.io
+openshift_master_default_subdomain=apps.ocp.scottes.io
 
 # OpenShift Router Options
 #
@@ -110,31 +110,53 @@ openshift_hosted_manage_registry=true
 # See: https://docs.openshift.com/enterprise/latest/install_config/cluster_metrics.html
 #
 # By default metrics are not automatically deployed, set this to enable them
-openshift_hosted_metrics_deploy=true
+#openshift_hosted_metrics_deploy=true
 #openshift_hosted_metrics_deployer_version=3.3.0
-openshift_hosted_metrics_storage_kind=dynamic
-openshift_hosted_metrics_storage_volume_size= 10Gi
-openshift_metrics_hawkular_replicas=2
-openshift_metrics_cassandra_replicas=3
-openshift_metrics_hawkular_nodeselector='{"region":"infra"}'
-openshift_metrics_cassandra_nodeselector='{"region":"infra"}'
-openshift_metrics_heapster_nodeselector='{"region":"infra"}'
-openshift_metrics_selector="region=infra"
+#openshift_hosted_metrics_storage_kind=nfs
+#openshift_hosted_metrics_storage_volume_size=10Gi
+#openshift_metrics_hawkular_replicas=2
+#openshift_metrics_cassandra_replicas=3
+#openshift_metrics_hawkular_nodeselector='{"region":"infra"}'
+#openshift_metrics_cassandra_nodeselector='{"region":"infra"}'
+#openshift_metrics_heapster_nodeselector='{"region":"infra"}'
+#openshift_metrics_selector="region=infra"
 
 
 # Logging deployment
 #
 # Currently logging deployment is disabled by default, enable it by setting this
-openshift_hosted_logging_deploy=false
+#openshift_hosted_logging_deploy=false
+openshift_hosted_logging_deploy=true
 #openshift_hosted_logging_deployer_version=3.3.0
-#openshift_hosted_metrics_storage_kind=dynamic
-#openshift_logging_es_pvc_size= 100Gi
-#openshift_logging_es_cluster_size= 3
+openshift_logging_image_version=v3.6
+#openshift_logging_es_pvc_size=100Gi
+openshift_logging_es_cluster_size=3
 #openshift_logging_es_number_of_replicas=2
 #openshift_logging_kibana_replica_count=2
-#openshift_logging_es_nodeselector='{"region":"infra"}'
-#openshift_logging_kibana_nodeselector='{"region":"infra"}'
-#openshift_logging_curator_nodeselector='{"region":"infra"}'
+openshift_logging_es_nodeselector='{"region":"infra"}'
+openshift_logging_kibana_nodeselector='{"region":"infra"}'
+openshift_logging_curator_nodeselector='{"region":"infra"}'
+
+#openshift_hosted_logging_storage_host=host
+openshift_hosted_logging_storage_kind=nfs
+openshift_hosted_logging_storage_access_modes=['ReadWriteOnce']
+openshift_hosted_logging_storage_nfs_directory=/exports
+openshift_hosted_logging_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_logging_storage_volume_name=logging
+openshift_hosted_logging_storage_volume_size=10Gi
+openshift_hosted_logging_storage_labels={'storage': 'logging'}
+openshift_logging_es_pvc_dynamic=false
+openshift_logging_es_ops_pvc_dynamic=false
+#openshift_logging_kibana_hostname=
+#openshift_hosted_logging_hostname=
+
+#openshift_hosted_logging_storage_kind=nfs
+#openshift_hosted_logging_storage_access_modes=['ReadWriteOnce']
+#openshift_hosted_logging_storage_host=ose-bastion.c.ocp-demo.internal
+#openshift_hosted_logging_storage_nfs_directory=/NotBackedUp/nfs/ose36
+#openshift_hosted_logging_storage_volume_name=logging
+#openshift_hosted_logging_storage_volume_size=10Gi
+#openshift_hosted_logging_storage_labels={'storage': 'logging'}
 
 # Configure the multi-tenant SDN plugin (default is 'redhat/openshift-ovs-subnet')
 os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
@@ -198,8 +220,8 @@ openshift_disable_check=docker_storage,memory_availability,disk_availability
 
 #{% if {{ env[GLUSTER] }} equals = 'yes' %}
 #gluster
-openshift_storage_glusterfs_namespace=glusterfs 
-openshift_storage_glusterfs_name=storage
+#openshift_storage_glusterfs_namespace=glusterfs 
+#openshift_storage_glusterfs_name=storage
 #{% endif %}
 
 
@@ -223,7 +245,7 @@ infranode[1:3] openshift_node_labels="{'region': 'infra'}"
 
 
 #{% if {{ env[GLUSTER] }} equals 'yes' %}
-[glusterfs] 
-node[1:3] glusterfs_ip="{{ ansible_default_ipv4.address }}" glusterfs_devices='[ "/dev/sdc" ]'
+#[glusterfs] 
+#node[1:3] glusterfs_ip="{{ ansible_default_ipv4.address }}" glusterfs_devices='[ "/dev/sdc" ]'
 #{% endif %}
 
