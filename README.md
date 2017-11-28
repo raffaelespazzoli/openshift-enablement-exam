@@ -126,6 +126,7 @@ ansible-playbook -v -i hosts /usr/share/ansible/openshift-ansible/playbooks/byo/
 From the bastion host run the following
 ```
 ansible 'masters' -i hosts -b -m shell -a "htpasswd -b /etc/origin/master/htpasswd <username> <password>"
+ansible 'masters' -i hosts -b -m shell -a "oadm policy add-cluster-role-to-user cluster-admin admin"
 ```
 ## Clean up
 

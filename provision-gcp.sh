@@ -12,7 +12,7 @@ gcloud compute disks create "node2-docker" --size "50" --zone "us-central1-b" --
 gcloud compute disks create "node3-docker" --size "50" --zone "us-central1-f" --type "pd-standard" &
 wait
 
-if [ $GLUSTER == "yes" ]; then
+if [[ $GLUSTER == "yes" ]]; then
 
 	#create gluster disks
 	gcloud compute disks create "node1-gluster" --size "200" --zone "us-central1-a" --type "pd-standard" &
@@ -32,7 +32,7 @@ gcloud compute instances create "infranode2" --zone "us-central1-b" --machine-ty
 gcloud compute instances create "infranode3" --zone "us-central1-f" --machine-type "n1-standard-2"  --subnet "default" --maintenance-policy "TERMINATE" --service-account default --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append","https://www.googleapis.com/auth/compute","https://www.googleapis.com/auth/devstorage.read_write" --disk "name=infranode3-docker,device-name=disk-1,mode=rw,boot=no" --image-project "rhel-cloud" --image "rhel-7-v20170816" --boot-disk-size "20" --boot-disk-type "pd-standard" --boot-disk-device-name "infranode3" --tags "infranode" &
 
 
-if [ $GLUSTER == "yes" ]; then
+if [[ $GLUSTER == "yes" ]]; then
 
 	#nodes
 	gcloud compute instances create "node1" --zone "us-central1-a" --machine-type "n1-standard-2"  --subnet "default" --maintenance-policy "TERMINATE" --service-account default --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append","https://www.googleapis.com/auth/compute","https://www.googleapis.com/auth/devstorage.read_write" --disk "name=node1-docker,device-name=disk-1,mode=rw,boot=no" --disk "name=node1-gluster,device-name=disk-2,mode=rw,boot=no" --image-project "rhel-cloud" --image "rhel-7-v20170816" --boot-disk-size "50" --boot-disk-type "pd-standard" --boot-disk-device-name "node1" &
@@ -110,7 +110,7 @@ gcloud compute instances create "ose-bastion" --zone "us-central1-a" --machine-t
 gsutil mb -c Standard -l us-central1 -p $GCLOUD_PROJECT gs://$GCLOUD_PROJECT-registry
 
 #create dns zone only if it already does not exists
-if [ `gcloud dns managed-zones list | grep $DNS_DOMAIN | wc -l` -ne 1  ]; then
+if [[ `gcloud dns managed-zones list | grep $DNS_DOMAIN | wc -l` -ne 1  ]]; then
 gcloud dns managed-zones create --dns-name="$DNS_DOMAIN" --description="A zone" "$GCLOUD_PROJECT"
 fi
 
