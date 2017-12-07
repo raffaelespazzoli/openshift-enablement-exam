@@ -196,8 +196,8 @@ openshift_cfme_install_app=true
 openshift_disable_check=docker_storage,memory_availability,disk_availability,docker_image_availability,docker_storage_driver
 
 #crio
-openshift_use_crio=true
-openshift_crio_enable_docker_gc=true
+#openshift_use_crio=true
+#openshift_crio_enable_docker_gc=true
 
 #{% if {{ env[GLUSTER] }} equals = 'yes' %}
 #gluster
