@@ -32,7 +32,7 @@ deployment_type=openshift-enterprise
 # use this to lookup the latest exact version of the container images, which is the tag actually used to configure
 # the cluster. For RPM installations we just verify the version detected in your configured repos matches this
 # release.
-openshift_release=v3.6
+openshift_release=v3.7
 
 # Docker Configuration
 # Add additional, insecure, and blocked registries to global docker configuration
@@ -143,8 +143,8 @@ openshift_logging_fluentd_audit_container_engine=true
 openshift_logging_install_eventrouter=true
 
 # Configure the multi-tenant SDN plugin (default is 'redhat/openshift-ovs-subnet')
-os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
-#os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
+#os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
 
 
 # Disable the OpenShift SDN plugin
@@ -203,6 +203,10 @@ openshift_crio_enable_docker_gc=true
 #gluster
 openshift_storage_glusterfs_namespace=glusterfs 
 openshift_storage_glusterfs_name=storage
+openshift_storage_glusterfs_storageclass=true
+openshift_storage_glusterfs_block_deploy=true
+openshift_storage_glusterfs_block_host_vol_create=true
+openshift_storage_glusterfs_s3_deploy=true
 #{% endif %}
 
 

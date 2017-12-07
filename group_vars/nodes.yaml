@@ -14,10 +14,10 @@ openshift_node_kubelet_args:
   image-gc-low-threshold: 
   - '60'
   kube-reserved: 
-  - cpu: "{{ ansible_processor_vcpus * 50 }}m"
-  - memory: "{{ ansible_processor_vcpus * 50 }}M"
+  - cpu="{{ ansible_processor_vcpus * 50 }}m"
+  - memory="{{ ansible_processor_vcpus * 50 }}M"
   system-reserved: 
-  - cpu: "{{ ansible_processor_vcpus * 50 }}m"
-  - memory: "{{ ansible_processor_vcpus * 100 }}M"
+  - cpu="{{ ansible_processor_vcpus * 50 }}m"
+  - memory="{{ ansible_processor_vcpus * 100 }}M"
   eviction-hard: 
-  - memory_available: 256Mi 
+  - memory_available<256Mi 
