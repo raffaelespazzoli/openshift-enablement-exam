@@ -696,12 +696,12 @@
             "#d44a3a"
           ],
           "datasource": "${DS_PROMETHEUS}",
-          "decimals": null,
+          "decimals": 2,
           "format": "none",
           "gauge": {
             "maxValue": 10,
             "minValue": 0,
-            "show": true,
+            "show": false,
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
@@ -722,8 +722,8 @@
           "maxDataPoints": 100,
           "nullPointMode": "connected",
           "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
+          "postfix": " GB per CPU",
+          "postfixFontSize": "120%",
           "prefix": "",
           "prefixFontSize": "50%",
           "rangeMaps": [
@@ -748,18 +748,12 @@
               "intervalFactor": 10,
               "legendFormat": "workload aspect ratio (GB/CPU)",
               "refId": "A"
-            },
-            {
-              "expr": "",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "refId": "B"
             }
           ],
           "thresholds": "",
           "title": "Workload aspect ratio",
           "type": "singlestat",
-          "valueFontSize": "80%",
+          "valueFontSize": "120%",
           "valueMaps": [
             {
               "op": "=",
@@ -779,11 +773,12 @@
             "#508642"
           ],
           "datasource": "${DS_PROMETHEUS}",
+          "decimals": 2,
           "format": "none",
           "gauge": {
             "maxValue": 10,
             "minValue": 0,
-            "show": true,
+            "show": false,
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
@@ -804,8 +799,8 @@
           "maxDataPoints": 100,
           "nullPointMode": "connected",
           "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
+          "postfix": " GB per CPU",
+          "postfixFontSize": "120%",
           "prefix": "",
           "prefixFontSize": "50%",
           "rangeMaps": [
@@ -834,7 +829,7 @@
           "thresholds": "",
           "title": "Cluster Aspect Ratio",
           "type": "singlestat",
-          "valueFontSize": "80%",
+          "valueFontSize": "120%",
           "valueMaps": [
             {
               "op": "=",
@@ -866,7 +861,8 @@
             "#d44a3a"
           ],
           "datasource": "${DS_PROMETHEUS}",
-          "format": "none",
+          "decimals": 2,
+          "format": "decgbytes",
           "gauge": {
             "maxValue": 100,
             "minValue": 0,
@@ -912,7 +908,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "clamp_min((sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1)) / 2^30)  - \n(\n (sum(sum(kube_node_status_allocatable_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1))) / \n (sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1))) * \n (sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1)) / 2^30) \n),0) * sum(abs(kube_node_spec_unschedulable - 1))",
+              "expr": "clamp_min((sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1)) / 2^30)  - \n(\n (sum(sum(kube_node_status_allocatable_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1))) / \n (sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1))) * \n (sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1)) / 2^30) \n),0)",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "",
@@ -920,9 +916,9 @@
             }
           ],
           "thresholds": "",
-          "title": "Memory Waste per node",
+          "title": "Intrinsic Memory Waste",
           "type": "singlestat",
-          "valueFontSize": "80%",
+          "valueFontSize": "120%",
           "valueMaps": [
             {
               "op": "=",
@@ -942,6 +938,7 @@
             "#d44a3a"
           ],
           "datasource": "${DS_PROMETHEUS}",
+          "decimals": 2,
           "format": "none",
           "gauge": {
             "maxValue": 100,
@@ -967,8 +964,8 @@
           "maxDataPoints": 100,
           "nullPointMode": "connected",
           "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
+          "postfix": " CPU",
+          "postfixFontSize": "120%",
           "prefix": "",
           "prefixFontSize": "50%",
           "rangeMaps": [
@@ -988,7 +985,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "clamp_min(( sum(sum(kube_node_status_allocatable_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) ) - \n(\n(sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1)) / 2^30) / \n(sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1) ) / 2^30) *\n(sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) ))\n)\n),0) * sum(abs(kube_node_spec_unschedulable - 1))",
+              "expr": "clamp_min(( sum(sum(kube_node_status_allocatable_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) ) - \n(\n(sum(sum(kube_node_status_allocatable_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1)) / 2^30) / \n(sum(sum(kube_pod_container_resource_requests_memory_bytes) by (node) * on (node) abs(kube_node_spec_unschedulable -1) ) / 2^30) *\n(sum (sum (kube_pod_container_resource_requests_cpu_cores) by (node) * on (node) abs(kube_node_spec_unschedulable -1) ))\n)\n),0)",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "",
@@ -996,9 +993,9 @@
             }
           ],
           "thresholds": "",
-          "title": "CPU Waste per node",
+          "title": "Intrinsic CPU Waste",
           "type": "singlestat",
-          "valueFontSize": "80%",
+          "valueFontSize": "120%",
           "valueMaps": [
             {
               "op": "=",

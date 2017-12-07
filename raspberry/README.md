@@ -37,3 +37,7 @@ setup dnsmasq for forward and reverse name resolution
 boostrap ansible-needed packages
 dnf install -y python2 python2-dnf libselinux-python libsemanage-python python2-firewall pyOpenSSL python-cryptography
 
+
+add ansible_python_interpreter=/usr/bin/python3
+didn't work so used alternatives
+repoquery is failing so set version in the hosts file
