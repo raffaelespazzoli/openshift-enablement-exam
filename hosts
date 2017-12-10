@@ -6,9 +6,8 @@ masters
 nodes
 etcd
 #nfs
-#{% if {{ env[GLUSTER] }} equals 'yes' %}
-glusterfs
-#{% endif %}
+#glusterfs
+
 
 # Set variables common for all OSEv3 hosts
 [OSEv3:vars]
@@ -38,25 +37,13 @@ openshift_release=v3.7
 # Add additional, insecure, and blocked registries to global docker configuration
 # For enterprise deployment types we ensure that registry.access.redhat.com is
 # included if you do not include it
-openshift_docker_insecure_registries=docker-registry.default.svc.cluster.local:5000, docker-registry.default.svc:5000
 openshift_docker_options="--log-driver=json-file --log-opt max-size=50m --log-opt max-file=100 --storage-opt dm.basesize=15G"
 
 # htpasswd auth
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 # Defining htpasswd users
 openshift_master_htpasswd_users={'admin': '$apr1$7aiANAYb$TOUYVUqnBqBlD5AQEIMYw1'} 
-# or
-#openshift_master_htpasswd_file=<path to local pre-generated htpasswd file>
 
-# Allow all auth
-#openshift_master_identity_providers=[{'name': 'allow_all', 'login': 'true', 'challenge': 'true', 'kind': 'AllowAllPasswordIdentityProvider'}]
-
-# LDAP auth
-#openshift_master_identity_providers=[{'name': 'my_ldap_provider', 'challenge': 'true', 'login': 'true', 'kind': 'LDAPPasswordIdentityProvider', 'attributes': {'id': ['dn'], 'email': ['mail'], 'name': ['cn'], 'preferredUsername': ['uid']}, 'bindDN': '', 'bindPassword': '', 'ca': '', 'insecure': 'false', 'url': 'ldap://ldap.example.com:389/ou=users,dc=example,dc=com?uid'}]
-# Configuring the ldap ca certificate
-#openshift_master_ldap_ca=<ca text>
-# or
-#openshift_master_ldap_ca_file=<path to local ca file to use>
 
 osm_default_node_selector='region=primary'
 
@@ -80,11 +67,11 @@ osm_cockpit_plugins=['cockpit-kubernetes']
 # or to one or all of the masters defined in the inventory if no load
 # balancer is present.
 openshift_master_cluster_method=native
-openshift_master_cluster_hostname=master.10.128.0.10.xip.io
-openshift_master_cluster_public_hostname=master.104.197.199.131.xip.io
+openshift_master_cluster_hostname=INTERNAL_MASTER
+openshift_master_cluster_public_hostname=EXTERNAL_MASTER
 
 # default subdomain to use for exposed routes
-openshift_master_default_subdomain=apps.104.198.35.122.xip.io
+openshift_master_default_subdomain=APP_SUBDOMAIN
 
 # OpenShift Router Options
 #
@@ -105,15 +92,14 @@ openshift_hosted_manage_router=true
 #
 openshift_hosted_registry_selector='region=infra'
 openshift_hosted_manage_registry=true
-openshift_hosted_registry_storage_kind=glusterfs
+#openshift_hosted_registry_storage_kind=glusterfs
 
 # Metrics deployment
 # See: https://docs.openshift.com/enterprise/latest/install_config/cluster_metrics.html
 #
 # By default metrics are not automatically deployed, set this to enable them
 openshift_metrics_install_metrics=true
-#openshift_hosted_metrics_deployer_version=3.3.0
-openshift_metrics_cassandra_storage_type=glusterfs
+#openshift_metrics_cassandra_storage_type=dynamic
 openshift_metrics_duration=1
 openshift_metrics_hawkular_replicas=2
 openshift_metrics_cassandra_replicas=3
@@ -128,8 +114,7 @@ openshift_metrics_install_hawkular_agent=true
 #
 # Currently logging deployment is disabled by default, enable it by setting this
 openshift_logging_install_logging=true
-#openshift_hosted_logging_deployer_version=3.3.0
-openshift_logging_es_pvc_dynamic=glusterfs
+#openshift_logging_es_pvc_dynamic=true
 openshift_logging_es_pvc_size= 10Gi
 openshift_logging_es_cluster_size= 3
 openshift_logging_es_number_of_replicas=2
@@ -174,19 +159,11 @@ osm_cluster_network_cidr=10.1.0.0/16
 # Configure dnsIP in the node config
 #openshift_dns_ip=172.30.0.1
 
-# Configure node kubelet arguments
-# openshift_node_kubelet_args={'pods-per-core': ['10'], 'max-pods': ['250'], 'image-gc-high-threshold': ['90'], 'image-gc-low-threshold': ['80'], 'kube-reserved': ['cpu=100m,memory=300M'], 'system-reserved': ['cpu=100m,memory=100M']}
-
-# Configure logrotate scripts
-# See: https://github.com/nickhammond/ansible-logrotate
-#logrotate_scripts=[{"name": "syslog", "path": "/var/log/cron\n/var/log/maillog\n/var/log/messages\n/var/log/secure\n/var/log/spooler\n", "options": ["daily", "rotate 7", "compress", "sharedscripts", "missingok"], "scripts": {"postrotate": "/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true"}}]
-
-
 #service broker settings
 
 openshift_enable_service_catalog=true
 openshift_template_service_broker_namespaces=['openshift']
-openshift_hosted_etcd_storage_kind=glusterfs
+#openshift_hosted_etcd_storage_kind=glusterfs
 
 
 #cloudforms settings
@@ -199,21 +176,21 @@ openshift_disable_check=docker_storage,memory_availability,disk_availability,doc
 #openshift_use_crio=true
 #openshift_crio_enable_docker_gc=true
 
-#{% if {{ env[GLUSTER] }} equals = 'yes' %}
-#gluster
-openshift_storage_glusterfs_namespace=glusterfs 
-openshift_storage_glusterfs_name=storage
-openshift_storage_glusterfs_storageclass=true
-openshift_storage_glusterfs_block_deploy=true
-openshift_storage_glusterfs_block_host_vol_create=true
-openshift_storage_glusterfs_s3_deploy=true
-#{% endif %}
+#openshift_storage_glusterfs_namespace=glusterfs 
+#openshift_storage_glusterfs_name=storage
+#openshift_storage_glusterfs_storageclass=true
+#openshift_storage_glusterfs_block_deploy=true
+#openshift_storage_glusterfs_block_host_vol_create=true
+#openshift_storage_glusterfs_s3_deploy=true
+#openshift_storage_glusterfs_heketi_admin_key=admin
+#openshift_storage_glusterfs_heketi_user_key=user
+
 
 
 
 #prometheus
 openshift_hosted_prometheus_deploy=true
-openshift_prometheus_storage_kind=glusterfs
+#openshift_prometheus_storage_kind=glusterfs
 openshift_prometheus_namespace=openshift-metrics
 openshift_prometheus_node_selector={"region":"infra"}
 
@@ -237,8 +214,8 @@ node[1:3] openshift_node_labels="{'region': 'primary'}"
 infranode[1:3] openshift_node_labels="{'region': 'infra'}"
 
 
-#{% if {{ env[GLUSTER] }} equals 'yes' %}
-[glusterfs] 
-infranode[1:3]
-#{% endif %}
+
+#[glusterfs] 
+#infranode[1:3]
+
 
