@@ -1,0 +1,9 @@
+kind: ConfigMap
+metadata:
+  name: local-volume-config
+data:
+    "local-hdd": | 
+      {
+        "hostDir": "/mnt/local-storage", 
+        "mountDir": "/mnt/local-storage" 
+      }

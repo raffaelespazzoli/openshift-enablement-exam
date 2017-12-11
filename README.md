@@ -123,7 +123,12 @@ ansible-playbook -v -i hosts /usr/share/ansible/openshift-ansible/playbooks/byo/
 
 ## Creating new users
 
-From the bastion host run the following
+The admin/admin user is created by the installer.
+You still have to give it permissions, for example (from one of the masters):
+```
+oc adm policy add-cluster-role-to-user cluster-admin admin
+```
+If you need to add more users, from the bastion host run the following
 ```
 ansible 'masters' -i hosts -b -m shell -a "htpasswd -b /etc/origin/master/htpasswd <username> <password>"
 ```

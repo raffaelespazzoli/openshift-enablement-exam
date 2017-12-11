@@ -168,6 +168,9 @@ openshift_template_service_broker_namespaces=['openshift']
 
 #cloudforms settings
 openshift_cfme_install_app=true
+openshift_management_install_beta=true
+openshift_management_app_template=cfme-template
+openshift_management_storage_class=cloudprovider
 
 # checks
 openshift_disable_check=docker_storage,memory_availability,disk_availability,docker_image_availability,docker_storage_driver
@@ -193,6 +196,16 @@ openshift_hosted_prometheus_deploy=true
 #openshift_prometheus_storage_kind=glusterfs
 openshift_prometheus_namespace=openshift-metrics
 openshift_prometheus_node_selector={"region":"infra"}
+openshift_prometheus_storage_type: pvc
+openshift_prometheus_alertmanager_storage_type: pvc
+openshift_prometheus_alterbuffer_storage_type: pvc
+openshift_prometheus_pvc_name: prometheus-data
+openshift_prometheus_alertmanager_pvc_name: alertmanager-data
+openshift_prometheus_alterbuffer_pvc_name: alertbuffer-data
+openshift_prometheus_pvc_size: 3G
+openshift_prometheus_alertmanager_pvc_size: 1G
+openshift_prometheus_alertbuffer_pvc_size: 2G
+openshift_prometheus_pvc_access_modes: [ReadWriteOnce]
 
 
 # host group for masters
