@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: restore-logging-es-0
+  annotations:
+    snapshot.alpha.kubernetes.io/snapshot: snapshot-demo
+spec:
+  storageClassName: snapshot-promoter
