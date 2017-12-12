@@ -207,6 +207,15 @@ openshift_prometheus_alertmanager_pvc_size: 1G
 openshift_prometheus_alertbuffer_pvc_size: 2G
 openshift_prometheus_pvc_access_modes: [ReadWriteOnce]
 
+# audit
+
+openshift_master_audit_config={"enabled": true, "auditFilePath": "/var/log/ocp-audit.log", "maximumFileRetentionDays": 2, "maximumFileSizeMegabytes": 50, "maximumRetainedFiles": 5}
+
+
+#alpha features
+osm_api_server_args={ "feature-gates": [ "PersistentLocalVolumes=true", "AdvancedAuditing=true" ] }
+osm_controller_args={ "feature-gates": [ "PersistentLocalVolumes=true" ] }
+
 
 # host group for masters
 [masters]

@@ -11,9 +11,13 @@ excract the project template
 oadm create-bootstrap-project-template -o yaml > template.yaml
 ```
 
-If you want deny all as your default
+add the necessary policy
+```
+oc create -f template.yaml -n default
+```
+configure the new template in `master-config`:
 
-
-# how to switch from one plugin to another
-
-ansible nodes -b -i hosts -m service -a name=
+```
+projectConfig:
+  projectRequestTemplate: "default/project-request"
+```

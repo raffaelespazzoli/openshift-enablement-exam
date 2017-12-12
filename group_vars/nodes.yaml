@@ -21,3 +21,5 @@ openshift_node_kubelet_args:
   - memory={{ ansible_processor_vcpus * 100 }}M
   eviction-hard: 
   - memory.available<256Mi 
+  feature-gates:
+  - PersistentLocalVolumes=true
