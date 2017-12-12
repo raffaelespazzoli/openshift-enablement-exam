@@ -7,6 +7,7 @@ ansible nodes -b -i hosts -m shell -a "mkdir -p -m 777 /mnt/local-storage"
 create a config map that describe the storage layout
 ```
 oc adm new-project local-storage --node-selector=""
+oc project local-storage
 oc apply -f ./local-storage-cm.yaml
 ```
 deploy the local storage controller:

@@ -196,16 +196,16 @@ openshift_hosted_prometheus_deploy=true
 #openshift_prometheus_storage_kind=glusterfs
 openshift_prometheus_namespace=openshift-metrics
 openshift_prometheus_node_selector={"region":"infra"}
-openshift_prometheus_storage_type: pvc
-openshift_prometheus_alertmanager_storage_type: pvc
-openshift_prometheus_alterbuffer_storage_type: pvc
-openshift_prometheus_pvc_name: prometheus-data
-openshift_prometheus_alertmanager_pvc_name: alertmanager-data
-openshift_prometheus_alterbuffer_pvc_name: alertbuffer-data
-openshift_prometheus_pvc_size: 3G
-openshift_prometheus_alertmanager_pvc_size: 1G
-openshift_prometheus_alertbuffer_pvc_size: 2G
-openshift_prometheus_pvc_access_modes: [ReadWriteOnce]
+openshift_prometheus_storage_type= pvc
+openshift_prometheus_alertmanager_storage_type= pvc
+openshift_prometheus_alterbuffer_storage_type= pvc
+openshift_prometheus_pvc_name= prometheus-data
+openshift_prometheus_alertmanager_pvc_name= alertmanager-data
+openshift_prometheus_alterbuffer_pvc_name= alertbuffer-data
+openshift_prometheus_pvc_size= 3G
+openshift_prometheus_alertmanager_pvc_size= 1G
+openshift_prometheus_alertbuffer_pvc_size= 2G
+openshift_prometheus_pvc_access_modes= [ReadWriteOnce]
 
 # audit
 
