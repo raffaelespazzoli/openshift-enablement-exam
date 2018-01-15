@@ -1,6 +1,6 @@
+host_key_checking: False
 ansible_user: openshift
-ansible_become: True
-
+hosting_infrastructure: openstack
 # OpenStack Provisioning Variables
 # use the "-e" option to set "openstack_ssh_public_key"
 #openstack_ssh_public_key:
@@ -15,15 +15,15 @@ openstack_num_nodes: 3
 openstack_num_infra: 3
 env_id: "env1"
 
-lb_flavor: m1.small
-etcd_flavor: m1.large
-master_flavor: m1.large
-node_flavor: etl1.medium
-infra_flavor: etl1.large
-dns_flavor: m1.small
+openstack_lb_flavor: m1.small
+openstack_etcd_flavor: m1.large
+openstack_master_flavor: m1.large
+openstack_node_flavor: etl1.medium
+openstack_infra_flavor: etl1.large
+openstack_dns_flavor: m1.small
 
 public_dns_domain: "casl.raffa.com"
-public_dns_nameservers: 
+public_dns_nameservers:
 - 10.9.48.31
 - 10.9.48.32
 
@@ -59,7 +59,7 @@ rhsm_activationkey: 'casl-openshift'
 #rhsm_activationkey: 'casl-latest'
 rhsm_repos:
  - "rhel-7-server-rpms"
- - "rhel-7-server-ose-3.6-rpms"
+ - "rhel-7-server-ose-3.7-rpms"
  - "rhel-7-server-extras-rpms"
  - "rhel-7-fast-datapath-rpms"
  - "rhel-7-server-optional-rpms"

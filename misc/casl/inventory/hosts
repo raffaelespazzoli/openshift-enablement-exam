@@ -62,16 +62,6 @@ infra.env1.casl.raffa.com
 [masters.env1.casl.raffa.com:vars]
 openshift_node_labels="{'region': {{ osm_default_node_selector }} }"
 
-#[infra.env1.casl.raffa.com:vars]
-#openshift_node_kubelet_args="{ 'kube-reserved': ['cpu=100m,memory=300M'], 'system-reserved': ['cpu=100m,memory=100M'], 'eviction-hard': ['memory_available': '256Mi'] }"
-
-#[nodes.env1.casl.raffa.com:vars]
-#openshift_node_kubelet_args="{ 'kube-reserved': ['cpu=100m,memory=300M'], 'system-reserved': ['cpu=100m,memory=100M'], 'eviction-hard': ['memory_available': '256Mi'] }"
-
-#[glusterfs:vars]
-#glusterfs_devices=['/dev/vdc']
-#glusterfs_device_sizes=['50GB']
-
-#[targetd:vars]
-#ansible_user=cloud-user
+[dns:vars]
+become=true
 

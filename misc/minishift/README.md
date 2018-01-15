@@ -12,6 +12,9 @@ minishift config set memory 12288
 ```
 minishift start --metrics --username rhn-gps-rspazzol --password <your_pwd> 
 ```
+```
+minishift start --openshift-version=v3.7.0 --metrics  --extra-config="kubelet.AllowedUnsafeSysctls=kernel.core_pattern"
+```
 
 # configuring minishift VM
 

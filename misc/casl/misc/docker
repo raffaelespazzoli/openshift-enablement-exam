@@ -1,0 +1,20 @@
+# /etc/sysconfig/docker
+
+# Modify these options if you want to change the way the docker daemon runs
+OPTIONS=' --selinux-enabled  --log-driver=json-file --log-opt max-size=50m --log-opt max-file=100'
+if [ -z "${DOCKER_CERT_PATH}" ]; then
+    DOCKER_CERT_PATH=/etc/docker
+fi
+
+# Do not add registries in this file anymore. Use /etc/containers/registries.conf
+# from the atomic-registries package.
+#
+
+# docker-latest daemon can be used by starting the docker-latest unitfile.
+# To use docker-latest client, uncomment below lines
+#DOCKERBINARY=/usr/bin/docker-latest
+#DOCKERDBINARY=/usr/bin/dockerd-latest
+#DOCKER_CONTAINERD_BINARY=/usr/bin/docker-containerd-latest
+#DOCKER_CONTAINERD_SHIM_BINARY=/usr/bin/docker-containerd-shim-latest
+ADD_REGISTRY='--add-registry registry.access.redhat.com'
+INSECURE_REGISTRY='--insecure-registry docker-registry.default.svc:5000'

@@ -30,20 +30,20 @@ master-[0:2].env1.casl.raffa.com
 master-[0:2].env1.casl.raffa.com
 
 [glusterfs]
-infranode-0.env1.casl.raffa.com glusterfs_devices="['/dev/vdc']"   
-infranode-1.env1.casl.raffa.com glusterfs_devices="['/dev/vdc']"   
-infranode-2.env1.casl.raffa.com glusterfs_devices="['/dev/vdc']"   
+infranode-0.env1.casl.raffa.com 
+infranode-1.env1.casl.raffa.com    
+infranode-2.env1.casl.raffa.com    
 
 # NOTE: Currently we require that masters be part of the SDN which requires that they also be nodes
 # However, in order to ensure that your masters are not burdened with running pods you should
 # make them unschedulable by adding openshift_schedulable=False any node that's also a master.
 [nodes]
-master-0.env1.casl.raffa.com openshift_schedulable=false iscsi_initiator_name=iqn.2003-03.com.raffa:master-0
-master-1.env1.casl.raffa.com openshift_schedulable=false iscsi_initiator_name=iqn.2003-03.com.raffa:master-1
-master-2.env1.casl.raffa.com openshift_schedulable=false iscsi_initiator_name=iqn.2003-03.com.raffa:master-2
-app-node-0.env1.casl.raffa.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}" iscsi_initiator_name=iqn.2003-03.com.raffa:app-node-0 openshift_node_kubelet_args="{ 'kube-reserved': ['cpu=100m,memory=300M'], 'system-reserved': ['cpu=100m,memory=100M'], 'eviction-hard': ['memory_available': '256Mi'] }" 
-app-node-1.env1.casl.raffa.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}" iscsi_initiator_name=iqn.2003-03.com.raffa:app-node-1 openshift_node_kubelet_args="{ 'kube-reserved': ['cpu=100m,memory=300M'], 'system-reserved': ['cpu=100m,memory=100M'], 'eviction-hard': ['memory_available': '256Mi'] }" 
-app-node-2.env1.casl.raffa.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}" iscsi_initiator_name=iqn.2003-03.com.raffa:app-node-2 openshift_node_kubelet_args="{ 'kube-reserved': ['cpu=100m,memory=300M'], 'system-reserved': ['cpu=100m,memory=100M'], 'eviction-hard': ['memory_available': '256Mi'] }"
-infranode-0.env1.casl.raffa.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  iscsi_initiator_name=iqn.2003-03.com.raffa:infranode-0 openshift_node_kubelet_args="{ 'kube-reserved': ['cpu=100m,memory=300M'], 'system-reserved': ['cpu=100m,memory=100M'], 'eviction-hard': ['memory_available': '256Mi'] }"
-infranode-1.env1.casl.raffa.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  iscsi_initiator_name=iqn.2003-03.com.raffa:infranode-1 openshift_node_kubelet_args="{ 'kube-reserved': ['cpu=100m,memory=300M'], 'system-reserved': ['cpu=100m,memory=100M'], 'eviction-hard': ['memory_available': '256Mi'] }"
-infranode-2.env1.casl.raffa.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  iscsi_initiator_name=iqn.2003-03.com.raffa:infranode-2 openshift_node_kubelet_args="{ 'kube-reserved': ['cpu=100m,memory=300M'], 'system-reserved': ['cpu=100m,memory=100M'], 'eviction-hard': ['memory_available': '256Mi'] }"
+master-0.env1.casl.raffa.com openshift_schedulable=false 
+master-1.env1.casl.raffa.com openshift_schedulable=false 
+master-2.env1.casl.raffa.com openshift_schedulable=false 
+app-node-0.env1.casl.raffa.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}" 
+app-node-1.env1.casl.raffa.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}"  
+app-node-2.env1.casl.raffa.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}" 
+infranode-0.env1.casl.raffa.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  
+infranode-1.env1.casl.raffa.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  
+infranode-2.env1.casl.raffa.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  

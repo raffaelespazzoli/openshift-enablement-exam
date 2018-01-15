@@ -23,6 +23,4 @@ openshift_node_kubelet_args:
   image-gc-low-threshold: 
   - '60'
   feature-gates:
-  - PersistentLocalVolumes=true
-  
-openshift_hostname: "{{ ansible_nodename }}"  
+  - PersistentLocalVolumes=true 

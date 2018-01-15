@@ -1,0 +1,10 @@
+10.9.51.68  master-0.env1.casl.raffa.com
+10.9.51.46  master-1.env1.casl.raffa.com
+10.9.51.36  master-2.env1.casl.raffa.com
+10.9.51.56  lb-0.env1.casl.raffa.com
+10.9.51.53  infranode-0.env1.casl.raffa.com
+10.9.51.62  infranode-1.env1.casl.raffa.com
+10.9.51.48  infranode-2.env1.casl.raffa.com
+10.9.51.33  app-node-0.env1.casl.raffa.com
+10.9.51.63  app-node-1.env1.casl.raffa.com
+
