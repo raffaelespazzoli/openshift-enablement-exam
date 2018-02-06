@@ -23,6 +23,8 @@ openshift_master_htpasswd_users:
 
 openshift_cloudprovider_kind: gce
 
+osm_cluster_network_cidr: 10.1.0.0/16
+
 openshift_hosted_router_selector: 'region=infra'
 openshift_hosted_manage_router: true
 
