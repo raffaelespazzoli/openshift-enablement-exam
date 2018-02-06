@@ -6,7 +6,7 @@ oc create sa prometheus
 oc adm policy add-cluster-role-to-user cluster-reader -z prometheus
 oc create configmap grafana --from-file=grafana.ini
 oc create configmap prometheus --from-file=prometheus.yaml
-oc process -f all-in-one.yaml -p NAMESPACE=prometheus | oc apply -f -
+oc process -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/prometheus/all-in-one.yaml -p NAMESPACE=prometheus | oc apply -f -
 
 ```
 

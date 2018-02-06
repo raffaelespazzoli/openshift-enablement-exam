@@ -1,14 +1,10 @@
 ---
 
-ansible_user: openshift
-ansible_become: True
+
 
 deployment_type: openshift-enterprise
 openshift_deployment_type: openshift-enterprise
 openshift_master_cluster_method: native
-openshift_master_cluster_hostname: "{{ groups.lb.0 }}"
-openshift_master_cluster_public_hostname: "{{ groups.lb.0 }}"
-openshift_master_default_subdomain: "apps.{{ env_id }}.{{ public_dns_domain }}"
 
 #openshift_deployment_type: openshift-enterprise
 openshift_release: v3.7
@@ -25,6 +21,8 @@ openshift_master_identity_providers:
 openshift_master_htpasswd_users:
   admin: $apr1$7aiANAYb$TOUYVUqnBqBlD5AQEIMYw1   
 
+openshift_cloudprovider_kind: gce
+
 openshift_hosted_router_selector: 'region=infra'
 openshift_hosted_manage_router: true
 
@@ -34,8 +32,8 @@ openshift_hosted_registry_storage_kind: glusterfs-storage
 
 openshift_logging_install_logging: true
 openshift_logging_es_pvc_size: 10Gi
-openshift_logging_es_cluster_size: 3
-openshift_logging_es_number_of_replicas: 2
+openshift_logging_es_cluster_size: 1
+openshift_logging_es_number_of_replicas: 0
 openshift_logging_kibana_replica_count: 1
 openshift_logging_es_nodeselector: 
   region: infra
@@ -70,16 +68,6 @@ osm_cockpit_plugins:
 
 openshift_docker_options: "--log-driver=json-file --log-opt max-size=50m --log-opt max-file=100"
 
-openshift_cloudprovider_kind: openstack
-openshift_cloudprovider_openstack_auth_url: "{{ lookup('env','OS_AUTH_URL') }}"
-openshift_cloudprovider_openstack_username: "sa_casl_contrib"
-openshift_cloudprovider_openstack_password: "UKyq9t752A73CfqD"
-openshift_cloudprovider_openstack_domain_name: Default
-openshift_cloudprovider_openstack_tenant_id: "{{ lookup('env','OS_PROJECT_ID') }}"
-openshift_cloudprovider_openstack_tenant_name: "{{ lookup('env','OS_PROJECT_NAME') }}"
-openshift_cloudprovider_openstack_region: "{{ lookup('env','OS_REGION_NAME') }}"
-openshift_cloudprovider_openstack_lb_subnet_id: 89dc38ac-8e32-43ca-8861-da0509969769
-
 os_sdn_network_plugin_name: 'redhat/openshift-ovs-networkpolicy'
 #os_sdn_network_plugin_name: 'redhat/openshift-ovs-multitenant'
 
@@ -94,7 +82,7 @@ openshift_template_service_broker_namespaces:
 openshift_hosted_etcd_storage_kind: dynamic     
   
 #cloudforms settings
-openshift_cfme_install_app: true
+openshift_cfme_install_app: false
 openshift_management_install_beta: true
 openshift_management_app_template: cfme-template
 openshift_management_storage_class: cloudprovider 
@@ -115,16 +103,16 @@ session_auth_username_in: session_target_username
 session_auth_password_in: session_target_password
 
 #gluster
-openshift_storage_glusterfs_namespace: glusterfs 
-openshift_storage_glusterfs_name: storage
-openshift_storage_glusterfs_nodeselector: "region=infra"
-openshift_storage_glusterfs_storageclass: true
-openshift_storage_glusterfs_block_deploy: true
-openshift_storage_glusterfs_block_host_vol_create: true
-openshift_storage_glusterfs_s3_deploy: true
-openshift_storage_glusterfs_heketi_admin_key: admin
-openshift_storage_glusterfs_heketi_user_key: user
-openshift_storage_glusterfs_wipe: true
+#openshift_storage_glusterfs_namespace: glusterfs 
+#openshift_storage_glusterfs_name: storage
+#openshift_storage_glusterfs_nodeselector: "region=infra"
+#openshift_storage_glusterfs_storageclass: true
+#openshift_storage_glusterfs_block_deploy: true
+#openshift_storage_glusterfs_block_host_vol_create: true
+#openshift_storage_glusterfs_s3_deploy: true
+#openshift_storage_glusterfs_heketi_admin_key: admin
+#openshift_storage_glusterfs_heketi_user_key: user
+#openshift_storage_glusterfs_wipe: true
 
 #crio
 #openshift_use_crio: true
@@ -150,7 +138,7 @@ osm_controller_args:
   - PersistentLocalVolumes=true
   
 #prometheus
-openshift_hosted_prometheus_deploy: true
+openshift_hosted_prometheus_deploy: false
 openshift_prometheus_storage_kind: dynamic
 openshift_prometheus_namespace: openshift-metrics
 openshift_prometheus_node_selector: 
@@ -167,32 +155,32 @@ openshift_prometheus_alertbuffer_pvc_size: 2G
 openshift_prometheus_pvc_access_modes: [ReadWriteOnce]
 
 
-openshift_project_request_template_edits:
-  - key: objects
-    action: append
-    value:
-      kind: NetworkPolicy
-      apiVersion: extensions/v1beta1
-      metadata:
-        name: deny-by-default
-      spec:
-        podSelector:
-        ingress: []
-  - key: objects
-    action: append
-    value:
-      kind: NetworkPolicy
-      apiVersion: extensions/v1beta1
-      metadata:
-        name: allow-same-namespace
-      spec:
-        ingress:
-        - from:
-          - podSelector: {}
-        - from:
-          - namespaceSelector:
-              matchLabels:
-                name: default          
+#openshift_project_request_template_edits:
+#  - key: objects
+#    action: append
+#    value:
+#      kind: NetworkPolicy
+#      apiVersion: extensions/v1beta1
+#      metadata:
+#        name: deny-by-default
+#      spec:
+#        podSelector:
+#        ingress: []
+#  - key: objects
+#    action: append
+#    value:
+#      kind: NetworkPolicy
+#      apiVersion: extensions/v1beta1
+#      metadata:
+#        name: allow-default-and-same-namespace
+#      spec:
+#        ingress:
+#        - from:
+#          - podSelector: {}
+#        - from:
+#          - namespaceSelector:
+#              matchLabels:
+#                name: default          
 
 
 
