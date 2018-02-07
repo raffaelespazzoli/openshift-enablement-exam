@@ -30,9 +30,11 @@ openshift_hosted_manage_router: true
 
 openshift_hosted_registry_selector: 'region=infra'
 openshift_hosted_manage_registry: true
-openshift_hosted_registry_storage_kind: glusterfs-storage
+openshift_hosted_registry_replicas: 1
+#openshift_hosted_registry_storage_kind: glusterfs-storage
 
 openshift_logging_install_logging: true
+openshift_logging_es_pvc_dynamic: true
 openshift_logging_es_pvc_size: 10Gi
 openshift_logging_es_cluster_size: 1
 openshift_logging_es_number_of_replicas: 0
@@ -48,14 +50,14 @@ openshift_logging_fluentd_audit_file: /var/log/ocp-audit.log
 openshift_logging_install_eventrouter: true
 
 openshift_metrics_install_metrics: true
-openshift_hosted_metrics_storage_kind: dynamic
 openshift_metrics_hawkular_nodeselector:
   region: infra
 openshift_metrics_cassandra_nodeselector: 
   region: infra
 openshift_metrics_heapster_nodeselector: 
   region: infra  
-openshift_metrics_selector: "region=infra" 
+openshift_metrics_selector: "region=infra"
+openshift_metrics_cassandra_storage_type: dynamic
 openshift_metrics_cassandra_pvc_size: 5Gi
 openshift_metrics_hawkular_replicas: 1
 openshift_metrics_cassandra_replicas: 1
@@ -140,21 +142,21 @@ osm_controller_args:
   - PersistentLocalVolumes=true
   
 #prometheus
-openshift_hosted_prometheus_deploy: false
-openshift_prometheus_storage_kind: dynamic
-openshift_prometheus_namespace: openshift-metrics
-openshift_prometheus_node_selector: 
-  region: infra
-openshift_prometheus_storage_type: pvc
-openshift_prometheus_alertmanager_storage_type: pvc
-openshift_prometheus_alterbuffer_storage_type: pvc
-openshift_prometheus_pvc_name: prometheus-data
-openshift_prometheus_alertmanager_pvc_name: alertmanager-data
-openshift_prometheus_alterbuffer_pvc_name: alertbuffer-data
-openshift_prometheus_pvc_size: 3G
-openshift_prometheus_alertmanager_pvc_size: 1G
-openshift_prometheus_alertbuffer_pvc_size: 2G
-openshift_prometheus_pvc_access_modes: [ReadWriteOnce]
+#openshift_hosted_prometheus_deploy: false
+#openshift_prometheus_storage_kind: dynamic
+#openshift_prometheus_namespace: openshift-metrics
+#openshift_prometheus_node_selector: 
+#  region: infra
+#openshift_prometheus_storage_type: pvc
+#openshift_prometheus_alertmanager_storage_type: pvc
+#openshift_prometheus_alterbuffer_storage_type: pvc
+#openshift_prometheus_pvc_name: prometheus-data
+#openshift_prometheus_alertmanager_pvc_name: alertmanager-data
+#openshift_prometheus_alterbuffer_pvc_name: alertbuffer-data
+#openshift_prometheus_pvc_size: 3G
+#openshift_prometheus_alertmanager_pvc_size: 1G
+#openshift_prometheus_alertbuffer_pvc_size: 2G
+#openshift_prometheus_pvc_access_modes: [ReadWriteOnce]
 
 
 #openshift_project_request_template_edits:
