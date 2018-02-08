@@ -44,6 +44,8 @@ openshift_logging_kibana_nodeselector:
   region: infra
 openshift_logging_curator_nodeselector: 
   region: infra
+openshift_logging_eventrouter_nodeselector:
+  region: infra  
 openshift_logging_fluentd_audit_container_engine: true
 openshift_logging_fluentd_audit_file: /var/log/ocp-audit.log
 openshift_logging_install_eventrouter: true
@@ -121,6 +123,7 @@ openshift_storage_glusterfs_name: storage
 openshift_storage_glusterfs_nodeselector: "region=infra"
 openshift_storage_glusterfs_storageclass: true
 openshift_storage_glusterfs_block_deploy: true
+openshift_storage_glusterfs_block_host_vol_size: 10
 openshift_storage_glusterfs_block_host_vol_create: true
 openshift_storage_glusterfs_s3_deploy: true
 openshift_storage_glusterfs_heketi_admin_key: admin
