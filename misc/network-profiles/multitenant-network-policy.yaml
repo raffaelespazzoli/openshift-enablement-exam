@@ -1,13 +1,35 @@
-kind: NetworkPolicy
-apiVersion: extensions/v1beta1
-metadata:
-  name: legacy-multitenant
-spec:
-  podSelector:
-  ingress:
-  - from:
-    - podSelector: {}
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: default    
+---
+#      kind: NetworkPolicy
+#      apiVersion: extensions/v1beta1
+#      metadata:
+#        name: deny-by-default
+#      Spec:
+#        podSelector:
+#        ingress: []
+---
+      kind: NetworkPolicy
+      apiVersion: extensions/v1beta1
+      metadata:
+        name: allow-same-and-default-namespace
+      spec:
+        ingress:
+        - from:
+          - podSelector: {}
+        - from:
+          - namespaceSelector:
+              matchLabels:
+                name: default
+---
+#      kind: NetworkPolicy
+#      apiVersion: extensions/v1beta1
+#      metadata:
+#        name: allow-default-namespace
+#      spec:
+#        ingress:
+#        - from:
+#          - podSelector: {}
+#        - from:
+#          - namespaceSelector:
+#              matchLabels:
+#                name: default
+          

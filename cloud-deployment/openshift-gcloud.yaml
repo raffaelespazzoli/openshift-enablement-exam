@@ -2,45 +2,28 @@
 
 
 imports:
-- path: vm-master.jinja
-- path: vm-node.jinja
-- path: vm-bastion.jinja
+- path: vm-masters.yaml
+- path: vm-nodes.yaml
+- path: vm-infranodes.yaml
 - path: infranode-networking.jinja
 - path: master-networking.jinja
 
 resources:                  
-- name: bastion-vm
-  type: vm-bastion.jinja
-  properties:
-    zone: us-central1-a
-- name: infranode-vms
-  type: vm-node.jinja
-  properties:
-    number: 2
-    zones: [us-central1-a, us-central1-c]
-    tag: infranode
-- name: node-vms
-  type: vm-node.jinja
-  properties:
-    number: 3
-    zones: [us-central1-c]
-    tag: node
-- name: master-vms
-  type: vm-master.jinja
-  properties:
-    number: 3
-    zones: [us-central1-a, us-central1-b, us-central1-c]    
+- name: infranodes-vms
+  type: vm-infranodes.yaml
+- name: nodes-vms
+  type: vm-nodes.yaml
+- name: masters-vms
+  type: vm-masters.jinja    
 - name: infranode-networking
   type: infranode-networking.jinja
   properties:
-    instances: [$(ref.infranode1.selfLink),$(ref.infranode2.selfLink)] 
+    infranode-instances: $(ref.infranodes-vms.infranode-instances)
 - name: master-networking
   type: master-networking.jinja
   properties:
-    instances: [$(ref.master1.selfLink),$(ref.master2.selfLink),$(ref.master3.selfLink)] 
-    instance-groups: [$(ref.master1-ig.selfLink),$(ref.master2-ig.selfLink),$(ref.master3-ig.selfLink)]            
-#- name: registry-bucket
-#  type: registry-bucket.jinja
+    master-instances: $(ref.masters-vms.master-instances) 
+    master-instance-groups: $(ref.masters-vms.master-instance-groups)
     
     
     

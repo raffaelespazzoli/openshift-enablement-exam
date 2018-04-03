@@ -1,0 +1,7 @@
+---
+
+openshift_node_labels: 
+  region: cns
+  
+glusterfs_devices:
+- '/dev/disk/by-id/google-cns-disk1'  

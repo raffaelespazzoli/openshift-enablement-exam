@@ -51,6 +51,7 @@ openshift_logging_eventrouter_nodeselector:
 openshift_logging_fluentd_audit_container_engine: true
 openshift_logging_fluentd_audit_file: /var/log/ocp-audit.log
 openshift_logging_install_eventrouter: true
+openshift_logging_curator_default_days: 7
 
 openshift_metrics_install_metrics: true
 openshift_metrics_hawkular_nodeselector:
@@ -58,7 +59,9 @@ openshift_metrics_hawkular_nodeselector:
 openshift_metrics_cassandra_nodeselector: 
   region: infra
 openshift_metrics_heapster_nodeselector: 
-  region: infra  
+  region: infra
+openshift_metrics_hawkular_agent_nodeselector: 
+  region: infra   
 openshift_metrics_cassandra_storage_type: dynamic
 openshift_metrics_cassandra_pvc_size: 5Gi
 openshift_metrics_hawkular_replicas: 1
@@ -76,6 +79,7 @@ openshift_docker_options: "--log-driver=json-file --log-opt max-size=50m --log-o
 
 os_sdn_network_plugin_name: 'redhat/openshift-ovs-networkpolicy'
 #os_sdn_network_plugin_name: 'redhat/openshift-ovs-multitenant'
+os_firewall_use_firewalld: true
 
 openshift_disable_check: 
   - docker_storage
@@ -113,8 +117,13 @@ session_auth_password_in: session_target_password
 #openshift_storage_glusterfs_name: storage
 #openshift_storage_glusterfs_nodeselector: "region=infra"
 #openshift_storage_glusterfs_storageclass: true
+#openshift_storage_glusterfs_storageclass_default: true
 #openshift_storage_glusterfs_block_deploy: true
 #openshift_storage_glusterfs_block_host_vol_create: true
+#openshift_storage_glusterfs_block_host_vol_size: 100
+#openshift_storage_glusterfs_block_host_vol_max:10
+#openshift_storage_glusterfs_block_storageclass=true
+#openshift_storage_glusterfs_block_storageclass_default=false
 #openshift_storage_glusterfs_s3_deploy: true
 #openshift_storage_glusterfs_heketi_admin_key: admin
 #openshift_storage_glusterfs_heketi_user_key: user

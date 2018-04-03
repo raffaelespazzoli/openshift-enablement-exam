@@ -49,6 +49,7 @@ openshift_logging_eventrouter_nodeselector:
 openshift_logging_fluentd_audit_container_engine: true
 openshift_logging_fluentd_audit_file: /var/log/ocp-audit.log
 openshift_logging_install_eventrouter: true
+openshift_logging_curator_default_days: 7
 
 openshift_metrics_install_metrics: true
 openshift_metrics_hawkular_nodeselector:
@@ -56,7 +57,9 @@ openshift_metrics_hawkular_nodeselector:
 openshift_metrics_cassandra_nodeselector: 
   region: infra
 openshift_metrics_heapster_nodeselector: 
-  region: infra  
+  region: infra
+openshift_metrics_hawkular_agent_nodeselector: 
+  region: infra    
 openshift_metrics_selector: "region=infra"
 openshift_metrics_cassandra_storage_type: dynamic 
 openshift_metrics_cassandra_pvc_size: 5Gi
@@ -85,6 +88,7 @@ openshift_cloudprovider_openstack_lb_subnet_id: 89dc38ac-8e32-43ca-8861-da050996
 
 os_sdn_network_plugin_name: 'redhat/openshift-ovs-networkpolicy'
 #os_sdn_network_plugin_name: 'redhat/openshift-ovs-multitenant'
+os_firewall_use_firewalld: true
 
 openshift_disable_check: 
   - docker_storage
