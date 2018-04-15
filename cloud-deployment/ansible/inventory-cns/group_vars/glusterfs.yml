@@ -2,6 +2,7 @@
 
 openshift_node_labels: 
   region: cns
+  node-role.kubernetes.io/cnsnode: true
   
 glusterfs_devices:
 - '/dev/disk/by-id/google-cns-disk1'  

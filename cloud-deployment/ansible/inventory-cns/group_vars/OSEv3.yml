@@ -3,13 +3,7 @@
 deployment_type: openshift-enterprise
 openshift_deployment_type: openshift-enterprise
 openshift_master_cluster_method: native
-openshift_release: v3.7
-
-#oreg_url: witz-docker.witz.pw:5000/openshift3/ose-${component}:${version}
-#openshift_docker_additional_registries: witz-docker.witz.pw:5000
-#openshift_docker_insecure_registries: witz-docker.witz.pw:5000
-#openshift_examples_modify_imagestreams: true
-
+openshift_release: v3.9
 
 
 # HTPASSWD Identity Provider
