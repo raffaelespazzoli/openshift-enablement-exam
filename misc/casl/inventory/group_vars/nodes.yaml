@@ -1,4 +1,7 @@
-iscsi_initiator_name: "iqn.2003-03.env1.raffa:{{ ansible_hostname }}"
+---
+openshift_node_labels: 
+  region: primary
+  
 openshift_node_kubelet_args:
   kube-reserved: 
   - cpu={{ ansible_processor_vcpus * 50 }}m
@@ -24,5 +27,6 @@ openshift_node_kubelet_args:
   - '60'
   feature-gates:
   - PersistentLocalVolumes=true
+  - HugePages=true
   
-openshift_hostname: "{{ ansible_nodename }}"  
+ 

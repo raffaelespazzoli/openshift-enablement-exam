@@ -32,7 +32,8 @@ openshift_disable_check:
   - disk_availability    
   
 openshift_use_crio: true
-openshift_crio_enable_docker_gc: true  
+openshift_crio_enable_docker_gc: false
+oreg_url: registry.access.redhat.com/openshift3/ose-${component}:${version}  
 
 openshift_hosted_router_selector: 'region=infra'
 openshift_hosted_manage_router: true

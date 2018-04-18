@@ -1,5 +1,0 @@
-glusterfs_devices:
-- '/dev/vdc'
-glusterfs_device_sizes:
-- '50GB'
-glusterfs_ip: "{{ ansible_eth1.ipv4.address }}" 
