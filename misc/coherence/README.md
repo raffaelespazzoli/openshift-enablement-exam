@@ -1,6 +1,7 @@
 # Coherence Install steps
 
 [Download Server JRE 8](http://www.oracle.com/technetwork/java/javase/downloads/server-jre8-downloads-2133154.html) `.tar.gz` file and drop it inside folder `oraclejava`
+
 [Download coherence standalone 12.2.1.2.0](http://www.oracle.com/technetwork/middleware/coherence/downloads/index.html) and drop it in the folder `coherence`
 
 ```
