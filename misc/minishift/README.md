@@ -2,12 +2,17 @@
 
 ```
 minishift setup-cdk
-minishift config set vm-driver virtualbox
+minishift config set vm-driver kvm
 minishift config set cpus 2
 minishift config set memory 12288
+minishift config set skip-registration
 ```
 
 # starting minishift
+
+```
+minishift start --skip-registration
+```
 
 ```
 minishift start --metrics --username rhn-gps-rspazzol --password <your_pwd> 
