@@ -14,7 +14,7 @@ objects:
       application: "${APPLICATION_NAME}"
     name: "${APPLICATION_NAME}"
   spec:
-    replicas: "${{instances}}"
+    replicas: "${{INSTANCES}}"
     selector:
       matchLabels:
         application: "${APPLICATION_NAME}"
@@ -30,17 +30,13 @@ objects:
             value: "${JAVA_OPTS}"
           - name: COH_EXTEND_PORT
             value: "${COH_EXTEND_PORT}"
-          - name: NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
           - name: COH_WKA
-            value: "${APPLICATION_NAME}.coherence.svc"                            
+            value: "${APPLICATION_NAME}.${NAMESPACE}.svc"                            
           image: "172.30.1.1:5000/coherence/coherence:12.2.1.2.0-standalone"
           imagePullPolicy: Always
           name: "${APPLICATION_NAME}"
           ports:
-          - containerPort: 8088
+          - containerPort: 7475
             protocol: TCP  
           - containerPort: "${{COH_EXTEND_PORT}}"
             protocol: TCP
@@ -53,9 +49,9 @@ objects:
   spec:
     clusterIP: None
     ports:
-    - name: 8088-tcp
-      port: 8088
-      containerPort: 8088
+    - name: 7475-tcp
+      port: 7475
+      containerPort: 7475
       protocol: TCP  
     - name: "${COH_EXTEND_PORT}-tcp"
       port: "${{COH_EXTEND_PORT}}"
@@ -79,4 +75,7 @@ parameters:
 - description: The number of instances.
   name: INSTANCES
   required: false
-  value: 1      
+  value: "1"    
+- description: The namespace in which this service will be running.
+  name: NAMESPACE
+  required: true  

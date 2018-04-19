@@ -6,6 +6,7 @@
 
 ```
 oc new-project coherence
+oc adm policy add-scc-to-user anyuid -z default
 cd oraclejava
 oc new-build --strategy=docker --name=oraclejre --binary=true --docker-image=oraclelinux:7-slim
 oc start-build oraclejre --from-dir=. -F
