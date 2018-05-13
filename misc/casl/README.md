@@ -3,17 +3,6 @@ cd /home/rspazzol/git/casl-ansible/
 ansible-galaxy install -r casl-requirements.yml -p roles
 
 sudo setenforce 0
-
-docker run -u `id -u` \
-      -v $HOME/.ssh/rspazzol-etl2.pem:/opt/app-root/src/.ssh/rspazzol-etl2.pem:Z \
-      -v $HOME/src/:/tmp/src:Z \
-      -v $HOME/.config/openstack/:/opt/app-root/src/.config/openstack/ \
-      -v $HOME/git:/tmp/git:Z \
-      -v $HOME/git/openshift-enablement-exam/misc/casl/misc/ansible.cfg:/etc/ansible/ansible.cfg:Z \
-      -e INVENTORY_DIR=/tmp/git/openshift-enablement-exam/misc/casl/inventory \
-      -e PLAYBOOK_FILE=/tmp/src/casl-ansible/playbooks/openshift/end-to-end.yml \
-      -e OPTS="-e openstack_ssh_public_key=rspazzol-etl2" -ti \
-      redhatcop/installer-openstack /bin/bash
       
 docker run -u `id -u` \
       -v $HOME/.ssh/rspazzol-etl3.pem:/opt/app-root/src/.ssh/rspazzol-etl3.pem:ro \
@@ -22,18 +11,7 @@ docker run -u `id -u` \
       -e INVENTORY_DIR=/tmp/git/openshift-enablement-exam/misc/casl/inventory \
       -e PLAYBOOK_FILE=/tmp/git/casl-ansible/playbooks/openshift/end-to-end.yml \
       -e OPTS="-e openstack_ssh_public_key=rspazzol-etl3" -ti \
-      redhatcop/installer-openstack /bin/bash      
-      
-docker run \
-      -v $HOME/.ssh/rspazzol-etl2.pem:/opt/app-root/src/.ssh/rspazzol-etl2.pem:Z \
-      -v $HOME/src/:/tmp/src:Z \
-      -v $HOME/.config/openstack/:/opt/app-root/src/.config/openstack/ \
-      -v $HOME/git:/tmp/git:Z \
-      -v $HOME/git/openshift-enablement-exam/misc/casl/misc/ansible.cfg:/etc/ansible/ansible.cfg:Z \
-      -e INVENTORY_DIR=/tmp/git/openshift-enablement-exam/misc/casl/inventory \
-      -e PLAYBOOK_FILE=/tmp/src/casl-ansible/playbooks/openshift/end-to-end.yml \
-      -e OPTS="-e openstack_ssh_public_key=rspazzol-etl2" -ti \
-      redhatcop/control-host-openstack     
+      redhatcop/installer-openstack /bin/bash           
       
 docker run -it --name control-host -v $HOME/.ssh:/root/.ssh -v $HOME/.config/openstack:/root/.config/openstack -v $HOME/git:/tmp/git:Z -v $HOME/git/openshift-enablement-exam/misc/casl/misc/ansible.cfg:/root/.ansible.cfg docker.io/redhatcop/control-host-openstack bash      
 
@@ -41,7 +19,7 @@ export ANSIBLE_CONFIG=/etc/ansible/ansible.cfg
 
 openstack stack delete -y env1.casl.raffa.com
 
-ansible-playbook -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory   /tmp/git/casl-ansible/playbooks/openshift/end-to-end.yml --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol-etl
+ansible-playbook -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory   /tmp/git/casl-ansible/playbooks/openshift/end-to-end.yml --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol
 
 ansible-playbook -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory   /tmp/git/openshift-ansible/playbooks/byo/config.yml --private-key=~/.ssh/rspazzol-etl2.pem -e openstack_ssh_public_key=rspazzol-etl2
 

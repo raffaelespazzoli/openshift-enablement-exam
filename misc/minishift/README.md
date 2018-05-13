@@ -5,7 +5,7 @@ minishift setup-cdk
 minishift config set vm-driver kvm
 minishift config set cpus 2
 minishift config set memory 12288
-minishift config set skip-registration
+minishift config set ocp-tag v3.9.14
 ```
 
 # starting minishift
@@ -13,6 +13,15 @@ minishift config set skip-registration
 ```
 minishift start --skip-registration
 ```
+MINISHIFT_ENABLE_EXPERIMENTAL=y minishift start --extra-clusterup-flags='--istio \
+               --launcher \
+               --launcher-catalog-git-branch=istio \
+               --launcher-catalog-git-repo=https://github.com/snowdrop/launcher-booster-catalog.git \
+               --launcher-openshift-user=admin \
+               --launcher-openshift-password=admin \
+               --launcher-github-token="" \
+               --launcher-github-username=""' \
+               --skip-registration
 
 ```
 minishift start --metrics --username rhn-gps-rspazzol --password <your_pwd> 

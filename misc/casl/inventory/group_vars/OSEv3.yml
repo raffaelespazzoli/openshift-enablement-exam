@@ -24,7 +24,7 @@ osm_cockpit_plugins:
 - 'cockpit-kubernetes'
 
 os_sdn_network_plugin_name: 'redhat/openshift-ovs-networkpolicy'
-os_firewall_use_firewalld: true
+os_firewall_use_firewalld: false
 
 # HTPASSWD Identity Provider
 openshift_master_identity_providers:
@@ -75,11 +75,3 @@ openshift_disable_check:
   - docker_storage
   - memory_availability
   - disk_availability
-  
-openshift_enable_service_catalog: false  
-  
-#cloudforms settings
-openshift_cfme_install_app: false
-openshift_management_install_beta: true
-openshift_management_app_template: cfme-template
-openshift_management_storage_class: cloudprovider 

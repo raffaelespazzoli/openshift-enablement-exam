@@ -18,22 +18,22 @@ etcd
 # For OSEv3 normal group vars, see ./group_vars/OSEv3.yml
 
 [masters:children]
-masters.env1.casl.raffa.com
+masters.raffa1.casl-contrib.osp.rht-labs.com
 
 [etcd:children]
-etcd.env1.casl.raffa.com
+masters.raffa1.casl-contrib.osp.rht-labs.com
 
 [nodes:children]
 masters
 infra_hosts
-nodes.env1.casl.raffa.com
+nodes.raffa1.casl-contrib.osp.rht-labs.com
 
 
 [infra_hosts:children]
-infra.env1.casl.raffa.com
+infra.raffa1.casl-contrib.osp.rht-labs.com
 
-[masters.env1.casl.raffa.com]
-[etcd.env1.casl.raffa.com]
-[nodes.env1.casl.raffa.com]
-[infra.env1.casl.raffa.com]
+[masters.raffa1.casl-contrib.osp.rht-labs.com]
+[etcd.raffa1.casl-contrib.osp.rht-labs.com]
+[nodes.raffa1.casl-contrib.osp.rht-labs.com]
+[infra.raffa1.casl-contrib.osp.rht-labs.com]
 

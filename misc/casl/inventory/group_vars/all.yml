@@ -12,9 +12,9 @@ openstack_subnet_prefix: 192.168.99
 openstack_num_masters: 1
 openstack_num_nodes: 4
 openstack_num_infra: 1
-env_id: "env1"
+env_id: "raffa1"
 
-dns_domain: "casl.raffa.com"
+dns_domain: "casl-contrib.osp.rht-labs.com"
 dns_nameservers:
 - 10.9.53.22
 
@@ -25,12 +25,12 @@ dns_nameservers:
 
 nsupdate_config:
   - view: public
-    zone: 'casl-core.osp.rht-labs.com'
+    zone: 'casl-contrib.osp.rht-labs.com'
     server_list:
-      - key_secret: 'TkwMjeqO2jp8CD3lzrcpkE5lR5x2u/J5Ja2gOWTLk58='
+      - key_secret: 'aXf4BXuIRCWhVkOFz1wPsMr1BsZ811MnazxTG0HkUOM='
         key_algorithm: 'hmac-sha256'
-        server: '10.9.53.36'
-        key_name: 'external-casl-core.osp.rht-labs.com'
+        server: '10.9.53.20'
+        key_name: 'external-casl-contrib.osp.rht-labs.com'
   - view: "private"
     zone: 'casl-contrib.osp.rht-labs.com'
     server_list:
@@ -56,8 +56,8 @@ openshift_hosted_registry_storage_kind: openstack
 
 # # Subscription Management Details
 rhsm_register: True
-rhsm_satellite: 'sat.casl.rht-labs.com'
-rhsm_org: 'CASL'
+rhsm_server_hostname: 'sat.casl.rht-labs.com'
+rhsm_org_id: 'CASL'
 rhsm_activationkey: 'casl-openshift'
 
 
@@ -67,7 +67,6 @@ rhsm_repos:
  - "rhel-7-server-extras-rpms"
  - "rhel-7-fast-datapath-rpms"
  - "rhel-7-server-optional-rpms"
-rhsm_password: ''
 
 
 
