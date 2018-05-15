@@ -1,0 +1,49 @@
+---
+  
+#- name: install openssl-devel
+#  package:
+#    name: openssl-devel
+#    state: present  
+
+- name: install python-firewall
+  package:
+    name: python-firewall
+    state: present
+
+- name: install firewalld
+  package:
+    name: firewalld
+    state: present
+    
+- name: enable and start or reload firewalld
+  service:
+    name: firewalld
+    state: reloaded
+    enabled: yes    
+
+- name: 'Open Firewall for HAproxy use'
+  firewalld: 
+    port: "{{item}}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items: {{ ports }}
+
+- name: 'Enable syslog logging' 
+  copy:
+    src: rsyslog_haproxy.conf
+    dest: /etc/rsyslog.d/haproxy.conf
+  notify: 'restart rsyslog'
+
+- name: install haproxy
+  package:
+    name: haproxy
+    state: present
+  
+- name: deploy haproxy config file
+  template:
+    src: "{{ haproxy_template }}"
+    dest: "/etc/haproxy/haproxy.cfg"
+    validate: 'haproxy -c -f %s'     
+  notify: 'enable and start or reload haproxy'
+    

@@ -1,0 +1,52 @@
+---
+
+- name: install python-firewall
+  package:
+    name: python-firewall
+    state: present
+    
+- name: install firewalld
+  package:
+    name: firewalld
+    state: present    
+    
+- name: enbale and start firewalld
+  service:
+    name: firewalld
+    state: reloaded
+    enabled: yes     
+
+- name: open VRRP port
+  firewalld:
+    rich_rule: 'rule protocol value="vrrp" accept'
+    permanent: true
+    state: enabled
+    immediate: true
+
+
+- name: 'Allow bind to the VIP'
+  lineinfile: 
+    path: /etc/sysctl.d/50-keepalived.conf
+    regexp: '^net.ipv4.ip_nonlocal_bind.*'
+    line: 'net.ipv4.ip_nonlocal_bind=1'
+    create: yes
+    state: present
+    owner: root
+    group: root
+    mode: 0644
+  notify: 'reload sysctl'
+    
+- name: install keepalived
+  package:
+    name: keepalived
+    state: present
+  notify: 'enable and start or reload keepalived'  
+    
+- name: deploy keepalived config file
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+    
+     
+    
+        

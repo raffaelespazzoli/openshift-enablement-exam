@@ -1,0 +1,1 @@
+lb_master_port: "{{ hostvars(groups['masters'][0]).openshift_master_api_port | default('8443') }}"

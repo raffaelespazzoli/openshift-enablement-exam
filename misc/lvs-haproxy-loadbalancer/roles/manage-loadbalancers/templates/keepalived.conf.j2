@@ -1,0 +1,26 @@
+vrrp_script chk_haproxy {
+  script "killall -0 haproxy"
+  interval 2
+  weight 2
+}
+
+vrrp_instance VI_1 {
+  interface {{ ansible_default_ipv4.interface }}
+  state {% if ansible_nodename == hostvars[groups['master-lbs'][0]].ansible_nodename %} MASTER {% else %} BACKUP {% endif %}
+  
+  virtual_router_id 51
+  priority {% if ansible_nodename == hostvars[groups['master-lbs'][0]].ansible_nodename %} 101 {% else %} 100 {% endif %}
+  
+  unicast_peer {
+  {% for ip in (groups['master-lbs'] | map('extract', hostvars, ['ansible_default_ipv4', 'address' ]) | list | difference( [ ansible_default_ipv4.address ] )) %}
+      {{ ip }}
+  {% endfor %}    
+  }  
+  
+  virtual_ipaddress {
+    {{ lb_VIP }}
+  }
+  track_script {
+    chk_haproxy
+  }
+}

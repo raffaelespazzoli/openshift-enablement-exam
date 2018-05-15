@@ -1,0 +1,17 @@
+---
+- hosts: master-lbs
+  vars: 
+    ports:
+    - {{ lb_master_port }}
+    haproxy_template: master-haproxy.conf.j2
+  roles:
+  - role: manage-loadbalancers
+  
+- hosts: infranode-lbs
+  vars: 
+    ports:
+    - 80
+    - 443
+    haproxy_template: infranode-haproxy.conf.j2
+  roles:
+  - role: manage-loadbalancers  
