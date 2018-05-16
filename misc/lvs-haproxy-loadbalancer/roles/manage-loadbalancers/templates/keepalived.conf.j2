@@ -18,7 +18,7 @@ vrrp_instance VI_1 {
   }  
   
   virtual_ipaddress {
-    {{ lb_VIP }}
+    {{ lb_vip }}
   }
   track_script {
     chk_haproxy

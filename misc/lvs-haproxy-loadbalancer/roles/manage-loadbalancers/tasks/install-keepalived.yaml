@@ -5,6 +5,11 @@
     name: python-firewall
     state: present
     
+#- name: install python-dns
+#  package:
+#    name: python-dns
+#    state: present    
+    
 - name: install firewalld
   package:
     name: firewalld
@@ -40,13 +45,13 @@
   package:
     name: keepalived
     state: present
-  notify: 'enable and start or reload keepalived'  
+  
     
 - name: deploy keepalived config file
   template:
     src: keepalived.conf.j2
     dest: /etc/keepalived/keepalived.conf
-    
+  notify: 'enable and start or reload keepalived'   
      
     
         

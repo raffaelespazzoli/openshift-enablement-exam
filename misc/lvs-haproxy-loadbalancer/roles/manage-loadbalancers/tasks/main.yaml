@@ -1,7 +1,7 @@
 ---
 
-- name: install keepalived
+- name: install and configure keepalived
   include_tasks: install-keepalived.yaml
   
-- name: install haproxy
+- name: install and configure haproxy
   include_tasks: install-haproxy.yaml  

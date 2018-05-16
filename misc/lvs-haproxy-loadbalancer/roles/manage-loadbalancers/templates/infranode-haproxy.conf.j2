@@ -20,9 +20,10 @@ global
     # turn on stats unix socket
     stats socket /var/lib/haproxy/stats
 
-    # utilize system-wide crypto-policies
-#    ssl-default-bind-ciphers PROFILE=SYSTEM
-#    ssl-default-server-ciphers PROFILE=SYSTEM
+listen stats :9000
+    mode http
+    stats enable
+    stats uri /
 
 #---------------------------------------------------------------------
 # common defaults that all the 'listen' and 'backend' sections will
@@ -47,17 +48,38 @@ defaults
     maxconn                 3000
 
 
-frontend master_frontend *:{{ lb_master_port }}
+frontend infranode-frontend-80 *:80
     mode tcp
     option tcplog
-    redirect scheme https if !{ ssl_fc }
-    default_backend masters
+    default_backend infranode-80
+    
+frontend infranode-frontend-443 *:443
+    mode tcp
+    option tcplog
+    default_backend infranode-443    
 
-backend masters
+backend infranode-80
     balance roundrobin
     mode tcp
     option httpchk GET /healtz
     http-check expect status 200
-{% for server in groups['masters'] %}
-    server  {{ hostvars[server].ansible_nodename }} {{ hostvars[server].ansible_default_ipv4.address }}:{{ lb_master_port }} check ssl verify none   
+{% for server in groups['nodes'] %}
+{% if hostvars[server].openshift_node_labels is defined %}
+{% if (hostvars[server].openshift_node_labels | intersect([hostvars[server].openshift_hosted_router_selector])) %}
+    server  {{ hostvars[server].ansible_nodename }} {{ hostvars[server].ansible_default_ipv4.address }}:80 check ssl verify none   
+{% endif %}
+{% endif %}
+{% endfor %}
+
+backend infranode-443
+    balance roundrobin
+    mode tcp
+    option httpchk GET /healtz
+    http-check expect status 200
+{% for server in groups['nodes'] %}
+{% if hostvars[server].openshift_node_labels is defined %}
+{% if (hostvars[server].openshift_node_labels | intersect([hostvars[server].openshift_hosted_router_selector])) %}
+    server  {{ hostvars[server].ansible_nodename }} {{ hostvars[server].ansible_default_ipv4.address }}:443 check ssl verify none
+{% endif %}
+{% endif %}       
 {% endfor %}

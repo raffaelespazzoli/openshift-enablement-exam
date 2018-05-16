@@ -10,16 +10,27 @@ etcd
 
 [etcd]
 10.9.53.57
-10.9.53.27
+10.9.53.62
 
 [masters]
 10.9.53.57
-10.9.53.27
+10.9.53.62
 
 [nodes]
+10.9.53.27 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+10.9.53.59 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 10.9.53.57
-10.9.53.27
+10.9.53.62
 
 [master-lbs]
-10.9.53.57
 10.9.53.27
+10.9.53.59
+
+[infranode-lbs]
+10.9.53.57
+10.9.53.62
+
+[OSEv3:vars]
+openshift_master_cluster_public_hostname = master.example.com
+openshift_master_default_subdomain = apps.example.com
+openshift_hosted_router_selector = 'region=infra'

@@ -84,3 +84,25 @@ osp_instances:
   - ssh-sec-group
   - icmp-sec-group
   - lb-sec-group
+- name: "lb3-raffa"
+  meta:
+    group: osp_instances
+  image: "rhel-server-7.5-x86_64"
+  key_name: "rspazzol"
+  flavor: "m1.small"
+  network: "raffa-static"
+  security_groups:
+  - ssh-sec-group
+  - icmp-sec-group
+  - lb-sec-group
+- name: "lb4-raffa"
+  meta:
+    group: osp_instances
+  image: "rhel-server-7.5-x86_64"
+  key_name: "rspazzol"
+  flavor: "m1.small"
+  network: "raffa-static"
+  security_groups:
+  - ssh-sec-group
+  - icmp-sec-group
+  - lb-sec-group  

@@ -17,8 +17,8 @@ The VIPs will be retrived by resolving the following FQDNs:
 
 If the DNS entries for the VIPs are not yet created, the VIPs can be specified as follow (replace with valid values for your environment):
 ```
-master-VIP: '192.168.1.1'
-infranode-VIP: '192.168.1.2'
+master_vip: '192.168.1.1'
+infranode_vip: '192.168.1.2'
 ```
 
 This playbook expects two host groups:
@@ -28,3 +28,7 @@ This playbook expects two host groups:
 [infranode-lbs]
 ```
 Currently the playbook supports creating two separate load balancers, therefore these two groups must not have hosts in common. 
+
+Currently this playbook supports only one VIP per load balancer. This means only one member of the load balancer cluster is active. In some situations it might be preferable to spread the load across multiple members. For this configuration to wrk the DNS must be able to load balance on multiple VIPs and the load balancer cluster mus expose multiple VIPs. This configuration is not currently supported.
+
+This playbook requires `python-dns` installed on the ansible hosts. 

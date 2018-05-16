@@ -19,15 +19,15 @@
   service:
     name: firewalld
     state: reloaded
-    enabled: yes    
+    enabled: yes       
 
 - name: 'Open Firewall for HAproxy use'
   firewalld: 
-    port: "{{item}}"
+    port: "{{ item }}"
     permanent: yes
     state: enabled
     immediate: yes
-  with_items: {{ ports }}
+  with_items: "{{ ports }}"
 
 - name: 'Enable syslog logging' 
   copy:
@@ -39,6 +39,12 @@
   package:
     name: haproxy
     state: present
+
+#- name: debug
+#  debug:
+#    msg: "{{ hostvars[item].openshift_node_labels }}"
+#  with_items: "{{ groups['nodes'] }}"   
+
   
 - name: deploy haproxy config file
   template:

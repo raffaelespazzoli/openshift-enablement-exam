@@ -3,13 +3,13 @@
 - name: 'reload sysctl'
   command: sysctl -p
 
-- name: enable and start or reload keepalived
+- name: 'enable and start or reload keepalived'
   service:
     name: keepalived
     state: reloaded
     enabled: yes  
     
-- name: enable and start or reload haproxy
+- name: 'enable and start or reload haproxy'
   service:
     name: haproxy
     state: reloaded
