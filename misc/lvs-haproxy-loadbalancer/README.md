@@ -31,4 +31,25 @@ Currently the playbook supports creating two separate load balancers, therefore 
 
 Currently this playbook supports only one VIP per load balancer. This means only one member of the load balancer cluster is active. In some situations it might be preferable to spread the load across multiple members. For this configuration to wrk the DNS must be able to load balance on multiple VIPs and the load balancer cluster mus expose multiple VIPs. This configuration is not currently supported.
 
-This playbook requires `python-dns` installed on the ansible hosts. 
+## Ansible dependency check
+
+This playbook requires `dnspython` to be installed on the ansible host. To verify this module is installed use the following command:
+``` 
+$ ansible localhost -m debug -a var='lookup("dig","google.com")'
+``` 
+If the above returns  
+```
+ [WARNING]: provided hosts list is empty, only localhost is available
+
+localhost | FAILED! => {
+    "failed": true,                                                                                                                                                 
+    "msg": "Can't LOOKUP(dig): module dns.resolver is not installed"                                                                                                
+}   
+```
+Then you need to install the `dnspython` module with pip. As root, perform the following.
+
+```
+yum install epel-release  
+yum install python-pip 
+pip install dnspython
+```
