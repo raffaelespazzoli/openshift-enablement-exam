@@ -56,7 +56,7 @@ frontend master_frontend *:{{ lb_master_port }}
 backend masters
     balance roundrobin
     mode tcp
-    option httpchk GET /healtz
+    option httpchk GET /healthz
     http-check expect status 200
 {% for server in groups['masters'] %}
     server  {{ hostvars[server].ansible_nodename }} {{ hostvars[server].ansible_default_ipv4.address }}:{{ lb_master_port }} check ssl verify none   
