@@ -1,5 +1,4 @@
 ---
-
 - hosts: all
   gather_facts: true
 
@@ -7,6 +6,7 @@
   vars: 
     ports:
     - "{{ lb_master_port }}/tcp"
+    lb_type: master
     haproxy_template: master-haproxy.conf.j2
     lb_vip: "{{ lb_master_vip }}" 
   roles:
@@ -17,7 +17,8 @@
     ports:
     - 80/tcp
     - 443/tcp
+    lb_type: infranode
     haproxy_template: infranode-haproxy.conf.j2
     lb_vip: "{{ lb_infranode_vip }}" 
   roles:
-  - role: manage-loadbalancers  
+  - role: manage-loadbalancers
