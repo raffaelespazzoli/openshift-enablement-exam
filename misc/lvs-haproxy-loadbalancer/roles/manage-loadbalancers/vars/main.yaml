@@ -1,3 +1,4 @@
 lb_master_port: "{{ hostvars[groups['masters'][0]].openshift_master_api_port | default('8443') }}"
-lb_master_vip: "{{ lookup('dnstxt', hostvars[groups['masters'][0]].openshift_master_cluster_public_hostname) | default(master_vip) }}"
-lb_infranode_vip: "{{ lookup('dnstxt', 'a.'~hostvars[groups['masters'][0]].openshift_master_default_subdomain) | default(infranode_vip) }}"
+
+lb_master_vip: "{{ lookup('dig', hostvars[groups['masters'][0]].openshift_master_cluster_public_hostname) | default(infranode_vip) }}"
+lb_infranode_vip: "{{ lookup('dig', hostvars[groups['masters'][0]].openshift_master_default_subdomain) | default(infranode_vip) }}"
