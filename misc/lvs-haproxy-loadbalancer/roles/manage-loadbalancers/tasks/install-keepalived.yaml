@@ -49,9 +49,6 @@
     
 - name: deploy keepalived config file
   template:
-    src: keepalived.conf.j2
+    src: "{{ lb_type }}-keepalived.conf.j2"
     dest: /etc/keepalived/keepalived.conf
-  notify: 'enable and start or reload keepalived'   
-     
-    
-        
+  notify: 'enable and start or reload keepalived'

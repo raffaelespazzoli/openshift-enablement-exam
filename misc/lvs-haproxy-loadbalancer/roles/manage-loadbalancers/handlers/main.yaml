@@ -18,4 +18,4 @@
 - name: 'restart rsyslog'
   service:
     name: rsyslog
-    state: restarted       
+    state: restarted
