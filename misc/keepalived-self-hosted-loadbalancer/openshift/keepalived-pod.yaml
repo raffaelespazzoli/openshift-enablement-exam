@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myipfailover
+  labels:
+    role: loadbalancer
+spec:
+  hostNetwork: true
+  containers:
+  - name: myipfailover
+    image: "registry.access.redhat.com/openshift3/ose-keepalived-ipfailover:v3.9.14"
+    command:
+#    - /bin/bash
+#    - -c
+#    - "sleep infinity"
+    - /usr/sbin/keepalived
+    - -l
+    - -D
+    - -n
+    args:
+    - -f
+    - /etc/keepalived.d/keepalived.conf
+    ports:
+    - containerPort: 63000
+      hostPort: 63000
+      protocol: TCP
+    volumeMounts:
+    - mountPath: /lib/modules
+      name: lib-modules
+      readOnly: true
+    - mountPath: /etc/keepalived.d
+      name: config
+      readOnly: true      
+    securityContext:
+      privileged: true            
+  volumes:
+  - hostPath:
+      path: /lib/modules
+    name: lib-modules  
+  - hostPath:
+      path: /etc/kubelet.pod.d
+    name: config    
+  nodeSelector:
+    kubernetes.io/hostname: master-0.raffa1.casl-contrib.osp.rht-labs.com
+    
+          

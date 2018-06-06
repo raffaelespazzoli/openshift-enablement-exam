@@ -31,6 +31,8 @@ ansible nodes -vv -b -i /tmp/git/openshift-enablement-exam/misc/casl/inventory -
 
 ansible nodes -vv -b -i /tmp/git/openshift-enablement-exam/misc/casl/inventory -m shell -a "rm -rf /etc/origin && rm -rf /var/lib/etcd && rm -rf /var/lib/etcd" --private-key=~/.ssh/rspazzol-etl2.pem -e openstack_ssh_public_key=rspazzol-etl2
 
+ansible nodes -vv -b -i /tmp/git/openshift-enablement-exam/misc/casl/inventory -m file -a "state=directory name=/etc/kubelet.d" --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol
+
 
 
 

@@ -44,17 +44,21 @@ openshift_hosted_registry_selector: 'region=infra'
 openshift_hosted_manage_registry: true
 
 # Deploy Logging with dynamic storage
-openshift_hosted_logging_deploy: true
+openshift_hosted_logging_deploy: false
 openshift_logging_install_logging: true
 openshift_logging_es_pvc_dynamic: true
 openshift_logging_es_pvc_size: 40G
 openshift_logging_curator_default_days: 1
 
 # Deploy Metrics with dynamic storage
-openshift_metrics_install_metrics: true
+openshift_metrics_install_metrics: false
 openshift_metrics_cassandra_storage_type: dynamic
 openshift_metrics_cassandra_pvc_size: 40G
 openshift_metrics_duration: 2
+
+openshift_enable_service_catalog: false
+openshift_hosted_prometheus_deploy: false
+openshift_cfme_install_app: false 
 
 openshift_docker_options: "--log-driver=json-file --log-opt max-size=50m --log-opt max-file=100"
 
@@ -75,3 +79,8 @@ openshift_disable_check:
   - docker_storage
   - memory_availability
   - disk_availability
+  
+static_pod_manifest_path: /etc/kubelet.d
+static_pod_config_path: /etc/kubelet.pod.d  
+lb_masters_vip: 192.168.99.100
+lb_routers_vip: 192.168.99.101

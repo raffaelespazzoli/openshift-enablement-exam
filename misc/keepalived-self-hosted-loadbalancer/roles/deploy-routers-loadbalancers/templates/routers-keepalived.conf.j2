@@ -1,0 +1,78 @@
+global_defs {
+
+}
+
+vrrp_instance vi_master {
+    interface {{ ansible_default_ipv4.interface }}
+    
+    state {% if ansible_nodename == hostvars[groups['routers-lbs'][0]].ansible_hostname %} MASTER {% else %} BACKUP {% endif %}
+    
+    virtual_router_id {{ routers_virtual_router_id }}
+    
+    priority {% if ansible_nodename == hostvars[groups['routers-lbs'][0]].ansible_hostname %} 101 {% else %} 100 {% endif %}
+    
+    advert_int 1
+    
+    unicast_peer {
+    {% for ip in (groups['routers-lbs'] | map('extract', hostvars, ['ansible_default_ipv4', 'address' ]) | list | difference( [ ansible_default_ipv4.address ] )) %}
+        {{ ip }}
+    {% endfor %}    
+    }  
+    
+    virtual_ipaddress {
+      {{ lb_routers_vip }}
+    }
+}
+
+virtual_server {{ lb_routers_vip }} 80 {
+    delay_loop 20
+    lb_algo rr
+    lb_kind NAT
+    persistence_timeout 360
+    protocol TCP
+
+{% for server in groups['nodes'] %}
+{% if hostvars[server].openshift_node_labels is defined %}
+{% for k,v in hostvars[server].openshift_node_labels.items() %} 
+{% if ((k~'='~v) == hostvars[server].openshift_hosted_router_selector) %}
+
+    real_server {{ hostvars[server].ansible_default_ipv4.address }} 80 {
+        weight 1
+        TCP_CHECK {
+            connect_timeout 3
+        }        
+    }
+
+
+{% endif %}
+{% endfor %}
+{% endif %}       
+{% endfor %}    
+  
+}
+
+virtual_server {{ lb_routers_vip }} 443 {
+    delay_loop 20
+    lb_algo rr
+    lb_kind NAT
+    persistence_timeout 360
+    protocol TCP
+
+{% for server in groups['nodes'] %}
+{% if hostvars[server].openshift_node_labels is defined %}
+{% for k,v in hostvars[server].openshift_node_labels.items() %} 
+{% if ((k~'='~v) == hostvars[server].openshift_hosted_router_selector) %}
+
+    real_server {{ hostvars[server].ansible_default_ipv4.address }} 443 {
+        weight 1
+        TCP_CHECK {
+            connect_timeout 3
+        }        
+    }
+
+{% endif %}
+{% endfor %}
+{% endif %}       
+{% endfor %}    
+  
+}

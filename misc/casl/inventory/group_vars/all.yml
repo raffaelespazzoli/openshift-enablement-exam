@@ -9,9 +9,9 @@ openstack_default_flavor: "etl1.large"
 openstack_external_network_name: "external"
 #openstack_dns_domain: "casl.raffa.com"
 openstack_subnet_prefix: 192.168.99
-openstack_num_masters: 1
-openstack_num_nodes: 4
-openstack_num_infra: 1
+openstack_num_masters: 3
+openstack_num_nodes: 1
+openstack_num_infra: 3
 env_id: "raffa1"
 
 dns_domain: "casl-contrib.osp.rht-labs.com"
@@ -43,7 +43,7 @@ openstack_lb_flavor: m1.small
 openstack_etcd_flavor: m1.large
 openstack_master_flavor: m1.large
 openstack_node_flavor: etl1.medium
-openstack_infra_flavor: etl1.large
+openstack_infra_flavor: etl1.medium
 openstack_dns_flavor: m1.small
 
 

@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: master-loadbalancer
+  labels:
+    role: master-loadbalancer
+spec:
+  hostNetwork: true
+  containers:
+  - name: myipfailover
+    image: "registry.access.redhat.com/openshift3/ose-keepalived-ipfailover:v3.9.14"
+    command:
+    - /usr/sbin/keepalived
+    - -l
+    - -D
+    - -n
+    args:
+    - -f
+    - /etc/keepalived.d/masters-keepalived.conf
+    ports:
+    - containerPort: 63000
+      hostPort: 63000
+      protocol: TCP
+    volumeMounts:
+    - mountPath: /lib/modules
+      name: lib-modules
+      readOnly: true
+    - mountPath: /etc/keepalived.d
+      name: config
+      readOnly: true      
+    securityContext:
+      privileged: true            
+  volumes:
+  - hostPath:
+      path: /lib/modules
+    name: lib-modules  
+  - hostPath:
+      path: /etc/kubelet.pod.d
+    name: config
+    
+          

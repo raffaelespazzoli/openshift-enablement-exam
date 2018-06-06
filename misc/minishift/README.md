@@ -6,6 +6,7 @@ minishift config set vm-driver kvm
 minishift config set cpus 2
 minishift config set memory 12288
 minishift config set ocp-tag v3.9.14
+minishift config set ocp-tag v3.9.27
 ```
 
 # starting minishift
