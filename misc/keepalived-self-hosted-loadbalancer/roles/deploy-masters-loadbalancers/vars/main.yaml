@@ -1,0 +1,2 @@
+masters_virtual_router_id: 51
+openshift_master_api_port: 8443

@@ -11,11 +11,28 @@ OSEv3
 masters
 nodes
 etcd
+masters-lbs
+routers-lbs
+lb
 
 # Set variables common for all OSEv3 hosts
 #[OSEv3:vars]
 
 # For OSEv3 normal group vars, see ./group_vars/OSEv3.yml
+
+[lb:children]
+lb.raffa1.casl-contrib.osp.rht-labs.com
+
+[masters-lbs:children]
+masters
+
+[routers-lbs:children]
+infra_hosts
+
+[nodes:children]
+masters
+infra_hosts
+nodes.raffa1.casl-contrib.osp.rht-labs.com
 
 [masters:children]
 masters.raffa1.casl-contrib.osp.rht-labs.com
@@ -23,17 +40,14 @@ masters.raffa1.casl-contrib.osp.rht-labs.com
 [etcd:children]
 masters.raffa1.casl-contrib.osp.rht-labs.com
 
-[nodes:children]
-masters
-infra_hosts
-nodes.raffa1.casl-contrib.osp.rht-labs.com
-
-
 [infra_hosts:children]
 infra.raffa1.casl-contrib.osp.rht-labs.com
 
+
+
+[nodes.raffa1.casl-contrib.osp.rht-labs.com]
 [masters.raffa1.casl-contrib.osp.rht-labs.com]
 [etcd.raffa1.casl-contrib.osp.rht-labs.com]
-[nodes.raffa1.casl-contrib.osp.rht-labs.com]
 [infra.raffa1.casl-contrib.osp.rht-labs.com]
+[lb.raffa1.casl-contrib.osp.rht-labs.com]
 

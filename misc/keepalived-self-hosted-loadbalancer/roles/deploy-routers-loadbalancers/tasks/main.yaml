@@ -1,0 +1,66 @@
+- name: install python-firewall
+  package:
+    name: python-firewall
+    state: present   
+    
+- name: install firewalld
+  package:
+    name: firewalld
+    state: present
+  when: os_firewall_use_firewalld         
+
+- name: open VRRP port
+  firewalld:
+    rich_rule: 'rule protocol value="vrrp" accept'
+    permanent: true
+    state: enabled
+    immediate: true
+  when: os_firewall_use_firewalld    
+    
+- name: open VRRP port - iptables
+  iptables: 
+    chain: INPUT
+    protocol: vrrp
+    jump: ACCEPT
+  when: not os_firewall_use_firewalld
+  
+- name: reload iptables
+  service:
+    name: iptables
+    state: restarted
+  when: not os_firewall_use_firewalld
+  
+- name: 'Enable IP forwading'
+  lineinfile: 
+    path: /etc/sysctl.d/50-keepalived.conf
+    regexp: '^net.ipv4.ip_forward.*'
+    line: 'net.ipv4.ip_forward=1'
+    create: yes
+    state: present
+    owner: root
+    group: root
+    mode: 0644
+
+- name: 'reload sysctl'
+  command: sysctl -p       
+    
+- name: make sure conf dir is present
+  file:
+    name: "{{ static_pod_config_path }}"
+    state: directory    
+    
+- name: create routers keepalived configuration
+  template:
+    src: routers-keepalived.conf.j2
+    dest: "{{ static_pod_config_path }}/routers-keepalived.conf"
+
+- name: make sure pod dir is present
+  file:
+    name: "{{ static_pod_manifest_path }}"
+    state: directory
+
+- name: create routers keepalived pod definition    
+  template:
+    src: routers-keepalived-pod.yaml.j2
+    dest: "{{ static_pod_manifest_path }}/routers-keepalived-pod.yaml"
+    

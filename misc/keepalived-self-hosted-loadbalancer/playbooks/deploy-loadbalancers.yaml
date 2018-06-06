@@ -1,0 +1,10 @@
+- hosts: all
+  gather_facts: true
+  
+- hosts: masters-lbs
+  roles:
+  - role: deploy-masters-loadbalancers  
+ 
+- hosts: routers-lbs
+  roles:
+  - role: deploy-routers-loadbalancers   

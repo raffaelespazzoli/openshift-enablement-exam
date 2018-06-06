@@ -30,7 +30,7 @@ openshift_hosted_registry_selector: 'region=infra'
 openshift_hosted_manage_registry: true
 #openshift_hosted_registry_storage_kind: 
 
-#openshift_logging_install_logging: false
+#
 #openshift_logging_es_pvc_dynamic: true
 #openshift_logging_es_pvc_size: 10Gi
 #openshift_logging_es_cluster_size: 3

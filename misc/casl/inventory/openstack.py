@@ -68,6 +68,7 @@ import shade
 import shade.inventory
 
 CONFIG_FILES = ['/etc/ansible/openstack.yaml', '/etc/ansible/openstack.yml']
+#CONFIG_FILES = ['/tmp/git/openshift-enablement-exam/misc/casl/inventory/clouds.yaml']
 
 
 def get_groups_from_server(server_vars, namegroup=True):
