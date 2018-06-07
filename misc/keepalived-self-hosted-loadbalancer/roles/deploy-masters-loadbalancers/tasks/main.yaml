@@ -1,5 +1,25 @@
 #- load ip_vs iptables and ipset modules
 
+- name: make sure modules are loaded at boot
+  file: 
+    src: ../files/keepalived-pod.conf
+    dest: /etc/modules-load.d/keepalived-pod.conf
+    
+- name: make sure ip_vs is loaded
+  modprobe:
+    name: ip_vs
+    state: present
+
+- name: make sure iptables is loaded
+  modprobe:
+    name: iptables
+    state: present
+
+- name: make sure ipset is loaded
+  modprobe:
+    name: ipset
+    state: present    
+
 - name: install python-firewall
   package:
     name: python-firewall
