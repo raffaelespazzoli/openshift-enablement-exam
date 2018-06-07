@@ -1,8 +1,8 @@
 #- load ip_vs iptables and ipset modules
 
 - name: make sure modules are loaded at boot
-  file: 
-    src: ../files/keepalived-pod.conf
+  template: 
+    src: keepalived-pod.conf
     dest: /etc/modules-load.d/keepalived-pod.conf
     
 - name: make sure ip_vs is loaded
