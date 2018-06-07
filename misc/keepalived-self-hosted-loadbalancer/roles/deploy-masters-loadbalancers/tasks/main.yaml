@@ -12,7 +12,7 @@
 
 - name: make sure ipset is loaded
   modprobe:
-    name: ipset
+    name: ip_set
     state: present    
 
 - name: install python-firewall
