@@ -1,3 +1,5 @@
+#- load ip_vs iptables and ipset modules
+
 - name: install python-firewall
   package:
     name: python-firewall
