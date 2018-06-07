@@ -10,11 +10,6 @@
     name: ip_vs
     state: present
 
-- name: make sure iptables is loaded
-  modprobe:
-    name: iptables
-    state: present
-
 - name: make sure ipset is loaded
   modprobe:
     name: ipset
