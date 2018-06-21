@@ -1,7 +1,9 @@
 global
     chroot      /var/lib/haproxy
-    user        haproxy
-    group       haproxy
+ #   user        haproxy
+ #   group       haproxy
+    uid 1000
+    gid 1000
     daemon
 
     maxconn     20000
@@ -28,7 +30,8 @@ defaults
     timeout check           5s
     maxconn                 20000
 
-listen stats {{ ansible_default_ipv4.address }}:1396
+listen stats 
+    bind {{ ansible_default_ipv4.address }}:1396
     mode http
     stats enable
     stats uri       /
@@ -39,7 +42,7 @@ frontend master-api-frontend
     bind {{ lb_masters_vip }}:{{ openshift_master_api_port }}
     mode tcp
     option tcplog
-    default_backend atomic-openshift-master-api-backend
+    default_backend master-api-backend
 
 backend master-api-backend
     mode tcp
