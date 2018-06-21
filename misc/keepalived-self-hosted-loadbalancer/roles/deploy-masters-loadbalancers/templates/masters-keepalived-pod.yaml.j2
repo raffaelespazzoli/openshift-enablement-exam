@@ -32,9 +32,9 @@ spec:
     - /usr/sbin/haproxy
     args:
     - -f
-    - /etc/keepalived.d/masters-haproxy.conf
+    - /etc/haproxy.d/masters-haproxy.conf
     volumeMounts:
-    - mountPath: /etc/keepalived.d
+    - mountPath: /etc/haproxy.d
       name: config
       readOnly: true      
     securityContext:
