@@ -1,0 +1,49 @@
+global
+    chroot      /var/lib/haproxy
+    user        haproxy
+    group       haproxy
+    daemon
+
+    maxconn     20000
+
+    log         127.0.0.1 local0 notice
+    # Uncomment to enable connection level logging and debug messages
+#    log         127.0.0.1 local1 debug
+
+    stats socket /var/lib/haproxy/stats mode 600
+
+# See https://docs.openshift.com/container-platform/latest/architecture/core_concepts/routes.html#env-variables
+defaults
+    log                     global
+    mode                    http
+    option                  httplog
+    option                  dontlognull
+    option                  log-separate-errors
+    option                  http-server-close
+    timeout http-request    5s
+    timeout connect         5s
+    timeout client          30s
+    timeout server          30s
+    timeout tunnel          1h
+    timeout check           5s
+    maxconn                 20000
+
+listen stats {{ internal_vip }}:9000
+    mode http
+    stats enable
+    stats uri       /
+#   stats auth      admin:password
+    stats refresh   5s
+
+frontend master-api-frontend
+    bind {{ lb_masters_vip }}:{{ openshift_master_api_port }}
+    mode tcp
+    option tcplog
+    default_backend atomic-openshift-master-api-backend
+
+backend master-api-backend
+    mode tcp
+    balance source
+{% for server in groups['masters'] %}
+    server {{ hostvars[server].ansible_hostname }} {{ hostvars[server].ansible_default_ipv4.address }}:{{ openshift_master_api_port }} check
+{% endfor %}

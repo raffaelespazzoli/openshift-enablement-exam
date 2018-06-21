@@ -18,12 +18,14 @@ spec:
   selector:
     app: nfs-provisioner
 ---
-kind: DeploymentConfig
-apiVersion: v1
+kind: Deployment
+apiVersion: extensions/v1beta1
 metadata:
   name: nfs-provisioner
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -31,7 +33,7 @@ spec:
     spec:
       containers:
         - name: nfs-provisioner
-          image: wongma7/nfs-provisioner
+          image: quay.io/kubernetes_incubator/nfs-provisioner:v1.0.8
           ports:
             - name: nfs
               containerPort: 2049
@@ -43,12 +45,13 @@ spec:
               containerPort: 111
               protocol: UDP
           securityContext:
-            privileged: true
             capabilities:
               add:
                 - DAC_READ_SEARCH
+#                - SYS_RESOURCE
           args:
-            - "-provisioner=local-pod/nfs"
+            - "-provisioner=example.com/nfs"
+            - "-grace-period=10"
           env:
             - name: POD_IP
               valueFrom:
@@ -63,9 +66,8 @@ spec:
           imagePullPolicy: "IfNotPresent"
           volumeMounts:
             - name: export-volume
-              mountPath: /export      
-      serviceAccount: nfs-provisioner
+              mountPath: /export
       volumes:
         - name: export-volume
           hostPath:
-            path: /export2
+            path: /tmp/nfs-provisioner

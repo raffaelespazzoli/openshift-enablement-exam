@@ -6,15 +6,12 @@ You will need oc client v1.4, I believe the server can be 3.3, but I tested only
 ```
 oc new-project nfs-provisioner
 oc create sa nfs-provisioner
-oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-scc.yaml
+oc apply -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-scc.yaml
 oc adm policy add-scc-to-user nfs-provisioner -z nfs-provisioner
-oc adm policy add-cluster-role-to-user cluster-reader system:serviceaccount:nfs-provisioner:nfs-provisioner
-oc adm policy add-cluster-role-to-user system:pv-provisioner-controller system:serviceaccount:nfs-provisioner:nfs-provisioner
-oc adm policy add-cluster-role-to-user system:pv-binder-controller system:serviceaccount:nfs-provisioner:nfs-provisioner
-oc adm policy add-cluster-role-to-user system:pv-recycler-controller system:serviceaccount:nfs-provisioner:nfs-provisioner
-oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-class.yaml
-oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-dc.yaml
-oc create -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-pvc.yaml
+oc apply -f https://raw.githubusercontent.com/kubernetes-incubator/external-storage/master/nfs/deploy/kubernetes/auth/openshift-clusterrole.yaml
+oc adm policy add-cluster-role-to-user nfs-provisioner-runner -z nfs-provisioner
+oc apply -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-dc.yaml
+oc apply -f https://raw.githubusercontent.com/raffaelespazzoli/openshift-enablement-exam/master/misc/nfs-dp/nfs-provisioner-class.yaml
 ```
 
 if you want to create a default storage class for your cluster run
