@@ -3,14 +3,15 @@
 This is an Ansible playbook that install a L4 load balancer for Openshift. It will actually install two load balancers: one for the masters and one for the routers.
 The load balancers are highly available by means of a VIP. Both the VIP and the load balancing functions are managed by Keepalived.
 Keepalived is run as a pod inside openshift, therefore this loadbalancer is self-hosted.
+
 The below diagram depicts the architecture:
 
 ![Self-hosted loadbalancer](./media/self-hosted-loadbalancer.png) 
 
 The load balancer is needed before OpenShift starts. To work around this chicken-egg situation, the load balancer is deployed as a [static pod](https://kubernetes.io/docs/tasks/administer-cluster/static-pod/).
 
-The playbook makes sure that the nodes running the keepalived static pod are correclty configured.
-the playbook requires the definition of two new groups under the OSEv3 group: `master-lbs`, `routers-lbs`
+This playbook makes sure that the nodes running the keepalived static pod are correclty configured.
+This playbook requires the definition of two new groups under the OSEv3 group: `master-lbs`, `routers-lbs`
 
 ```
 [OSEv3:children]

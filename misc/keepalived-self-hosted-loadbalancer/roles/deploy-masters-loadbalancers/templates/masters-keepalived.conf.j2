@@ -24,22 +24,22 @@ vrrp_instance vi_master {
     }
 }
 
-virtual_server {{ lb_masters_vip }} {{ openshift_master_api_port }} {
-    delay_loop 20
-    lb_algo rr
-    lb_kind NAT
-    persistence_timeout 360
-    protocol TCP
-{% for server in groups['masters'] %}
-
-    real_server {{ hostvars[server].ansible_default_ipv4.address }} {{ openshift_master_api_port }} {
-        weight 1
-        TCP_CHECK {
-            connect_timeout 3
-        }        
-    }
-   
-{% endfor %}    
-    
-
-}
+#virtual_server {{ lb_masters_vip }} {{ openshift_master_api_port }} {
+#    delay_loop 20
+#    lb_algo rr
+#    lb_kind NAT
+#    persistence_timeout 360
+#    protocol TCP
+#{% for server in groups['masters'] %}
+#
+#    real_server {{ hostvars[server].ansible_default_ipv4.address }} {{ openshift_master_api_port }} {
+#        weight 1
+#        TCP_CHECK {
+#            connect_timeout 3
+#        }        
+#    }
+#   
+#{% endfor %}    
+#    
+#
+#}

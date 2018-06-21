@@ -2,7 +2,7 @@
 
 - name: make sure modules are loaded at boot
   template: 
-    src: keepalived-pod.conf
+    src: keepalived-pod-modules.conf
     dest: /etc/modules-load.d/keepalived-pod.conf
     
 - name: make sure ip_vs is loaded
@@ -28,6 +28,14 @@
     state: enabled
     immediate: true
   when: os_firewall_use_firewalld   
+
+- name: 'Open Firewalld for HAproxy use'
+  firewalld: 
+    port: "{{ openshift_master_api_port }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  when: os_firewall_use_firewalld      
   
 - name: open VRRP port - iptables
   iptables: 
@@ -36,17 +44,26 @@
     jump: ACCEPT
   when: not os_firewall_use_firewalld
   
+- name: open iptables for HAproxy use
+  iptables: 
+    chain: INPUT 
+    jump: ACCEPT 
+    protocol: tcp 
+    destination_port: "{{ openshift_master_api_port }}" 
+    comment: 'Accept HAProxy traffic for masters'
+  when: not os_firewall_use_firewalld    
+  
 - name: reload iptables
   service:
     name: iptables
     state: restarted
   when: not os_firewall_use_firewalld  
   
-- name: 'Enable IP forwading'
+- name: 'Allow bind to the VIP'
   lineinfile: 
     path: /etc/sysctl.d/50-keepalived.conf
-    regexp: '^net.ipv4.ip_forward.*'
-    line: 'net.ipv4.ip_forward=1'
+    regexp: '^net.ipv4.ip_nonlocal_bind.*'
+    line: 'net.ipv4.ip_nonlocal_bind=1'
     create: yes
     state: present
     owner: root
@@ -55,7 +72,16 @@
 
 - name: 'reload sysctl'
   command: sysctl -p  
-           
+  
+- name: 'Enable syslog logging' 
+  copy:
+    src: rsyslog_haproxy.conf
+    dest: /etc/rsyslog.d/haproxy.conf
+    
+- name: 'restart rsyslog'
+  service:
+    name: rsyslog
+    state: restarted          
 
 - name: make sure conf dir is present
   file:
@@ -66,6 +92,11 @@
   template:
     src: masters-keepalived.conf.j2
     dest: "{{ static_pod_config_path }}/masters-keepalived.conf"
+    
+- name: create the masters haproxy configuration  
+  template:
+    src: masters-haproxy.conf.j2
+    dest: "{{ static_pod_config_path }}/masters-haproxy.conf"  
 
 - name: make sure pod dir is present
   file:

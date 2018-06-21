@@ -7,7 +7,7 @@ metadata:
 spec:
   hostNetwork: true
   containers:
-  - name: myipfailover
+  - name: keepalived
     image: "registry.access.redhat.com/openshift3/ose-keepalived-ipfailover:{{ openshift_release }}"
     command:
     - /usr/sbin/keepalived
@@ -17,10 +17,6 @@ spec:
     args:
     - -f
     - /etc/keepalived.d/masters-keepalived.conf
-    ports:
-    - containerPort: 63000
-      hostPort: 63000
-      protocol: TCP
     volumeMounts:
     - mountPath: /lib/modules
       name: lib-modules
@@ -29,7 +25,20 @@ spec:
       name: config
       readOnly: true      
     securityContext:
-      privileged: true            
+      privileged: true     
+  - name: haproxy
+    image: "registry.connect.redhat.com/haproxytech/haproxy:latest"
+    command:
+    - /usr/sbin/haproxy
+    args:
+    - -f
+    - /etc/keepalived.d/masters-haproxy.conf
+    volumeMounts:
+    - mountPath: /etc/keepalived.d
+      name: config
+      readOnly: true      
+    securityContext:
+      privileged: true              
   volumes:
   - hostPath:
       path: /lib/modules
