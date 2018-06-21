@@ -28,7 +28,7 @@ defaults
     timeout check           5s
     maxconn                 20000
 
-listen stats {{ internal_vip }}:9000
+listen stats {{ ansible_default_ipv4.address }}:1396
     mode http
     stats enable
     stats uri       /
