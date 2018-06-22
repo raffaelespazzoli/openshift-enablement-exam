@@ -58,20 +58,18 @@
     name: iptables
     state: restarted
   when: not os_firewall_use_firewalld  
-  
-- name: 'Allow bind to the VIP'
-  lineinfile: 
-    path: /etc/sysctl.d/50-keepalived.conf
-    regexp: '^net.ipv4.ip_nonlocal_bind.*'
-    line: 'net.ipv4.ip_nonlocal_bind=1'
-    create: yes
-    state: present
-    owner: root
-    group: root
-    mode: 0644
+    
+- name: Enable IPv4 forwarding sysctl
+  sysctl: 
+    name: net.ipv4.ip_forward 
+    value: 1 
+    sysctl_set: yes  
 
-- name: 'reload sysctl'
-  command: sysctl -p  
+- name: Enable binding to non local ip
+  sysctl: 
+    name: net.ipv4.ip_nonlocal_bind 
+    value: 1 
+    sysctl_set: yes      
   
 - name: 'Enable syslog logging' 
   copy:
