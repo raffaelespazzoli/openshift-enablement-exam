@@ -27,9 +27,9 @@ spec:
     securityContext:
       privileged: true     
   - name: haproxy
-    image: "haproxy:latest"
+    image: "registry.access.redhat.com/openshift3/ose-haproxy-router:{{ openshift_release }}"
     command:
-    - /usr/local/sbin/haproxy
+    - /usr/sbin/haproxy
     args:
     - -f
     - /etc/haproxy.d/masters-haproxy.conf
