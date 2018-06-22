@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: master-loadbalancer
-  labels:
-    role: master-loadbalancer
+  annotations:
+    security.alpha.kubernetes.io/unsafe-sysctls: net.ipv4.ip_nonlocal_bind=1
 spec:
   hostNetwork: true
   containers:
