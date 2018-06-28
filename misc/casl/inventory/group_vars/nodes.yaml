@@ -28,7 +28,7 @@ openshift_node_kubelet_args:
   feature-gates:
   - PersistentLocalVolumes=true
   - HugePages=true
-  pod-manifest-path:
-  - "{{ static_pod_manifest_path }}" 
+#  pod-manifest-path:
+#  - "{{ static_pod_manifest_path }}" 
   
  
