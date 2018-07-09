@@ -67,6 +67,7 @@ spec:
           volumeMounts:
             - name: export-volume
               mountPath: /export
+      serviceAccount: nfs-provisioner        
       volumes:
         - name: export-volume
           hostPath:
