@@ -55,10 +55,10 @@ docker_storage_block_device: "/dev/vdb"
 openshift_hosted_registry_storage_kind: openstack
 
 # # Subscription Management Details
-rhsm_register: True
-rhsm_server_hostname: 'sat.casl.rht-labs.com'
-rhsm_org_id: 'CASL'
-rhsm_activationkey: 'casl-openshift'
+#rhsm_register: True
+#rhsm_server_hostname: 'sat.casl.rht-labs.com'
+#rhsm_org_id: 'CASL'
+#rhsm_activationkey: 'casl-openshift'
 
 
 rhsm_repos:
@@ -67,6 +67,12 @@ rhsm_repos:
  - "rhel-7-server-extras-rpms"
  - "rhel-7-fast-datapath-rpms"
  - "rhel-7-server-optional-rpms"
+ 
+ 
+rhsm_username: "{{ lookup('env','RHN_USERNAME') }}"
+rhsm_password: "{{ lookup('env','RHN_PASSWORD') }}"
+rhsm_register: true
+rhsm_pool: "{{ lookup('env','RHN_SUB_POOL') }}"
 
 
 
