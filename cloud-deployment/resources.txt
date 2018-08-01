@@ -1,2 +1,0 @@
-projects/united-sandbox-151818/regions/us-central1/forwardingRules/master-internal
-projects/united-sandbox-151818/regions/us-central1/backend-services/master-internal

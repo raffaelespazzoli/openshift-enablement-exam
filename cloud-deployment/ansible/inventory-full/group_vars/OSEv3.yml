@@ -3,7 +3,7 @@
 deployment_type: openshift-enterprise
 openshift_deployment_type: openshift-enterprise
 openshift_master_cluster_method: native
-openshift_release: v3.9
+openshift_release: v3.10
 
 
 # HTPASSWD Identity Provider
@@ -12,12 +12,12 @@ openshift_master_identity_providers:
    'login': 'true'
    'challenge': 'true'
    'kind': 'HTPasswdPasswordIdentityProvider'
-   'filename': '/etc/origin/master/htpasswd'
+#   'filename': '/etc/origin/master/htpasswd'
    
 openshift_master_htpasswd_users:
   admin: $apr1$7aiANAYb$TOUYVUqnBqBlD5AQEIMYw1   
   
-osm_default_node_selector: 'region=primary'
+#osm_default_node_selector: 'region=primary'
 
 openshift_docker_options: "--log-driver=json-file --log-opt max-size=50m --log-opt max-file=100"
 
@@ -31,48 +31,55 @@ openshift_disable_check:
   - memory_availability    
   - disk_availability    
   
-openshift_use_crio: true
-openshift_crio_enable_docker_gc: false
+#openshift_use_crio: true
+#openshift_crio_enable_docker_gc: false
 oreg_url: registry.access.redhat.com/openshift3/ose-${component}:${version}  
 
-openshift_hosted_router_selector: 'region=infra'
+#openshift_hosted_router_selector: 'region=infra'
 openshift_hosted_manage_router: true
 
-openshift_hosted_registry_selector: 'region=infra'
+#openshift_hosted_registry_selector: 'region=infra'
 openshift_hosted_manage_registry: true
+openshift_hosted_registry_storage_kind: object
+openshift_hosted_registry_storage_provider: gcs
+openshift_hosted_registry_storage_gcs_bucket: "{{ google_registry_bucket_name }}"
+openshift_hosted_registry_storage_gcs_keyfile: "{{ lookup('env','GCE_CREDENTIALS_FILE_PATH') }}"
+openshift_hosted_registry_storage_gcs_rootdirectory: /registry 
 
 openshift_logging_install_logging: true
 openshift_logging_es_pvc_dynamic: true
 openshift_logging_es_pvc_size: 10Gi
 openshift_logging_es_cluster_size: 3
 openshift_logging_es_number_of_replicas: 2
+openshift_logging_es_memory_limit: 2Gi
 openshift_logging_kibana_replica_count: 2
 openshift_logging_es_nodeselector: 
-  region: infra
+  'node-role.kubernetes.io/infra': 'true'
 openshift_logging_kibana_nodeselector: 
-  region: infra
+  'node-role.kubernetes.io/infra': 'true'
 openshift_logging_curator_nodeselector: 
-  region: infra
+  'node-role.kubernetes.io/infra': 'true'
 openshift_logging_eventrouter_nodeselector:
-  region: infra  
+  'node-role.kubernetes.io/infra': 'true'  
 openshift_logging_fluentd_audit_container_engine: true
 openshift_logging_install_eventrouter: true
 openshift_logging_curator_default_days: 7
+logging_elasticsearch_rollout_override: false
 
 openshift_metrics_install_metrics: true
 openshift_metrics_hawkular_nodeselector:
-  region: infra
+  'node-role.kubernetes.io/infra': 'true'
 openshift_metrics_cassandra_nodeselector: 
-  region: infra
+  'node-role.kubernetes.io/infra': 'true'
 openshift_metrics_heapster_nodeselector: 
-  region: infra
+  'node-role.kubernetes.io/infra': 'true'
 openshift_metrics_hawkular_agent_nodeselector: 
-  region: infra    
+  'node-role.kubernetes.io/infra': 'true'    
 openshift_metrics_cassandra_storage_type: dynamic 
 openshift_metrics_cassandra_pvc_size: 5Gi
 openshift_metrics_hawkular_replicas: 2
 openshift_metrics_cassandra_replicas: 3
-openshift_metrics_install_hawkular_agent: true 
+
 
 #service catalog
 openshift_enable_service_catalog: true
@@ -83,16 +90,17 @@ template_service_broker_install: true
   
   
 #cloudforms settings
-openshift_cfme_install_app: true
-openshift_management_install_beta: true
-openshift_management_app_template: cfme-template
-openshift_management_storage_class: cloudprovider 
+#openshift_cfme_install_app: true
+#openshift_management_install_beta: true
+#openshift_management_app_template: cfme-template
+#openshift_management_storage_class: cloudprovider 
 
 #prometheus
-openshift_hosted_prometheus_deploy: false
+openshift_prometheus_state: present
+openshift_prometheus_node_exporter_install: true
 openshift_prometheus_namespace: openshift-metrics
 openshift_prometheus_node_selector: 
-  region: infra
+  'node-role.kubernetes.io/infra': 'true'
 openshift_prometheus_storage_type: pvc
 openshift_prometheus_alertmanager_storage_type: pvc
 openshift_prometheus_alterbuffer_storage_type: pvc
@@ -102,9 +110,15 @@ openshift_prometheus_alterbuffer_storage_class: standard
 openshift_prometheus_pvc_name: prometheus-data
 openshift_prometheus_alertmanager_pvc_name: alertmanager-data
 openshift_prometheus_alterbuffer_pvc_name: alertbuffer-data
-openshift_prometheus_pvc_size: 3G
-openshift_prometheus_alertmanager_pvc_size: 1G
-openshift_prometheus_alertbuffer_pvc_size: 2G
+openshift_prometheus_pvc_size: 10G
+openshift_prometheus_alertmanager_pvc_size: 10G
+openshift_prometheus_alertbuffer_pvc_size: 10G
+
+#descheduler
+openshift_descheduler_install: true
+
+#node problem detector
+openshift_node_problem_detector_state: present
   
   
 
