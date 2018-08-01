@@ -6,4 +6,4 @@
   "basicAuth":false
 }
 
-{ "name":"prometheus", "type":"prometheus", "url":"http://prmetheus:9090", "access":"proxy", "basicAuth":false }
+{ "name":"prometheus", "type":"prometheus", "url":"http://prometheus:9090", "access":"proxy", "basicAuth":false }
