@@ -1,0 +1,79 @@
+host_key_checking: False
+ansible_user: openshift
+hosting_infrastructure: openstack
+# OpenStack Provisioning Variables
+# use the "-e" option to set "openstack_ssh_public_key"
+#openstack_ssh_public_key:
+openstack_default_image_name: "rhel-server-7.4-x86_64"
+openstack_default_flavor: "etl1.large"
+openstack_external_network_name: "external"
+#openstack_dns_domain: "casl.raffa.com"
+openstack_subnet_prefix: 192.168.98
+openstack_num_masters: 1
+openstack_num_nodes: 1
+openstack_num_infra: 1
+env_id: "raffa2"
+
+dns_domain: "casl-contrib.osp.rht-labs.com"
+dns_nameservers:
+- 10.9.53.22
+
+# Sample configuration for the use of DNS servers for name resolution
+# NOTE: The view names of `private` and `public` are REQUIRED as it indicates 
+#       the role each of these entries have.
+#       Each view section can have multiple servers (i.e.: it's a list of servers)
+
+nsupdate_config:
+  - view: public
+    zone: 'casl-contrib.osp.rht-labs.com'
+    server_list:
+      - key_secret: 'aXf4BXuIRCWhVkOFz1wPsMr1BsZ811MnazxTG0HkUOM='
+        key_algorithm: 'hmac-sha256'
+        server: '10.9.53.20'
+        key_name: 'external-casl-contrib.osp.rht-labs.com'
+  - view: "private"
+    zone: 'casl-contrib.osp.rht-labs.com'
+    server_list:
+      - key_secret: 'nYcNpkGi9eYuha3SdivBYopHFABg46VBRjj+l1cIPIQ='
+        key_algorithm: 'hmac-sha256'
+        key_name: 'internal-casl-contrib.osp.rht-labs.com'
+        server: '10.9.53.22'
+
+openstack_lb_flavor: m1.small
+openstack_etcd_flavor: m1.large
+openstack_master_flavor: m1.large
+openstack_node_flavor: etl1.medium
+openstack_infra_flavor: etl1.medium
+openstack_dns_flavor: m1.small
+
+
+
+docker_volume_size: "10"
+docker_storage_block_device: "/dev/vdb"
+
+
+openshift_hosted_registry_storage_kind: openstack
+
+# # Subscription Management Details
+#rhsm_register: True
+#rhsm_server_hostname: 'sat.casl.rht-labs.com'
+#rhsm_org_id: 'CASL'
+#rhsm_activationkey: 'casl-openshift'
+
+
+rhsm_repos:
+ - "rhel-7-server-rpms"
+ - "rhel-7-server-ose-3.9-rpms"
+ - "rhel-7-server-extras-rpms"
+ - "rhel-7-fast-datapath-rpms"
+ - "rhel-7-server-optional-rpms"
+ 
+ 
+rhsm_username: "{{ lookup('env','RHN_USERNAME') }}"
+rhsm_password: "{{ lookup('env','RHN_PASSWORD') }}"
+rhsm_register: true
+rhsm_pool: "{{ lookup('env','RHN_SUB_POOL') }}"
+
+
+
+

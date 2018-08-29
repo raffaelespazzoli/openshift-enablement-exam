@@ -9,6 +9,9 @@ minishift config set ocp-tag v3.9.14
 minishift config set ocp-tag v3.9.27
 ```
 
+minishift start --openshift-version=v3.10.14 --vm-driver=kvm \
+  --cpus=2 --memory=8GB
+
 # starting minishift
 
 ```

@@ -1,0 +1,53 @@
+#[all:vars]
+# For all group_vars, see ./group_vars/all.yml
+
+# Create an OSEv3 group that contains the master, nodes, etcd, and lb groups.
+# The lb group lets Ansible configure HAProxy as the load balancing solution.
+# Comment lb out if your load balancer is pre-configured.
+[cluster_hosts:children]
+OSEv3
+
+[OSEv3:children]
+masters
+nodes
+etcd
+masters-lbs
+routers-lbs
+lb
+
+# Set variables common for all OSEv3 hosts
+#[OSEv3:vars]
+
+# For OSEv3 normal group vars, see ./group_vars/OSEv3.yml
+
+[lb:children]
+lb.raffa2.casl-contrib.osp.rht-labs.com
+
+[masters-lbs:children]
+masters
+
+[routers-lbs:children]
+infra_hosts
+
+[nodes:children]
+masters
+infra_hosts
+nodes.raffa2.casl-contrib.osp.rht-labs.com
+
+[masters:children]
+masters.raffa2.casl-contrib.osp.rht-labs.com
+
+[etcd:children]
+masters.raffa2.casl-contrib.osp.rht-labs.com
+
+[infra_hosts:children]
+infra.raffa2.casl-contrib.osp.rht-labs.com
+
+
+
+[nodes.raffa2.casl-contrib.osp.rht-labs.com]
+[masters.raffa2.casl-contrib.osp.rht-labs.com]
+[etcd.raffa2.casl-contrib.osp.rht-labs.com]
+[infra.raffa2.casl-contrib.osp.rht-labs.com]
+[lb.raffa2.casl-contrib.osp.rht-labs.com]
+

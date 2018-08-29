@@ -1,0 +1,14 @@
+---
+
+openshift_node_labels: 
+  region: master 
+
+#alpha features
+osm_api_server_args:
+  feature-gates: 
+  - PersistentLocalVolumes=true
+  - HugePages=true 
+osm_controller_args:
+  feature-gates:
+  - PersistentLocalVolumes=true
+  - VolumeScheduling=true

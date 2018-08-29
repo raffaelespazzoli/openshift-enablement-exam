@@ -1,0 +1,15 @@
+# Default values for istio-mesh-extension.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+tunnelRemotePeer:
+tunnelCIDR:
+Namespace: istio-mesh-extension
+tunnelPort: 5555
+tunnelName: istio-mesh-tun
+
+image:
+  repository: quay.io/raffaelespazzoli/istio-mesh-extension
+  tag: latest
+  pullPolicy: IfNotPresent
+
