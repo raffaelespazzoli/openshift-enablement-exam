@@ -6,7 +6,8 @@
 # TUNNEL_REMOTE_PEER : the peer IP or VIP to which establish the tunnel 
 # TUNNEL_LOCAL_PEER : the local IP to be used for the tunnel
 # TUNNEL_CIDR : the CIDR that should be routed thoru this tunnel in x.x.x.x/x format
-# WG_CONFIG: the absolute location of the WG Config file
+# TUNNEL_PRIVATE_KEY: the absolute location of the private key file
+# TUNNEL_PEER_PUBLIC_KEY: the peer's public key
 
 set -o nounset
 set -o errexit
@@ -26,42 +27,81 @@ function setupFouTunnel {
   ip addr add $TUNNEL_CIDR dev $TUNNEL_DEV_NAME
   }
 
-function setupSocatTunnel {
+function setupSocat {
   # to debug add -d -d -d -d -D -v
   socat UDP:$TUNNEL_REMOTE_PEER:$TUNNEL_PORT,bind=$TUNNEL_LOCAL_PEER:$TUNNEL_PORT \
-  TUN:$TUNNEL_CIDR,tun-name=$TUNNEL_DEV_NAME,iff-no-pi,tun-type=tun,iff-up
+  TUN:$TUNNEL_CIDR,tun-name=$TUNNEL_DEV_NAME,iff-no-pi,tun-type=tun,iff-up &
   # attach the tunnel device to the openvswitch bridge
   }
 
-function SocatCleanup {
+function cleanupSocat {
   echo cleaning up
   killall socat
   }
 
-function setupClient {
+function setupSocatcs {
+  echo starting server
+  socat -d -d UDP-RECV:$TUNNEL_PORT,bind=$TUNNEL_LOCAL_PEER:$TUNNEL_PORT TUN:$TUNNEL_CIDR,tun-name=$TUNNEL_DEV_NAME,iff-no-pi,tun-type=tun,iff-up &  
   echo starting client 
-  socat -d -d UDP-SENDTO:$TUNNEL_REMOTE_PEER:$TUNNEL_PORT TUN,tun-name=$TUNNEL_DEV_NAME &
-  
+  socat -d -d UDP-SENDTO:$TUNNEL_REMOTE_PEER:$TUNNEL_PORT TUN,tun-name=$TUNNEL_DEV_NAME &  
   }
 
-function setupServer {
-  echo starting server
-  socat -d -d UDP-RECV:$TUNNEL_PORT,bind=$TUNNEL_LOCAL_PEER:$TUNNEL_PORT TUN:$TUNNEL_CIDR,tun-name=$TUNNEL_DEV_NAME,iff-no-pi,tun-type=tun,iff-up &
-}
+function cleanupSocatcs {
+  echo cleaning up
+  killall socat  
+  }
 
 function setupWg {
   ip link add dev $TUNNEL_DEV_NAME type wireguard
-  wg set $TUNNEL_DEV_NAME listen-port $TUNNEL:PORT end-point $TUNNEL_REMOTE_PEER:$TUNNEL_PORT allowed-ips $TUNNEL_CIDR
+  wg set $TUNNEL_DEV_NAME listen-port $TUNNEL:PORT end-point $TUNNEL_REMOTE_PEER:$TUNNEL_PORT allowed-ips $TUNNEL_CIDR private-key $TUNNEL_PRIVATE_KEY peer $TUNNEL_PEER_PUBLIC_KEY
+  ip link set up dev $TUNNEL_DEV_NAME
   }
 
+function cleanupWg {
+  ip link set down dev $TUNNEL_DEV_NAME  
+}
 
 
+function setup {
+  if [ $mode = fou ] then
+    setupFouTunnel()
+  elif [ $mode = socat ] then
+    setupSocat()
+  elif [ $mode = socatcs ] then
+    setupSocatcs()
+  elif [ $mode = wireguard ] then
+    setupWg()
+    
+  wireOVS()  
+  }
 
+function cleanup {
+  unwireOVS()
+  if [ $mode = fou ] then
+    cleanupFouTunnel()
+  elif [ $mode = socat ] then
+    cleanupSocat()
+  elif [ $mode = socatcs ] then
+    cleanupSocatcs()
+  elif [ $mode = wireguard ] then
+    cleanupWg()
+  }   
+}
+
+function wireOVS {
+  ovs-vsctl add-port br0 $TUNNEL_DEV_NAME
+  #TODO add flow rules  
+}
+
+function unwireOVS{
+  #TODO remove flow rules
+  ovs-vsctl add-port br0 $TUNNEL_DEV_NAME  
+}
 
 
 cleanup  
 trap cleanup TERM
-setupTunnel
+setup
 sleep inifinity
 trap - TERM
 
