@@ -70,7 +70,11 @@ spec:
         - name: TUNNEL_PORT
           value: '{{ .Values.tunnelPort }}'
         - name: TUNNEL_MODE
-          value: '{{ .Values.tunnelMode }}'                                           
+          value: '{{ .Values.tunnelMode }}'
+        - name: TUNNEL_PEER_PUBLIC_KEY
+          value: '{{ .Values.tunnelPeerPublicKey }}'
+        - name: TUNNEL_PRIVATE_KEY
+          value: '{{ .Values.tunnelPrivateKey }}'                                                               
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: {{ .Chart.Name }}

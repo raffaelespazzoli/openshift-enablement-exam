@@ -12,9 +12,16 @@ CLUSTER2_CIDR=$(oc --context $CLUSTER2 get clusternetwork default -o custom-colu
 oc --context $CLUSTER1 adm new-project istio-mesh-extension --node-selector=""
 oc --context $CLUSTER2 adm new-project istio-mesh-extension --node-selector=""
 
+wg genkey | tee privatekey1 | wg pubkey > publickey1
+wg genkey | tee privatekey2 | wg pubkey > publickey2
 
-helm template -n istio-mesh-extension --set tunnelCIDR=$CLUSTER2_CIDR,tunnelRemotePeer=$CLUSTER2_LB_IP,tunnelMode=wireguard istio-mesh-extension | oc --context $CLUSTER1 apply -f -
-helm template -n istio-mesh-extension --set tunnelCIDR=$CLUSTER1_CIDR,tunnelRemotePeer=$CLUSTER1_LB_IP,tunnelMode=wireguard istio-mesh-extension | oc --context $CLUSTER2 apply -f -
+CLUSTER1_PRK=$(<privatekey1)
+CLUSTER1_PUK=$(<publickey1)
+CLUSTER2_PRK=$(<privatekey2)
+CLUSTER2_PUK=$(<publickey2)
+
+helm template -n istio-mesh-extension --set tunnelPrivateKey=$CLUSTER1_PRK,tunnelPeerPublicKey=$CLUSTER2_PUK,image.pullPolicy=Always,tunnelCIDR=$CLUSTER2_CIDR,tunnelRemotePeer=$CLUSTER2_LB_IP,tunnelMode=wireguard istio-mesh-extension | oc --context $CLUSTER1 apply -f -
+helm template -n istio-mesh-extension --set tunnelPrivateKey=$CLUSTER2_PRK,tunnelPeerPublicKey=$CLUSTER1_PUK,image.pullPolicy=Always,tunnelCIDR=$CLUSTER1_CIDR,tunnelRemotePeer=$CLUSTER1_LB_IP,tunnelMode=wireguard istio-mesh-extension | oc --context $CLUSTER2 apply -f -
 ```
 
 
