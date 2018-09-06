@@ -8,6 +8,9 @@ Namespace: istio-mesh-extension
 tunnelPort: 5555
 tunnelName: istio-mesh-tun
 
+#possible values are: fou, socat, socatcs, wireguard
+tunnelMode: socat
+
 image:
   repository: quay.io/raffaelespazzoli/istio-mesh-extension
   tag: latest

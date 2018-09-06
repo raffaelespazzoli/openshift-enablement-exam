@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #### this script uses the following environment variables
 # TUNNEL_PORT : the port used to establish the tunnel
@@ -8,6 +8,7 @@
 # TUNNEL_CIDR : the CIDR that should be routed thoru this tunnel in x.x.x.x/x format
 # TUNNEL_PRIVATE_KEY: the absolute location of the private key file
 # TUNNEL_PEER_PUBLIC_KEY: the peer's public key
+# TUNNEL_MODE: implementnation of the tunnel (fou, socat, socatcs, wireguard)
 
 set -o nounset
 set -o errexit
@@ -63,13 +64,13 @@ function cleanupWg {
 
 
 function setup {
-  if [ $mode = fou ] then
+  if [ $TUNNEL_MODE = fou ] then
     setupFouTunnel()
-  elif [ $mode = socat ] then
+  elif [ $TUNNEL_MODE = socat ] then
     setupSocat()
-  elif [ $mode = socatcs ] then
+  elif [ $TUNNEL_MODE = socatcs ] then
     setupSocatcs()
-  elif [ $mode = wireguard ] then
+  elif [ $TUNNEL_MODE = wireguard ] then
     setupWg()
     
   wireOVS()  
@@ -77,13 +78,13 @@ function setup {
 
 function cleanup {
   unwireOVS()
-  if [ $mode = fou ] then
+  if [ $TUNNEL_MODE = fou ] then
     cleanupFouTunnel()
-  elif [ $mode = socat ] then
+  elif [ $TUNNEL_MODE = socat ] then
     cleanupSocat()
-  elif [ $mode = socatcs ] then
+  elif [ $TUNNEL_MODE = socatcs ] then
     cleanupSocatcs()
-  elif [ $mode = wireguard ] then
+  elif [ $TUNNEL_MODE = wireguard ] then
     cleanupWg()
   }   
 }

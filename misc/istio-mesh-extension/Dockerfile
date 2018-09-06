@@ -5,8 +5,9 @@ ENV TUNNEL_PORT 5555 \
 
 USER root
     
-RUN curl -Lo /etc/yum.repos.d/wireguard.repo https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo &&\
-    yum install -y epel-release &&\
+RUN curl -Lo /etc/yum.repos.d/wireguard.repo https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo && \
+    curl -Lo ./epel-release-latest-7.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \ 
+    yum install -y ./epel-release-latest-7.noarch.rpm && \
     yum install -y socat iproute wireguard-tools
     
 ADD tunnel.sh /tunnel.sh

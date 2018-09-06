@@ -18,6 +18,11 @@ metadata:
   labels:
     chart: {{ template "istio-mesh-extension.chart" . }}
 spec:
+  externalTrafficPolicy: Local
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 2
   type: NodePort
   ports:
   - port: {{ .Values.tunnelPort }}
@@ -63,7 +68,9 @@ spec:
         - name: TUNNEL_DEV_NAME
           value: {{ .Values.tunnelName }}  
         - name: TUNNEL_PORT
-          value: '{{ .Values.tunnelPort }}'                                 
+          value: '{{ .Values.tunnelPort }}'
+        - name: TUNNEL_MODE
+          value: '{{ .Values.tunnelMode }}'                                           
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: {{ .Chart.Name }}
@@ -78,10 +85,7 @@ spec:
       - name: openvswitch
         hostPath: 
           path: /var/run/openvswitch/db.sock
-          type: Socket            
-      
-      
-         
+          type: Socket                     
 ---
 apiVersion: v1
 kind: SecurityContextConstraints
