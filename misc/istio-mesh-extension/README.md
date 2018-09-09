@@ -20,8 +20,8 @@ CLUSTER1_PUK=$(<publickey1)
 CLUSTER2_PRK=$(<privatekey2)
 CLUSTER2_PUK=$(<publickey2)
 
-helm template -n istio-mesh-extension --set tunnelPrivateKey=$CLUSTER1_PRK,tunnelPeerPublicKey=$CLUSTER2_PUK,image.pullPolicy=Always,tunnelCIDR=$CLUSTER2_CIDR,tunnelRemotePeer=$CLUSTER2_LB_IP,tunnelMode=wireguard istio-mesh-extension | oc --context $CLUSTER1 apply -f -
-helm template -n istio-mesh-extension --set tunnelPrivateKey=$CLUSTER2_PRK,tunnelPeerPublicKey=$CLUSTER1_PUK,image.pullPolicy=Always,tunnelCIDR=$CLUSTER1_CIDR,tunnelRemotePeer=$CLUSTER1_LB_IP,tunnelMode=wireguard istio-mesh-extension | oc --context $CLUSTER2 apply -f -
+helm template -n istio-mesh-extension --set tunnelPort=32011,serviceType=NodePort,tunnelPrivateKey=$CLUSTER1_PRK,tunnelPeerPublicKey=$CLUSTER2_PUK,image.pullPolicy=Always,tunnelCIDR=$CLUSTER2_CIDR,tunnelRemotePeer=$CLUSTER2_LB_IP,tunnelMode=wireguard istio-mesh-extension | oc --context $CLUSTER1 apply -f -
+helm template -n istio-mesh-extension --set tunnelPort=32011,serviceType=NodePort,tunnelPrivateKey=$CLUSTER2_PRK,tunnelPeerPublicKey=$CLUSTER1_PUK,image.pullPolicy=Always,tunnelCIDR=$CLUSTER1_CIDR,tunnelRemotePeer=$CLUSTER1_LB_IP,tunnelMode=wireguard istio-mesh-extension | oc --context $CLUSTER2 apply -f -
 ```
 
 

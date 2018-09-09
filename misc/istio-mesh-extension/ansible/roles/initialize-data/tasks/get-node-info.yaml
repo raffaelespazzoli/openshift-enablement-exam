@@ -1,0 +1,13 @@
+---
+- name: get hostnetwork
+  command: oc --context {{ cluster.context }} get hostsubnet {{ node }} -o custom-columns=SUBNET:subnet --no-headers
+  register: hostnetwork
+  
+- name: create node struct
+  set_fact:
+    node_struct: "{{ dict({'name': node, 'hostnetwork': hostnetwork.stdout}) }}"  
+    
+- name: add node struct
+  set_fact:
+    cluster_nodes: "{{ cluster_nodes | union( [node_struct] ) }}"    
+    

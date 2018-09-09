@@ -1,0 +1,22 @@
+---
+- name: list nodes
+  command: oc --context={{ cluster.context }} get nodes -o custom-columns=NAME:metadata.name --no-headers=true
+  register: nodes
+  
+- name: reset cluster nodes
+  set_fact:
+    cluster_nodes: "{{ [] }}"    
+  
+- name: get node info
+  include_tasks: get-node-info.yaml
+  with_items: "{{ nodes.stdout_lines }}"
+  loop_control:
+    loop_var: node  
+  
+- name: Add Nodes to Clusters
+  set_fact:
+    tmp_cluster: "{{ [ (clusters | selectattr('name', 'match', cluster.name) | list | combine({'nodes': cluster_nodes })) ] }}"
+
+- name: Update Clusters
+  set_fact:
+    clusters: "{{ clusters | rejectattr('name', 'match', cluster.name) | list }} + {{ tmp_cluster }}"     

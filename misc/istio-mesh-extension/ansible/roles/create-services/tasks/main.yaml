@@ -1,0 +1,6 @@
+---
+- name: create cluster services
+  include_tasks: create-services.yaml
+  with_items: "{{ clusters }}"
+  loop_control:
+    loop_var: cluster

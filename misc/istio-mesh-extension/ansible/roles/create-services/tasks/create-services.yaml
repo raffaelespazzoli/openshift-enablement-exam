@@ -1,0 +1,13 @@
+---
+- name: create project
+  command: oc --context {{ cluster.context }} adm new-project {{ namespace }} --node-selector=""
+  register: oc_res
+  failed_when: oc_res.rc >= 2
+
+- name: process service template
+  template:
+    src: service.yaml.j2
+    dest: "/tmp/{{ cluster.name }}-service.yaml"
+    
+- name: apply service template
+  command: oc --context {{ cluster.context }} apply -f /tmp/{{ cluster.name }}-service.yaml

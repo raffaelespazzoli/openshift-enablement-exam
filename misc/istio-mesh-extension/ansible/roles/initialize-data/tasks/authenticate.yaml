@@ -1,0 +1,16 @@
+---  
+
+- name: login
+  command: oc login --username={{ cluster.username }} --password={{ cluster.password }} --server={{ cluster.url }} --insecure-skip-tls-verify=true
+  
+- name: get context
+  command: oc config current-context
+  register: context   
+    
+- name: Add Context to Clusters
+  set_fact:
+    tmp_cluster: "{{ [ (clusters | selectattr('name', 'match', cluster.name) | list | combine([{'context': context.stdout}]))] }}"       
+  
+- name: Update Clusters
+  set_fact:
+    clusters: "{{ clusters | rejectattr('name', 'match', cluster['name']) | list }} + {{ tmp_cluster }}"    

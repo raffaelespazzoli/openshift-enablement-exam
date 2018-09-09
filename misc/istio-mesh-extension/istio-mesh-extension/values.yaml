@@ -9,6 +9,7 @@ tunnelPort: 5555
 tunnelName: istio-mesh-tun
 tunnelPrivateKey:
 tunnelPeerPublicKey:
+serviceType: LoadBalancer
 
 #possible values are: fou, socat, socatcs, wireguard
 tunnelMode: socat

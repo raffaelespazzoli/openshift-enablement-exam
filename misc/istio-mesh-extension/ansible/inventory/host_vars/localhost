@@ -1,0 +1,19 @@
+namespace: istio-mesh-tunnel2
+tunnel_port: 5555
+image: 
+clusters:
+- name: raffa1
+  url: console.raffa1.casl-contrib.osp.rht-labs.com:8443
+  username: admin
+  password: admin 
+#  sdn_cidr: 
+#  nodes:
+#  - name:
+#    hostnetwork:
+#    private_key:
+#    public_key:
+#    public_ip:
+- name: raffa2
+  url: console.raffa2.casl-contrib.osp.rht-labs.com:8443
+  username: admin
+  password: admin  

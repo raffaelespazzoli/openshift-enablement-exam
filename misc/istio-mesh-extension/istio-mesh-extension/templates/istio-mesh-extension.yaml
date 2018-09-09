@@ -23,10 +23,13 @@ spec:
   sessionAffinityConfig:
     clientIP:
       timeoutSeconds: 2
-  type: NodePort
+  type: {{ .Values.serviceType }}
   ports:
   - port: {{ .Values.tunnelPort }}
     targetPort: {{ .Values.tunnelPort }}
+    {{if eq .Values.serviceType "NodePort"}}
+    nodePort: {{ .Values.tunnelPort }}
+    {{end}}
     protocol: UDP
     name: {{ .Values.tunnelName }}
   selector:

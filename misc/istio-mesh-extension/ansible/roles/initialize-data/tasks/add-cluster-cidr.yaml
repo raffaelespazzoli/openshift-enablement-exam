@@ -1,0 +1,12 @@
+---
+- name: "get cluster cidr"
+  command: oc --context {{ cluster.context }} get clusternetwork default -o custom-columns=CIDR:.clusterNetworks[0].CIDR --no-headers
+  register: cidr   
+    
+- name: Add cidr to Clusters
+  set_fact:
+    tmp_cluster: "{{ [ (clusters | selectattr('name', 'match', cluster.name) | list | combine([{'sdn_cidr': cidr.stdout}]))] }}"       
+  
+- name: Update Clusters
+  set_fact:
+    clusters: "{{ clusters | rejectattr('name', 'match', cluster['name']) | list }} + {{ tmp_cluster }}"

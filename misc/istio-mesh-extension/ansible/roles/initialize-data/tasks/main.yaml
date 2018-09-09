@@ -1,0 +1,22 @@
+# oc get nodes -o custom-columns=NAME:metadata.name --no-headers=true
+
+---
+# oc get nodes -o custom-columns=NAME:metadata.name --no-headers=true
+- name: login to the clusters
+  include_tasks: authenticate.yaml
+  with_items: "{{ clusters }}"
+  loop_control:
+    loop_var: cluster
+
+- name: add the node name to the dictionary
+  include_tasks: add-nodes.yaml
+  with_items: "{{ clusters }}"
+  loop_control:
+    loop_var: cluster
+    
+- name: add the node cidr to the dictionary
+  include_tasks: add-cluster-cidr.yaml
+  with_items: "{{ clusters }}"
+  loop_control:
+    loop_var: cluster    
+         

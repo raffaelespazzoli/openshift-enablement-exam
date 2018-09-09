@@ -30,7 +30,8 @@ function fouCleanup {
 function setupFouTunnel {
   echo running setupFouTunnel
   ip fou add port $TUNNEL_PORT ipproto 4
-  ip link add name $TUNNEL_DEV_NAME type ipip remote $TUNNEL_REMOTE_PEER local $TUNNEL_LOCAL_PEER ttl 225 encap fou encap-sport auto encap-dport $TUNNEL_PORT
+  ip link add name $TUNNEL_DEV_NAME type ipip remote $TUNNEL_REMOTE_PEER local $TUNNEL_LOCAL_PEER ttl 225 encap fou encap-sport \
+    auto encap-dport $TUNNEL_PORT
   ip addr add $TUNNEL_CIDR dev $TUNNEL_DEV_NAME
   }
 
@@ -38,7 +39,7 @@ function setupSocat {
   echo running setupSocat
   # to debug add -d -d -d -d -D -v
   socat -d -d UDP:$TUNNEL_REMOTE_PEER:$TUNNEL_PORT,bind=$TUNNEL_LOCAL_PEER:$TUNNEL_PORT \
-  TUN:$TUNNEL_CIDR,tun-name=$TUNNEL_DEV_NAME,iff-no-pi,tun-type=tun,iff-up &
+    TUN:$TUNNEL_CIDR,tun-name=$TUNNEL_DEV_NAME,iff-no-pi,tun-type=tun,iff-up &
   }
 
 function cleanupSocat {
@@ -67,7 +68,8 @@ function setupWg {
   echo running setupwg
   echo $TUNNEL_PRIVATE_KEY > ./privatekey
   ip link add dev $TUNNEL_DEV_NAME type wireguard
-  wg set $TUNNEL_DEV_NAME listen-port $TUNNEL_PORT private-key ./privatekey peer $TUNNEL_PEER_PUBLIC_KEY endpoint $TUNNEL_REMOTE_PEER:$TUNNEL_PORT allowed-ips $TUNNEL_CIDR  
+  wg set $TUNNEL_DEV_NAME listen-port $TUNNEL_PORT private-key ./privatekey peer $TUNNEL_PEER_PUBLIC_KEY \
+    endpoint $TUNNEL_REMOTE_PEER:$TUNNEL_PORT persistent-keepalive 25 allowed-ips $TUNNEL_CIDR  
   ip link set up dev $TUNNEL_DEV_NAME
   }
 

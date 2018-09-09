@@ -1,0 +1,20 @@
+{% for node in cluster.nodes %}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ "istio-mesh-tunnel-"~node.name.split('.')[0] }}
+  namespace: {{ namespace }}  
+  labels:
+    node: {{ node.name }}
+spec:
+  type: LoadBalancer
+  ports:
+  - port: {{ tunnel_port }}
+    targetPort: {{ tunnel_port }}
+    protocol: UDP
+    name: istio-mesh-tunnel
+  selector:
+    app: istio-mesh-tunnel
+    node: {{ node.name }}
+{% endfor %}    
