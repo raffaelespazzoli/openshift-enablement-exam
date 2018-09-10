@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: istio-mesh-tunnel
+  name: {{ appname }}
   namespace: {{ namespace }}
   labels:
-    app: istio-mesh-tunnel
+    app: {{ appname }}
 ---
 apiVersion: v1
 kind: SecurityContextConstraints
@@ -16,9 +16,9 @@ metadata:
       any SELinux context.  WARNING: this is the most relaxed SCC and should be
       used only for cluster administration. Grant with caution.'
   creationTimestamp: null
-  name: istio-mesh-tunnel
+  name: {{ appname }}
   labels:
-  app: istio-mesh-tunnel  
+  app: {{ appname }}  
 allowHostDirVolumePlugin: true
 allowHostIPC: true
 allowHostNetwork: true
@@ -47,18 +47,18 @@ seccompProfiles:
 supplementalGroups:
   type: RunAsAny
 users:
-- system:serviceaccount:{{ namespace }}:istio-mesh-tunnel
+- system:serviceaccount:{{ namespace }}:{{ appname }}
 volumes:
 - '*'
-{{% for node in cluster.nodes %}
+{% for node in cluster.nodes %}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ "istio-mesh-tunnel-"~split(node.name,'.')[0] }}
+  name: {{ appname~"-"~node.name.split('.')[0] }}
   namespace: {{ namespace }}
   labels:
-    app: istio-mesh-tunnel
+    app: {{ appname }}
     node: {{ node.name }}
 data:
   wireguard.config: |-
@@ -66,79 +66,68 @@ data:
    ListenPort = {{ tunnel_port }} 
    PrivateKey = {{ node.private_key }}
     
-{{% for ext_cluster in clusters %}}
-{{% if ext_cluster != cluster %}}
-{{% for ext_node in ext_cluster.nodes %}}
+{% for ext_cluster in clusters %}
+{% if ext_cluster != cluster %}
+{% for ext_node in ext_cluster.nodes %}
    [Peer]
    PublicKey = {{ ext_node.public_key }}
    AllowedIPs = {{ ext_node.hostsubnet }}
-   Endpoint = {{ext_node.publicip}}:{{ tunnel_port }}
+   Endpoint = {{ ext_node.public_ip }}:{{ ext_node.port }}
    PersistentKeepalive = 25
    
-{{% endfor %}}
-{{% endfor %}}
+{% endfor %}
+{% endif %}
+{% endfor %} 
     
 ---        
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   labels:
-    app: istio-mesh-tunnel
+    app: {{ appname }}
     node: {{ node.name }}
-  name: {{ "istio-mesh-tunnel-"~node.name.split('.')[0] }}
+  name: {{ appname~"-"~node.name.split('.')[0] }}
   namespace: {{ namespace }}
 spec:
   selector:
     matchLabels:
-      app: istio-mesh-tunnel
+      app: {{ appname }}
       node: {{ node.name }}
   template:
     metadata:
       labels:
-        app: istio-mesh-tunnel
+        app: {{ appname }}
         node: {{ node.name }}
-      name: {{ "istio-mesh-tunnel-"~node.name.split('.')[0] }}
+      name: {{ appname~"-"~node.name.split('.')[0] }}
     spec:
+      nodeSelector: 
+        kubernetes.io/hostname: {{ node.hostname }}
       containers:
       - env:
-#        - name: TUNNEL_LOCAL_PEER
-#          valueFrom:
-#            fieldRef:
-#              fieldPath: status.podIP
-#        - name: TUNNEL_REMOTE_PEER
-#          value: {{ .Values.tunnelRemotePeer}}   
-#        - name: TUNNEL_CIDR
-#          value: {{ .Values.tunnelCIDR }}
         - name: TUNNEL_DEV_NAME
-          value: istio-mesh-tunnel  
-#        - name: TUNNEL_PORT
-#          value: '{{ .Values.tunnelPort }}'
+          value: sdn-tunnel  
         - name: TUNNEL_MODE
           value: wireguard
-#        - name: TUNNEL_PEER_PUBLIC_KEY
-#          value: '{{ .Values.tunnelPeerPublicKey }}'
-#        - name: TUNNEL_PRIVATE_KEY
-#          value: '{{ .Values.tunnelPrivateKey }}'
         - name: WIREGUARD_CONFIG
           value: /root/wireguard_config/wireguard.config                                                                 
         image: "{{ image }}"
         imagePullPolicy: Always
-        name: istio-mesh-tunnel
+        name: sdn-tunnel
         securityContext:
           privileged: true
         volumeMounts:
         - name: openvswitch
           mountPath: /var/run/openvswitch/db.sock
-        - name: wireguard_config
+        - name: wireguard-config
           mountPath: /root/wireguard_config                                              
-      serviceAccountName: istio-mesh-tunnel
+      serviceAccountName: {{ appname }}
       hostNetwork: false
       volumes:  
       - name: openvswitch
         hostPath: 
           path: /var/run/openvswitch/db.sock
           type: Socket
-      - name: wireguard_config
-        configmap: 
-          name: {{ "istio-mesh-tunnel-"~node.name.split('.')[0] }}    
-{{% endfor %}}      
+      - name: wireguard-config
+        configMap: 
+          name: {{ "sdn-tunnel-"~node.name.split('.')[0] }}     
+{% endfor %}      

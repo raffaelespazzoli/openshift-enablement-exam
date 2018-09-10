@@ -1,0 +1,16 @@
+---
+#- name: prepare-keys
+#  command: for node in {{ cluster.nodes | map(attribute='name') | join(' ') }}; do wg genkey | tee /tmp/{{ cluster.name }}-$node-priv | wg pubkey > /tmp/{{ cluster.name }}-$node-publ done
+#  with_items: "{{ clusters }}"
+#  loop_control:
+#    loop_var: cluster
+
+- name: add keys to cluster
+  include_tasks: add-keys.yaml
+  with_items: "{{ clusters }}"
+  loop_control:
+    loop_var: cluster
+    
+- name: debug
+  debug:
+    var: clusters    

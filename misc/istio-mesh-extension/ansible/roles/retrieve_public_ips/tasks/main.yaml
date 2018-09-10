@@ -1,0 +1,10 @@
+---
+- name: add ips to cluster
+  include_tasks: add-ips.yaml
+  with_items: "{{ clusters }}"
+  loop_control:
+    loop_var: cluster
+
+- name: debug
+  debug:
+    var: clusters

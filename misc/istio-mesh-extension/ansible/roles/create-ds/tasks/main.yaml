@@ -1,0 +1,6 @@
+---
+- name: create cluster daemonsets
+  include_tasks: create-ds.yaml
+  with_items: "{{ clusters }}"
+  loop_control:
+    loop_var: cluster

@@ -1,0 +1,19 @@
+---
+- name: prepare keys
+  shell: wg genkey | tee /tmp/{{ cluster.name }}-{{ node.name.split('.')[0] }}-priv | wg pubkey > /tmp/{{ cluster.name }}-{{ node.name.split('.')[0] }}-publ
+
+- name: read private key
+  set_fact:
+    priv_key: "{{ lookup('file', '/tmp/'~cluster.name~'-'~node.name.split('.')[0]~'-priv') }}"
+    
+- name: read public key
+  set_fact:
+    publ_key: "{{ lookup('file', '/tmp/'~cluster.name~'-'~node.name.split('.')[0]~'-publ') }}" 
+    
+- name: create node struct
+  set_fact:
+    node_struct: "{{ dict({'private_key': priv_key, 'public_key': publ_key}) | combine(node) }}"      
+     
+- name: add node struct
+  set_fact:
+    cluster_nodes: "{{ cluster_nodes | union( [node_struct] ) }}"      

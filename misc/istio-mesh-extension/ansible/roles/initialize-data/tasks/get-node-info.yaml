@@ -1,11 +1,21 @@
 ---
 - name: get hostnetwork
   command: oc --context {{ cluster.context }} get hostsubnet {{ node }} -o custom-columns=SUBNET:subnet --no-headers
-  register: hostnetwork
+  register: hostsubnet
   
+#- name: get hostname
+#  command: oc --context {{ cluster.context }} get node {{ node }} -o custom-columns=HOSTNAME:metadata.labels.kubernetes.io/hostname --no-headers
+#  register: hostname
+  
+- name: get ip
+  command: oc --context {{ cluster.context }} get node {{ node }} -o custom-columns=IP:status.addresses[0].address --no-headers
+  register: ip    
+  
+  
+# here the second node should be hostname, but the above command doesn't work.  
 - name: create node struct
   set_fact:
-    node_struct: "{{ dict({'name': node, 'hostnetwork': hostnetwork.stdout}) }}"  
+    node_struct: "{{ dict({'name': node, 'hostsubnet': hostsubnet.stdout, 'hostname': node, 'ip': ip.stdout}) }}"  
     
 - name: add node struct
   set_fact:

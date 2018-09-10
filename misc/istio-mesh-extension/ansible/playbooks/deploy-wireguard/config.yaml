@@ -4,5 +4,6 @@
   roles:
   - role: initialize-data
   - role: create-services
-#  - prepare-keys
-#  - create-ds
+  - role: prepare-keys
+  - role: retrieve_public_ips 
+  - role: create-ds

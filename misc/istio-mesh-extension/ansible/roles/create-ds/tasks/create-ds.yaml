@@ -1,0 +1,8 @@
+---
+- name: process daemonset template
+  template:
+    src: istio-mesh-tunnel.yaml.j2
+    dest: "/tmp/{{ cluster.name }}-istio-mesh-tunnel.yaml"
+    
+- name: apply daemonset template
+  command: oc --context {{ cluster.context }} apply -f /tmp/{{ cluster.name }}-istio-mesh-tunnel.yaml

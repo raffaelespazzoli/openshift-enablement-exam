@@ -18,5 +18,10 @@
   include_tasks: add-cluster-cidr.yaml
   with_items: "{{ clusters }}"
   loop_control:
-    loop_var: cluster    
+    loop_var: cluster
+    
+- name: debug
+  debug:
+    var: clusters
+          
          

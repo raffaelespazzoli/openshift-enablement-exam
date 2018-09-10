@@ -1,0 +1,18 @@
+---
+- name: reset cluster nodes
+  set_fact:
+    cluster_nodes: "{{ [] }}"    
+  
+- name: get ips
+  include_tasks: get-ips.yaml
+  with_items: "{{ cluster.nodes }}"
+  loop_control:
+    loop_var: node  
+  
+- name: Add Nodes to Clusters
+  set_fact:
+    tmp_cluster: "{{ [ (clusters | selectattr('name', 'match', cluster.name) | list | combine({'nodes': cluster_nodes })) ] }}"
+
+- name: Update Clusters
+  set_fact:
+    clusters: "{{ clusters | rejectattr('name', 'match', cluster.name) | list }} + {{ tmp_cluster }}"  

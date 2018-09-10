@@ -3,18 +3,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ "istio-mesh-tunnel-"~node.name.split('.')[0] }}
+  name: {{ appname~"-"~node.name.split('.')[0] }}
   namespace: {{ namespace }}  
   labels:
     node: {{ node.name }}
 spec:
-  type: LoadBalancer
+  type: {{ serviceType }}
   ports:
   - port: {{ tunnel_port }}
     targetPort: {{ tunnel_port }}
     protocol: UDP
-    name: istio-mesh-tunnel
+    name: {{ appname }}
   selector:
-    app: istio-mesh-tunnel
+    app: {{ appname }}
     node: {{ node.name }}
 {% endfor %}    

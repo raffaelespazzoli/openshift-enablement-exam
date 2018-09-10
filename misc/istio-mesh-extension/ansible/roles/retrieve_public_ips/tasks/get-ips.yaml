@@ -1,0 +1,24 @@
+---
+- name: get ip
+  command: oc --context {{ cluster.context }} get service -n {{ namespace }} {{ appname }}-{{ node.name.split('.')[0] }} -o custom-columns=IP:status.loadBalancer.ingress[0].ip --no-headers=true
+  register: ip
+  when: serviceType == 'LoadBalancer'
+
+- name: create node struct
+  set_fact:
+    node_struct: "{{ dict({'public_ip': ip.stdout, 'port': tunnel_port }) | combine(node)  }}"
+  when: serviceType == 'LoadBalancer' 
+  
+- name: get port
+  command: oc --context {{ cluster.context }} get service -n {{ namespace }} {{ appname }}-{{ node.name.split('.')[0] }} -o custom-columns=PORT:spec.ports[0].nodePort --no-headers=true
+  register: port
+  when: serviceType == 'NodePort'
+
+- name: create node struct
+  set_fact:
+    node_struct: "{{ dict({'public_ip': node.ip, 'port': port.stdout }) | combine(node)  }}"
+  when: serviceType == 'NodePort'         
+     
+- name: add node struct
+  set_fact:
+    cluster_nodes: "{{ cluster_nodes | union( [node_struct] ) }}" 

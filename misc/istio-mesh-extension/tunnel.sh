@@ -9,6 +9,7 @@
 # TUNNEL_PRIVATE_KEY: the private key
 # TUNNEL_PEER_PUBLIC_KEY: the peer's public key
 # TUNNEL_MODE: implementnation of the tunnel (fou, socat, socatcs, wireguard)
+# WIREGUARD_CONFIG: location of the wireguard config file
 
 set -o nounset
 set -o errexit
@@ -66,10 +67,11 @@ function cleanupSocatcs {
 
 function setupWg {
   echo running setupwg
-  echo $TUNNEL_PRIVATE_KEY > ./privatekey
+#  echo $TUNNEL_PRIVATE_KEY > ./privatekey
   ip link add dev $TUNNEL_DEV_NAME type wireguard
-  wg set $TUNNEL_DEV_NAME listen-port $TUNNEL_PORT private-key ./privatekey peer $TUNNEL_PEER_PUBLIC_KEY \
-    endpoint $TUNNEL_REMOTE_PEER:$TUNNEL_PORT persistent-keepalive 25 allowed-ips $TUNNEL_CIDR  
+#  wg set $TUNNEL_DEV_NAME listen-port $TUNNEL_PORT private-key ./privatekey peer $TUNNEL_PEER_PUBLIC_KEY \
+#    endpoint $TUNNEL_REMOTE_PEER:$TUNNEL_PORT persistent-keepalive 25 allowed-ips $TUNNEL_CIDR
+  wg setconf $TUNNEL_DEV_NAME $WIREGUARD_CONFIG  
   ip link set up dev $TUNNEL_DEV_NAME
   }
 

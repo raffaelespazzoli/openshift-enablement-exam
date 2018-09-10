@@ -32,6 +32,9 @@ ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --pr
 
 ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 5555 -j ACCEPT"
 ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 5555 -j ACCEPT"
+
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 30000:40000 -j ACCEPT"
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 30000:40000 -j ACCEPT"
 ```
 install wg
 ```

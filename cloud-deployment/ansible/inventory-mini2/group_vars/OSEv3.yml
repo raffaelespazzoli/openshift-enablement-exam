@@ -1,0 +1,117 @@
+---
+
+deployment_type: openshift-enterprise
+openshift_deployment_type: openshift-enterprise
+openshift_master_cluster_method: native
+openshift_release: v3.10
+
+#oreg_url: witz-docker.witz.pw:5000/openshift3/ose-${component}:${version}
+#openshift_docker_additional_registries: witz-docker.witz.pw:5000
+#openshift_docker_insecure_registries: witz-docker.witz.pw:5000
+#openshift_examples_modify_imagestreams: true
+
+
+
+# HTPASSWD Identity Provider
+openshift_master_identity_providers:
+ - 'name': 'htpasswd_auth'
+   'login': 'true'
+   'challenge': 'true'
+   'kind': 'HTPasswdPasswordIdentityProvider'
+#   'filename': '/etc/origin/master/htpasswd'
+   
+openshift_master_htpasswd_users:
+  admin: $apr1$7aiANAYb$TOUYVUqnBqBlD5AQEIMYw1   
+
+#openshift_hosted_router_selector: 'region=infra'
+openshift_hosted_manage_router: true
+
+#openshift_hosted_registry_selector: 'region=infra'
+openshift_hosted_manage_registry: true
+#openshift_hosted_registry_storage_kind:
+openshift_hosted_registry_storage_provider: gcs
+openshift_hosted_registry_storage_gcs_bucket: "{{ google_registry_bucket_name }}"
+#openshift_hosted_registry_storage_gcs_keyfile: test.key
+openshift_hosted_registry_storage_gcs_rootdirectory: /registry 
+
+#
+#openshift_logging_es_pvc_dynamic: true
+#openshift_logging_es_pvc_size: 10Gi
+#openshift_logging_es_cluster_size: 3
+#openshift_logging_es_number_of_replicas: 2
+#openshift_logging_kibana_replica_count: 1
+#openshift_logging_es_nodeselector: 
+#  region: infra
+#openshift_logging_kibana_nodeselector: 
+#  region: infra
+#openshift_logging_curator_nodeselector: 
+#  region: infra
+#openshift_logging_eventrouter_nodeselector:
+#  region: infra  
+#openshift_logging_fluentd_audit_container_engine: true
+##openshift_logging_fluentd_audit_file: /var/log/ocp-audit.log
+#openshift_logging_install_eventrouter: true
+#openshift_logging_curator_default_days: 7
+
+#openshift_metrics_install_metrics: false
+#openshift_metrics_hawkular_nodeselector:
+#  region: infra
+#openshift_metrics_cassandra_nodeselector: 
+#  region: infra
+#openshift_metrics_heapster_nodeselector: 
+#  region: infra
+#openshift_metrics_hawkular_agent_nodeselector: 
+#  region: infra    
+#openshift_metrics_selector: "region=infra"
+#openshift_metrics_cassandra_storage_type: dynamic 
+#openshift_metrics_cassandra_pvc_size: 5Gi
+#openshift_metrics_hawkular_replicas: 1
+#openshift_metrics_cassandra_replicas: 1
+#openshift_metrics_install_hawkular_agent: true 
+
+#openshift_node_labels: "{{ openstack.metadata.node_labels}}"
+
+#osm_default_node_selector: 'node-role.kubernetes.io/compute=true'
+
+openshift_docker_options: "--log-driver=json-file --log-opt max-size=50m --log-opt max-file=100"
+
+openshift_cloudprovider_kind: gce
+
+os_sdn_network_plugin_name: 'redhat/openshift-ovs-networkpolicy'
+#os_sdn_network_plugin_name: 'redhat/openshift-ovs-multitenant'
+os_firewall_use_firewalld: true
+osm_cluster_network_cidr: 10.1.0.0/16
+
+openshift_disable_check: 
+  - memory_availability    
+  - disk_availability  
+  
+openshift_enable_service_catalog: false    
+
+openshift_node_groups:
+  - name: node-config-master 
+    labels:
+      - 'node-role.kubernetes.io/master=true' 
+    edits: 
+    - key: kubeletArguments.kube-reserved
+      value: [ 'cpu={{ ansible_processor_vcpus * 50 }}m', 'memory={{ ansible_processor_vcpus * 50 }}M' ]
+    - key: kubeletArguments.system-reserved
+      value: [ 'cpu={{ ansible_processor_vcpus * 50 }}m', 'memory={{ ansible_processor_vcpus * 100 }}M' ]      
+  - name: node-config-infra
+    labels:
+      - 'node-role.kubernetes.io/infra=true'
+    edits:
+    - key: kubeletArguments.kube-reserved
+      value: [ 'cpu={{ ansible_processor_vcpus * 50 }}m', 'memory={{ ansible_processor_vcpus * 50 }}M' ]
+    - key: kubeletArguments.system-reserved
+      value: [ 'cpu={{ ansible_processor_vcpus * 50 }}m', 'memory={{ ansible_processor_vcpus * 100 }}M' ]
+  - name: node-config-compute
+    labels:
+      - 'node-role.kubernetes.io/compute=true'
+    edits: 
+    - key: kubeletArguments.kube-reserved
+      value: [ 'cpu={{ ansible_processor_vcpus * 50 }}m', 'memory={{ ansible_processor_vcpus * 50 }}M' ]
+    - key: kubeletArguments.system-reserved
+      value: [ 'cpu={{ ansible_processor_vcpus * 50 }}m', 'memory={{ ansible_processor_vcpus * 100 }}M' ]
+
+
