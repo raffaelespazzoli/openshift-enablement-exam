@@ -10,6 +10,8 @@
 # TUNNEL_PEER_PUBLIC_KEY: the peer's public key
 # TUNNEL_MODE: implementnation of the tunnel (fou, socat, socatcs, wireguard)
 # WIREGUARD_CONFIG: location of the wireguard config file
+# CLUSTER_CIDR: the cidr of the current cluster
+# TUNNEL_CIDRs: comma separated CIDRs of the remote clusters  
 
 set -o nounset
 set -o errexit
@@ -79,7 +81,7 @@ function cleanupWg {
   echo running cleanupWg
   set +e
   ip a | grep $TUNNEL_DEV_NAME
-  if [ $0 = '0' ] 
+  if [ $? = '0' ] 
   then  
     ip link set down dev $TUNNEL_DEV_NAME
     ip link delete $TUNNEL_DEV_NAME type wireguard
@@ -129,12 +131,37 @@ function wireOVS {
   echo running wireOVS
   ovs-vsctl add-port br0 $TUNNEL_DEV_NAME
   #TODO add flow rules  
+  #tunnel <port_of_tunnel> determined by "ovs-ofctl show br0 --protocols=OpenFlow13"
+  port=$(ovs-ofctl dump-ports-desc br0 --protocols=OpenFlow13 | grep sdn-tunnel | awk '{print $1}' | cut -d'(' -f 1)
+  echo port $port
+  echo ext_cidr $TUNNEL_CIDRs
+  for cidr in ${TUNNEL_CIDRs//,/ }
+  do
+    echo current cidr $cidr
+  # table=0, priority=300,ip,nw_src=10.128.0.0/14, nw_dst=10.132.0.0/14 actions=output:<port_of_tunnel>
+    ovs-ofctl add-flow br0 "table=0,priority=300,ip,nw_src=$CLUSTER_CIDR,nw_dst=$cidr,actions=output:$port" --protocols=OpenFlow13
+  #From remote tunnel to local network 
+  # table=0, priority=300,ip,nw_src=10.132.0.0/14, nw_dst=10.128.0.0/14 action=goto_table:30
+    ovs-ofctl add-flow br0 "table=0,priority=300,ip,nw_src=$cidr,nw_dst=$CLUSTER_CIDR action=goto_table:30" --protocols=OpenFlow13
+  done    
 }
 
 function unwireOVS {
   echo running unwireOVS
   #TODO remove flow rules
   set +e
+  
+  port=$(ovs-ofctl dump-ports-desc br0 --protocols=OpenFlow13 | grep sdn-tunnel | awk '{print $1}' | cut -d'(' -f 1)
+  
+  for cidr in ${TUNNEL_CIDRs//,/ }
+  do
+  # table=0, priority=300,ip,nw_src=10.128.0.0/14, nw_dst=10.132.0.0/14 actions=output:<port_of_tunnel>
+    ovs-ofctl del-flows br0 table=0,priority=300,ip,nw_src=$CLUSTER_CIDR,nw_dst=$cidr,actions=output:$port --protocols=OpenFlow13
+  #From remote tunnel to local network 
+  # table=0, priority=300,ip,nw_src=10.132.0.0/14, nw_dst=10.128.0.0/14 action=goto_table:30
+    ovs-ofctl del-flows br0 table=0,priority=300,ip,nw_src=$cidr,nw_dst=$CLUSTER_CIDR action=goto_table:30 --protocols=OpenFlow13
+  done
+  
   ovs-vsctl list-ports br0 | grep $TUNNEL_DEV_NAME
   if [ $? = '0' ] 
   then

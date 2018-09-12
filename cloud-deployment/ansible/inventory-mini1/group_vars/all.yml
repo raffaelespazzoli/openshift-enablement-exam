@@ -56,7 +56,7 @@ rhsm_repos:
  - "rhel-7-server-ansible-2.4-rpms"
  
 # Specify the version of docker to use
-docker_version: "1.13.1" 
+#docker_version: "1.13.1" 
 
 #google specific properties
 service_account_email: "{{ lookup('env','GCE_EMAIL') }}"
@@ -76,4 +76,5 @@ openshift_master_default_subdomain: apps.{{ env_id }}.{{ dns_domain }}
 
 openshift_gcp_prefix: "{{ env_id }}"
 openshift_gcp_project: "{{ lookup('env','GCE_PROJECT') }}"
-openshift_gcp_multizone: true
+openshift_gcp_multizone: false
+openshift_gcp_network_name: default

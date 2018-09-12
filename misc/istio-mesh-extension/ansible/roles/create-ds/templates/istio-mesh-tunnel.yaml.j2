@@ -109,7 +109,11 @@ spec:
         - name: TUNNEL_MODE
           value: wireguard
         - name: WIREGUARD_CONFIG
-          value: /root/wireguard_config/wireguard.config                                                                 
+          value: /root/wireguard_config/wireguard.config
+        - name: CLUSTER_CIDR
+          value: {{ cluster.sdn_cidr }}
+        - name: TUNNEL_CIDRs
+          value: {% for ext_cluster in clusters | rejectattr('name', 'match', cluster.name) %}{% if loop.index==1 %}{{ ext_cluster.sdn_cidr }}{% else %}","~{{ ext_cluster.sdn_cidr }}{% endif %}{% endfor %}                                                                                      
         image: "{{ image }}"
         imagePullPolicy: Always
         name: sdn-tunnel
@@ -117,16 +121,16 @@ spec:
           privileged: true
         volumeMounts:
         - name: openvswitch
-          mountPath: /var/run/openvswitch/db.sock
+          mountPath: /var/run/openvswitch
         - name: wireguard-config
           mountPath: /root/wireguard_config                                              
       serviceAccountName: {{ appname }}
-      hostNetwork: false
+      hostNetwork: true
       volumes:  
       - name: openvswitch
         hostPath: 
-          path: /var/run/openvswitch/db.sock
-          type: Socket
+          path: /var/run/openvswitch
+          type: Directory
       - name: wireguard-config
         configMap: 
           name: {{ "sdn-tunnel-"~node.name.split('.')[0] }}     
