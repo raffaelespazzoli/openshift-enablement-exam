@@ -125,7 +125,8 @@ spec:
         - name: wireguard-config
           mountPath: /root/wireguard_config                                              
       serviceAccountName: {{ appname }}
-      hostNetwork: true
+      hostNetwork: false
+      hostPID: true
       volumes:  
       - name: openvswitch
         hostPath: 
