@@ -127,9 +127,9 @@ function cleanup {
 
 function wireOVS {
   echo running wireOVS
-  ovs-vsctl add-port br0 $TUNNEL_DEV_NAME
-  #TODO add flow rules  
+  ovs-vsctl add-port br0 $TUNNEL_DEV_NAME  
   #tunnel <port_of_tunnel> determined by "ovs-ofctl show br0 --protocols=OpenFlow13"
+  # TODO this might be better ovs-vsctl get Interface eth0 ofport
   port=$(ovs-ofctl dump-ports-desc br0 --protocols=OpenFlow13 | grep sdn-tunnel | awk '{print $1}' | cut -d'(' -f 1)
   echo port $port
   echo ext_cidr $TUNNEL_CIDRs

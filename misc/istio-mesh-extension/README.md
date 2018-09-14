@@ -1,3 +1,41 @@
+# Installation
+
+due to an issue nodes must be routable between each other at the moment. this is up to you to setup.If in CASL follow the below:
+
+## setup casl routing
+```
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "ip route add 192.168.99.0/24 via 192.168.98.254"
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "ip route add 192.168.98.0/24 via 192.168.99.254"
+
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 5555 -j ACCEPT"
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 5555 -j ACCEPT"
+
+#ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 30000:40000 -j ACCEPT"
+#ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 30000:40000 -j ACCEPT"
+```
+## install wireguard
+```
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "curl -Lo /etc/yum.repos.d/wireguard.repo https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo"
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "yum install -y epel-release-latest-7.noarch.rpm"
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "yum install -y wireguard-dkms wireguard-tools"
+
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "curl -Lo /etc/yum.repos.d/wireguard.repo https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo"
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "yum install -y epel-release-latest-7.noarch.rpm"
+ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "yum install -y wireguard-dkms wireguard-tools"
+```
+
+## run the installation playbook
+
+see an example of the inventory here ./ansible/inventory and customize for your clusters
+run the playbook:
+```
+ansible-playbook -i ./ansible/inventory ./ansible/playbooks/deploy-wireguard/config.yaml
+```
+
+
+## old notes
 ```
 CLUSTER1_LB_IP=192.168.99.14
 CLUSTER2_LB_IP=192.168.98.13
@@ -25,26 +63,4 @@ helm template -n istio-mesh-extension --set tunnelPort=32011,serviceType=NodePor
 ```
 
 
-setup casl routing
-```
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "ip route add 192.168.99.0/24 via 192.168.98.254"
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "ip route add 192.168.98.0/24 via 192.168.99.254"
-
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 5555 -j ACCEPT"
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 5555 -j ACCEPT"
-
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 30000:40000 -j ACCEPT"
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 30000:40000 -j ACCEPT"
-```
-install wg
-```
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "curl -Lo /etc/yum.repos.d/wireguard.repo https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo"
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "yum install -y epel-release-latest-7.noarch.rpm"
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "yum install -y wireguard-dkms wireguard-tools"
-
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "curl -Lo /etc/yum.repos.d/wireguard.repo https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo"
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "yum install -y epel-release-latest-7.noarch.rpm"
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "yum install -y wireguard-dkms wireguard-tools"
 
