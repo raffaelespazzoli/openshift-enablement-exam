@@ -5,5 +5,10 @@
   - role: initialize-data
   - role: create-services
   - role: prepare-keys
-  - role: retrieve_public_ips 
+  - role: retrieve-public-ips 
   - role: create-ds
+  - role: retrieve-pods-ips
+  - role: create-cm  
+
+
+    

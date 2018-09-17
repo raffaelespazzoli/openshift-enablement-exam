@@ -11,7 +11,8 @@
 # TUNNEL_MODE: implementnation of the tunnel (fou, socat, socatcs, wireguard)
 # WIREGUARD_CONFIG: location of the wireguard config file
 # CLUSTER_CIDR: the cidr of the current cluster
-# TUNNEL_CIDRs: comma separated CIDRs of the remote clusters  
+# TUNNEL_CIDRs: comma separated CIDRs of the remote clusters
+# PEER_CONFIG: location of the PEER_CONFIG file  
 
 set -o nounset
 set -o errexit
@@ -67,6 +68,31 @@ function cleanupSocatcs {
   set -e  
   }
 
+function setupWg2 {
+  echo running setupwg2
+  sysctl -w net.ipv4.ip_forward=1
+  ip link add dev $TUNNEL_DEV_NAME type wireguard
+  #ip link set $TUNNEL_DEV_NAME netns $$
+  wg setconf $TUNNEL_DEV_NAME $WIREGUARD_CONFIG
+  ip link set up dev $TUNNEL_DEV_NAME
+  for cidr in ${TUNNEL_CIDRs//,/ }
+  do
+    ip route add $cidr dev $TUNNEL_DEV_NAME
+  done    
+}
+
+function cleanupWg2 {
+  echo running cleanupWg
+  set +e
+  ip a | grep $TUNNEL_DEV_NAME
+  if [ $? = '0' ] 
+  then  
+    ip link set down dev $TUNNEL_DEV_NAME
+    ip link delete dev $TUNNEL_DEV_NAME type wireguard
+  fi  
+  set -e     
+  }
+
 function setupWg {
   echo running setupwg
   ip link add dev $TUNNEL_DEV_NAME type wireguard
@@ -82,7 +108,7 @@ function cleanupWg {
   if [ $? = '0' ] 
   then  
     nsenter -t 1 -n ip link set down dev $TUNNEL_DEV_NAME
-    nsenter -t 1 -n ip link delete $TUNNEL_DEV_NAME type wireguard
+    nsenter -t 1 -n ip link delete dev $TUNNEL_DEV_NAME type wireguard
   fi  
   set -e  
 }
@@ -90,6 +116,7 @@ function cleanupWg {
 
 function setup {
   echo running setup
+  setupIPTables
   if [ $TUNNEL_MODE = "fou" ] 
   then
     setupFouTunnel
@@ -101,14 +128,14 @@ function setup {
     setupSocatcs
   elif [ $TUNNEL_MODE = "wireguard" ] 
   then
-    setupWg
+    setupWg2
   fi  
-  wireOVS  
+  wireOVS2  
   }
 
 function cleanup {
   echo running cleanup
-  unwireOVS
+  unwireOVS2
   if [ $TUNNEL_MODE = "fou" ] 
   then
     cleanupFouTunnel
@@ -120,17 +147,53 @@ function cleanup {
     cleanupSocatcs
   elif [ $TUNNEL_MODE = "wireguard" ] 
   then
-    cleanupWg
+    cleanupWg2
   fi  
   }   
+
+function wireOVS2 {
+  echo running wireOVS2
+  # retrieve the vethdevice name
+  iflink=$(cat /sys/class/net/eth0/iflink)
+  veth=$(nsenter -t 1 -n ip link | grep $iflink: | awk '{print $2}' | cut -d '@' -f 1)
+  port=$(ovs-vsctl get Interface $veth ofport)
+  for cidr in ${TUNNEL_CIDRs//,/ }
+  do
+    echo cluster_cidr: $CLUSTER_CIDR , cidr: $cidr , port: $port
+  # table=0, priority=300,ip,nw_src=10.128.0.0/14, nw_dst=10.132.0.0/14 actions=output:<port_of_tunnel>
+    ovs-ofctl add-flow br0 "table=0,priority=300,ip,nw_src=$CLUSTER_CIDR,nw_dst=$cidr,actions=output:$port" --protocols=OpenFlow13
+  #From remote tunnel to local network 
+  # table=0, priority=300,ip,nw_src=10.132.0.0/14, nw_dst=10.128.0.0/14 action=goto_table:30
+    ovs-ofctl add-flow br0 "table=0,priority=300,ip,in_port=$port,nw_src=$cidr,nw_dst=$CLUSTER_CIDR action=goto_table:30" --protocols=OpenFlow13
+  done  
+  }
+
+function unwireOVS2 {
+  echo running unwireOVS2
+  # retrieve the vethdevice name
+  set +e
+  iflink=$(cat /sys/class/net/eth0/iflink)
+  veth=$(nsenter -t 1 -n ip link | grep $iflink: | awk '{print $2}' | cut -d '@' -f 1)
+  port=$(ovs-vsctl get Interface $veth ofport)
+  for cidr in ${TUNNEL_CIDRs//,/ }
+  do
+    echo cluster_cidr: $CLUSTER_CIDR , cidr: $cidr , port: $port
+  # table=0, priority=300,ip,nw_src=10.128.0.0/14, nw_dst=10.132.0.0/14 actions=output:<port_of_tunnel>
+    ovs-ofctl del-flows br0 table=0,priority=300,ip,nw_src=$CLUSTER_CIDR,nw_dst=$cidr,actions=output:$port --protocols=OpenFlow13
+  #From remote tunnel to local network 
+  # table=0, priority=300,ip,nw_src=10.132.0.0/14, nw_dst=10.128.0.0/14 action=goto_table:30
+    ovs-ofctl del-flows br0 table=0,priority=300,ip,nw_src=$cidr,nw_dst=$CLUSTER_CIDR action=goto_table:30 --protocols=OpenFlow13
+  done
+  set -e  
+  }
 
 
 function wireOVS {
   echo running wireOVS
-  ovs-vsctl add-port br0 $TUNNEL_DEV_NAME  
-  #tunnel <port_of_tunnel> determined by "ovs-ofctl show br0 --protocols=OpenFlow13"
-  # TODO this might be better ovs-vsctl get Interface eth0 ofport
-  port=$(ovs-ofctl dump-ports-desc br0 --protocols=OpenFlow13 | grep sdn-tunnel | awk '{print $1}' | cut -d'(' -f 1)
+  ovs-vsctl add-port br0 $TUNNEL_DEV_NAME  --  set  Interface  $TUNNEL_DEV_NAME type=internal 
+  #tunnel <port_of_tunnel> determined by "ovs-ofctl show $TUNNEL_DEV_NAME --protocols=OpenFlow13"
+  # TODO this might be better ovs-vsctl get Interface $TUNNEL_DEV_NAME ofport
+  port=$(ovs-ofctl dump-ports-desc br0 --protocols=OpenFlow13 | grep $TUNNEL_DEV_NAME | awk '{print $1}' | cut -d'(' -f 1)
   echo port $port
   echo ext_cidr $TUNNEL_CIDRs
   for cidr in ${TUNNEL_CIDRs//,/ }
@@ -167,6 +230,23 @@ function unwireOVS {
   fi
   set -e
 }
+
+function setupIPTables {
+
+# wait untill the config file appears
+  while [ ! -f $PEER_CONFIG ]
+  do
+    sleep 2
+  done
+  
+  lines=$(cat $PEER_CONFIG)
+  for line in $lines ; 
+  do
+    iptables -t nat -A INPUT -i eth0 -p udp --dport $TUNNEL_PORT -s ${line%-*} -j SNAT --to-source ${line#*-}:$TUNNEL_PORT
+  done  
+  
+  }
+
 
 
 

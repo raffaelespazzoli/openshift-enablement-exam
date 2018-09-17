@@ -1,0 +1,8 @@
+---
+- name: process configmap template
+  template:
+    src: peer-cm.yaml.j2
+    dest: "/tmp/{{ cluster.name }}-peer-cm.yaml"
+    
+- name: apply configmap template
+  command: oc --context {{ cluster.context }} apply -f /tmp/{{ cluster.name }}-peer-cm.yaml

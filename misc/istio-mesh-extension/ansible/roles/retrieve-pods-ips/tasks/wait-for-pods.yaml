@@ -1,0 +1,8 @@
+---
+
+- name: make sure all pods are running
+  shell: oc --context {{ cluster.context }} get pods -n {{ namespace }} -o custom-columns=NAME:metadata.name,IP:status.podIP --no-headers=true | grep -v none | wc -l
+  register: n_pods
+  until: n_pods.stdout != cluster.nodes | length
+  retries: 10
+  delay: 10

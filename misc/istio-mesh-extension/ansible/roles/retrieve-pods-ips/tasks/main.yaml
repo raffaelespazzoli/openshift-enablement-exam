@@ -1,0 +1,17 @@
+---
+
+- name: make sure all pods are started
+  include_tasks: wait-for-pods.yaml
+  with_items: "{{ clusters }}"
+  loop_control:
+    loop_var: cluster
+
+- name: add pod ips to cluster
+  include_tasks: add-pod-ips.yaml
+  with_items: "{{ clusters }}"
+  loop_control:
+    loop_var: cluster
+
+- name: debug
+  debug:
+    var: clusters

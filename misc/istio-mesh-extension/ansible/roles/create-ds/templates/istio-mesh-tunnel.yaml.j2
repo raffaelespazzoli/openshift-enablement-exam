@@ -72,7 +72,7 @@ data:
    [Peer]
    PublicKey = {{ ext_node.public_key }}
    AllowedIPs = {{ ext_node.hostsubnet }}
-   Endpoint = {{ ext_node.public_ip }}:{{ tunnel_port }}
+   Endpoint = {{ ext_node.public_ip }}:{{ ext_node.port }}
    PersistentKeepalive = 25
    
 {% endfor %}
@@ -104,6 +104,10 @@ spec:
         kubernetes.io/hostname: {{ node.hostname }}
       containers:
       - env:
+        - name: TUNNEL_PORT
+          value: "{{ tunnel_port }}" 
+        - name: PEER_CONFIG
+          value: /root/peers/peers.config      
         - name: TUNNEL_DEV_NAME
           value: sdn-tunnel  
         - name: TUNNEL_MODE
@@ -123,9 +127,11 @@ spec:
         - name: openvswitch
           mountPath: /var/run/openvswitch
         - name: wireguard-config
-          mountPath: /root/wireguard_config                                              
+          mountPath: /root/wireguard_config
+        - name: peers
+          mountPath: /root/peers                                                        
       serviceAccountName: {{ appname }}
-      hostNetwork: true
+      hostNetwork: false
       hostPID: true
       volumes:  
       - name: openvswitch
@@ -134,5 +140,17 @@ spec:
           type: Directory
       - name: wireguard-config
         configMap: 
-          name: {{ "sdn-tunnel-"~node.name.split('.')[0] }}     
-{% endfor %}      
+          name: {{ appname~"-"~node.name.split('.')[0] }}
+      - name: peers
+        configMap: 
+          name: {{ appname~"-peers" }}               
+{% endfor %}
+---      
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ appname~"-peers" }}
+  namespace: {{ namespace }}
+  labels:
+    app: {{ appname }}
+data:

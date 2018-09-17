@@ -1,0 +1,6 @@
+---
+- name: create peer configmap
+  include_tasks: create-cm.yaml
+  with_items: "{{ clusters }}"
+  loop_control:
+    loop_var: cluster

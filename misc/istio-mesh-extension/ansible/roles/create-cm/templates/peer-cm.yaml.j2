@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ appname~"-peers" }}
+  namespace: {{ namespace }}
+  labels:
+    app: {{ appname }}
+data:
+  peers.config: |-    
+{% for ext_cluster in clusters %}
+{% if ext_cluster != cluster %}
+{% for ext_node in ext_cluster.nodes %}
+   {{ ext_node.pod_ip }}-{{ ext_node.public_ip }}   
+{% endfor %}
+{% endif %}
+{% endfor %} 

@@ -1,0 +1,12 @@
+---
+- name: get ip
+  shell: oc --context {{ cluster.context }} get pod -n {{ namespace }} -o custom-columns=NAME:metadata.name,IP:status.podIP --no-headers=true | grep {{ appname }}-{{ node.name.split('.')[0] }} | awk '{print $2}'
+  register: ip 
+
+- name: create node struct
+  set_fact:
+    node_struct: "{{ dict({'pod_ip': ip.stdout }) | combine(node)  }}"
+     
+- name: add node struct
+  set_fact:
+    cluster_nodes: "{{ cluster_nodes | union( [node_struct] ) }}" 

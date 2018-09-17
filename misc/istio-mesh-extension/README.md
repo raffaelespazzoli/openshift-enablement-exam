@@ -7,8 +7,8 @@ due to an issue nodes must be routable between each other at the moment. this is
 ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "ip route add 192.168.99.0/24 via 192.168.98.254"
 ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "ip route add 192.168.98.0/24 via 192.168.99.254"
 
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 5555 -j ACCEPT"
-ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 5555 -j ACCEPT"
+#ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 5555 -j ACCEPT"
+#ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 5555 -j ACCEPT"
 
 #ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory-mini --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 30000:40000 -j ACCEPT"
 #ansible nodes -vv -i /tmp/git/openshift-enablement-exam/misc/casl/inventory --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol -m shell -a "iptables -A INPUT -p udp -m udp --dport 30000:40000 -j ACCEPT"
