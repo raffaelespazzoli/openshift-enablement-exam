@@ -1,3 +1,4 @@
+tunnel_mode: gre
 namespace: sdn-tunnel
 appname: sdn-tunnel
 tunnel_port: 5555

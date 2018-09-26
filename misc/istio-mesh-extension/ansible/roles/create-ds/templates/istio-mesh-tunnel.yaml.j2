@@ -72,7 +72,7 @@ data:
    [Peer]
    PublicKey = {{ ext_node.public_key }}
    AllowedIPs = {{ ext_node.hostsubnet }}
-   Endpoint = {{ ext_node.public_ip }}:{{ ext_node.port }}
+   Endpoint = {{ ext_node.public_ip }}:{{ tunnel_port }}
    PersistentKeepalive = 25
    
 {% endfor %}
@@ -104,16 +104,18 @@ spec:
         kubernetes.io/hostname: {{ node.hostname }}
       containers:
       - env:
+        - name: NODEIP_CIDR
+          value: /etc/nodeip-cidr/ip-cidr.config
         - name: TUNNEL_PORT
           value: "{{ tunnel_port }}" 
         - name: PEER_CONFIG
-          value: /root/peers/peers.config      
+          value: /etc/peers/peers.config      
         - name: TUNNEL_DEV_NAME
           value: sdn-tunnel  
         - name: TUNNEL_MODE
-          value: wireguard
+          value: "{{ tunnel_mode }}"
         - name: WIREGUARD_CONFIG
-          value: /root/wireguard_config/wireguard.config
+          value: /etc/wireguard_config/wireguard.config
         - name: CLUSTER_CIDR
           value: {{ cluster.sdn_cidr }}
         - name: TUNNEL_CIDRs
@@ -127,13 +129,25 @@ spec:
         - name: openvswitch
           mountPath: /var/run/openvswitch
         - name: wireguard-config
-          mountPath: /root/wireguard_config
+          mountPath: /etc/wireguard_config
         - name: peers
-          mountPath: /root/peers                                                        
+          mountPath: /etc/peers
+        - name: nodeip-cidr
+          mountPath: /etc/nodeip-cidr                                                                  
       serviceAccountName: {{ appname }}
+{% if tunnel_mode == 'fou' or tunnel_mode == 'gre' or tunnel_mode == 'wireguard1' or tunnel_mode == 'wireguard4' %}
       hostNetwork: false
+{% endif %}
+{% if tunnel_mode == 'wireguard2' or tunnel_mode == 'wireguard5' %}
+      hostNetwork: true
+{% endif %}
+{% if tunnel_mode == 'fou' or tunnel_mode == 'gre' or tunnel_mode == 'wireguard1' or tunnel_mode == 'wireguard4' %}
       hostPID: true
-      volumes:  
+{% endif %}
+{% if tunnel_mode == 'wireguard2' or tunnel_mode == 'wireguard5' %}
+      hostPID: false
+{% endif %}            
+      volumes: 
       - name: openvswitch
         hostPath: 
           path: /var/run/openvswitch
@@ -143,9 +157,29 @@ spec:
           name: {{ appname~"-"~node.name.split('.')[0] }}
       - name: peers
         configMap: 
-          name: {{ appname~"-peers" }}               
+          name: {{ appname~"-peers" }}
+      - name: nodeip-cidr
+        configMap: 
+          name: {{ appname~"-nodeip-cidr" }}                          
 {% endfor %}
 ---      
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ appname~"-nodeip-cidr" }}
+  namespace: {{ namespace }}
+  labels:
+    app: {{ appname }}
+data:
+  ip-cidr.config: |-    
+{% for ext_cluster in clusters %}
+{% if ext_cluster != cluster %}
+{% for ext_node in ext_cluster.nodes %}
+   {{ ext_node.ip }}-{{ ext_node.hostsubnet }}   
+{% endfor %}
+{% endif %}
+{% endfor %}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
