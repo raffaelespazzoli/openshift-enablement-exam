@@ -1,4 +1,4 @@
-tunnel_mode: gre
+tunnel_mode: wireguard1
 namespace: sdn-tunnel
 appname: sdn-tunnel
 tunnel_port: 5555

@@ -11,3 +11,4 @@
     
 - name: apply service template
   command: oc --context {{ cluster.context }} apply -f /tmp/{{ cluster.name }}-service.yaml
+  when: tunnel_mode != 'wireguard4'

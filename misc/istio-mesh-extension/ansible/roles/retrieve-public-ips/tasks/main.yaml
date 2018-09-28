@@ -4,6 +4,7 @@
   with_items: "{{ clusters }}"
   loop_control:
     loop_var: cluster
+  when: tunnel_mode != 'wireguard4'  
 
 - name: debug
   debug:

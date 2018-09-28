@@ -72,9 +72,13 @@ data:
    [Peer]
    PublicKey = {{ ext_node.public_key }}
    AllowedIPs = {{ ext_node.hostsubnet }}
-   Endpoint = {{ ext_node.public_ip }}:{{ tunnel_port }}
-   PersistentKeepalive = 25
-   
+{% if tunnel_mode == 'wireguard4' %}   
+   Endpoint = {{ ext_node.ip }}:{{ tunnel_port }}
+{% endif %}
+{% if tunnel_mode == 'wireguard1' %}   
+   Endpoint = {{ ext_node.public_ip }}:{{ ext_node.port }}
+{% endif %}   
+   PersistentKeepalive = 25   
 {% endfor %}
 {% endif %}
 {% endfor %} 
@@ -135,18 +139,8 @@ spec:
         - name: nodeip-cidr
           mountPath: /etc/nodeip-cidr                                                                  
       serviceAccountName: {{ appname }}
-{% if tunnel_mode == 'fou' or tunnel_mode == 'gre' or tunnel_mode == 'wireguard1' or tunnel_mode == 'wireguard4' %}
       hostNetwork: false
-{% endif %}
-{% if tunnel_mode == 'wireguard2' or tunnel_mode == 'wireguard5' %}
-      hostNetwork: true
-{% endif %}
-{% if tunnel_mode == 'fou' or tunnel_mode == 'gre' or tunnel_mode == 'wireguard1' or tunnel_mode == 'wireguard4' %}
-      hostPID: true
-{% endif %}
-{% if tunnel_mode == 'wireguard2' or tunnel_mode == 'wireguard5' %}
-      hostPID: false
-{% endif %}            
+      hostPID: true          
       volumes: 
       - name: openvswitch
         hostPath: 

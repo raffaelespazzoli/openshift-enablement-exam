@@ -1,3 +1,4 @@
+{% if tunnel_mode == 'wireguard1' %}
 {% for node in cluster.nodes %}
 ---
 apiVersion: v1
@@ -17,4 +18,5 @@ spec:
   selector:
     app: {{ appname }}
     node: {{ node.name }}
-{% endfor %}    
+{% endfor %}
+{% endif %}
