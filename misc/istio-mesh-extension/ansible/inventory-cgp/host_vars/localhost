@@ -1,0 +1,13 @@
+clusters:
+- name: env1
+  url: master.env1.raffa.systems:8443
+  username: admin
+  password: admin 
+- name: env2
+  url: master.env2.raffa.systems:8443
+  username: admin
+  password: admin
+- name: env3
+  url: master.env3.raffa.systems:8443
+  username: admin
+  password: admin    

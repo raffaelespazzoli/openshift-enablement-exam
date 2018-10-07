@@ -39,7 +39,7 @@ cloud_infrastructure:
      docker_volume_size: 50     
 
 # docker_storage_block_device: "/dev/vdb"
-docker_storage_block_device: /dev/disk/by-id/google-docker-storage
+#docker_storage_block_device: /dev/disk/by-id/google-docker-storage
 
 # NOTE: If you do not have access to an internal satellite server, use the "rhsm_username" and "rhsm_password" to subscribe to redhat.com and your account available there. Make sure to use an account that has v$
 rhsm_username: "{{ lookup('env','RHN_USERNAME') }}"

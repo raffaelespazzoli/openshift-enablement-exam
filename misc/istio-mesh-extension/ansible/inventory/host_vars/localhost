@@ -1,16 +1,14 @@
-tunnel_mode: wireguard1
-namespace: sdn-tunnel
-appname: sdn-tunnel
-tunnel_port: 5555
-image: quay.io/raffaelespazzoli/istio-mesh-extension:latest
+istio_git_tag: 1.0.2
 # LoadBalancer or NodePort
 serviceType: NodePort 
 clusters:
 - name: raffa1
   url: console.raffa1.casl-contrib.osp.rht-labs.com:8443
   username: admin
-  password: admin 
+  password: admin
+  istio_control_plane: true 
 - name: raffa2
   url: console.raffa2.casl-contrib.osp.rht-labs.com:8443
   username: admin
-  password: admin  
+  password: admin
+  istio_control_plane: false  

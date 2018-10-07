@@ -8,16 +8,16 @@ ansible_become: true
 hosting_infrastructure: gcp
 public_dns_domain: raffa.systems
 dns_domain: raffa.systems
-env_id: env2
+env_id: env3
 
 cloud_infrastructure:
-   region: us-east1
+   region: us-west1
    image_name: rhel7
    masters: 
      count: 1
      flavor: n1-standard-2
      zones: 
-     - us-east1-b
+     - us-west1-b
      name_prefix: master
      preemptible: false
      docker_volume_size: 50
@@ -25,7 +25,7 @@ cloud_infrastructure:
      count: 1
      flavor: n1-standard-2
      zones: 
-     - us-east1-b
+     - us-west1-b
      name_prefix: node
      preemptible: false
      docker_volume_size: 50
@@ -33,7 +33,7 @@ cloud_infrastructure:
      count: 1
      flavor: n1-standard-2
      zones: 
-     - us-east1-b
+     - us-west1-b
      name_prefix: infranode          
      preemptible: false
      docker_volume_size: 50     

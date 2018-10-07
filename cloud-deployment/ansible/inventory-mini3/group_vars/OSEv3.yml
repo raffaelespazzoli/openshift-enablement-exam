@@ -80,8 +80,8 @@ openshift_cloudprovider_kind: gce
 os_sdn_network_plugin_name: 'redhat/openshift-ovs-networkpolicy'
 #os_sdn_network_plugin_name: 'redhat/openshift-ovs-multitenant'
 os_firewall_use_firewalld: true
-osm_cluster_network_cidr: 10.2.0.0/16
-openshift_portal_net: 172.31.0.0/16
+osm_cluster_network_cidr: 10.3.0.0/16
+openshift_portal_net: 172.32.0.0/16
 
 openshift_disable_check: 
   - memory_availability    

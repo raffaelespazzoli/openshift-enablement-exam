@@ -34,10 +34,17 @@ ansible nodes -vv -b -i /tmp/git/openshift-enablement-exam/misc/casl/inventory -
 ansible nodes -vv -b -i /tmp/git/openshift-enablement-exam/misc/casl/inventory -m file -a "state=directory name=/etc/kubelet.d" --private-key=~/.ssh/rspazzol-etl3.pem -e openstack_ssh_public_key=rspazzol
 
 
+docker run -ti -u `id -u` -v /home/rspazzol/.gcp/openshift-enablement-exam1-ec7cc7a46156.json:/home/rspazzol/.gcp/openshift-enablement-exam1-ec7cc7a46156.json:Z,ro \
+                         -v $HOME/.ssh:/opt/app-root/src/.ssh:Z,ro \
+                         -v $HOME/git:/tmp/git:Z \
+                         -e INVENTORY_DIR=/tmp/openshift-enablement-exam/cloud-deployment/ansible/inventory-mini2 \
+                         -e PLAYBOOK_FILE=/tmp/git/tmpgit/casl-ansible/playbooks/openshift/end-to-end.yml \
+                         -e ANSIBLE_CONFIG=/tmp/git/openshift-enablement-exam/cloud-deployment/ansible/inventory-mini1/ansible.cfg \
+                         openshift/origin-ansible:v3.10 /bin/bash
 
-
-
-
+source /tmp/git/openshift-enablement-exam/cloud-deployment/ansible/setvars1.sh
+ansible-playbook -i /tmp/git/openshift-enablement-exam/cloud-deployment/ansible/inventory-mini2 --private-key=/opt/app-root/src/.ssh/sshkey-gcp /tmp/git/tmp/casl-ansible/playbooks/openshift/end-to-end.yml
+ansible-playbook -i /tmp/git/openshift-enablement-exam/cloud-deployment/ansible/inventory-mini2 --private-key=/opt/app-root/src/.ssh/sshkey-gcp /tmp/git/tmp/casl-ansible/playbooks/openshift/delete-cluster.yml
 
 developing with git
 
