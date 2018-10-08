@@ -11,6 +11,7 @@ docker run -u `id -u` \
       -e INVENTORY_DIR=/tmp/git/openshift-enablement-exam/misc/casl/inventory \
       -e PLAYBOOK_FILE=/tmp/git/casl-ansible/playbooks/openshift/end-to-end.yml \
       -e OPTS="-e openstack_ssh_public_key=rspazzol-etl3" -ti \
+      -e ANSIBLE_CONFIG=/tmp/git/casl-ansible/ansible.cfg \
       redhatcop/installer-openstack /bin/bash           
       
 docker run -it --name control-host -v $HOME/.ssh:/root/.ssh -v $HOME/.config/openstack:/root/.config/openstack -v $HOME/git:/tmp/git:Z -v $HOME/git/openshift-enablement-exam/misc/casl/misc/ansible.cfg:/root/.ansible.cfg docker.io/redhatcop/control-host-openstack bash      

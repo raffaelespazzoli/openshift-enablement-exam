@@ -4,7 +4,7 @@ ansible_user: openshift
 ansible_become: True
 
 # Node Labels to use with the CASL tools
-openshift_node_labels: "{{ openstack.metadata.node_labels}}"
+#openshift_node_labels: "{{ openstack.metadata.node_labels}}"
 
 deployment_type: openshift-enterprise
 openshift_deployment_type: openshift-enterprise
@@ -15,18 +15,18 @@ openshift_master_cluster_hostname: "master-0.{{ env_id }}.{{ dns_domain }}"
 openshift_master_cluster_public_hostname: "console.{{ env_id }}.{{ dns_domain }}"
 
 #openshift_deployment_type: openshift-enterprise
-openshift_release: v3.9
+openshift_release: v3.10
 osm_cluster_network_cidr: 10.132.0.0/14
 openshift_portal_net: 172.31.0.0/16
 
 
-osm_default_node_selector: 'region=primary'
-osm_use_cockpit: true
-osm_cockpit_plugins: 
-- 'cockpit-kubernetes'
+#osm_default_node_selector: 'region=primary'
+osm_use_cockpit: false
+#osm_cockpit_plugins: 
+#- 'cockpit-kubernetes'
 
 os_sdn_network_plugin_name: 'redhat/openshift-ovs-networkpolicy'
-os_firewall_use_firewalld: false
+#os_firewall_use_firewalld: false
 
 # HTPASSWD Identity Provider
 openshift_master_identity_providers:
@@ -34,20 +34,19 @@ openshift_master_identity_providers:
    'login': 'true'
    'challenge': 'true'
    'kind': 'HTPasswdPasswordIdentityProvider'
-   'filename': '/etc/origin/master/htpasswd'
+#   'filename': '/etc/origin/master/htpasswd'
    
 openshift_master_htpasswd_users:
   admin: $apr1$7aiANAYb$TOUYVUqnBqBlD5AQEIMYw1   
 
-openshift_hosted_router_selector: 'region=infra'
+#openshift_hosted_router_selector: 'region=infra'
 openshift_hosted_manage_router: true
 
-openshift_hosted_registry_selector: 'region=infra'
+#openshift_hosted_registry_selector: 'region=infra'
 openshift_hosted_manage_registry: true
 
 # Deploy Logging with dynamic storage
-openshift_hosted_logging_deploy: false
-openshift_logging_install_logging: true
+openshift_logging_install_logging: false
 openshift_logging_es_pvc_dynamic: true
 openshift_logging_es_pvc_size: 40G
 openshift_logging_curator_default_days: 1
@@ -81,7 +80,48 @@ openshift_disable_check:
   - docker_storage
   - memory_availability
   - disk_availability
+  - docker_image_availability
 
 #fix for recent bug
 oreg_url: registry.access.redhat.com/openshift3/ose-${component}:${version}
-openshift_examples_modify_imagestreams: true
+oreg_auth_user: "{{ lookup('env', 'RHN_USERNAME' )}}"
+oreg_auth_password: "{{ lookup('env', 'RHN_PASSWORD' )}}"
+#openshift_examples_modify_imagestreams: true
+
+openshift_node_groups:
+- name: node-config-master
+  labels:
+  - 'node-role.kubernetes.io/master=true'
+  edits:
+  - key: kubeletArguments.kube-reserved
+    value:
+    - 'cpu={{ ansible_processor_vcpus * 50 }}m'
+    - 'memory={{ ansible_processor_vcpus * 50 }}M'
+  - key: kubeletArguments.system-reserved
+    value:
+    - 'cpu={{ ansible_processor_vcpus * 50 }}m'
+    - 'memory={{ ansible_processor_vcpus * 100 }}M'
+- name: node-config-infra
+  labels:
+  - 'node-role.kubernetes.io/infra=true'
+  edits:
+  - key: kubeletArguments.kube-reserved
+    value:
+    - 'cpu={{ ansible_processor_vcpus * 50 }}m'
+    - 'memory={{ ansible_processor_vcpus * 50 }}M'
+  - key: kubeletArguments.system-reserved
+    value:
+    - 'cpu={{ ansible_processor_vcpus * 50 }}m'
+    - 'memory={{ ansible_processor_vcpus * 100 }}M'
+- name: node-config-compute
+  labels:
+  - 'node-role.kubernetes.io/compute=true'
+  edits:
+  - key: kubeletArguments.kube-reserved
+    value:
+    - 'cpu={{ ansible_processor_vcpus * 50 }}m'
+    - 'memory={{ ansible_processor_vcpus * 50 }}M'
+  - key: kubeletArguments.system-reserved
+    value:
+    - 'cpu={{ ansible_processor_vcpus * 50 }}m'
+    - 'memory={{ ansible_processor_vcpus * 100 }}M'
