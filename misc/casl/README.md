@@ -44,8 +44,8 @@ docker run -ti -u `id -u` -v /home/rspazzol/.gcp/openshift-enablement-exam1-ec7c
                          openshift/origin-ansible:v3.10 /bin/bash
 
 source /tmp/git/openshift-enablement-exam/cloud-deployment/ansible/setvars1.sh
-ansible-playbook -i /tmp/git/openshift-enablement-exam/cloud-deployment/ansible/inventory-mini2 --private-key=/opt/app-root/src/.ssh/sshkey-gcp /tmp/git/tmp/casl-ansible/playbooks/openshift/end-to-end.yml
-ansible-playbook -i /tmp/git/openshift-enablement-exam/cloud-deployment/ansible/inventory-mini2 --private-key=/opt/app-root/src/.ssh/sshkey-gcp /tmp/git/tmp/casl-ansible/playbooks/openshift/delete-cluster.yml
+ansible-playbook -i /tmp/git/openshift-enablement-exam/cloud-deployment/ansible/inventory-mini2 --private-key=/opt/app-root/src/.ssh/sshkey-gcp /tmp/git/casl-ansible/playbooks/openshift/end-to-end.yml
+ansible-playbook -i /tmp/git/openshift-enablement-exam/cloud-deployment/ansible/inventory-mini2 --private-key=/opt/app-root/src/.ssh/sshkey-gcp /tmp/git/casl-ansible/playbooks/openshift/delete-cluster.yml
 
 developing with git
 

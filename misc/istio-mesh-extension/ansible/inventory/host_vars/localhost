@@ -1,14 +1,18 @@
+enable_dns: true
 istio_git_tag: 1.0.2
+log_level: 6
 # LoadBalancer or NodePort
-serviceType: NodePort 
+service_type: NodePort 
 clusters:
 - name: raffa1
   url: console.raffa1.casl-contrib.osp.rht-labs.com:8443
   username: admin
   password: admin
-  istio_control_plane: true 
+  istio_control_plane: true
+  federation_control_plane: true 
 - name: raffa2
   url: console.raffa2.casl-contrib.osp.rht-labs.com:8443
   username: admin
   password: admin
   istio_control_plane: false  
+  federation_control_plane: false

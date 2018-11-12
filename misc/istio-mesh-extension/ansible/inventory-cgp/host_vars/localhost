@@ -1,3 +1,4 @@
+log_level: 6
 clusters:
 - name: env1
   url: master.env1.raffa.systems:8443
