@@ -41,7 +41,7 @@ docker run -ti -u `id -u` -v /home/rspazzol/.gcp/openshift-enablement-exam1-ec7c
                          -e INVENTORY_DIR=/tmp/openshift-enablement-exam/cloud-deployment/ansible/inventory-mini2 \
                          -e PLAYBOOK_FILE=/tmp/git/tmpgit/casl-ansible/playbooks/openshift/end-to-end.yml \
                          -e ANSIBLE_CONFIG=/tmp/git/openshift-enablement-exam/cloud-deployment/ansible/inventory-mini1/ansible.cfg \
-                         openshift/origin-ansible:v3.10 /bin/bash
+                         openshift/origin-ansible:v3.11 /bin/bash
 
 source /tmp/git/openshift-enablement-exam/cloud-deployment/ansible/setvars1.sh
 ansible-playbook -i /tmp/git/openshift-enablement-exam/cloud-deployment/ansible/inventory-mini2 --private-key=/opt/app-root/src/.ssh/sshkey-gcp /tmp/git/casl-ansible/playbooks/openshift/end-to-end.yml

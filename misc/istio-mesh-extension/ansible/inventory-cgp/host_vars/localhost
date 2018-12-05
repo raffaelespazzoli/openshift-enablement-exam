@@ -4,11 +4,17 @@ clusters:
   url: master.env1.raffa.systems:8443
   username: admin
   password: admin 
+  istio_control_plane: true
+  federation_control_plane: true   
 - name: env2
   url: master.env2.raffa.systems:8443
   username: admin
   password: admin
+  istio_control_plane: false  
+  federation_control_plane: false  
 - name: env3
   url: master.env3.raffa.systems:8443
   username: admin
-  password: admin    
+  password: admin
+  istio_control_plane: false  
+  federation_control_plane: false      

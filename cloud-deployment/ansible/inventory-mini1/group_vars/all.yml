@@ -21,14 +21,17 @@ cloud_infrastructure:
      name_prefix: master
      preemptible: false
      docker_volume_size: 50
+# docker volume type options are persistent or ephemeral (default persistent)     
+     docker_volume_type: persistent
    appnodes: 
-     count: 1
+     count: 2
      flavor: n1-standard-2
      zones: 
      - us-central1-a
      name_prefix: node
      preemptible: false
      docker_volume_size: 50
+     docker_volume_type: persistent
    infranodes: 
      count: 1
      flavor: n1-standard-2
@@ -36,10 +39,15 @@ cloud_infrastructure:
      - us-central1-a
      name_prefix: infranode          
      preemptible: false
-     docker_volume_size: 50     
+     docker_volume_size: 50
+     docker_volume_type: persistent
+
+docker_volume_name: docker-storage
+container_runtime_docker_storage_setup_device: /dev/disk/by-id/google-{{ docker_volume_name }}
+container_runtime_docker_storage_type: overlay2
 
 # docker_storage_block_device: "/dev/vdb"
-#docker_storage_block_device: /dev/disk/by-id/google-docker-storage
+# docker_storage_block_device: /dev/disk/by-id/google-docker-storage
 
 # NOTE: If you do not have access to an internal satellite server, use the "rhsm_username" and "rhsm_password" to subscribe to redhat.com and your account available there. Make sure to use an account that has v$
 rhsm_username: "{{ lookup('env','RHN_USERNAME') }}"

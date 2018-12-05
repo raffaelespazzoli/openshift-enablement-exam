@@ -15,7 +15,7 @@ openshift_master_cluster_hostname: "master-0.{{ env_id }}.{{ dns_domain }}"
 openshift_master_cluster_public_hostname: "console.{{ env_id }}.{{ dns_domain }}"
 
 #openshift_deployment_type: openshift-enterprise
-openshift_release: v3.10
+openshift_release: v3.11
 osm_cluster_network_cidr: 10.132.0.0/14
 openshift_portal_net: 172.31.0.0/16
 
@@ -83,7 +83,6 @@ openshift_disable_check:
   - docker_image_availability
 
 #fix for recent bug
-oreg_url: registry.access.redhat.com/openshift3/ose-${component}:${version}
 oreg_auth_user: "{{ lookup('env', 'RHN_USERNAME' )}}"
 oreg_auth_password: "{{ lookup('env', 'RHN_PASSWORD' )}}"
 #openshift_examples_modify_imagestreams: true

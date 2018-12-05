@@ -15,7 +15,7 @@ openshift_master_cluster_hostname: "master-0.{{ env_id }}.{{ dns_domain }}"
 openshift_master_cluster_public_hostname: "console.{{ env_id }}.{{ dns_domain }}"
 
 #openshift_deployment_type: openshift-enterprise
-openshift_release: v3.10
+openshift_release: v3.11
 
 
 #osm_default_node_selector: 'region=primary'
@@ -55,7 +55,7 @@ openshift_metrics_cassandra_storage_type: dynamic
 openshift_metrics_cassandra_pvc_size: 40G
 openshift_metrics_duration: 2
 
-openshift_enable_service_catalog: false
+openshift_enable_service_catalog: true
 openshift_hosted_prometheus_deploy: false
 openshift_cfme_install_app: false 
 
@@ -79,14 +79,8 @@ openshift_disable_check:
   - memory_availability
   - disk_availability
   - docker_image_availability
-  
-static_pod_manifest_path: /etc/kubelet.d
-static_pod_config_path: /etc/kubelet.pod.d  
-lb_masters_vip: 192.168.99.100
-lb_routers_vip: 192.168.99.101
 
 #fix for recent bug
-oreg_url: registry.access.redhat.com/openshift3/ose-${component}:${version}
 oreg_auth_user: "{{ lookup('env', 'RHN_USERNAME' )}}"
 oreg_auth_password: "{{ lookup('env', 'RHN_PASSWORD' )}}"
 #openshift_examples_modify_imagestreams: true

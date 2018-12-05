@@ -3,14 +3,7 @@
 deployment_type: openshift-enterprise
 openshift_deployment_type: openshift-enterprise
 openshift_master_cluster_method: native
-openshift_release: v3.10
-
-#oreg_url: witz-docker.witz.pw:5000/openshift3/ose-${component}:${version}
-#openshift_docker_additional_registries: witz-docker.witz.pw:5000
-#openshift_docker_insecure_registries: witz-docker.witz.pw:5000
-#openshift_examples_modify_imagestreams: true
-
-
+openshift_release: v3.11
 
 # HTPASSWD Identity Provider
 openshift_master_identity_providers:
@@ -34,42 +27,8 @@ openshift_hosted_registry_storage_gcs_bucket: "{{ google_registry_bucket_name }}
 #openshift_hosted_registry_storage_gcs_keyfile: test.key
 openshift_hosted_registry_storage_gcs_rootdirectory: /registry 
 
-#
-#openshift_logging_es_pvc_dynamic: true
-#openshift_logging_es_pvc_size: 10Gi
-#openshift_logging_es_cluster_size: 3
-#openshift_logging_es_number_of_replicas: 2
-#openshift_logging_kibana_replica_count: 1
-#openshift_logging_es_nodeselector: 
-#  region: infra
-#openshift_logging_kibana_nodeselector: 
-#  region: infra
-#openshift_logging_curator_nodeselector: 
-#  region: infra
-#openshift_logging_eventrouter_nodeselector:
-#  region: infra  
-#openshift_logging_fluentd_audit_container_engine: true
-##openshift_logging_fluentd_audit_file: /var/log/ocp-audit.log
-#openshift_logging_install_eventrouter: true
-#openshift_logging_curator_default_days: 7
-
-#openshift_metrics_install_metrics: false
-#openshift_metrics_hawkular_nodeselector:
-#  region: infra
-#openshift_metrics_cassandra_nodeselector: 
-#  region: infra
-#openshift_metrics_heapster_nodeselector: 
-#  region: infra
-#openshift_metrics_hawkular_agent_nodeselector: 
-#  region: infra    
-#openshift_metrics_selector: "region=infra"
-#openshift_metrics_cassandra_storage_type: dynamic 
-#openshift_metrics_cassandra_pvc_size: 5Gi
-#openshift_metrics_hawkular_replicas: 1
-#openshift_metrics_cassandra_replicas: 1
-#openshift_metrics_install_hawkular_agent: true 
-
-#openshift_node_labels: "{{ openstack.metadata.node_labels}}"
+oreg_auth_user: "{{ lookup('env', 'OREG_AUTH_USER' )}}"
+oreg_auth_password: "{{ lookup('env', 'OREG_AUTH_PASSWORD' )}}"
 
 #osm_default_node_selector: 'node-role.kubernetes.io/compute=true'
 

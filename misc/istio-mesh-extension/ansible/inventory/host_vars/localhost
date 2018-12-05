@@ -1,6 +1,8 @@
 enable_dns: true
 istio_git_tag: 1.0.2
+mesh_subdomain: mesh.apps.raffa2.casl-contrib.osp.rht-labs.com
 log_level: 6
+bookinfo_domain: example.com
 # LoadBalancer or NodePort
 service_type: NodePort 
 clusters:

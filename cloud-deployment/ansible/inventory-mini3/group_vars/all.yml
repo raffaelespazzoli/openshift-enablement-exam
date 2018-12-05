@@ -49,11 +49,11 @@ rhsm_pool: "{{ lookup('env','RHN_SUB_POOL') }}"
 
 rhsm_repos:
  - "rhel-7-server-rpms"
- - "rhel-7-server-ose-3.10-rpms"
+ - "rhel-7-server-ose-3.11-rpms"
  - "rhel-7-server-extras-rpms"
  - "rhel-7-fast-datapath-rpms"
  - "rhel-7-server-optional-rpms"
- - "rhel-7-server-ansible-2.4-rpms"
+ - "rhel-7-server-ansible-2.6-rpms"
  
 # Specify the version of docker to use
 #docker_version: "1.13.1" 
