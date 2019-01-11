@@ -16,7 +16,9 @@ openshift_master_cluster_public_hostname: "console.{{ env_id }}.{{ dns_domain }}
 
 #openshift_deployment_type: openshift-enterprise
 openshift_release: v3.11
-
+osm_cluster_network_cidr: 10.128.0.0/14
+openshift_portal_net: 172.30.0.0/16
+openshift_master_ingress_ip_network_cidr: 192.168.97.0/24
 
 #osm_default_node_selector: 'region=primary'
 osm_use_cockpit: false

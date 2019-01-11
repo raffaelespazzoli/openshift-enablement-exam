@@ -1,0 +1,25 @@
+baseDomain: raffa.xyz
+clusterID: b379ccc5-6d85-49b6-9ce7-26035fce7709
+machines:
+- name: master
+  platform: {}
+  replicas: 1
+- name: worker
+  platform: {}
+  replicas: 2
+metadata:
+  creationTimestamp: null
+  name: env1
+networking:
+  clusterNetworks:
+  - cidr: 10.128.0.0/14
+    hostSubnetLength: 9
+  serviceCIDR: 172.30.0.0/16
+  type: OpenshiftSDN
+platform:
+  aws:
+    region: us-east-1
+    vpcCIDRBlock: 10.0.0.0/16
+pullSecret: '{"auths":{"cloud.openshift.com":{"auth":"b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K3Jobmdwc3JzcGF6em9sMWViZ2NzYWxjcW96cnVpbGlsMHRja3Jkbm54Ok5CWjBSSzJLNEhDTjNUN0MzWUlHMVFGTUtYVzNVVk5WSExQWUdCMUxCN1JKMkxTS1ZCTkFYSjZCNDhWMDdEOTI=","email":"rspazzol@redhat.com"},"quay.io":{"auth":"b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K3Jobmdwc3JzcGF6em9sMWViZ2NzYWxjcW96cnVpbGlsMHRja3Jkbm54Ok5CWjBSSzJLNEhDTjNUN0MzWUlHMVFGTUtYVzNVVk5WSExQWUdCMUxCN1JKMkxTS1ZCTkFYSjZCNDhWMDdEOTI=","email":"rspazzol@redhat.com"}}}'
+sshKey: |
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDtty9+Qton+j31GmZGakLqlk4tPuo/MFnWI9bYKXUhxc2w0AA99mw0KbO4VTP0Y5LeEbXE0aCls13TseH2CtoFUhnDSxxWM9aW9C4vXDMfd1buTPaDJMLaKOtynzu34Hkm7P7wnArw3Yr9mWoeTgTRWg38XiyKeh9z51L/TQden7NW2znaQCav8QWZGLm0LyiJWjMif5AqPBYee/EA3cugjU7ZFpCRvpxCarjCT+3jAAV702IynYsqBf+4mD7UBG5GU7zbmYJtmXIzcgBge9vyfSKhhXvioKkT9Y4NB+qBg9dJ0LJKaU+zIzHqwF7T07i3nQwnBG885amDyRHPDAdj rspazzol

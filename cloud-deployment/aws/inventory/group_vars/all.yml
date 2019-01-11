@@ -1,0 +1,24 @@
+# Minimum mandatory provisioning variables.  See provisioning_vars.yml.example.
+# for more information.
+openshift_deployment_type: openshift-enterprise
+openshift_aws_clusterid: env1
+openshift_aws_ssh_key_name: sshkey-gcp
+openshift_aws_base_ami: ami-016da012fe10653c3
+openshift_aws_ami: ami-01cd95ad915a68df8
+openshift_aws_create_iam_cert: false
+
+openshift_aws_master_group_desired_size: 1
+openshift_aws_compute_group_desired_size: 3
+openshift_aws_infra_group_desired_size: 2
+
+oc_adm_csr:
+  approve_all: True
+  #nodes: < list of nodes here >
+  timeout: 0
+
+ansible_ssh_user: ec2-user
+ansible_become: true
+#openshift_pkg_version: "3.11.43"
+# These are required when doing SSL on the ELBs
+#openshift_aws_iam_cert_path: # example: '/path/to/wildcard.<clusterid>.example.com.crt'
+#openshift_aws_iam_cert_key_path: # example: '/path/to/wildcard.<clusterid>.example.com.key'
