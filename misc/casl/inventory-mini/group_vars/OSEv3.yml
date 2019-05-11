@@ -18,7 +18,7 @@ openshift_master_cluster_public_hostname: "console.{{ env_id }}.{{ dns_domain }}
 openshift_release: v3.11
 osm_cluster_network_cidr: 10.132.0.0/14
 openshift_portal_net: 172.31.0.0/16
-openshift_master_ingress_ip_network_cidr: 192.168.96.0/24
+
 
 
 #osm_default_node_selector: 'region=primary'
@@ -63,6 +63,7 @@ openshift_hosted_prometheus_deploy: false
 openshift_cfme_install_app: false 
 
 openshift_docker_options: "--log-driver=json-file --log-opt max-size=50m --log-opt max-file=100"
+openshift_configure_container_storage: False
 
 openshift_cloudprovider_kind: openstack
 openshift_cloudprovider_openstack_auth_url: "{{ lookup('env','OS_AUTH_URL') }}"
@@ -72,9 +73,11 @@ openshift_cloudprovider_openstack_domain_name: Default
 openshift_cloudprovider_openstack_tenant_id: "{{ lookup('env','OS_PROJECT_ID') }}"
 openshift_cloudprovider_openstack_tenant_name: "{{ lookup('env','OS_PROJECT_NAME') }}"
 openshift_cloudprovider_openstack_region: "{{ lookup('env','OS_REGION_NAME') }}"
-openshift_cloudprovider_openstack_lb_subnet_id: 7702e6d6-bba5-4e73-b0ee-467a33c78511
+openshift_cloudprovider_openstack_lb_subnet_id: 75927368-3f6d-4551-afe8-1f40bb954ca2
 openshift_cloudprovider_openstack_blockstorage_version: v2
 
+list_of_additional_ca_certs:
+- "{{ lookup('env','OS_CACERT') }}"
 
 
 openshift_disable_check: 

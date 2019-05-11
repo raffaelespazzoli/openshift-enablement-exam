@@ -1,1 +1,4 @@
 /auth/
+/cluster1/
+/cluster2/
+/users.htpasswd
