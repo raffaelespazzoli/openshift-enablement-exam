@@ -4,7 +4,7 @@ hosting_infrastructure: openstack
 # OpenStack Provisioning Variables
 # use the "-e" option to set "openstack_ssh_public_key"
 #openstack_ssh_public_key:
-openstack_default_image_name: "rhel-server-7.5-x86_64"
+openstack_default_image_name: "rhel-server-7.6-x86_64"
 openstack_default_flavor: "etl1.large"
 openstack_external_network_name: "external"
 #openstack_dns_domain: "casl.raffa.com"
@@ -16,7 +16,7 @@ env_id: "raffa1"
 
 dns_domain: "casl-contrib.osp.rht-labs.com"
 dns_nameservers:
-- 10.9.53.22
+- 10.9.51.22
 
 openshift_master_api_port: 8443
 openshift_master_console_port: 8443
@@ -30,17 +30,17 @@ nsupdate_config:
   - view: public
     zone: 'casl-contrib.osp.rht-labs.com'
     server_list:
-      - key_secret: 'aXf4BXuIRCWhVkOFz1wPsMr1BsZ811MnazxTG0HkUOM='
+      - key_secret: 'Xap68yg0yIzeUUAkWZOOspmJC3oj7yXOk3y8GLtPNxc='
         key_algorithm: 'hmac-sha256'
-        server: '10.9.53.20'
+        server: '10.9.51.47'
         key_name: 'external-casl-contrib.osp.rht-labs.com'
   - view: "private"
     zone: 'casl-contrib.osp.rht-labs.com'
     server_list:
-      - key_secret: 'nYcNpkGi9eYuha3SdivBYopHFABg46VBRjj+l1cIPIQ='
+      - key_secret: 'Hhb4i8lxFZ32MEj/tjcHCukw2vjtQh3RXmw4A5Fd/Lg='
         key_algorithm: 'hmac-sha256'
         key_name: 'internal-casl-contrib.osp.rht-labs.com'
-        server: '10.9.53.22'
+        server: '10.9.51.22'
 
 openstack_lb_flavor: m1.small
 openstack_etcd_flavor: m1.large
@@ -72,6 +72,8 @@ rhsm_repos:
  - "rhel-7-fast-datapath-rpms"
  - "rhel-7-server-optional-rpms"
  - "rhel-7-server-ansible-2.6-rpms"
+ - "rhel-7-server-openstack-13-rpms"
+ - "rhel-7-server-openstack-13-tools-rpms"
  
  
 rhsm_username: "{{ lookup('env','RHN_USERNAME') }}"

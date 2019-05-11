@@ -1,1 +1,0 @@
-{"clusterName":"env1","aws":{"region":"us-east-1","identifier":[{"openshiftClusterID":"b379ccc5-6d85-49b6-9ce7-26035fce7709"},{"kubernetes.io/cluster/env1":"owned"}]}}

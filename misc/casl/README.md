@@ -10,7 +10,7 @@ docker run -u `id -u` \
       -v $HOME/git:/tmp/git:Z \
       -e INVENTORY_DIR=/tmp/git/openshift-enablement-exam/misc/casl/inventory \
       -e PLAYBOOK_FILE=/tmp/git/casl-ansible/playbooks/openshift/end-to-end.yml \
-      -e OPTS="-e openstack_ssh_public_key=rspazzol-etl3" -ti \
+      -e OPTS="-e openstack_ssh_public_key=rspazzol" -ti \
       -e ANSIBLE_CONFIG=/tmp/git/casl-ansible/ansible.cfg \
       redhatcop/installer-openstack /bin/bash           
       
@@ -60,3 +60,9 @@ git push --force [--set-upstream origin <branch>]
 
 when adding multiple interfaces:
 ansible -vv -i /root/code/openshift-enablement-exam/misc/casl/inventory nodes,targetd -m copy -a "src=/root/code/openshift-enablement-exam/misc/casl/ifcfg-eth1 dest=/etc/sysconfig/network-scripts" -e openstack_ssh_public_key=rspazzol-etl2 --private-key=.ssh/rspazzol-etl2.pem
+
+
+# fix a stuck namespace
+
+kubectl patch ns cert-manager -p='[{"op": "replace", "path": "/spec/finalizers", "value":[]}]' --type='json'
+
