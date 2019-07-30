@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-operators-redhat 
+  annotations:
+    openshift.io/node-selector: ""
+  labels:
+    openshift.io/cluster-logging: "true"
+    openshift.io/cluster-monitoring: "true"
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: openshift-operators-redhat
+  namespace: openshift-operators-redhat 
+spec: {}
+---
+apiVersion: "operators.coreos.com/v1"
+kind: "CatalogSourceConfig"
+metadata:
+  name: "elasticsearch"
+  namespace: "openshift-marketplace"
+spec:
+  targetNamespace: "openshift-operators-redhat" 
+  packages: "elasticsearch-operator"
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  generateName: "elasticsearch-"
+  namespace: "openshift-operators-redhat" 
+spec:
+  channel: "preview" 
+  installPlanApproval: "Automatic"
+  source: "elasticsearch"
+  sourceNamespace: "openshift-operators-redhat" 
+  name: "elasticsearch-operator"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prometheus-k8s
+  namespace: openshift-operators-redhat
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - services
+  - endpoints
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-k8s
+  namespace: openshift-operators-redhat
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-k8s
+subjects:
+- kind: ServiceAccount
+  name: prometheus-k8s
+namespace: openshift-operators-redhat
+---    
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cluster-logging
+  annotations:
+    openshift.io/node-selector: "" 
+  labels:
+    openshift.io/cluster-logging: "true"
+    openshift.io/cluster-monitoring: "true"
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: cluster-logging
+  namespace: cluster-logging
+spec: {}
+
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: cluster-logging
+  namespace: cluster-logging
+spec:
+  channel: preview
+  installPlanApproval: Automatic
+  name: cluster-logging
+  source: installed-redhat-cluster-logging
+  sourceNamespace: cluster-logging 
+---
+
+    
