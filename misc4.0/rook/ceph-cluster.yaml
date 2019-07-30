@@ -1,0 +1,34 @@
+apiVersion: ceph.rook.io/v1
+kind: CephCluster
+metadata:
+  name: rook-ceph
+  namespace: rook-ceph
+spec:
+  cephVersion:
+    image: ceph/ceph:v14.2
+  dataDirHostPath: /var/lib/rook
+  mon:
+    count: 3
+    allowMultiplePerNode: false
+  # enable the ceph dashboard for viewing cluster status
+  dashboard:
+    enabled: true
+  placement:
+    all:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: node-role.kubernetes.io/rook
+              operator: In
+              values:
+              - ""
+      tolerations:
+      - key: node-role.kubernetes.io/rook
+        operator: Exists
+  storage:
+    useAllNodes: true
+    useAllDevices: false
+    devices:
+    - name: rook
+              

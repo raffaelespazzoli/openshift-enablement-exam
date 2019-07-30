@@ -1,0 +1,73 @@
+---
+apiVersion: "autoscaling.openshift.io/v1"
+kind: "ClusterAutoscaler"
+metadata:
+  name: "default"
+spec:
+  podPriorityThreshold: -10 
+  resourceLimits:
+    maxNodesTotal: 24 
+    cores:
+      min: 8 
+      max: 128 
+    memory:
+      min: 4 
+      max: 256
+  scaleDown: 
+    enabled: true 
+    delayAfterAdd: 10m 
+    delayAfterDelete: 5m 
+    delayAfterFailure: 30s 
+    unneededTime: 60s 
+---    
+apiVersion: "autoscaling.openshift.io/v1beta1"
+kind: "MachineAutoscaler"
+metadata:
+  name: "cluster-2d3c-x4z74-worker-us-west-2a" 
+  namespace: "openshift-machine-api"
+spec:
+  minReplicas: 1 
+  maxReplicas: 12 
+  scaleTargetRef: 
+    apiVersion: machine.openshift.io/v1beta1
+    kind: MachineSet 
+    name: cluster-2d3c-x4z74-worker-us-west-2a
+---
+apiVersion: "autoscaling.openshift.io/v1beta1"
+kind: "MachineAutoscaler"
+metadata:
+  name: "cluster-2d3c-x4z74-worker-us-west-2b" 
+  namespace: "openshift-machine-api"
+spec:
+  minReplicas: 1 
+  maxReplicas: 12 
+  scaleTargetRef: 
+    apiVersion: machine.openshift.io/v1beta1
+    kind: MachineSet 
+    name: cluster-2d3c-x4z74-worker-us-west-2b
+---
+apiVersion: "autoscaling.openshift.io/v1beta1"
+kind: "MachineAutoscaler"
+metadata:
+  name: "cluster-2d3c-x4z74-worker-us-west-2c" 
+  namespace: "openshift-machine-api"
+spec:
+  minReplicas: 1 
+  maxReplicas: 12 
+  scaleTargetRef: 
+    apiVersion: machine.openshift.io/v1beta1
+    kind: MachineSet 
+    name: cluster-2d3c-x4z74-worker-us-west-2c
+---
+apiVersion: "autoscaling.openshift.io/v1beta1"
+kind: "MachineAutoscaler"
+metadata:
+  name: "cluster-2d3c-x4z74-worker-us-west-2d" 
+  namespace: "openshift-machine-api"
+spec:
+  minReplicas: 1 
+  maxReplicas: 12 
+  scaleTargetRef: 
+    apiVersion: machine.openshift.io/v1beta1
+    kind: MachineSet 
+    name: cluster-2d3c-x4z74-worker-us-west-2d           
