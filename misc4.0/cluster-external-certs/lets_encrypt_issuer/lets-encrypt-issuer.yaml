@@ -1,0 +1,39 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: ${EMAIL}
+
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    # ACME DNS-01 provider configurations
+    dns01:
+      # Here we define a list of DNS-01 providers that can solve DNS challenges
+      providers:
+        - name: cluster-dns
+          route53:
+            accessKeyID: ${AWS_ACCESS_KEY_ID}
+            # A secretKeyRef to a google cloud json service account
+            secretAccessKeySecretRef:
+              name: cert-manager-dns-credentials
+              key: aws_secret_access_key
+            region: ${REGION} 
+            hostedZoneID: ${zoneid}
+
+
+# type ACMEIssuerDNS01ProviderRoute53 struct {
+# 	AccessKeyID string `json:"accessKeyID"`
+
+# 	SecretAccessKey SecretKeySelector `json:"secretAccessKeySecretRef"`
+
+# 	// +optional
+# 	HostedZoneID string `json:"hostedZoneID,omitempty"`
+
+# 	Region string `json:"region"`
+# }           
+
+
