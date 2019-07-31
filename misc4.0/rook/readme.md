@@ -9,8 +9,8 @@ oc set env deployment/rook-ceph-operator ROOK_HOSTPATH_REQUIRES_PRIVILEGED=true 
 
 deploy ceph VMs
 ```
-export master_machine=$(oc get machines -n openshift-machine-api | grep -m 1 master | awk '{print $1}')
-export cluster_id=${master_machine:8:15}
+export cluster_uuid=$(oc get clusterversions.config.openshift.io version -o jsonpath='{.spec.clusterID}{"\n"}')
+export infra_id=$(oc get infrastructures.config.openshift.io cluster -o jsonpath='{.status.infrastructureName}{"\n"}')
 export region=$(oc get machines -n openshift-machine-api | grep -m 1 master | awk '{print $5}')
 export azs=$(oc get machines -n openshift-machine-api | grep master | awk '{print $6}')
 for az in $azs; do
@@ -21,4 +21,10 @@ done
 deploy ceph cluster
 ```
 oc apply -f ceph-cluster.yaml -n rook-ceph
+```
+
+consider
+```
+$ CLUSTER_UUID=$(oc get clusterversions.config.openshift.io version -o jsonpath='{.spec.clusterID}{"\n"}')
+$ INFRA_ID=$(oc get infrastructures.config.openshift.io cluster -o jsonpath='{.status.infrastructureName}{"\n"}')
 ```

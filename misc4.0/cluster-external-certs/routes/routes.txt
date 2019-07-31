@@ -1,0 +1,5 @@
+openshift-console/console
+openshift-console/downloads
+openshift-monitoring/alertmanager-main
+openshift-monitoring/grafana
+openshift-monitoring/prometheus-k8s

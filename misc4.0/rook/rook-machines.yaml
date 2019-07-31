@@ -2,24 +2,24 @@ apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
   labels:
-    machine.openshift.io/cluster-api-cluster: cluster-${cluster_id}
-  name: cluster-${cluster_id}-rook-${az}
+    machine.openshift.io/cluster-api-cluster: ${infra_id}
+  name: ${infra_id}-rook-${az}
   namespace: openshift-machine-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      machine.openshift.io/cluster-api-cluster: cluster-${cluster_id}
+      machine.openshift.io/cluster-api-cluster: ${infra_id}
       machine.openshift.io/cluster-api-machine-role: rook
       machine.openshift.io/cluster-api-machine-type: rook
-      machine.openshift.io/cluster-api-machineset: cluster-${cluster_id}-rook-${az}
+      machine.openshift.io/cluster-api-machineset: ${infra_id}-rook-${az}
   template:
     metadata:
       labels:
-        machine.openshift.io/cluster-api-cluster: cluster-${cluster_id}
+        machine.openshift.io/cluster-api-cluster: ${infra_id}
         machine.openshift.io/cluster-api-machine-role: rook
         machine.openshift.io/cluster-api-machine-type: rook
-        machine.openshift.io/cluster-api-machineset: cluster-${cluster_id}-rook-${az}
+        machine.openshift.io/cluster-api-machineset: ${infra_id}-rook-${az}
     spec:
       taints:
       - key: node-role.kubernetes.io/rook
@@ -46,7 +46,7 @@ spec:
             name: aws-cloud-credentials
           deviceIndex: 0
           iamInstanceProfile:
-            id: cluster-${cluster_id}-worker-profile
+            id: ${infra_id}-worker-profile
           instanceType: m5.xlarge
           kind: AWSMachineProviderConfig
           metadata:
@@ -59,14 +59,14 @@ spec:
           - filters:
             - name: tag:Name
               values:
-              - cluster-${cluster_id}-worker-sg
+              - ${infra_id}-worker-sg
           subnet:
             filters:
             - name: tag:Name
               values:
-              - cluster-${cluster_id}-private-${az}
+              - ${infra_id}-private-${az}
           tags:
-          - name: kubernetes.io/cluster/cluster-${cluster_id}
+          - name: kubernetes.io/cluster/${infra_id}
             value: owned
           userDataSecret:
             name: worker-user-data
