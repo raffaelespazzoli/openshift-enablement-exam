@@ -1,0 +1,19 @@
+nodeSelector:
+  'node-role.kubernetes.io/rook': ""
+
+tolerations:
+- key: node-role.kubernetes.io/rook
+  operator: Exists
+
+agent:
+  flexVolumeDirPath: /etc/kubernetes/kubelet-plugins/volume/exec
+  toleration: NoSchedule
+  tolerationKey: node-role.kubernetes.io/rook
+
+discover:
+  toleration: NoSchedule
+  tolerationKey: node-role.kubernetes.io/rook  
+
+#enableSelinuxRelabeling: "true"
+#hostpathRequiresPrivileged: "true"
+#disableDeviceHotplug: "false"
