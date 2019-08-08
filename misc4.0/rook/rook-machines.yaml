@@ -26,7 +26,7 @@ spec:
         effect: NoSchedule
       metadata:
         labels:
-          node-role.kubernetes.io/rook: ""
+          node-role.kubernetes.io/rook: ceph
       providerSpec:
         value:
           ami:
@@ -41,7 +41,7 @@ spec:
               iops: 0
               volumeSize: 200
               volumeType: gp2
-            deviceName: /dev/rook                
+#            deviceName: /dev/rook                
           credentialsSecret:
             name: aws-cloud-credentials
           deviceIndex: 0

@@ -1,21 +1,7 @@
-deploy ceph operator
+# Rook
 
-```
-oc new-project rook-ceph
-oc apply -f rook-scc.yaml
-helm repo add rook-release https://charts.rook.io/release
-helm repo update
-helm fetch rook-release/rook-ceph
-helm template --namespace rook-ceph rook-ceph-v1.0.4.tgz -f rook-ceph-chart-values.yaml | oc apply -f - -n rook-ceph
-oc set env deployment/rook-ceph-operator ROOK_ALLOW_MULTIPLE_FILESYSTEMS=false ROOK_ENABLE_FSGROUP=true ROOK_HOSTPATH_REQUIRES_PRIVILEGED=true ROOK_DISABLE_DEVICE_HOTPLUG=false ROOK_ENABLE_SELINUX_RELABELING=true -n rook-ceph
-oc set image deployment/rook-ceph-operator rook-ceph-operator=rook/ceph:master -n rook-ceph
-oc apply -f rook-ceph-cmd-reporter.yaml
-```
+## deploy ceph VMs
 
-
-
-
-deploy ceph VMs
 ```
 export cluster_uuid=$(oc get clusterversions.config.openshift.io version -o jsonpath='{.spec.clusterID}{"\n"}')
 export infra_id=$(oc get infrastructures.config.openshift.io cluster -o jsonpath='{.status.infrastructureName}{"\n"}')
@@ -26,24 +12,50 @@ for az in $azs; do
 done
 ```
 
-deploy ceph cluster
+## attach ceph volumes
+
 ```
-oc apply -f ceph-cluster.yaml -n rook-ceph
+for machine in $(oc get machine -n openshift-machine-api | grep rook | awk '{print $1}'); do
+  instance_id=$(oc get machine $machine -n openshift-machine-api -o jsonpath='{.status.providerStatus.instanceId}')
+  echo working on machine $machine instance $instance_id
+  availability_zone=$(oc get machine $machine -n openshift-machine-api -o jsonpath='{.spec.providerSpec.value.placement.availabilityZone}')
+  region=$(oc get machine $machine -n openshift-machine-api -o jsonpath='{.spec.providerSpec.value.placement.region}')
+  echo creating volume in availability zone $availability_zone and region $region
+  volume_id=$(aws ec2 create-volume --region $region --availability-zone $availability_zone --volume-type=gp2 --size 200 --output json | jq -r .VolumeId)
+  sleep 5
+  echo attaching volume $volume_id to instance $instance_id 
+  aws ec2 attach-volume --region $region --instance-id $instance_id --volume-id $volume_id --device /dev/sdr
+done
 ```
 
-consider
-```
-$ CLUSTER_UUID=$(oc get clusterversions.config.openshift.io version -o jsonpath='{.spec.clusterID}{"\n"}')
-$ INFRA_ID=$(oc get infrastructures.config.openshift.io cluster -o jsonpath='{.status.infrastructureName}{"\n"}')
-```
+## Deploy the operator
 
-for master use:
 ```
 oc new-project rook-ceph
-helm repo add rook-master https://charts.rook.io/master
-helm repo update
-helm search rook-ceph
-helm fetch rook-master/rook-ceph --version v1.0.0
-helm template --namespace rook-ceph rook-ceph-v1.0.0.tgz | oc apply -f - -n rook-ceph
-oc set env deployment/rook-ceph-operator ROOK_HOSTPATH_REQUIRES_PRIVILEGED=true -n rook-ceph
+oc apply -f rook-openshift/common.yaml -n rook-ceph
+oc apply -f rook-openshift/operator-openshift.yaml -n rook-ceph
+oc apply -f ceph-cluster.yaml -n rook-ceph
+# after a few seconds
+sleep 20
+oc set image statefulset/csi-rbdplugin-provisioner csi-snapshotter=quay.io/k8scsi/csi-snapshotter:v1.2.0 -n rook-ceph
+oc scale statefulset/csi-rbdplugin-provisioner --replicas 0
+oc scale statefulset/csi-rbdplugin-provisioner --replicas 1
+oc apply -f rook-openshift/filesystem.yaml -n rook-ceph
+oc apply -f rook-openshift/toolbox.yaml -n rook-ceph
+oc apply -f rook-openshift/storageclasses/cephfs-storageclass.yaml -n rook-ceph
+oc apply -f rook-openshift/storageclasses/rbd-storageclass.yaml -n rook-ceph
+```
+
+## Debug rook
+
+```
+oc -n rook-ceph exec -it $(kubectl -n rook-ceph get pod -l "app=rook-ceph-tools" -o jsonpath='{.items[0].metadata.name}') bash
+```
+
+then execute ceph commands
+```
+ceph status
+```
+
+
 ```
