@@ -44,6 +44,12 @@ oc apply -f rook-openshift/filesystem.yaml -n rook-ceph
 oc apply -f rook-openshift/toolbox.yaml -n rook-ceph
 oc apply -f rook-openshift/storageclasses/cephfs-storageclass.yaml -n rook-ceph
 oc apply -f rook-openshift/storageclasses/rbd-storageclass.yaml -n rook-ceph
+# this currently doesn't work because of a fetaure gate
+#oc apply -f rook-openshift/storageclasses/rbd-snapshoteclass.yaml -n rook-ceph
+oc create route passthrough rook-ceph-mgr-dashboard --service rook-ceph-mgr-dashboard --port 8443 -n rook-ceph
+# this currently doesn't work for wrong service account
+# oc apply -f rook-openshift/nfs.yaml -n rook-ceph
+oc apply -f rook-openshift/object-openshift.yaml -n rook-ceph
 ```
 
 ## Debug rook
@@ -57,5 +63,19 @@ then execute ceph commands
 ceph status
 ```
 
+## connecting to the ceph dashboard
+```
+echo credentials: admin/$(oc get secret rook-ceph-dashboard-password -n rook-ceph -o jsonpath='{.data.password}' | base64 -d)
+echo url: https://$(oc get route rook-ceph-mgr-dashboard -n rook-ceph -o jsonpath='{.spec.host}')
+``` 
+
+# Intall monitoring
+
+install the prometehus operator in the rook-ceph namespace then run:
 
 ```
+oc apply -f monitoring -n rook-ceph
+oc expose service prometheus-operated -n rook-ceph
+```
+
+
