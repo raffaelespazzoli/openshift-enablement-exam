@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: isam
+    service: isam-config
+  name: isam-config
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: isam-config
+  template:
+    metadata:
+      labels:
+        app: isam-config
+    spec:
+      containers:
+      - env:
+        - name: SERVICE
+          value: config
+        image: store/ibmcorp/isam:9.0.7.0
+        imagePullPolicy: IfNotPresent
+        name: isam-config
+        ports:
+        - containerPort: 9443
+          name: https
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/shared
+          name: isam-config
+        securityContext:
+          runAsUser: 6000
+          capabilties:
+            add: [CHOWN, DAC_OVERRIDE, FOWNER, KILL, NET_BIND_SERVICE, SETFCAP, SETGID, SETUID]        
+      serviceAccountName: isam
+      volumes:
+      - persistentVolumeClaim:
+          claimName: isam-config
+        name: isam-config

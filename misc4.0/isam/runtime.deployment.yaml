@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: isam
+    service: isam-runtime
+  name: isam-runtime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: isam-runtime
+  template:
+    metadata:
+      labels:
+        app: isam-runtime
+    spec:
+      containers:
+      - env:
+        - name: SERVICE
+          value: runtime
+        - name: AUTO_RELOAD_FREQUENCY
+          value: "60"          
+        image: store/ibmcorp/isam:9.0.7.0
+        imagePullPolicy: IfNotPresent
+        name: isam-runtime
+        ports:
+        - containerPort: 9443
+          name: https
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/shared
+          name: isam-config
+        securityContext:
+          runAsUser: 6000
+          capabilties:
+            add: [CHOWN, DAC_OVERRIDE, FOWNER, KILL, NET_BIND_SERVICE, SETFCAP, SETGID, SETUID]        
+      serviceAccountName: isam
+      volumes:
+      - persistentVolumeClaim:
+          claimName: isam-config
+        name: isam-config

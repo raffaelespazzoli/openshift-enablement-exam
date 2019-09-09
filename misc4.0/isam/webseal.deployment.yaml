@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: isam
+    service: isam-webseal
+  name: isam-webseal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: isam-webseal
+  template:
+    metadata:
+      labels:
+        app: isam-webseal
+    spec:
+      containers:
+      - env:
+        - name: SERVICE
+          value: webseal
+        - name: INSTANCE
+          value: "1"
+        - name: AUTO_RELOAD_FREQUENCY
+          value: "60"            
+        image: store/ibmcorp/isam:9.0.7.0
+        imagePullPolicy: IfNotPresent
+        name: isam-webseal
+        ports:
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/shared
+          name: config
+        securityContext:
+          runAsUser: 6000
+          capabilties:
+            add: [CHOWN, DAC_OVERRIDE, FOWNER, KILL, NET_BIND_SERVICE, SETFCAP, SETGID, SETUID]        
+      serviceAccountName: isam-config
+      volumes:
+      - persistentVolumeClaim:
+          claimName: isam-config
+        name: isam-config

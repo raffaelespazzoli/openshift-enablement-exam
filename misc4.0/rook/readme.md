@@ -75,7 +75,7 @@ install the prometehus operator in the rook-ceph namespace then run:
 
 ```
 oc apply -f monitoring -n rook-ceph
-oc expose service prometheus-operated -n rook-ceph
+oc expose service rook-prometheus -n rook-ceph
 ```
 
 

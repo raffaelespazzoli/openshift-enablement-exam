@@ -62,6 +62,16 @@ when adding multiple interfaces:
 ansible -vv -i /root/code/openshift-enablement-exam/misc/casl/inventory nodes,targetd -m copy -a "src=/root/code/openshift-enablement-exam/misc/casl/ifcfg-eth1 dest=/etc/sysconfig/network-scripts" -e openstack_ssh_public_key=rspazzol-etl2 --private-key=.ssh/rspazzol-etl2.pem
 
 
+tagging:
+
+creating tags
+git tag -a "<tagname>" -m "<commit message>"
+git push upstream <tagname>
+
+deleting tags
+git tag -d <tagname>
+git push upstream --delete <tagname>
+
 # fix a stuck namespace
 
 kubectl patch ns cert-manager -p='[{"op": "replace", "path": "/spec/finalizers", "value":[]}]' --type='json'

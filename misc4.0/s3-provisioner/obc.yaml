@@ -1,0 +1,9 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: myobc
+  namespace: s3-provider
+spec:
+  generateBucketName: mybucket
+  bucketName: my-awesome-bucket
+  storageClassName: s3-buckets
