@@ -1,0 +1,22 @@
+apiVersion: "operators.coreos.com/v1"
+kind: "CatalogSourceConfig"
+metadata:
+  name: "elasticsearch"
+  namespace: "openshift-marketplace"
+spec:
+  csDisplayName: Red Hat Operators
+  csPublisher: Red Hat
+  targetNamespace: "openshift-operators" 
+  packages: "elasticsearch-operator"
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: "elasticsearch-operator"
+  namespace: "openshift-operators" 
+spec:
+  channel: "preview" 
+  installPlanApproval: "Automatic"
+  source: "elasticsearch"
+  sourceNamespace: "openshift-operators" 
+  name: "elasticsearch-operator"

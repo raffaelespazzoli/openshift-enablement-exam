@@ -1,0 +1,9 @@
+ui:
+  enabled: true
+global:
+  tlsDisable: true
+server:
+  storageFsGroup: 10000
+  ha:
+    enabled: true  
+    

@@ -10,6 +10,12 @@ spec:
   mon:
     count: 3
     allowMultiplePerNode: false
+    volumeClaimTemplate:
+      spec:
+        storageClassName: gp2
+        resources:
+          requests:
+            storage: 200Gi    
   # enable the ceph dashboard for viewing cluster status
   dashboard:
     enabled: true
@@ -22,22 +28,9 @@ spec:
     # If you have multiple rook-ceph clusters in the same k8s cluster, choose the same namespace (ideally, namespace with prometheus
     # deployed) to set rulesNamespace for all the clusters. Otherwise, you will get duplicate alerts with multiple alert definitions.
     rulesNamespace: rook-ceph    
-  placement:
-    all:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: node-role.kubernetes.io/rook
-              operator: In
-              values:
-              - ceph
-      tolerations:
-      - key: node-role.kubernetes.io/rook
-        operator: Exists
-  storage:
-    useAllNodes: true
-    useAllDevices: true
+#  storage:
+#    useAllNodes: true
+#    useAllDevices: true
 #    devices:
 #    - name: sdr
               
