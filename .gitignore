@@ -6,3 +6,4 @@
 /setvarsa.sh
 /setvarsb.sh
 /.pydevproject
+misc/cephfs/ceph-docker
