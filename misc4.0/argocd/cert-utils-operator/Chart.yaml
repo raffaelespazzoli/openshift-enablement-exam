@@ -1,0 +1,11 @@
+apiVersion: v1
+appVersion: v0.0.3
+description: Helm chart that deploys cert-utils-operator
+engine: gotpl
+keywords:
+- certificates
+- operator
+name: cert-utils-operator
+sources:
+- https://github.com/redhat-cop/cert-utils-operator
+version: v0.0.3

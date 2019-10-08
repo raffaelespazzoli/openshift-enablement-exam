@@ -4,7 +4,7 @@ metadata:
   name: "service-mesh"
   namespace: "openshift-marketplace"
 spec:
-  csDisplayName: Red Hat Operators
+  csDisplayName: Service Mesh Operators
   csPublisher: Red Hat
   targetNamespace: "openshift-operators" 
   packages: "elasticsearch-operator,servicemeshoperator,kiali-ossm,jaeger-product"
@@ -27,7 +27,7 @@ metadata:
   name: "jaeger-operator"
   namespace: "openshift-operators" 
 spec:
-  channel: "preview" 
+  channel: "stable" 
   installPlanApproval: "Automatic"
   source: "service-mesh"
   sourceNamespace: "openshift-operators" 
@@ -39,7 +39,7 @@ metadata:
   name: "kiali-operator"
   namespace: "openshift-operators" 
 spec:
-  channel: "preview" 
+  channel: "stable" 
   installPlanApproval: "Automatic"
   source: "service-mesh"
   sourceNamespace: "openshift-operators" 
