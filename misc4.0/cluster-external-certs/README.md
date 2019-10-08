@@ -33,7 +33,5 @@ envsubst < lets_encrypt_issuer/lets-encrypt-issuer.yaml | oc apply -f - -n cert-
 the only way to do is to replace the default certificate of the default ingresscontroller
 
 ```shell
-export basedomain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
-namespace=openshift-ingress route=default host='*.apps.'${basedomain} envsubst < routes/wildcard-certificate.yaml | oc apply -f -
-oc patch --type=merge --namespace openshift-ingress-operator ingresscontrollers/default --patch '{"spec":{"defaultCertificate":{"name":"cert-manager-default"}}}'
+748256
 ```
