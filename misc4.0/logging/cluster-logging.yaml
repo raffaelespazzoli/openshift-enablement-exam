@@ -2,7 +2,7 @@ apiVersion: "logging.openshift.io/v1"
 kind: "ClusterLogging"
 metadata:
   name: "instance" 
-  namespace: "cluster-logging"
+  namespace: "openshift-logging"
 spec:
   managementState: "Managed"  
   logStore:
@@ -17,7 +17,7 @@ spec:
           memory: 8Gi
       nodeCount: 3
       nodeSelector:
-        'node-role.kubernetes.io/es': ""
+        'node-role.kubernetes.io/es': "es"
       tolerations:
       - key: node-role.kubernetes.io/es
         operator: Exists

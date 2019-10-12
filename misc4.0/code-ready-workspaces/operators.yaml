@@ -1,0 +1,23 @@
+apiVersion: "operators.coreos.com/v1"
+kind: "CatalogSourceConfig"
+metadata:
+  name: "code-ready-workspaces"
+  namespace: "openshift-marketplace"
+spec:
+  csDisplayName: Service Mesh Operators
+  csPublisher: Red Hat
+  targetNamespace: "code-ready-workspaces" 
+  packages: "codeready-workspaces"
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: "code-ready-workspaces"
+  namespace: "code-ready-workspaces" 
+spec:
+  channel: "final" 
+  installPlanApproval: "Automatic"
+  source: "code-ready-workspaces"
+  sourceNamespace: "code-ready-workspaces" 
+  name: "codeready-workspaces"
+---
