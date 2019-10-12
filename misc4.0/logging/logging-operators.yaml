@@ -27,7 +27,7 @@ spec:
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  generateName: "elasticsearch-"
+  name: "elasticsearch-logging"
   namespace: "openshift-operators-redhat" 
 spec:
   channel: "preview" 
@@ -70,7 +70,7 @@ namespace: openshift-operators-redhat
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cluster-logging
+  name: openshift-logging
   annotations:
     openshift.io/node-selector: "" 
   labels:
@@ -80,22 +80,34 @@ metadata:
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
-  name: cluster-logging
-  namespace: cluster-logging
-spec: {}
-
+  name: openshift-logging
+  namespace: openshift-logging
+spec:
+  targetNamespaces:
+  - openshift-logging
+---
+apiVersion: "operators.coreos.com/v1"
+kind: "CatalogSourceConfig"
+metadata:
+  name: "openshift-logging"
+  namespace: "openshift-marketplace"
+spec:
+  csDisplayName: openshift-logging Operators
+  csPublisher: Red Hat
+  targetNamespace: "openshift-logging" 
+  packages: "cluster-logging"
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: cluster-logging
-  namespace: cluster-logging
+  name: openshift-logging
+  namespace: openshift-logging
 spec:
   channel: preview
   installPlanApproval: Automatic
   name: cluster-logging
-  source: installed-redhat-cluster-logging
-  sourceNamespace: cluster-logging 
+  source: openshift-logging
+  sourceNamespace: openshift-logging 
 ---
 
     
