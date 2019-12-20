@@ -1,17 +1,17 @@
 apiVersion: v1
-baseDomain: sandbox305.opentlc.com
+baseDomain: sandbox1044.opentlc.com
 compute:
 - hyperthreading: Enabled
   name: worker
   platform: {}
-  replicas: 3
+  replicas: 4
 controlPlane:
   hyperthreading: Enabled
   name: master
   platform: {}
   replicas: 3
 metadata:
-  name: cluster-0449
+  name: cluster-b5bd
 networking:
   clusterNetwork:
   - cidr: 10.128.0.0/14

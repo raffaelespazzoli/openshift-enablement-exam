@@ -1,9 +1,12 @@
 apiVersion: v1beta3
-baseDomain: 5434.ocp4.opentlc.com
+baseDomain: 8916.ocp4.opentlc.com
 compute:
 - name: worker
   platform: {}
   replicas: 3
+- name: infra
+  platform: {}
+  replicas: 3  
 controlPlane:
   name: master
   platform: {}

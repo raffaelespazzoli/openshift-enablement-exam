@@ -8,3 +8,4 @@
 /.pydevproject
 misc/cephfs/ceph-docker
 
+misc4.0/htpasswd/htpasswd
