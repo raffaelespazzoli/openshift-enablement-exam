@@ -1,0 +1,15 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  name: set-allocatable
+spec:
+  machineConfigPoolSelector:
+    matchLabels:
+      custom-kubelet: small-pods
+  kubeletConfig:
+    systemReserved:
+      cpu: 500m
+      memory: 512Mi
+    kubeReserved:
+      cpu: 500m
+      memory: 512Mi

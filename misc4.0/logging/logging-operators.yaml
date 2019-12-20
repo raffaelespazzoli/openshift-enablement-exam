@@ -15,25 +15,16 @@ metadata:
   namespace: openshift-operators-redhat 
 spec: {}
 ---
-apiVersion: "operators.coreos.com/v1"
-kind: "CatalogSourceConfig"
-metadata:
-  name: "elasticsearch"
-  namespace: "openshift-marketplace"
-spec:
-  targetNamespace: "openshift-operators-redhat" 
-  packages: "elasticsearch-operator"
----
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: "elasticsearch-logging"
   namespace: "openshift-operators-redhat" 
 spec:
-  channel: "preview" 
+  channel: "4.2" 
   installPlanApproval: "Automatic"
-  source: "elasticsearch"
-  sourceNamespace: "openshift-operators-redhat" 
+  source: "redhat-operators"
+  sourceNamespace: "openshift-marketplace"
   name: "elasticsearch-operator"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -86,28 +77,18 @@ spec:
   targetNamespaces:
   - openshift-logging
 ---
-apiVersion: "operators.coreos.com/v1"
-kind: "CatalogSourceConfig"
-metadata:
-  name: "openshift-logging"
-  namespace: "openshift-marketplace"
-spec:
-  csDisplayName: openshift-logging Operators
-  csPublisher: Red Hat
-  targetNamespace: "openshift-logging" 
-  packages: "cluster-logging"
----
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: openshift-logging
   namespace: openshift-logging
 spec:
-  channel: preview
+  channel: '4.2'
   installPlanApproval: Automatic
   name: cluster-logging
-  source: openshift-logging
-  sourceNamespace: openshift-logging 
----
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: clusterlogging.4.2.1-201910221723
+
 
     
