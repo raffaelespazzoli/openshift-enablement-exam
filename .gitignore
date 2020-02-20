@@ -9,3 +9,6 @@
 misc/cephfs/ceph-docker
 
 misc4.0/htpasswd/htpasswd
+4.0/config/pullsecret.json
+4.0/config/pullsecret.yaml
+
