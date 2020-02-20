@@ -1,4 +1,6 @@
 /auth/
 /cluster1/
+/cluster-azure1/
 /cluster2/
 /users.htpasswd
+/openshift-install
