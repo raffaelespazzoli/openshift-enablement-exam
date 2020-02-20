@@ -1,0 +1,63 @@
+apiVersion: v1
+baseDomain: catchall.azure.devcluster.openshift.com
+compute:
+- hyperthreading: Enabled
+  name: worker
+  platform: {}
+  replicas: 4
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  platform: {}
+  replicas: 3
+metadata:
+  name: rspazzol-ipv6
+networking:
+  clusterNetwork:
+  - cidr: "fd01::/48"
+    hostPrefix: 64
+  machineNetwork: 
+  - cidr: 10.0.0.0/16
+  - cidr: fc00::/48
+  networkType: OVNKubernetes
+  serviceNetwork:
+  - "fd02::/112"
+platform:
+  azure:
+    region: centralus 
+    baseDomainResourceGroupName: os4-common
+pullSecret: |
+  {
+    "auths": {
+      "cloud.openshift.com": {
+        "auth": "b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K3Jobmdwc3JzcGF6em9sMWViZ2NzYWxjcW96cnVpbGlsMHRja3Jkbm54Ok5CWjBSSzJLNEhDTjNUN0MzWUlHMVFGTUtYVzNVVk5WSExQWUdCMUxCN1JKMkxTS1ZCTkFYSjZCNDhWMDdEOTI=",
+        "email": "rspazzol@redhat.com"
+      },
+      "quay.io": {
+        "auth": "b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K3Jobmdwc3JzcGF6em9sMWViZ2NzYWxjcW96cnVpbGlsMHRja3Jkbm54Ok5CWjBSSzJLNEhDTjNUN0MzWUlHMVFGTUtYVzNVVk5WSExQWUdCMUxCN1JKMkxTS1ZCTkFYSjZCNDhWMDdEOTI=",
+        "email": "rspazzol@redhat.com"
+      },
+      "registry.connect.redhat.com": {
+        "auth": "ODA3MTgzM3x1aGMtMUVCR0NTQWxjcU9aclVpbElsMHRja3JETk5YOmV5SmhiR2NpT2lKU1V6VXhNaUo5LmV5SnpkV0lpT2lJM09EWTROelZtTURrNE5qQTBNR1U1T1RneU5HSTVPV1kxWkRJM01UbGhNaUo5Lk05bTdNN1hJdjRQeW5GQnphOXUzYjk1X19raUJHWjh0T0h5VllEQ3pha3VnS2tnRFBXZWYtc2tpcWtVWW54S1piaGYtUHNwVkcwYlRHbHJWdUZHNGEzY1NuNjViRm9MdVZRa29Td3lIRnViTmpqVXlNZmpQZFhfZ0xLUXhTMk1ybS1VNFpfbmgyNklXVkhlUmEtLTVsQlplTzNXZGo1TVlFNEhEWjdZVU1zV0VpZk4tMzE4ZV90ZkhDaUhYaUJVNkZlMkl4dktTQW5iSmRWdWdJNlFHYVY2eXFpd2NvbGlYREZkRmRCbHBmTU1pYkxYUzFITWxtX0o4dVpOdlJTYTlMd2tCRlVTN1VucFJLdHRna1V6aDFWM29ySzVTS3hTLVEtWHd4M2M4X1pEQXg1TjVfd0NKQi1PQkdyLWJDSHRpZ3F4dlRyd29jdGI3Wkp2Z2ZWbVlQMzM1U1RwRXgxY3o2VXRjdjEyMnBJWG0wX1BUOU40ZW0wSnIzSDVvNEk2Yk9pQjJZd0VmRGNLUlBKeEpTYlJweGExMVJoa2w4YW01aG9sWVdQR1lZWl9xc09zUjQtWUZNM2hiQXhDNWR1aWlkdnpNdEdTdFhPeklKZ1Ffc0VESDU3OHJQMjRheDhiWG5rTTV0MWVySHdYTmw2WEdZRXNUY2pleTFmZ3R5RjBRSlA0MmhCeXZwV3BKYk9BWDBnRHlSQUVPRGdfckxUWFA5OWJTMGN3YWh3OENpRjJ0S01fVTlwOW5jMDh4S1lSWGNVODBLMWhnNzdINTNKaWN3c0ZZWkhRZUVLdzBaWU80S2FGYzdQVGxoajFxUFhuNUhmSk82aGx0cDhtR1JyaWoxTTQxWU1JcjFSOTgyS1dxRlB6bFFzbDNlNjNPUEh4aXZ5QzBncS0xei1B",
+        "email": "rspazzol@redhat.com"
+      },
+      "registry.redhat.io": {
+        "auth": "ODA3MTgzM3x1aGMtMUVCR0NTQWxjcU9aclVpbElsMHRja3JETk5YOmV5SmhiR2NpT2lKU1V6VXhNaUo5LmV5SnpkV0lpT2lJM09EWTROelZtTURrNE5qQTBNR1U1T1RneU5HSTVPV1kxWkRJM01UbGhNaUo5Lk05bTdNN1hJdjRQeW5GQnphOXUzYjk1X19raUJHWjh0T0h5VllEQ3pha3VnS2tnRFBXZWYtc2tpcWtVWW54S1piaGYtUHNwVkcwYlRHbHJWdUZHNGEzY1NuNjViRm9MdVZRa29Td3lIRnViTmpqVXlNZmpQZFhfZ0xLUXhTMk1ybS1VNFpfbmgyNklXVkhlUmEtLTVsQlplTzNXZGo1TVlFNEhEWjdZVU1zV0VpZk4tMzE4ZV90ZkhDaUhYaUJVNkZlMkl4dktTQW5iSmRWdWdJNlFHYVY2eXFpd2NvbGlYREZkRmRCbHBmTU1pYkxYUzFITWxtX0o4dVpOdlJTYTlMd2tCRlVTN1VucFJLdHRna1V6aDFWM29ySzVTS3hTLVEtWHd4M2M4X1pEQXg1TjVfd0NKQi1PQkdyLWJDSHRpZ3F4dlRyd29jdGI3Wkp2Z2ZWbVlQMzM1U1RwRXgxY3o2VXRjdjEyMnBJWG0wX1BUOU40ZW0wSnIzSDVvNEk2Yk9pQjJZd0VmRGNLUlBKeEpTYlJweGExMVJoa2w4YW01aG9sWVdQR1lZWl9xc09zUjQtWUZNM2hiQXhDNWR1aWlkdnpNdEdTdFhPeklKZ1Ffc0VESDU3OHJQMjRheDhiWG5rTTV0MWVySHdYTmw2WEdZRXNUY2pleTFmZ3R5RjBRSlA0MmhCeXZwV3BKYk9BWDBnRHlSQUVPRGdfckxUWFA5OWJTMGN3YWh3OENpRjJ0S01fVTlwOW5jMDh4S1lSWGNVODBLMWhnNzdINTNKaWN3c0ZZWkhRZUVLdzBaWU80S2FGYzdQVGxoajFxUFhuNUhmSk82aGx0cDhtR1JyaWoxTTQxWU1JcjFSOTgyS1dxRlB6bFFzbDNlNjNPUEh4aXZ5QzBncS0xei1B",
+        "email": "rspazzol@redhat.com"
+      },
+      "localhost:5000": {
+        "auth": "cmFmZmE6cmFmZmE=",
+        "email": "rspazzol@redhat.com"
+      },
+      "raffaele:5000": {
+        "auth": "cmFmZmE6cmFmZmE=",
+        "email": "rspazzol@redhat.com"
+      },
+      "registry.svc.ci.openshift.org": {
+        "auth": "c3lzdGVtLXNlcnZpY2VhY2NvdW50LWlwdjYtZGVmYXVsdDpleUpoYkdjaU9pSlNVekkxTmlJc0ltdHBaQ0k2SWlKOS5leUpwYzNNaU9pSnJkV0psY201bGRHVnpMM05sY25acFkyVmhZMk52ZFc1MElpd2lhM1ZpWlhKdVpYUmxjeTVwYnk5elpYSjJhV05sWVdOamIzVnVkQzl1WVcxbGMzQmhZMlVpT2lKcGNIWTJJaXdpYTNWaVpYSnVaWFJsY3k1cGJ5OXpaWEoyYVdObFlXTmpiM1Z1ZEM5elpXTnlaWFF1Ym1GdFpTSTZJbVJsWm1GMWJIUXRkRzlyWlc0dGJEbHhhM0VpTENKcmRXSmxjbTVsZEdWekxtbHZMM05sY25acFkyVmhZMk52ZFc1MEwzTmxjblpwWTJVdFlXTmpiM1Z1ZEM1dVlXMWxJam9pWkdWbVlYVnNkQ0lzSW10MVltVnlibVYwWlhNdWFXOHZjMlZ5ZG1salpXRmpZMjkxYm5RdmMyVnlkbWxqWlMxaFkyTnZkVzUwTG5WcFpDSTZJakk0WWpZMk0yUXlMV1pqT1dZdE1URmxPUzA1T0dFNUxUUXlNREV3WVRobE1EQXdNeUlzSW5OMVlpSTZJbk41YzNSbGJUcHpaWEoyYVdObFlXTmpiM1Z1ZERwcGNIWTJPbVJsWm1GMWJIUWlmUS5JTG0tSWQwUUU3cGRsbHBZWmJVWmdoUWptYzJjY19BRWc3WEdlUVhNZ2U5VzV0NmNOVi1uUzc5UXNyVF85ODRqWHlzWThhcFNYR1hFTjY4TC1VeXNmQWNHNEpUSnJ6aks4Mm9uN0d1MjEtWXRRYldJT3hwMnNJb2w4QU5QcWxrNTlncFljNEJYMVhDMVR5WFdBQmpqSWVIQ2QtWWU5ZEYtZ3FySVlrbWZySHZ5SlBzMEVJc1BSXzN4bElFU0FnaDFfMFFSbzk5dkc0Y2xBcFk5R0YxUS1oNzNucnNkX1VpQVFDUFA2Q0FjcDhFXzlKLVdNaVBPbFRUOWJQaEg2emRMa2hzR0E0NXNVZC0tcW9aV1RZRXdSeFgwd21iWkQ0YlZSbDdOMXlmRGxqZm8xcWtMZlBzZXR0MDFuaFo5NjBHZzFCVW9NeVJXcW52cElLcGRBM2FwUUE="
+      }
+    }
+  }
+sshKey: |
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDtty9+Qton+j31GmZGakLqlk4tPuo/MFnWI9bYKXUhxc2w0AA99mw0KbO4VTP0Y5LeEbXE0aCls13TseH2CtoFUhnDSxxWM9aW9C4vXDMfd1buTPaDJMLaKOtynzu34Hkm7P7wnArw3Yr9mWoeTgTRWg38XiyKeh9z51L/TQden7NW2znaQCav8QWZGLm0LyiJWjMif5AqPBYee/EA3cugjU7ZFpCRvpxCarjCT+3jAAV702IynYsqBf+4mD7UBG5GU7zbmYJtmXIzcgBge9vyfSKhhXvioKkT9Y4NB+qBg9dJ0LJKaU+zIzHqwF7T07i3nQwnBG885amDyRHPDAdj rspazzol
+  

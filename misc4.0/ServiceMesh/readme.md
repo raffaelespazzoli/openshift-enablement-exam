@@ -12,5 +12,5 @@ oc apply -f servicememberroll.yaml -n istio-system
 oc apply -n bookinfo -f https://raw.githubusercontent.com/Maistra/bookinfo/maistra-1.0/bookinfo.yaml
 oc apply -n bookinfo -f https://raw.githubusercontent.com/Maistra/bookinfo/maistra-1.0/bookinfo-gateway.yaml
 export istio_gateway_url=$(oc get route istio-ingressgateway -n istio-system -o jsonpath='{.spec.host}')
-curl -k https://$istio_gateway_url/productpage
+curl http://$istio_gateway_url/productpage
 ```
