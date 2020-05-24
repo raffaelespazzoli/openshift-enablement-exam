@@ -1,0 +1,83 @@
+apiVersion: maistra.io/v1
+kind: ServiceMeshControlPlane
+metadata:
+  name: resource-constrained
+spec:
+  version: v1.1
+  istio:
+    gateways:
+      istio-egressgateway:
+        autoscaleEnabled: false
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+      istio-ingressgateway:
+        enabled: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    global:
+      disablePolicyChecks: false
+      controlPlaneSecurityEnabled: true
+      defaultResources:
+        requests:
+          cpu: 400m
+          memory: 1Gi
+      mtls:
+        enabled: true
+      proxy:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    grafana:
+      enabled: true
+      resources:
+        requests:
+          cpu: 200m
+          memory: 1Gi
+
+    prometheus:
+      enabled: true
+      resources:
+        requests:
+          cpu: 200m
+          memory: 1Gi
+
+    kiali:
+      enabled: true
+      resources:
+        requests:
+          cpu: 200m
+          memory: 1Gi
+
+    mixer:
+      policy:
+        autoscaleEnabled: false
+        resources:
+          requests:
+            cpu: 100m
+            memory: 1G
+      telemetry:
+        autoscaleEnabled: false
+        resources:
+          requests:
+            cpu: 100m
+            memory: 1G
+    pilot:
+      autoscaleEnabled: false
+      traceSampling: 100
+      resources:
+        requests:
+          cpu: 500m
+          memory: 2048Mi
+    tracing:
+      enabled: true
+      jaeger:
+        template: all-in-one
+        resources:
+          requests:
+            cpu: 200m
+            memory: 1Gi
