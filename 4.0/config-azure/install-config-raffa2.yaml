@@ -1,5 +1,5 @@
 apiVersion: v1beta3
-baseDomain: 8916.ocp4.opentlc.com
+baseDomain: sandbox456.opentlc.com
 compute:
 - name: worker
   platform: {}
