@@ -1,0 +1,29 @@
+global:
+  tlsDisable: false
+ui:
+  enabled: false
+server:
+  image:
+    tag: "1.4.2"
+  ha:
+    enabled: false
+  extraVolumes:
+    - type: 'secret'
+      name: 'seed-vault-tls'
+      path: '/etc/vault-tls'
+  standalone:    
+    config: |
+      ui = false
+
+      listener "tcp" {
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+        tls_cert_file="/etc/vault-tls/seed-vault-tls/tls.crt"
+        tls_key_file="/etc/vault-tls/seed-vault-tls/tls.key"
+        tls_client_ca_file="/etc/vault-tls/seed-vault-tls/ca.crt"
+      }
+      storage "file" {
+        path = "/vault/data"
+      }           
+injector:
+  enabled: false
