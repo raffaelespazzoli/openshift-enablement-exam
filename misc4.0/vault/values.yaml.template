@@ -1,0 +1,50 @@
+global:
+  tlsDisable: false
+ui:
+  enabled: true
+server:
+  image:
+    tag: "1.4.2"
+  extraVolumes:
+    - type: 'secret'
+      name: 'seed-vault-tls'
+      path: '/etc/vault-tls'
+    - type: 'secret'
+      name: 'vault-tls'
+      path: '/etc/vault-tls'        
+  ha:
+    enabled: true
+    raft:
+      enabled: true
+      setNodeId: true
+      config: |
+        ui = true
+
+        listener "tcp" {
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+          tls_cert_file="/etc/vault-tls/vault-tls/tls.crt"
+          tls_key_file="/etc/vault-tls/vault-tls/tls.key"
+          tls_client_ca_file="/etc/vault-tls/vault-tls/ca.crt"          
+        }
+
+        seal "transit" {
+          address            = "https://seed-vault:8200"
+          token              = "${SEED_VAULT_TOKEN}"
+          disable_renewal    = "false"
+      
+          // Key configuration
+          key_name           = "unseal_key"
+          mount_path         = "transit/"      
+          tls_ca_cert        = "/etc/vault-tls/seed-vault-tls/ca.crt"          
+        }
+        storage "raft" {
+          path = "/vault/data"
+        }
+
+        log_level = "debug"
+
+        service_registration "kubernetes" {}      
+injector:
+  agentImage:
+    tag: "1.4.2"
