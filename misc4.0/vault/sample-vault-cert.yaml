@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: sample-vault-cert
+spec:
+  # Secret names are always required.
+  secretName: sample-vault-cert
+  commonName: sample-vault-cert.vault.svc
+  duration: 721h 
+  usages:
+    - server auth
+  dnsNames:
+  - sample-vault-cert.vault.svc
+  - sample-vault-cert.vault.svc.cluster.local
+  issuerRef:
+    name: vault-issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: Issuer
+    # This is optional since cert-manager will default to this value however
+    # if you are using an external issuer, change this to that issuer group.
+    group: cert-manager.io 

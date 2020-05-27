@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1alpha3
+kind: Issuer
+metadata:
+  name: vault-issuer
+spec:
+  vault:
+    path: pki/sign/cert-manager
+    server: https://vault.vault.svc:8200
+    caBundle: ${vault_ca}    
+    auth:
+      kubernetes:
+        role: cert-manager
+        mountPath: /v1/auth/kubernetes
+        secretRef:
+          name: ${sa_secret_name}
+          key: token
