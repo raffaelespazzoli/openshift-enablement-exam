@@ -154,7 +154,7 @@ export sa_secret_name=$(oc get sa default -n vault -o jsonpath='{.secrets[*].nam
 envsubst < vault-issuer.yaml | oc apply -f - -n vault
 ```
 
-### Create a sample secret
+### Create a sample cert
 
 ```shell
 oc apply -f ./sample-vault-cert.yaml -n vault
