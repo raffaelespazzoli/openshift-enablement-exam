@@ -36,15 +36,54 @@ server:
           // Key configuration
           key_name           = "unseal_key"
           mount_path         = "transit/"      
-          tls_ca_cert        = "/etc/vault-tls/seed-vault-tls/ca.crt"          
+          tls_ca_cert        = "/etc/vault-tls/seed-vault-tls/ca.crt"
+                    
         }
         storage "raft" {
           path = "/vault/data"
+        /*  
+          retry_join {
+            leader_api_addr = "https://vault-0.vault-internal:8200"
+            leader_ca_cert = <<EOF 
+${ca_crt}
+        EOF
+            #leader_client_cert = "/etc/vault-tls/vault-tls/tls.crt"
+            #leader_client_key = "/etc/vault-tls/vault-tls/tls.key"
+          }
+
+          retry_join {
+            leader_api_addr = "https://vault-1.vault-internal:8200"
+            leader_ca_cert = <<EOF 
+${ca_crt}
+        EOF
+            #leader_client_cert = "/etc/vault-tls/vault-tls/tls.crt"
+            #leader_client_key = "/etc/vault-tls/vault-tls/tls.key"
+          }
+                  
+          retry_join {
+            leader_api_addr = "https://vault-2.vault-internal:8200"
+            leader_ca_cert = << EOF 
+${ca_crt}
+        EOF
+            #leader_client_cert = "/etc/vault-tls/vault-tls/tls.crt"
+            #leader_client_key = "/etc/vault-tls/vault-tls/tls.key"
+          }
+          */
+
         }
 
         log_level = "debug"
 
-        service_registration "kubernetes" {}      
+        service_registration "kubernetes" {}  
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: vault
+              app.kubernetes.io/instance: vault
+              component: server
+          topologyKey: failure-domain.beta.kubernetes.io/zone        
 injector:
   agentImage:
     tag: "1.4.2"
