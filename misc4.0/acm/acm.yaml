@@ -1,0 +1,6 @@
+apiVersion: operators.open-cluster-management.io/v1beta1
+kind: MultiClusterHub
+metadata:
+  name: multiclusterhub
+spec:
+  imagePullSecret: acm-pull-secret
