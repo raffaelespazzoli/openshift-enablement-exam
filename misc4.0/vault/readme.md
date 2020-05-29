@@ -80,14 +80,6 @@ echo "$HA_VAULT_TOKEN"
 oc create secret generic vault-init -n vault --from-literal=unseal_key=${HA_UNSEAL_KEY} --from-literal=root_token=${HA_VAULT_TOKEN}
 ```
 
-## Create Raft cluster for HA-vault
-
-```shell
-oc exec vault-1 -n vault -- sh -c 'vault operator raft join -address https://vault-1.vault-internal:8200 -ca-path /etc/vault-tls/vault-tls/ca.crt -leader-ca-cert="`cat /etc/vault-tls/vault-tls/ca.crt`" https://vault-0.vault-internal:8200'
-oc exec vault-2 -n vault -- sh -c 'vault operator raft join -address https://vault-2.vault-internal:8200 -ca-path /etc/vault-tls/vault-tls/ca.crt -leader-ca-cert="`cat /etc/vault-tls/vault-tls/ca.crt`" https://vault-0.vault-internal:8200'
-```
-
-
 ## Verify the cluster
 
 ```shell
