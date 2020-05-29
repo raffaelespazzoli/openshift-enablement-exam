@@ -151,3 +151,17 @@ envsubst < vault-issuer.yaml | oc apply -f - -n vault
 ```shell
 oc apply -f ./sample-vault-cert.yaml -n vault
 ```
+
+## Alternative deployment using AWS KMS for auto unseal
+
+Dont' deploy vault-seed at all
+
+```shell
+oc apply -f kms-cloud-credentials.yaml
+export region=$(oc get infrastructure cluster -o jsonpath='{.status.platformStatus.aws.region}')
+export key_id=$(aws --region ${region} kms create-key | jq -r .KeyMetadata.KeyId)
+envsubst < kms-values.yaml.template > values.yaml
+helm template vault ./vault-helm -n vault -f ./values.yaml --set server.gid=${sguid} --set server.uid=${uid} --set injector.gid=${sguid} --set injector.uid=${uid} | oc apply -f -
+```
+
+After this continue with "Initialize HA-vault"
