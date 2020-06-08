@@ -76,5 +76,10 @@ server:
               component: server
           topologyKey: failure-domain.beta.kubernetes.io/zone        
 injector:
+  image:
+    tag: "0.4.0"
   agentImage:
     tag: "1.4.2"
+  extraEnvironmentVars: 
+    AGENT_INJECT_SET_SECURITY_CONTEXT: "false"
+
