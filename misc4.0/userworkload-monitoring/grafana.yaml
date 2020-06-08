@@ -1,0 +1,58 @@
+---
+kind: OAuthClient
+apiVersion: oauth.openshift.io/v1
+metadata:
+ name: grafana-oauth 
+secret: grafana 
+redirectURIs:
+ - "https://grafana-multitenant-grafana.apps.cluster-b402.sandbox575.opentlc.com/login/generic_oauth" 
+grantMethod: auto 
+---
+apiVersion: integreatly.org/v1alpha1
+kind: Grafana
+metadata:
+  name: grafana-oauth
+spec:
+  config:
+    server:
+      root_url: https://grafana-multitenant-grafana.apps.cluster-b402.sandbox575.opentlc.com/
+    log:
+      mode: "console"
+      level: "warn"
+    auth:
+      disable_login_form: False
+      disable_signout_menu: True
+    auth.generic_oauth:
+      enabled: true
+      client_id: grafana-oauth
+      client_secret: grafana
+      scopes: "user:full, user:check-access"
+      auth_url: https://oauth-openshift.apps.cluster-b402.sandbox575.opentlc.com/oauth/authorize
+      token_url: https://oauth-openshift.apps.cluster-b402.sandbox575.opentlc.com/oauth/token
+      api_url: https://api.cluster-b402.sandbox575.opentlc.com:6443/.well-known/oauth-authorization-server
+      allowed_domains: 
+      allow_sign_up: false
+      tls_skip_verify_insecure: true
+      email_attribute_path: ""
+      email_attribute_name: "email:primary"
+  secrets:
+    - grafana-k8s-tls
+    - grafana-k8s-proxy
+  service:
+    ports:
+      - name: grafana
+        port: 9090
+        protocol: TCP
+        targetPort: grafana
+    annotations:
+      service.alpha.openshift.io/serving-cert-secret-name: grafana-k8s-tls
+  ingress:
+    enabled: True
+    targetPort: grafana-http
+    termination: edge
+  client:
+    preferService: True
+  serviceAccount:
+    annotations:
+      serviceaccounts.openshift.io/oauth-redirectreference.primary: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"grafana-route"}}'
+      

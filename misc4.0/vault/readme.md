@@ -165,3 +165,35 @@ helm template vault ./vault-helm -n vault -f ./values.yaml --set server.gid=${sg
 ```
 
 After this continue with "Initialize HA-vault"
+
+## Testing Agent Injection
+
+Follow the instructions to enable kubernetes auth.
+In this simple set up we assume we create a policy per namespace:
+
+### Prepare secret
+
+```shell
+oc new-project test-vault-agent-injection
+export deploy_namespace=test-vault-agent-injection
+vault policy write -tls-skip-verify ${deploy_namespace} - <<EOF
+# Read key/value secrets for ${deploy_namespace} namespace
+path "secret/${deploy_namespace}/*"
+{
+  capabilities = ["read"]
+}
+EOF
+
+vault write -tls-skip-verify auth/kubernetes/role/${deploy_namespace} bound_service_account_names=default bound_service_account_namespaces=${deploy_namespace} policies=${deploy_namespace}
+
+vault secrets enable -tls-skip-verify -path=secret/ kv
+vault kv put -tls-skip-verify secret/${deploy_namespace}/hello hello=world
+```
+
+### DEploy the application
+
+```shell
+oc extract secret/vault-tls --keys=ca.crt --to=/tmp/ --confirm -n vault
+oc create secret generic vault-tls --from-file=/tmp/ca.crt -n ${deploy_namespace}
+helm template test-app -n ${deploy_namespace} | oc apply -f -
+```
