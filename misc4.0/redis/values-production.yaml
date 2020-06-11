@@ -37,7 +37,7 @@ image:
 
 ## String to fully override redis.fullname template
 ##
-# fullnameOverride:
+fullnameOverride: redis
 
 ## Redis Cluster settings
 ##
@@ -96,7 +96,7 @@ clusterDomain: cluster.local
 networkPolicy:
   ## Specifies whether a NetworkPolicy should be created
   ##
-  enabled: false
+  enabled: true
 
   ## The Policy model to apply. When set to false, only pods with the correct
   ## client label will have network access to the port Redis is listening
@@ -152,13 +152,13 @@ podSecurityContext:
 ## Limits the number of pods of the replicated application that are down simultaneously from voluntary disruptions
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions
 ##
-podDisruptionBudget: {}
+podDisruptionBudget:
   ## Min number of pods that must still be available after the eviction
   ##
-  # minAvailable: 1
+  #minAvailable: 3
   ## Max number of pods that can be unavailable after the eviction
   ##
-  # maxUnavailable: 1
+  maxUnavailable: 2
 
 ## Containers Security Context
 containerSecurityContext:
@@ -179,7 +179,7 @@ usePassword: true
 ## Defaults to a random 10-character alphanumeric string if not set and usePassword is true
 ## ref: https://github.com/bitnami/bitnami-docker-redis#setting-the-server-password-on-first-run
 ##
-password: ""
+password: "ciao"
 ## Use existing secret (ignores previous password)
 # existingSecret:
 ## Password key to be retrieved from Redis secret
@@ -199,6 +199,28 @@ useAOFPersistence: "yes"
 # Redis port
 redisPort: 6379
 
+tls:
+  # Enable TLS traffic
+  enabled: false
+  #
+  # Whether to require clients to authenticate or not.
+  authClients: false
+  #
+  # Name of the Secret that contains the certificates
+  certificatesSecret: redis-tls
+  #
+  # Certificate filename
+  certFilename: tls.crt
+  #
+  # Certificate Key filename
+  certKeyFilename: tls.key
+  #
+  # CA Certificate filename
+  certCAFilename: tls.ca
+  #
+  # File containing DH params (in order to support DH based ciphers)
+  # dhParamsFilename:
+
 ##
 ## Redis parameters
 ##
@@ -213,7 +235,18 @@ redisPort: 6379
 ## Additional Redis configuration for the nodes
 ## ref: https://redis.io/topics/config
 ##
-configmap:
+configmap: 
+
+# port 0
+# tls-port 6379
+# tls-cert-file /certs/tls.crt 
+# tls-key-file /certs/tls.key
+# tls-ca-cert-file /certs/ca.crt
+# tls-cluster yes
+# tls-auth-clients no
+# loglevel notice
+
+  
 ## Redis additional command line flags
 ##
 ## Can be used to specify command line flags, for example:
@@ -264,7 +297,18 @@ readinessProbe:
 # tolerations: []
 ## Redis pod/node affinity/anti-affinity
 ##
-affinity: {}
+affinity: 
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/instance
+            operator: In
+            values:
+            - redis
+        topologyKey: failure-domain.beta.kubernetes.io/zone
 
 ## Redis Service properties for standalone mode.
 service:
@@ -475,10 +519,15 @@ podSecurityPolicy:
 ## Array to add extra volumes
 ##
 extraVolumes: []
+  # - name: tls-certs
+  #   secret:
+  #     secretName: redis-tls
 
 ## Array to add extra mounts (normally used with extraVolumes)
 ##
 extraVolumeMounts: []
+  # - name: tls-certs
+  #   mountPath: /certs
 
 ## An array to add extra env vars
 ## For example:

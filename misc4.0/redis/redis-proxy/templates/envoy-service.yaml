@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
+spec:
+  ports:
+  - name: redis-tcp
+    port: 6379
+    protocol: TCP
+    targetPort: redis-tcp
+  type: LoadBalancer  
+  selector:
+    name: {{ template "redis-proxy.fullname" . }}-envoy-proxy  

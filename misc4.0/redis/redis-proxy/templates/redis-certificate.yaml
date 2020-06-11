@@ -1,0 +1,26 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: {{ template "redis-proxy.fullname" . }}
+spec:
+  # Secret names are always required.
+  secretName: {{ template "redis-proxy.fullname" . }}-tls
+  commonName: {{ template "redis-proxy.fullname" . }}
+  usages:
+    - server auth
+    - client auth  
+  dnsNames:
+{{- $fullname := .Values.fullnameOverride -}}            
+{{- range until (int .Values.cluster.nodes) }}
+  - {{ $fullname }}-{{ . }}.{{ $fullname }}-headless
+  - {{ $fullname }}-{{ . }}.{{ $fullname }}-headless.svc
+  - {{ $fullname }}-{{ . }}.{{ $fullname }}-headless.svc.cluster.local
+{{- end }}
+  issuerRef:
+    name: internal-issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: Issuer
+    # This is optional since cert-manager will default to this value however
+    # if you are using an external issuer, change this to that issuer group.
+    group: cert-manager.io

@@ -1,0 +1,24 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
+spec:
+  # Secret names are always required.
+  secretName: {{ template "redis-proxy.fullname" . }}-envoy-proxy
+  commonName: redis-envoy-proxy
+  usages:
+    - server auth
+    - client auth  
+  dnsNames:
+  - {{ template "redis-proxy.fullname" . }}-envoy-proxy-{{ .Release.Namespace }}.{{ .Values.default_domain }}
+  - {{ template "redis-proxy.fullname" . }}-envoy-proxy
+  - {{ template "redis-proxy.fullname" . }}-envoy-proxy.{{ .Release.Namespace }}.svc
+  - {{ template "redis-proxy.fullname" . }}-envoy-proxy.{{ .Release.Namespace }}.svc.cluster.local
+  issuerRef:
+    name: internal-issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: Issuer
+    # This is optional since cert-manager will default to this value however
+    # if you are using an external issuer, change this to that issuer group.
+    group: cert-manager.io
