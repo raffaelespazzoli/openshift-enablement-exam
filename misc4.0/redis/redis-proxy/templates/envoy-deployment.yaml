@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
+  template:
+    metadata:
+      labels:
+        name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
+    spec:
+      containers:
+        - name: envoy
+          image: envoyproxy/envoy:v1.14.2
+          command:
+          - /usr/local/bin/envoy
+          args:
+          - -c 
+          - /envoy/envoy.yaml 
+          #- -l debug 
+          - --service-cluster proxy
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: config
+              mountPath: /envoy
+            - name: tls-certs
+              mountPath: /certs              
+          ports:
+          - name: redis-tcp
+            containerPort: 6379
+            protocol: TCP    
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
+        - name: tls-certs
+          secret:
+            secretName: {{ template "redis-proxy.fullname" . }}-envoy-proxy    
