@@ -1,0 +1,13 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
+spec:
+  port:
+    targetPort: 6379
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: passthrough
+  to:
+    kind: Service
+    name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
