@@ -139,8 +139,8 @@ rbac:
 ## Redis pod Security Context
 podSecurityContext:
   enabled: true
-  fsGroup: 1001
-  runAsUser: 1001
+  #fsGroup: 1001
+  #runAsUser: 1001
   ## sysctl settings
   ##
   ## Uncomment the setting below to increase the net.core.somaxconn value
@@ -163,8 +163,8 @@ podDisruptionBudget:
 ## Containers Security Context
 containerSecurityContext:
   enabled: true
-  fsGroup: 1001
-  runAsUser: 1001
+  #fsGroup: 1001
+  #runAsUser: 1001
   ## sysctl settings
   ##
   ## Uncomment the setting below to increase the net.core.somaxconn value
@@ -201,7 +201,7 @@ redisPort: 6379
 
 tls:
   # Enable TLS traffic
-  enabled: false
+  enabled: true
   #
   # Whether to require clients to authenticate or not.
   authClients: false
@@ -216,7 +216,7 @@ tls:
   certKeyFilename: tls.key
   #
   # CA Certificate filename
-  certCAFilename: tls.ca
+  certCAFilename: ca.crt
   #
   # File containing DH params (in order to support DH based ciphers)
   # dhParamsFilename:
@@ -312,7 +312,7 @@ affinity:
 
 ## Redis Service properties for standalone mode.
 service:
-  port: 6379
+  port: 6378
 
   ## Provide any additional annotations which may be required. This can be used to
   ## set the LoadBalancer service type to internal only.
@@ -518,10 +518,13 @@ podSecurityPolicy:
 
 ## Array to add extra volumes
 ##
-extraVolumes: []
-  # - name: tls-certs
-  #   secret:
-  #     secretName: redis-tls
+extraVolumes:
+  - name: redis-envoy-proxy-tls
+    secret:
+      secretName: redis-envoy-proxy-tls
+  - name: redis-envoy-proxy-config
+    configMap:
+      name: redis-envoy-proxy-config      
 
 ## Array to add extra mounts (normally used with extraVolumes)
 ##
@@ -551,7 +554,26 @@ extraInitContainers: {}
 
 ## Add sidecars to the pod
 ##
-sidecars: {}
+sidecars: 
+  - name: envoy
+    image: envoyproxy/envoy:v1.14.2
+    command:
+    - /usr/local/bin/envoy
+    args:
+    - -c 
+    - /envoy/envoy.yaml 
+    #- -l debug 
+    - --service-cluster proxy
+    imagePullPolicy: Always
+    volumeMounts:
+      - name: redis-envoy-proxy-config
+        mountPath: /envoy
+      - name: redis-envoy-proxy-tls
+        mountPath: /certs              
+    ports:
+    - name: envoy-redis-tcp
+      containerPort: 6378
+      protocol: TCP
 ## e.g.
 # - name: your-image-name
 #   image: your-image

@@ -1,0 +1,16 @@
+apiVersion: hive.openshift.io/v1
+kind: MachinePool
+metadata:
+  name: {{ template "acm-aws-cluster.fullname" . }}-worker
+spec:
+  clusterDeploymentRef:
+    name: {{ template "acm-aws-cluster.fullname" . }}
+  name: worker
+  platform:
+    aws:
+      rootVolume:
+        iops: 100
+        size: 100
+        type: gp2
+      type: m5.large
+  replicas: 3 
