@@ -1,0 +1,9 @@
+region: ${region}
+baseDomain: sandbox1459.opentlc.com
+sshKey: |
+${ssh_key}  
+sshPubKey: ${ssh_pub_key}
+aws_id: ${aws_id}
+aws_key: ${aws_key}
+docker_pull_secret: 
+  ${pull_secret}

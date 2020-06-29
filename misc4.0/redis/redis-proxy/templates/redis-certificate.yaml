@@ -10,11 +10,12 @@ spec:
     - server auth
     - client auth  
   dnsNames:
-{{- $fullname := .Values.fullnameOverride -}}            
+{{- $fullname := .Values.fullnameOverride -}}
+{{- $namespace := .Release.Namespace  -}}            
 {{- range until (int .Values.cluster.nodes) }}
   - {{ $fullname }}-{{ . }}.{{ $fullname }}-headless
-  - {{ $fullname }}-{{ . }}.{{ $fullname }}-headless.svc
-  - {{ $fullname }}-{{ . }}.{{ $fullname }}-headless.svc.cluster.local
+  - {{ $fullname }}-{{ . }}.{{ $fullname }}-headless.{{ $namespace }}.svc
+  - {{ $fullname }}-{{ . }}.{{ $fullname }}-headless.{{ $namespace }}.svc.cluster.local
 {{- end }}
   issuerRef:
     name: internal-issuer

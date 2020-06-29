@@ -1,0 +1,54 @@
+## mandatory fields
+# region: ""
+# baseDomain: ""
+# sshKey: ""
+# sshPubKey: ""
+# aws_id: ""
+# aws_key: ""
+# docker_pull_secret: ""
+
+
+install_config:
+  apiVersion: v1
+  metadata:
+    #added by template
+    name: ""
+  #added by template  
+  baseDomain: ""
+  controlPlane:
+    hyperthreading: Enabled
+    name: master
+    replicas: 3
+    platform:
+      aws:
+        rootVolume:
+          iops: 4000
+          size: 100
+          type: io1
+        type: m5.xlarge
+  compute:
+  - hyperthreading: Enabled
+    name: worker
+    replicas: 3
+    platform:
+      aws:
+        rootVolume:
+          iops: 2000
+          size: 100
+          type: io1
+        type: m5.large
+  networking:
+    clusterNetwork:
+    - cidr: 10.128.0.0/14
+      hostPrefix: 23
+    machineCIDR: 10.0.0.0/16
+    networkType: OpenShiftSDN
+    serviceNetwork:
+    - 172.30.0.0/16
+  platform:
+    aws:
+      # added by template
+      region: ""
+  pullSecret: "" # skip, hive will inject based on it's secrets
+  # added by template
+  sshKey: ""

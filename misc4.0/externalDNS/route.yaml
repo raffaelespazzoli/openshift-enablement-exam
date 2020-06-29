@@ -1,0 +1,11 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: external-dns
+  annotations:
+    route-type: global
+spec:
+  host: external.apps.global.sandbox1459.opentlc.com
+  to:
+    kind: Service
+    name: external-dns

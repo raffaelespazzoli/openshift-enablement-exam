@@ -4,7 +4,7 @@ metadata:
   name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
 spec:
   # Secret names are always required.
-  secretName: {{ template "redis-proxy.fullname" . }}-envoy-proxy
+  secretName: {{ template "redis-proxy.fullname" . }}-envoy-proxy-tls
   commonName: redis-envoy-proxy
   usages:
     - server auth

@@ -1,0 +1,27 @@
+apiVersion: multicloud.ibm.com/v1alpha1
+kind: EndpointConfig
+metadata:
+  name: {{ template "acm-aws-cluster.fullname" . }}
+spec:
+  clusterName: {{ template "acm-aws-cluster.fullname" . }}
+  clusterNamespace: {{ .Release.Namespace }}
+  clusterLabels:
+    cloud: auto-detect
+    vendor: auto-detect
+  applicationManager:
+    enabled: true
+  policyController:
+    enabled: true
+  searchCollector:
+    enabled: true
+  serviceRegistry:
+    enabled: true
+    dnsSuffix: "mcm.svc"
+    plugins: "kube-service"
+  cisController:
+    enabled: false
+  certPolicyController:
+    enabled: true
+  iamPolicyController:
+    enabled: true
+  version: 1.0.1

@@ -5,10 +5,10 @@ metadata:
   name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
 spec:
   ports:
-  - name: redis-tcp
-    port: 6379
+  - name: envoy-redis-tcp
+    port: 6378
     protocol: TCP
-    targetPort: redis-tcp
+    targetPort: envoy-redis-tcp
   type: LoadBalancer  
   selector:
-    name: {{ template "redis-proxy.fullname" . }}-envoy-proxy  
+    app.kubernetes.io/instance: {{ template "redis-proxy.fullname" . }}
