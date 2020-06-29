@@ -4,7 +4,7 @@ metadata:
   name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
 spec:
   port:
-    targetPort: 6379
+    targetPort: 6378
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: passthrough

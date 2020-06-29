@@ -34,7 +34,7 @@ helm upgrade -i redis-proxy ./redis-proxy -n redis --values values-production.ya
 Deploy redis
 
 ```shell
-helm template redis ./charts/bitnami/redis-cluster -n redis --values values-production.yaml --set containerSecurityContext.runAsUser=${uid} --set containerSecurityContext.fsGroup=${uid} --set podSecurityContext.runAsUser=${uid} --set podSecurityContext.fsGroup=${uid} | oc apply -f - -n redis
+helm template redis ./charts/bitnami/redis-cluster -n redis --values values-production.yaml --set containerSecurityContext.runAsUser=${uid} --set podSecurityContext.fsGroup=${uid} | oc apply -f - -n redis
 ```
 
 ### Test connectivity

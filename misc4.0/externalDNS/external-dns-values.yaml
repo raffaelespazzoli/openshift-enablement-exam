@@ -1,0 +1,8 @@
+provider: aws
+aws:
+  zoneType: public
+sources:
+  - openshift-route
+  - service
+logLevel: debug
+annotationFilter: route-type=global       

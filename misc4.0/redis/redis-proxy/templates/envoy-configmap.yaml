@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "redis-proxy.fullname" . }}-envoy-proxy
+  name: {{ template "redis-proxy.fullname" . }}-envoy-proxy-config
 data:
   envoy.yaml: |  
     admin:
@@ -18,13 +18,17 @@ data:
             certificate_chain:
               filename: /certs/tls.crt
             private_key:
-              filename: /certs/tls.key      
+              filename: /certs/tls.key
+        - name: client_ca
+          validation_context:
+            trusted_ca:
+              filename: /certs/ca.crt                                  
       listeners: 
         - name: redis_listener
           address:
             socket_address:
               address: 0.0.0.0
-              port_value: 6379        
+              port_value: 6378        
           filter_chains:
             transport_socket:
               name: envoy.transport_sockets.tls
@@ -47,6 +51,13 @@ data:
                     op_timeout: 5s
       clusters:
       - name: redis_cluster
+        transport_socket:
+          name: tls
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+            common_tls_context:
+              validation_context_sds_secret_config:
+                name: client_ca  
         connect_timeout: 1s
         type: strict_dns
         lb_policy: MAGLEV
