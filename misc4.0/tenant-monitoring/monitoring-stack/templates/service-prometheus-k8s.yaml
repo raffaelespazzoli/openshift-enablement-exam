@@ -1,0 +1,21 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: prometheus-k8s
+  namespace: {{ .Release.Namespace }}
+  labels:
+    prometheus: k8s
+  annotations:
+    service.alpha.openshift.io/serving-cert-secret-name: prometheus-k8s-tls
+spec:
+  ports:
+    - name: proxy
+      protocol: TCP
+      port: 9091
+      targetPort: proxy
+  selector:
+    app: prometheus
+  clusterIP: None
+  type: ClusterIP
+  sessionAffinity: None

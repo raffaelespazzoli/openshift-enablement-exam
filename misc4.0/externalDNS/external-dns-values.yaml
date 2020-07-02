@@ -3,6 +3,12 @@ aws:
   zoneType: public
 sources:
   - openshift-route
-  - service
+  - crd
 logLevel: debug
-annotationFilter: route-type=global       
+annotationFilter: route-type=global
+txtPrefix: ocp
+crd:
+  create: true
+  apiversion: externaldns.k8s.io/v1alpha1
+  kind: DNSEndpoint
+  
