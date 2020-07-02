@@ -29,3 +29,9 @@ oc create route reencrypt grafana-route --service grafana-service --port grafana
 export grafana_token=$(oc sa get-token grafana-serviceaccount -n ${deploy_namespace})
 envsubst < grafana-datasource-prometheus.yaml | oc apply -f - -n ${deploy_namespace}
 ```
+
+Source metrics from platform prometheus (do this only if needed)
+
+```shell
+oc apply -f ./service-monitoring-platform-prometheus.yaml -n ${deploy_namespace}
+```
