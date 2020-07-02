@@ -1,0 +1,20 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDataSource
+metadata:
+  name: prometheus
+spec:
+  name: prometheus
+  datasources:
+    - name: prometheus
+      type: prometheus
+      access: proxy
+      url: https://prometheus-operated:9091
+      isDefault: false
+      version: 1
+      editable: false
+      jsonData:
+        tlsSkipVerify: true
+        timeInterval: "5s"
+        httpHeaderName1: 'Authorization'
+      secureJsonData:
+        httpHeaderValue1: ${grafana_token}   

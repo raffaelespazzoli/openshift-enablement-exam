@@ -1,0 +1,14 @@
+
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: examplednsrecord
+  annotations:
+    route-type: global
+spec:
+  endpoints:
+  - dnsName: dnsendpoint.apps.global.sandbox1459.opentlc.com
+    recordTTL: 180
+    recordType: A
+    targets:
+    - 192.168.99.216

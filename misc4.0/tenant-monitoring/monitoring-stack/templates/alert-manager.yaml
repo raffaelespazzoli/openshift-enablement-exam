@@ -1,0 +1,53 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Alertmanager
+metadata:
+  name: {{ .Values.alertmanager.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 2
+  serviceAccountName: {{ .Values.alertmanager.name }}
+  listenLocal: true
+  podMetadata:
+    labels:
+      maistra.io/expose-route: 'true'
+  secrets:
+    - alertmanager-k8s-tls
+    - alertmanager-k8s-proxy
+  configMaps:
+    - trusted-ca-bundle
+  containers:
+    - args:
+        - '-provider=openshift'
+        - '-pass-basic-auth=false'
+        - '-https-address=:9091'
+        - '-http-address='
+        - '-email-domain=*'
+        - '-upstream=http://localhost:9093'
+        - '-openshift-sar={"namespace":"{{ .Release.Namespace }}","resource":"pods","verb":"get"}'
+        - '-openshift-delegate-urls={"/": {"namespace":"{{ .Release.Namespace }}","resource":"pods","verb":"get"}}'
+        - '-tls-cert=/etc/tls/private/tls.crt'
+        - '-tls-key=/etc/tls/private/tls.key'
+        - '-client-secret-file=/var/run/secrets/kubernetes.io/serviceaccount/token'
+        - '-cookie-secret-file=/etc/proxy/secrets/session_secret'
+        - '-openshift-service-account=sre-alertmanager'
+        - '-openshift-ca=/etc/configmap/trusted-ca-bundle/ca-bundle.crt'
+        - '-openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
+        - '-skip-auth-regex=^/metrics'
+      image: 'quay.io/openshift/origin-oauth-proxy:4.6'
+      name: alertmanager-proxy
+      ports:
+        - containerPort: 9091
+          name: proxy
+      resources:
+        requests:
+          cpu: 10m
+          memory: 20Mi
+      terminationMessagePolicy: FallbackToLogsOnError
+      volumeMounts:
+        - mountPath: /etc/tls/private
+          name: secret-alertmanager-k8s-tls
+        - mountPath: /etc/proxy/secrets
+          name: secret-alertmanager-k8s-proxy
+        - mountPath: /etc/configmap/trusted-ca-bundle
+          name: configmap-trusted-ca-bundle
+          readOnly: true
