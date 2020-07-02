@@ -1,0 +1,24 @@
+{
+  "Comment":"UPSERT zone delegation record and non-wildcard domain for default router ",
+  "Changes":[
+     {
+        "Action":"UPSERT",
+        "ResourceRecordSet": ${delegation_record},
+
+     "Action":"UPSERT",
+     "ResourceRecordSet":{
+        "Name":"apps.${cluster_base_domain}.",
+        "Type":"CNAME",
+        "TTL":172800,
+        "ResourceRecords":[
+           {
+              "Value":"a.apps.${cluster_base_domain}."
+           }
+        ]
+     }
+  }      
+
+  ]
+}
+
+
