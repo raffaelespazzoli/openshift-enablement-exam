@@ -1,0 +1,33 @@
+{
+   "Comment":"reset records",
+   "Changes":[
+      {
+         "Action":"DELETE",
+         "ResourceRecordSet":        {
+            "Name": "dnsendpoint.apps.global.sandbox1459.opentlc.com.",
+            "Type": "A",
+            "TTL": 180,
+            "ResourceRecords": [
+                {
+                    "Value": "192.168.99.216"
+                }
+            ]
+        }
+      },
+      {
+         "Action":"DELETE",
+         "ResourceRecordSet":{
+            "Name": "external.apps.global.sandbox1459.opentlc.com.",
+            "Type": "CNAME",
+            "TTL": 300,
+            "ResourceRecords": [
+                {
+                    "Value": "cluster3.cluster-9f56.sandbox1459.opentlc.com"
+                }
+            ]
+        }
+      }
+   ]
+}
+
+

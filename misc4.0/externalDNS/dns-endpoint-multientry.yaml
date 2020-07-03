@@ -1,0 +1,16 @@
+
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: external-multirecord
+  annotations:
+    route-type: global
+spec:
+  endpoints:
+  - dnsName: external.apps.global.sandbox1459.opentlc.com
+    recordTTL: 180
+    recordType: CNAME
+    targets:
+    - cluster1.cluster-9f56.sandbox1459.opentlc.com
+    - cluster2.cluster-9f56.sandbox1459.opentlc.com
+    - cluster3.cluster-9f56.sandbox1459.opentlc.com
