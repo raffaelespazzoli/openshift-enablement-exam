@@ -8,13 +8,14 @@ spec:
     - name: prometheus
       type: prometheus
       access: proxy
-      url: https://prometheus-operated:9091
-      isDefault: false
+      url: https://prometheus-k8s:9091
+      isDefault: true
       version: 1
       editable: false
+      withCredentials: true
       jsonData:
         tlsSkipVerify: true
         timeInterval: "5s"
         httpHeaderName1: 'Authorization'
       secureJsonData:
-        httpHeaderValue1: ${grafana_token}   
+        httpHeaderValue1: "Bearer ${grafana_token}"   

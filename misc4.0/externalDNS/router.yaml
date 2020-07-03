@@ -15,5 +15,5 @@ spec:
   domain: ${namespace}.${cluster_base_domain}
   routeSelector:
     matchLabels:
-      route: global
+      route-type: global
       router: ${namespace}       

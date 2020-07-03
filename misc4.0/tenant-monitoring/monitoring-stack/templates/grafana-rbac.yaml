@@ -21,6 +21,6 @@ subjects:
   namespace: {{ .Release.Namespace }}
   name: grafana-serviceaccount
 roleRef:
-  kind: Role
+  kind: ClusterRole
   name: view
   apiGroup: rbac.authorization.k8s.io    
