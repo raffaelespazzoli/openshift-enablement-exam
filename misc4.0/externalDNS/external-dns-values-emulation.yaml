@@ -1,0 +1,11 @@
+provider: aws
+aws:
+  zoneType: public
+logLevel: debug
+annotationFilter: route-type=global
+txtPrefix: ocp
+crd:
+  create: true
+  apiversion: externaldns.k8s.io/v1alpha1
+  kind: DNSEndpoint
+  
