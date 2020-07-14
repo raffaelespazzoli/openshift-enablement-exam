@@ -21,6 +21,8 @@ export ssh_pub_key=$(cat ~/.ssh/ocp_rsa.pub)
 export pull_secret=$(cat ~/git/openshift-enablement-exam/4.0/config/pullsecret.json)
 export aws_id=$(cat ~/.aws/credentials | grep aws_access_key_id | cut -d'=' -f 2)
 export aws_key=$(cat ~/.aws/credentials | grep aws_secret_access_key | cut -d'=' -f 2)
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+export base_domain=${base_domain#*.}
 ```
 
 create clusters

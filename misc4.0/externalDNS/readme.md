@@ -1,7 +1,6 @@
 # Setup external DNS in an AWS cluster
 
 ```shell
-aws route53 create-hosted-zone
 oc new-project external-dns
 export namespace=external-dns
 envsubst < ./credentials.yaml | oc apply -f - -n external-dns
