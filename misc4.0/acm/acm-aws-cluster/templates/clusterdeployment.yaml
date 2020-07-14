@@ -7,7 +7,7 @@ metadata:
     region: {{ .Values.region }}
     vendor: 'OpenShift'
 spec:
-  baseDomain: sandbox1250.opentlc.com
+  baseDomain: {{ .Values.baseDomain }}
   clusterName: {{ template "acm-aws-cluster.fullname" . }}
   controlPlaneConfig:
     servingCertificates: {}
@@ -15,7 +15,7 @@ spec:
   platform:
     aws:
       credentialsSecretRef:
-        name: {{ template "acm-aws-cluster.fullname" . }}-aws-creds
+        name: {{ template "acm-aws-cluster.fullname" . }}-aws-credentials
       region: {{ .Values.region }}
   provisioning:
     installConfigSecretRef:

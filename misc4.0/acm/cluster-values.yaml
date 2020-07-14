@@ -1,5 +1,5 @@
 region: ${region}
-baseDomain: sandbox1459.opentlc.com
+baseDomain: ${base_domain}
 sshKey: |
 ${ssh_key}  
 sshPubKey: ${ssh_pub_key}
