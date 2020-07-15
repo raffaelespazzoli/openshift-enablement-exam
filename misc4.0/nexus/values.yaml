@@ -1,0 +1,28 @@
+nexus: 
+  securityContextEnabled: true
+  securityContext:
+    fsGroup: ${guid}
+  imageName: sonatype/nexus3
+  imageTag: 3.25.0
+  service:
+    type: ClusterIP
+    podAnnotations: {}    
+nexusProxy:
+  enabled: false
+nexusBackup:
+  enabled: false
+route:
+  enabled: true
+  name: nexus
+  portName: nexus-service
+  path: '""' 
+
+service:
+  enabled: true
+  name: nexus-service
+  labels: {}
+  annotations: {}
+  portName: nexus-service
+  port: 8081
+  targetPort: 8081
+  ports: []
