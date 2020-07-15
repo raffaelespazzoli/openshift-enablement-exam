@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: wireguard-driver-installer
+  labels:
+    app.kubernetes.io/name: wireguard-driver-installer
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: wireguard-driver-installer
+  template:
+    metadata:
+      labels:
+        name: wireguard-driver-installer
+        app.kubernetes.io/name: wireguard-driver-installer
+    spec:
+      hostNetwork: true
+      hostPID: true
+      initContainers:
+      - image: squat/modulus:9d71ba20502914204cbb468e5de905b95dfe2bb0
+        name: modulus
+        args:
+        - compile
+        - wireguard
+        - "0.0.20190406"
+        securityContext:
+          privileged: true
+        env:
+        - name: MODULUS_CHROOT
+          value: "true"
+        - name: MODULUS_INSTALL
+          value: "true"
+        - name: MODULUS_CACHE_DIR
+          value: /opt/modulus/cache
+        - name: MODULUS_LD_ROOT
+          value: /root
+        volumeMounts:
+        - name: etc-coreos
+          mountPath: /etc/coreos
+          readOnly: true
+        - name: usr-share-coreos
+          mountPath: /usr/share/coreos
+          readOnly: true
+        - name: ld-root
+          mountPath: /root
+        - name: module-cache
+          mountPath: /opt/modulus/cache
+        - name: module-install-dir-base
+          mountPath: /opt/drivers
+        - name: dev
+          mountPath: /dev
+      containers:
+      - image: k8s.gcr.io/pause-amd64:3.1
+        name: pause
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        effect: "NoSchedule"
+        operator: "Exists"
+      volumes:
+      - name: etc-coreos
+        hostPath:
+          path: /etc/coreos
+      - name: usr-share-coreos
+        hostPath:
+          path: /usr/share/coreos
+      - name: ld-root
+        hostPath:
+          path: /
+      - name: module-cache
+        hostPath:
+          path: /opt/modulus/cache
+      - name: dev
+        hostPath:
+          path: /dev
+      - name: module-install-dir-base
+        hostPath:
+          path: /opt/drivers
