@@ -13,5 +13,6 @@ misc4.0/htpasswd/htpasswd
 4.0/config/pullsecret.yaml
 
 misc4.0/vault/values.yaml
-4.0/cluster1-acm/tls/journal-gatewayd.key
-4.0/cluster1-acm/tls/journal-gatewayd.crt
+4.0/config/config-acm/journal-gatewayd.key
+4.0/config/config-acm/journal-gatewayd.crt
+4.0/cluster2-acm/metadata.json
