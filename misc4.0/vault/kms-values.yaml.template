@@ -10,8 +10,8 @@ server:
     - envName: AWS_ACCESS_KEY_ID
       secretName: vault-aws-kms-credentials
       secretKey: aws_access_key_id      
-  image:
-    tag: "1.4.2"
+#  image:
+#    tag: "1.4.2"
   extraVolumes:
     - type: 'secret'
       name: 'vault-tls'
@@ -76,10 +76,10 @@ server:
               component: server
           topologyKey: failure-domain.beta.kubernetes.io/zone        
 injector:
-  image:
-    tag: "0.4.0"
-  agentImage:
-    tag: "1.4.2"
+#  image:
+#    tag: "0.4.0"
+#  agentImage:
+#    tag: "1.4.2"
   extraEnvironmentVars: 
     AGENT_INJECT_SET_SECURITY_CONTEXT: "false"
 
