@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: multiarch
+spec:
+  selector:
+    matchLabels:
+      app: multiarch
+  template:
+    metadata:
+      labels:
+        app: multiarch
+    spec:
+      hostPID: true
+      initContainers:
+      - args:
+        - --reset 
+        - -p
+        - "yes"
+        image: multiarch/qemu-user-static
+        name: multiarch
+      containers:  
+      - image: gcr.io/google_containers/pause-amd64:3.2
+        name: pause
+      nodeSelector:
+        node-role.kubernetes.io/worker: ""
+      securityContext:
+        privileged: true
+        runAsUser: 0
+

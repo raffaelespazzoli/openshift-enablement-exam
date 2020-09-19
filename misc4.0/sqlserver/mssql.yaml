@@ -1,0 +1,74 @@
+apiVersion: mssql.microsoft.com/v1
+kind: SqlServer
+metadata:
+  labels: {name: mssql1, type: sqlservr}
+  name: mssql1
+spec:
+  acceptEula: true
+  agentsContainerImage: mcr.microsoft.com/mssql/ha:2019-CTP2.1-ubuntu
+  availabilityGroups: [mssql-ag]
+  instanceRootVolume:
+    persistentVolumeClaim:
+      claimName: mssql1-data
+  saPassword:
+    secretKeyRef: {key: sapassword, name: sql-secrets}
+  sqlServerContainer: {image: 'mcr.microsoft.com/mssql/server:2019-CTP2.1-ubuntu'}
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: mssql1
+spec:
+  ports:
+  - {name: tds, port: 1433}
+  selector: {name: mssql1, type: sqlservr}
+---
+apiVersion: mssql.microsoft.com/v1
+kind: SqlServer
+metadata:
+  labels: {name: mssql2, type: sqlservr}
+  name: mssql2
+spec:
+  acceptEula: true
+  agentsContainerImage: mcr.microsoft.com/mssql/ha:2019-CTP2.1-ubuntu
+  availabilityGroups: [mssql-ag]
+  instanceRootVolume:
+    persistentVolumeClaim:
+      claimName: mssql2-data
+  saPassword:
+    secretKeyRef: {key: sapassword, name: sql-secrets}
+  sqlServerContainer: {image: 'mcr.microsoft.com/mssql/server:2019-CTP2.1-ubuntu'}
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: mssql2
+spec:
+  ports:
+  - {name: tds, port: 1433}
+  selector: {name: mssql2, type: sqlservr}
+---
+apiVersion: mssql.microsoft.com/v1
+kind: SqlServer
+metadata:
+  labels: {name: mssql3, type: sqlservr}
+  name: mssql3
+spec:
+  acceptEula: true
+  agentsContainerImage: mcr.microsoft.com/mssql/ha:2019-CTP2.1-ubuntu
+  availabilityGroups: [mssql-ag]
+  instanceRootVolume:
+    persistentVolumeClaim:
+      claimName: mssql3-data
+  saPassword:
+    secretKeyRef: {key: sapassword, name: sql-secrets}
+  sqlServerContainer: {image: 'mcr.microsoft.com/mssql/server:2019-CTP2.1-ubuntu'}
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: mssql3
+spec:
+  ports:
+  - {name: tds, port: 1433}
+  selector: {name: mssql3, type: sqlservr}

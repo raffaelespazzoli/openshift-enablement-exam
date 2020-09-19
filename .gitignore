@@ -18,3 +18,4 @@ misc4.0/vault/values.yaml
 4.0/cluster2-acm/metadata.json
 misc4.0/externalDNS/charts
 misc4.0/redis/charts
+4.0/pullsecret.json
