@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata: {annotations: null, name: mssql-ag-primary, namespace: mssql-ag}
+spec:
+  ports:
+  - {name: tds, port: 1433, targetPort: 1433}
+  selector: {role.ag.mssql.microsoft.com/mssql-ag: primary, type: sqlservr}
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata: {annotations: null, name: mssql-ag-secondary, namespace: mssql-ag}
+spec:
+  ports:
+  - {name: tds, port: 1433}
+  selector: {role.ag.mssql.microsoft.com/mssql-ag: secondary,
+    type: sqlservr}
+  type: LoadBalancer
+---
