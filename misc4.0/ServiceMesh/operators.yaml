@@ -40,7 +40,7 @@ metadata:
   name: "service-mesh-operator"
   namespace: "openshift-operators" 
 spec:
-  channel: "1.0" 
+  channel: "stable" 
   installPlanApproval: "Automatic"
   source: "redhat-operators"
   sourceNamespace: "openshift-marketplace" 
