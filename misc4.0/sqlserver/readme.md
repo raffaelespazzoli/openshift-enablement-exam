@@ -1,10 +1,17 @@
 https://medium.com/searce/sql-server-alwayson-availability-groups-on-google-kubernetes-engine-gke-df442f3da552
 
+https://github.com/microsoft/sqlworkshops-sqlonopenshift
+
+https://catalog.redhat.com/software/containers/mssql/rhel/server/5ba50865f5a0de06555a2ee7
+
+https://github.com/Microsoft/mssql-docker
+
 ## Helm chart approach
 
 ```shell
 export namespace=mssql
-helm upgrade mssql stable/mssql-linux -i --create-namespace -n ${namespace} -f ./values.yaml
+oc adm policy add-scc-to-user anyuid -z default -n ${namespace}
+helm upgrade mssql ./charts/mssql-linux -i --create-namespace -n ${namespace} -f ./values.yaml
 ```
 
 
