@@ -1,0 +1,29 @@
+apiVersion: v1
+baseDomain: sandbox693.opentlc.com
+compute:
+- hyperthreading: Enabled
+  name: worker
+  platform: {}
+  replicas: 4
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  platform: {}
+  replicas: 3
+metadata:
+  name: cluster-1ffc
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineCIDR: 10.0.0.0/16
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  aws:
+    region: us-west-2
+pullSecret: ${pull_secret}
+sshKey: |
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDtty9+Qton+j31GmZGakLqlk4tPuo/MFnWI9bYKXUhxc2w0AA99mw0KbO4VTP0Y5LeEbXE0aCls13TseH2CtoFUhnDSxxWM9aW9C4vXDMfd1buTPaDJMLaKOtynzu34Hkm7P7wnArw3Yr9mWoeTgTRWg38XiyKeh9z51L/TQden7NW2znaQCav8QWZGLm0LyiJWjMif5AqPBYee/EA3cugjU7ZFpCRvpxCarjCT+3jAAV702IynYsqBf+4mD7UBG5GU7zbmYJtmXIzcgBge9vyfSKhhXvioKkT9Y4NB+qBg9dJ0LJKaU+zIzHqwF7T07i3nQwnBG885amDyRHPDAdj rspazzol
+  
