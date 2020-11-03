@@ -29,7 +29,7 @@ spec:
       providerSpec:
         value:
           ami:
-            id: ami-00745fcbb14a863ed
+            id: ${ami}
           apiVersion: awsproviderconfig.openshift.io/v1beta1
           blockDevices:
           - ebs:

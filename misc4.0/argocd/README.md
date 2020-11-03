@@ -6,5 +6,6 @@ oc create route passthrough argocd-server --service argocd-server -n argocd --po
 export password=$(oc get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
 export route=$(oc get route argocd-server -n argocd -o jsonpath='{.spec.host}')
 argocd login $route --username=admin --password=$password
-oc apply -f application-test.yaml 
+oc new-project test-argocd
+oc apply -f application-test.yaml -n test-argocd
 ```

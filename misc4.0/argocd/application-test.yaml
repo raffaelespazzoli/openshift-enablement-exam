@@ -3,7 +3,7 @@ kind: Application
 metadata:
   name: cert-utils-operator
   # You'll usually want to add your resources to the argocd namespace.
-  namespace: argocd
+  #namespace: argocd
   # Add a this finalizer ONLY if you want these to cascade delete.
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -15,7 +15,7 @@ spec:
   source:
     repoURL: https://github.com/raffaelespazzoli/openshift-enablement-exam
     targetRevision: HEAD
-    path: misc4.0/argocd/cert-utils-operator
+    path: misc4.0/argocd/cert-utils-operator1
 
     # helm specific config
     helm:

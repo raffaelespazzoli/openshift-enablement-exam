@@ -7,6 +7,7 @@ export cluster_uuid=$(oc get clusterversions.config.openshift.io version -o json
 export infra_id=$(oc get infrastructures.config.openshift.io cluster -o jsonpath='{.status.infrastructureName}{"\n"}')
 export region=$(oc get machines -n openshift-machine-api | grep -m 1 master | awk '{print $4}')
 export azs=$(oc get machines -n openshift-machine-api | grep master | awk '{print $5}')
+export ami=$(oc get machineset -n openshift-machine-api -o jsonpath='{.items[0].spec.template.spec.providerSpec.value.ami.id}')
 for az in $azs; do
   az=$az envsubst < rook-machines.yaml | oc apply -f - -n openshift-machine-api
 done
@@ -23,7 +24,8 @@ done
 ## deploy storage operator
 
 ```shell
-oc apply -f https://raw.githubusercontent.com/openshift/ocs-operator/release-4.2/deploy/deploy-with-olm.yaml
+oc new-project openshift-storage
+oc apply -f operator.yaml
 ```
 
 ## deploy OCS cluster
