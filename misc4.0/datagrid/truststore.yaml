@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: truststore
+  annotations:
+    cert-utils-operator.redhat-cop.io/generate-java-truststore: 'true'
+    cert-utils-operator.redhat-cop.io/source-ca-key: service-ca.crt
+    service.beta.openshift.io/inject-cabundle: 'true'
