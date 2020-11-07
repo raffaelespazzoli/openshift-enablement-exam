@@ -17,7 +17,7 @@ data:
       application:
         name: amq-test
       activemq:
-        broker-url: auto://amq-hdls-svc:5671
+        broker-url: tcp://amq-hdls-svc:5672
         user: admin
         password: admin
         use_tls: false
