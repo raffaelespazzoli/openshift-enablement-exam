@@ -17,9 +17,12 @@ data:
       application:
         name: amq-test
       activemq:
-        broker-url: tcp://amq-hdls-svc:5672
+        broker-url: auto://amq-hdls-svc:5671
         user: admin
         password: admin
+        use_tls: false
+        truststore: /certs/truststore.jks
+        truststorePassword: changeit         
       jms:
         pub-sub-domain: true
 
