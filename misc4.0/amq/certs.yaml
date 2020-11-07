@@ -31,12 +31,13 @@ metadata:
 spec:
   # Secret names are always required.
   secretName: amq-amqp-tls-secret
-  commonName: amqp-tls
+  commonName: amq-hdls-svc
   usages:
     - server auth
   dnsNames:
   - amq-hdls-svc
   - amq-hdls-svc.amq.svc
+  - amq-hdls-svc.amq.svc.cluster.local  
   - amq-ss-0.amq-hdls-svc  
   - amq-ss-0.amq-hdls-svc.amq.svc
   - amq-ss-0.amq-hdls-svc.amq.svc.cluster.local

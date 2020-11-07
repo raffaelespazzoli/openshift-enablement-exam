@@ -60,7 +60,7 @@ spec:
     sslProfile: amq-tls
   interRouterListeners:  
   - authenticatePeer: true
-    expose: true
+    expose: false
     port: 55671
     saslMechanisms: EXTERNAL
     sslProfile: inter-router    
