@@ -94,43 +94,4 @@ metadata:
 stringData:
   keyStorePassword: changeit
   trustStorePassword: changeit
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: router-mesh-tls
-spec:
-  # Secret names are always required.
-  secretName: router-mesh-tls
-  commonName: router-mesh-tls
-  usages:
-    - server auth
-  dnsNames:
-  - router-mesh
-  - router-mesh.amq.svc
-  - router-mesh.amq.svc.cluster.local
-  - router-mesh-tls-5671-amq.apps.${base_domain}
-  duration: 168h
-  renewBefore: 1h
-  issuerRef:
-    name: internal-issuer
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: inter-router-mesh-tls
-spec:
-  # Secret names are always required.
-  secretName: inter-router-mesh-tls
-  commonName: inter-router-mesh-tls
-  usages:
-    - server auth
-    - client auth
-  dnsNames:
-  - router-mesh
-  - router-mesh.amq.svc
-  - router-mesh.amq.svc.cluster.local
-  duration: 168h
-  renewBefore: 1h
-  issuerRef:
-    name: internal-issuer 
+ 

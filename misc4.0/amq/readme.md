@@ -50,8 +50,9 @@ oc set data --from-file=/tmp/broker.ks --from-file=/tmp/client.ts -n ${project}
 oc get secret amq-console-secret -o jsonpath='{.data.keystore\.jks}' -n ${project} | base64 -d > /tmp/broker.ks
 oc get secret amq-console-secret -o jsonpath='{.data.truststore\.jks}' -n ${project} | base64 -d > /tmp/client.ts
 oc set data --from-file=/tmp/broker.ks --from-file=/tmp/client.ts -n ${project}
-
 ```
+
+
 
 ### Install AMQ Broker and Interconnect
 
@@ -63,11 +64,56 @@ oc apply -f ./amq.yaml -n ${project}
 
 ```shell
 # if you installed skater/reloader, run:
-oc annotate deployemnt mesh-router reloader.stakater.com/auto="true" -n ${project}
 oc annotate statefulset amq-ss reloader.stakater.com/auto="true" -n ${project}
 
+# if you didn't install skater/reloader, run this every time the certificates are renewed
+oc rollout restart statefulset amq-ss -n ${project}
+```
+
+## Run a client app
+
+The app can be found here: https://github.com/j-michels/amq-test
+
+```shell
+oc new-app registry.redhat.io/ubi8/openjdk-11~https://github.com/raffaelespazzoli/amq-test --name springboot-amq -n ${project} -l app=amq-test
+envsubst < application-properties.yaml | oc apply -f - -n ${project}
+oc set volume deployment/springboot-amq --add --configmap-name=application-properties --mount-path=/config --name=config -t configmap -n ${project}
+oc set volume deployment/springboot-amq --add --secret-name=amq-amqp-tls-secret --mount-path=/certs --name=certs -t secret -n ${project}
+oc set env deployment/springboot-amq SPRING_CONFIG_LOCATION=/config/application-properties.yaml -n ${project}
+oc set env deployment/springboot-amq SPRING_CONFIG_LOCATION=/config/application-properties.yaml -n ${project}
+oc expose service springboot-amq --port 8080-tcp -n ${project}
+curl -X POST http://springboot-amq-${project}.apps.${base_domain}/api/post/myqueue -H 'Content-Type: application/json' -d ciao
+```
+
+## Install interconnect
+
+Interconnect provides the ability to create broker topology-unaware clients and sets you up for multi-cluster deployment of the brokers.
+
+### Deploy interconnect operator
+
+```shell
+oc apply -f ./interconnect-operator.yaml
+```
+
+### Deploy certificates
+
+```shell
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+envsubst < ./interconnect-certs.yaml | oc apply -f - -n ${project}
+```
+
+### Deploy router-mesh
+
+```shell
+oc apply -f ./interconnect.yaml -n ${project}
+```
+
+### Interconnect certificate renewal
+
+```shell
+# if you installed skater/reloader, run:
+oc annotate deployment router-mesh reloader.stakater.com/auto="true" -n ${project}
 
 # if you didn't install skater/reloader, run this every time the certificates are renewed
-oc rollout restart deployment mesh-router -n ${project}
-oc rollout restart statefulset amq-ss -n ${project}
+oc rollout restart deployment router-mesh -n ${project}
 ```

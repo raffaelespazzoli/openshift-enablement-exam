@@ -1,0 +1,54 @@
+---  
+apiVersion: interconnectedcloud.github.io/v1alpha1
+kind: Interconnect
+metadata:
+  name: router-mesh
+spec:
+  deploymentPlan:
+    role: interior  
+    size: 2  
+    placement: AntiAffinity
+  addresses:
+  - prefix: myqueue  
+    waypoint: true
+  autoLinks:  
+  - address: myqueue
+    direction: in
+    connection: amq
+  - address: myqueue
+    direction: out
+    connection: amq
+  # connectors:  
+  # - name: amq
+  #   host: amq-hdls-svc
+  #   port: 5671
+  #   routeContainer: true
+  #   sslProfile: amq-tls
+  interRouterListeners:  
+  - authenticatePeer: true
+    expose: false
+    port: 55671
+    saslMechanisms: EXTERNAL
+    sslProfile: inter-router    
+  sslProfiles:
+    - name: amq-tls
+      caCert: amq-amqp-tls-secret
+      generateCredentials: false
+    - credentials: router-mesh-tls
+      name: default
+      generateCredentials: false
+    - caCert: inter-router-mesh-tls
+      credentials: inter-router-mesh-tls
+      mutualAuth: true
+      name: inter-router
+      generateCredentials: false            
+  listeners:
+    # - port: 5672
+    - authenticatePeer: true
+      expose: true
+      http: true
+      port: 8080
+    - port: 5671
+      sslProfile: default
+      expose: true
+  users: router-mesh-users
