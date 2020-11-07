@@ -1,0 +1,29 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: amq
+spec:
+  targetNamespaces:
+  - ${project}
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: amq
+spec:
+  channel: current
+  installPlanApproval: Automatic
+  name: amq-broker
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: amq7-interconnect
+spec:
+  channel: 1.2.0
+  installPlanApproval: Automatic
+  name: amq7-interconnect-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace   

@@ -1,0 +1,135 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: self-signer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rootca
+spec:
+  secretName: rootca
+  issuerRef:
+    name: self-signer
+  commonName: "ca.self-signer.cert-manager"
+  isCA: true
+---  
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: internal-issuer
+spec:
+  ca:
+    secretName: rootca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: amqp-tls
+spec:
+  # Secret names are always required.
+  secretName: amq-amqp-tls-secret
+  commonName: amqp-tls
+  usages:
+    - server auth
+  dnsNames:
+  - amq-hdls-svc
+  - amq-hdls-svc.amq.svc
+  - amq-ss-0.amq-hdls-svc  
+  - amq-ss-0.amq-hdls-svc.amq.svc
+  - amq-ss-0.amq-hdls-svc.amq.svc.cluster.local
+  - amq-ss-1.amq-hdls-svc  
+  - amq-ss-1.amq-hdls-svc.amq.svc
+  - amq-ss-1.amq-hdls-svc.amq.svc.cluster.local  
+  duration: 168h
+  renewBefore: 1h
+  issuerRef:
+    name: internal-issuer
+  keystores:
+    jks:
+      create: true
+      passwordSecretRef:
+        name: amq-amqp-tls-secret
+        key: keyStorePassword   
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: amq-console-tls
+spec:
+  # Secret names are always required.
+  secretName: amq-console-secret
+  commonName: amq-console-tls
+  usages:
+    - server auth
+  dnsNames:
+  - amq-wconsj-0-svc-rte-${namespace}.apps.${base_domain}
+  - amq-wconsj-0-svc-rte-${namespace}.apps.${base_domain}
+  duration: 168h
+  renewBefore: 1h
+  issuerRef:
+    name: internal-issuer
+  keystores:  
+    jks:
+      create: true
+      passwordSecretRef:
+        name: amq-console-secret
+        key: keyStorePassword
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: amq-console-secret
+stringData:
+  keyStorePassword: changeit
+  trustStorePassword: changeit
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: amq-amqp-tls-secret
+stringData:
+  keyStorePassword: changeit
+  trustStorePassword: changeit
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: router-mesh-tls
+spec:
+  # Secret names are always required.
+  secretName: router-mesh-tls
+  commonName: router-mesh-tls
+  usages:
+    - server auth
+  dnsNames:
+  - router-mesh
+  - router-mesh.amq.svc
+  - router-mesh.amq.svc.cluster.local
+  - router-mesh-tls-5671-amq.apps.${base_domain}
+  duration: 168h
+  renewBefore: 1h
+  issuerRef:
+    name: internal-issuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: inter-router-mesh-tls
+spec:
+  # Secret names are always required.
+  secretName: inter-router-mesh-tls
+  commonName: inter-router-mesh-tls
+  usages:
+    - server auth
+    - client auth
+  dnsNames:
+  - router-mesh
+  - router-mesh.amq.svc
+  - router-mesh.amq.svc.cluster.local
+  duration: 168h
+  renewBefore: 1h
+  issuerRef:
+    name: internal-issuer 

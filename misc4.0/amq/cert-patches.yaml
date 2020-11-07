@@ -1,0 +1,49 @@
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: ResourceLocker
+metadata:
+  name: amq-tls-patch
+spec:
+  serviceAccountRef:
+    name: default
+  patches:
+  - targetObjectRef:
+      apiVersion: v1
+      kind: Secret
+      name: amq-amqp-tls-secret
+      namespace: ${project}
+    patchTemplate: |
+      data:
+        broker.ks: {{ (index (index . 0).data "keystore.jks") }}
+        client.ts: {{ (index (index . 0).data "truststore.jks") }}
+    patchType: application/strategic-merge-patch+json
+    sourceObjectRefs:
+    - apiVersion: v1
+      kind: Secret
+      name: amq-amqp-tls-secret
+      namespace: ${project}
+    id: sa-annotation
+--- 
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: ResourceLocker
+metadata:
+  name: amq-console-tls-patch
+spec:
+  serviceAccountRef:
+    name: default
+  patches:
+  - targetObjectRef:
+      apiVersion: v1
+      kind: Secret
+      name: amq-console-secret
+      namespace: ${project}
+    patchTemplate: |
+      data:
+        broker.ks: {{ (index (index . 0).data "keystore.jks") }}
+        client.ts: {{ (index (index . 0).data "truststore.jks") }}
+    patchType: application/strategic-merge-patch+json
+    sourceObjectRefs:
+    - apiVersion: v1
+      kind: Secret
+      name: amq-console-secret
+      namespace: ${project}
+    id: sa-annotation
