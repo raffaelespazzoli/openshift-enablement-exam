@@ -80,7 +80,6 @@ envsubst < application-properties.yaml | oc apply -f - -n ${project}
 oc set volume deployment/springboot-amq --add --configmap-name=application-properties --mount-path=/config --name=config -t configmap -n ${project}
 oc set volume deployment/springboot-amq --add --secret-name=amq-amqp-tls-secret --mount-path=/certs --name=certs -t secret -n ${project}
 oc set env deployment/springboot-amq SPRING_CONFIG_LOCATION=/config/application-properties.yaml -n ${project}
-oc set env deployment/springboot-amq --from secret/amq-amqp-tls-secret -n ${project}
 oc set env deployment/springboot-amq JAVA_OPTIONS="-Djavax.net.ssl.trustStore=/certs/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" -n ${project}
 oc expose service springboot-amq --port 8080-tcp -n ${project}
 curl -X POST http://springboot-amq-${project}.apps.${base_domain}/api/post/myqueue -H 'Content-Type: application/json' -d ciao
