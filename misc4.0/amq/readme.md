@@ -120,8 +120,7 @@ oc apply -f ./interconnect.yaml -n ${project}
 ### Interconnect certificate renewal
 
 ```shell
-# if you installed skater/reloader, run:
-oc annotate deployment router-mesh reloader.stakater.com/auto="true" -n ${project}
+# if you installed skater/reloader, you have already created the patch configuration above together with the certs
 
 # if you didn't install skater/reloader, run this every time the certificates are renewed
 oc rollout restart deployment router-mesh -n ${project}

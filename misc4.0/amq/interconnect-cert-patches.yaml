@@ -20,4 +20,16 @@ spec:
       kind: Secret
       name: amq-amqp-tls-secret
       namespace: ${project}
-    id: amq-amqp-mesh-client-tls-secret 
+    id: amq-amqp-mesh-client-tls-secret
+  - targetObjectRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: router-mesh
+      namespace: ${project}
+    patchTemplate: |
+      metadata:
+        annotations:
+          reloader.stakater.com/auto: "true"
+    patchType: application/strategic-merge-patch+json
+    sourceObjectRefs: []
+    id: router-mesh    
