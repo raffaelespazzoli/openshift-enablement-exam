@@ -21,16 +21,7 @@ spec:
       kind: Secret
       name: amq-amqp-tls-secret
       namespace: ${project}
-    id: sa-annotation
---- 
-apiVersion: redhatcop.redhat.io/v1alpha1
-kind: ResourceLocker
-metadata:
-  name: amq-console-tls-patch
-spec:
-  serviceAccountRef:
-    name: default
-  patches:
+    id: amq-amqp-tls-secret
   - targetObjectRef:
       apiVersion: v1
       kind: Secret
@@ -46,4 +37,17 @@ spec:
       kind: Secret
       name: amq-console-secret
       namespace: ${project}
-    id: sa-annotation
+    id: amq-console-secret
+  - targetObjectRef:
+      apiVersion: apps/v1
+      kind: StatefulSet
+      name: amq-ss
+      namespace: ${project}
+    patchTemplate: |
+      metadata:
+        annotations:
+          reloader.stakater.com/auto: "true"
+    patchType: application/strategic-merge-patch+json
+    sourceObjectRefs: []
+    id: amq-ss          
+

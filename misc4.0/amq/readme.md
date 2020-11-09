@@ -52,9 +52,7 @@ oc get secret amq-console-secret -o jsonpath='{.data.truststore\.jks}' -n ${proj
 oc set data --from-file=/tmp/broker.ks --from-file=/tmp/client.ts -n ${project}
 ```
 
-
-
-### Install AMQ Broker and Interconnect
+### Install AMQ Broker
 
 ```shell
 oc apply -f ./amq.yaml -n ${project}
@@ -63,8 +61,7 @@ oc apply -f ./amq.yaml -n ${project}
 ### Certificate renewal
 
 ```shell
-# if you installed skater/reloader, run:
-oc annotate statefulset amq-ss reloader.stakater.com/auto="true" -n ${project}
+# if you installed skater/reloader, you have already created the patch configuration above together with the certs
 
 # if you didn't install skater/reloader, run this every time the certificates are renewed
 oc rollout restart statefulset amq-ss -n ${project}
@@ -82,6 +79,7 @@ oc set volume deployment/springboot-amq --add --configmap-name=application-prope
 oc set volume deployment/springboot-amq --add --secret-name=amq-amqp-tls-secret --mount-path=/certs --name=certs -t secret -n ${project}
 oc set env deployment/springboot-amq SPRING_CONFIG_LOCATION=/config/application-properties.yaml -n ${project}
 oc expose service springboot-amq --port 8080-tcp -n ${project}
+## not sure how to use this app, I tried teh below, but didn't work:
 curl -X POST http://springboot-amq-${project}.apps.${base_domain}/api/post/myqueue -H 'Content-Type: application/json' -d ciao
 ```
 
