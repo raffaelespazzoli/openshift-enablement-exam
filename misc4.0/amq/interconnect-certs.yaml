@@ -14,6 +14,7 @@ spec:
   - router-mesh.amq.svc
   - router-mesh.amq.svc.cluster.local
   - router-mesh-tls-5671-amq.apps.${base_domain}
+  - router-mesh-8443-amq.apps.${base_domain}
   duration: 168h
   renewBefore: 1h
   issuerRef:

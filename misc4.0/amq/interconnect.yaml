@@ -18,12 +18,12 @@ spec:
   - address: myqueue
     direction: out
     connection: amq
-  # connectors:  
-  # - name: amq
-  #   host: amq-hdls-svc
-  #   port: 5671
-  #   routeContainer: true
-  #   sslProfile: amq-tls
+  connectors:  
+  - name: amq
+    host: amq-hdls-svc
+    port: 5671
+    routeContainer: true
+    sslProfile: amq-tls
   interRouterListeners:  
   - authenticatePeer: true
     expose: false
@@ -31,24 +31,25 @@ spec:
     saslMechanisms: EXTERNAL
     sslProfile: inter-router    
   sslProfiles:
-    - name: amq-tls
-      caCert: amq-amqp-tls-secret
-      generateCredentials: false
-    - credentials: router-mesh-tls
-      name: default
-      generateCredentials: false
-    - caCert: inter-router-mesh-tls
-      credentials: inter-router-mesh-tls
-      mutualAuth: true
-      name: inter-router
-      generateCredentials: false            
+  - name: amq-tls
+    caCert: amq-amqp-tls-secret-1
+    generateCredentials: false
+  - name: default
+    credentials: router-mesh-tls
+    generateCredentials: false
+  - name: inter-router
+    caCert: inter-router-mesh-tls
+    credentials: inter-router-mesh-tls
+    mutualAuth: true
+    generateCredentials: false            
   listeners:
-    # - port: 5672
-    - authenticatePeer: true
-      expose: true
-      http: true
-      port: 8080
-    - port: 5671
-      sslProfile: default
-      expose: true
+  # - port: 5672
+  - authenticatePeer: false
+    expose: true
+    http: true
+    port: 8443
+    sslProfile: default
+  - port: 5671
+    sslProfile: default
+    expose: true
   users: router-mesh-users

@@ -83,6 +83,10 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: amq-console-secret
+type: kubernetes.io/tls
+data:
+  tls.crt: ""
+  tls.key: ""
 stringData:
   keyStorePassword: changeit
   trustStorePassword: changeit
@@ -91,6 +95,10 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: amq-amqp-tls-secret
+type: kubernetes.io/tls
+data:
+  tls.crt: ""
+  tls.key: ""
 stringData:
   keyStorePassword: changeit
   trustStorePassword: changeit

@@ -20,7 +20,8 @@ data:
       amqp10jms:
         username: admin
         password:  admin 
-        remote-url: amqps://amq-hdls-svc:5671
+        #https://qpid.apache.org/releases/qpid-jms-0.54.0/docs/index.html#ssl-transport-configuration-options        
+        remote-url: amqps://amq-hdls-svc:5671?transport.trustStoreLocation=/certs/truststore.jks&transport.trustStorePassword=changeit
         pool:
           enabled: true
           maxConnections: 2        
