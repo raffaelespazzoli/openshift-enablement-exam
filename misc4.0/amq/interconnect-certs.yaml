@@ -39,3 +39,12 @@ spec:
   renewBefore: 1h
   issuerRef:
     name: internal-issuer
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: amq-amqp-mesh-client-tls-secret
+type: kubernetes.io/tls
+data:
+  tls.crt: ""
+  tls.key: ""

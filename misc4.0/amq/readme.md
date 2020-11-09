@@ -46,10 +46,10 @@ envsubst < ./cert-patches.yaml | oc apply -f - -n ${project}
 # if you didn't install resource-locker-operator run this (and re-run it every time certificates are renewed)
 oc get secret amq-amqp-tls-secret -o jsonpath='{.data.keystore\.jks}' -n ${project} | base64 -d > /tmp/broker.ks
 oc get secret amq-amqp-tls-secret -o jsonpath='{.data.truststore\.jks}' -n ${project} | base64 -d > /tmp/client.ts
-oc set data --from-file=/tmp/broker.ks --from-file=/tmp/client.ts -n ${project}
+oc set data secret/amq-amqp-tls-secret --from-file=/tmp/broker.ks --from-file=/tmp/client.ts -n ${project}
 oc get secret amq-console-secret -o jsonpath='{.data.keystore\.jks}' -n ${project} | base64 -d > /tmp/broker.ks
 oc get secret amq-console-secret -o jsonpath='{.data.truststore\.jks}' -n ${project} | base64 -d > /tmp/client.ts
-oc set data --from-file=/tmp/broker.ks --from-file=/tmp/client.ts -n ${project}
+oc set data secret/amq-console-secret --from-file=/tmp/broker.ks --from-file=/tmp/client.ts -n ${project}
 ```
 
 ### Install AMQ Broker
@@ -79,7 +79,7 @@ oc set volume deployment/springboot-amq --add --configmap-name=application-prope
 oc set volume deployment/springboot-amq --add --secret-name=amq-amqp-tls-secret --mount-path=/certs --name=certs -t secret -n ${project}
 oc set env deployment/springboot-amq SPRING_CONFIG_LOCATION=/config/application-properties.yaml -n ${project}
 oc expose service springboot-amq --port 8080-tcp -n ${project}
-## not sure how to use this app, I tried teh below, but didn't work:
+## not sure how to use this app, I tried the below, but didn't work:
 curl -X POST http://springboot-amq-${project}.apps.${base_domain}/api/post/myqueue -H 'Content-Type: application/json' -d ciao
 ```
 
@@ -98,6 +98,17 @@ oc apply -f ./interconnect-operator.yaml -n ${project}
 ```shell
 export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
 envsubst < ./interconnect-certs.yaml | oc apply -f - -n ${project}
+```
+
+patching the certs
+
+```shell
+# If you installed resource locker operator run the following:
+envsubst < ./interconnect-cert-patches.yaml | oc apply -f - -n ${project}
+
+# If you didn't install resource locker, run the following (and every time the certificates are renewed)
+oc get secret amq-amqp-mesh-client-tls-secret -o jsonpath='{.data.ca.crt}' -n ${project} | base64 -d > /tmp/tls.crt
+oc set data secret/amq-amqp-mesh-client-tls-secret --from-file=/tmp/tls.crt -n ${project}
 ```
 
 ### Deploy router-mesh

@@ -1,0 +1,23 @@
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: ResourceLocker
+metadata:
+  name: interconnect-tls-patch
+spec:
+  serviceAccountRef:
+    name: default
+  patches:
+  - targetObjectRef:
+      apiVersion: v1
+      kind: Secret
+      name: amq-amqp-mesh-client-tls-secret
+      namespace: ${project}
+    patchTemplate: |
+      data:
+        tls.crt: {{ (index (index . 0).data "ca.crt") }}
+    patchType: application/strategic-merge-patch+json
+    sourceObjectRefs:
+    - apiVersion: v1
+      kind: Secret
+      name: amq-amqp-tls-secret
+      namespace: ${project}
+    id: amq-amqp-mesh-client-tls-secret 

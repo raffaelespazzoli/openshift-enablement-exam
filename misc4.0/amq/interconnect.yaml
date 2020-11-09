@@ -14,16 +14,27 @@ spec:
   autoLinks:  
   - address: myqueue
     direction: in
-    connection: amq
+    connection: amq-0
   - address: myqueue
     direction: out
-    connection: amq
+    connection: amq-0
+  - address: myqueue
+    direction: in
+    connection: amq-1
+  - address: myqueue
+    direction: out
+    connection: amq-1  
   connectors:  
-  - name: amq
-    host: amq-hdls-svc
+  - name: amq-0
+    host: amq-ss-0.amq-hdls-svc
     port: 5671
     routeContainer: true
     sslProfile: amq-tls
+  - name: amq-1
+    host: amq-ss-1.amq-hdls-svc
+    port: 5671
+    routeContainer: true
+    sslProfile: amq-tls    
   interRouterListeners:  
   - authenticatePeer: true
     expose: false
@@ -32,7 +43,7 @@ spec:
     sslProfile: inter-router    
   sslProfiles:
   - name: amq-tls
-    caCert: amq-amqp-tls-secret-1
+    caCert: amq-amqp-mesh-client-tls-secret
     generateCredentials: false
   - name: default
     credentials: router-mesh-tls
