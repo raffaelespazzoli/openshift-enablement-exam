@@ -142,7 +142,8 @@ oc rollout restart deployment router-mesh -n ${project}
 
 ```shell
 oc new-app openjdk-11~https://github.com/raffaelespazzoli/amq-test --name springboot-interconnect-internal -n ${project} -l app=interconnect-internal-test
-oc apply -f interconnect-internal-application-properties.yaml -n ${project}
+export password=$(oc get secret router-mesh-users -n ${project} -o jsonpath='{.data.guest}' | base64 -d)
+envsubst < ./interconnect-internal-application-properties.yaml | oc apply -f - -n ${project}
 oc set volume deployment/springboot-interconnect-internal --add --configmap-name=interconnect-internal-application-properties --mount-path=/config --name=config -t configmap -n ${project}
 oc set volume deployment/springboot-interconnect-internal --add --secret-name=router-mesh-tls --mount-path=/certs --name=certs -t secret -n ${project}
 oc set env deployment/springboot-interconnect-internal SPRING_CONFIG_LOCATION=/config/application-properties.yaml -n ${project}
@@ -152,7 +153,8 @@ oc set env deployment/springboot-interconnect-internal SPRING_CONFIG_LOCATION=/c
 
 ```shell
 oc new-app openjdk-11~https://github.com/raffaelespazzoli/amq-test --name springboot-interconnect-external -n ${project} -l app=interconnect-external-test
-envsubst < ./interconnect-external-application-properties.yaml |  oc apply -f - -n ${project}
+export password=$(oc get secret router-mesh-users -n ${project} -o jsonpath='{.data.guest}' | base64 -d)
+envsubst < ./interconnect-external-application-properties.yaml | oc apply -f - -n ${project}
 oc set volume deployment/springboot-interconnect-external --add --configmap-name=interconnect-external-application-properties --mount-path=/config --name=config -t configmap -n ${project}
 oc set volume deployment/springboot-interconnect-external --add --secret-name=router-mesh-tls --mount-path=/certs --name=certs -t secret -n ${project}
 oc set env deployment/springboot-interconnect-external SPRING_CONFIG_LOCATION=/config/application-properties.yaml -n ${project}

@@ -19,7 +19,7 @@ data:
     amqphub:
       amqp10jms:
         username: guest@router-mesh
-        password:  CxhnpJMK 
+        password:  ${password} 
         #https://qpid.apache.org/releases/qpid-jms-0.54.0/docs/index.html#ssl-transport-configuration-options        
         remote-url: amqps://router-mesh:5671?transport.trustStoreLocation=/certs/truststore.jks&transport.trustStorePassword=changeit
         pool:
