@@ -1,5 +1,15 @@
 # AMQ
 
+This script will create the following architecture:
+
+![Architecture](./media/AMQ.png)
+
+All systems are in HA.
+
+All connection are TLS and certificate provisioning and renewal is fully automated.
+
+Three clients options are available.
+
 ## Prerequisites
 
 Install a recent version of cert-manager
@@ -27,7 +37,8 @@ export uid=$(oc get project ${project} -o jsonpath='{.metadata.annotations.opens
 helm upgrade -i -n ${project} reloader stakater/reloader --set reloader.deployment.securityContext.runAsUser=${uid}
 ```
 
-Resource locker operator automates the injection of the injection of keystore and truststore in the secrets
+Resource locker operator automates the injection of the injection of keystore and truststore in the secrets.
+
 Reloader automates the reboot of pods when certificates are renewed.
 
 ## Install AMQ Broker
@@ -124,4 +135,25 @@ oc apply -f ./interconnect.yaml -n ${project}
 
 # if you didn't install skater/reloader, run this every time the certificates are renewed
 oc rollout restart deployment router-mesh -n ${project}
+```
+
+
+### Run client app internally
+
+```shell
+oc new-app openjdk-11~https://github.com/raffaelespazzoli/amq-test --name springboot-interconnect-internal -n ${project} -l app=interconnect-internal-test
+oc apply -f interconnect-internal-application-properties.yaml -n ${project}
+oc set volume deployment/springboot-interconnect-internal --add --configmap-name=interconnect-internal-application-properties --mount-path=/config --name=config -t configmap -n ${project}
+oc set volume deployment/springboot-interconnect-internal --add --secret-name=router-mesh-tls --mount-path=/certs --name=certs -t secret -n ${project}
+oc set env deployment/springboot-interconnect-internal SPRING_CONFIG_LOCATION=/config/application-properties.yaml -n ${project}
+```
+
+### Run client app externally
+
+```shell
+oc new-app openjdk-11~https://github.com/raffaelespazzoli/amq-test --name springboot-interconnect-external -n ${project} -l app=interconnect-external-test
+envsubst < ./interconnect-external-application-properties.yaml |  oc apply -f - -n ${project}
+oc set volume deployment/springboot-interconnect-external --add --configmap-name=interconnect-external-application-properties --mount-path=/config --name=config -t configmap -n ${project}
+oc set volume deployment/springboot-interconnect-external --add --secret-name=router-mesh-tls --mount-path=/certs --name=certs -t secret -n ${project}
+oc set env deployment/springboot-interconnect-external SPRING_CONFIG_LOCATION=/config/application-properties.yaml -n ${project}
 ```

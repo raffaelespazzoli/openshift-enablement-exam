@@ -1,0 +1,32 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: interconnect-internal-application-properties
+data:
+  application-properties.yaml: | 
+    management:
+      endpoint:
+        health:
+          show-details: always
+      endpoints:
+        web:
+          exposure:
+            include: ["health", "info", "env","bus-refresh", "refresh"]
+       
+      jms:
+        pub-sub-domain: true
+
+    amqphub:
+      amqp10jms:
+        username: guest@router-mesh
+        password:  CxhnpJMK 
+        #https://qpid.apache.org/releases/qpid-jms-0.54.0/docs/index.html#ssl-transport-configuration-options        
+        remote-url: amqps://router-mesh:5671?transport.trustStoreLocation=/certs/truststore.jks&transport.trustStorePassword=changeit
+        pool:
+          enabled: true
+          maxConnections: 2        
+
+    server:
+      servlet:
+        context-path: /amq/api
+        port: 8080

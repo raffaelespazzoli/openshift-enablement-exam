@@ -13,12 +13,18 @@ spec:
   - router-mesh
   - router-mesh.amq.svc
   - router-mesh.amq.svc.cluster.local
-  - router-mesh-tls-5671-amq.apps.${base_domain}
+  - router-mesh-5671-amq.apps.${base_domain}
   - router-mesh-8443-amq.apps.${base_domain}
   duration: 168h
   renewBefore: 1h
   issuerRef:
     name: internal-issuer
+  keystores:  
+    jks:
+      create: true
+      passwordSecretRef:
+        name: router-mesh-tls
+        key: keyStorePassword     
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -38,7 +44,7 @@ spec:
   duration: 168h
   renewBefore: 1h
   issuerRef:
-    name: internal-issuer
+    name: internal-issuer   
 ---
 apiVersion: v1
 kind: Secret
@@ -48,3 +54,15 @@ type: kubernetes.io/tls
 data:
   tls.crt: ""
   tls.key: ""
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: router-mesh-tls
+type: kubernetes.io/tls
+data:
+  tls.crt: ""
+  tls.key: ""
+stringData:
+  keyStorePassword: changeit
+  trustStorePassword: changeit  
