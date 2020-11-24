@@ -1,0 +1,87 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: buildpack
+spec:
+  params:
+  - name: repo
+    type: string
+    description: repo
+    default: https://github.com/buildpacks/samples
+  - name: context
+    type: string
+    description: context
+    default: apps/java-maven
+  - name: builder_image
+    type: string
+    description: builder_image
+    default: cnbs/sample-builder:alpine@sha256:329dd975bed06758c891d29014b98a3baaf381afb36d7375c3140bfbbb94fb08    
+  resources:
+  - name: result
+    type: image
+  workspaces:
+    - name: source  
+  tasks:
+  - name: git-clone
+    params:
+    - name: url
+      value: $(params.repo)
+    - name: revision
+      value: master
+    - name: submodules
+      value: "true"
+    - name: depth
+      value: "1"
+    - name: sslVerify
+      value: "true"
+    - name: deleteExisting
+      value: "true"
+    taskRef:
+      kind: ClusterTask
+      name: git-clone
+    workspaces: 
+      - name: output
+        workspace: source   
+  - name: buildpacks
+    params:
+    - name: BUILDER_IMAGE
+      value: $(params.builder_image)
+      #value: gcr.io/buildpacks/builder:v1
+      #value: cnbs/sample-builder:bionic
+    - name: CACHE
+      value: empty-dir
+    - name: PLATFORM_DIR
+      value: empty-dir
+    - name: USER_ID
+      value: "1000"
+    - name: GROUP_ID
+      value: "1000"
+    - name: PROCESS_TYPE
+      value: web
+    - name: SKIP_RESTORE
+      value: "false"
+    - name: SOURCE_SUBPATH
+      value: $(params.context)
+    resources:
+      outputs:
+      - name: image
+        resource: result
+    runAfter:
+    - git-clone
+    taskRef:
+      kind: Task
+      name: buildpacks
+    workspaces: 
+      - name: source
+        workspace: source
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: buildpacks-source-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi          

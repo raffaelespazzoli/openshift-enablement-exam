@@ -54,6 +54,10 @@ git fetch upstream
 git rebase upstream/master
 git push origin
 
+git fetch upstream
+git rebase upstream/main
+git push origin
+
 git checkout <branch>
 git rebase master
 git push --force [--set-upstream origin <branch>]
