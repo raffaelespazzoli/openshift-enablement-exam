@@ -1,0 +1,11 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: chargeback-monitoring
+spec:
+  groups:
+    - name: chargeback-monitoring.rules
+      rules:
+        - expr: >-
+            sum by (label_${prometheus_label}) (container_memory_working_set_bytes{container="",pod!=""} * on (namespace) group_left(label_${prometheus_label}) kube_namespace_labels{label_${prometheus_label}=~".+"})
+          record: '${prometheus_label}:container_memory_working_set_bytes:sum'

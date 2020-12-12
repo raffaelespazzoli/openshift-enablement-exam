@@ -59,7 +59,7 @@ spec:
     - name: PROCESS_TYPE
       value: web
     - name: SKIP_RESTORE
-      value: "false"
+      value: "true"
     - name: SOURCE_SUBPATH
       value: $(params.context)
     resources:
