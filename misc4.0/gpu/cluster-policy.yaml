@@ -1,0 +1,93 @@
+apiVersion: nvidia.com/v1
+kind: ClusterPolicy
+metadata:
+  name: gpu-cluster-policy
+spec:
+  dcgmExporter:
+    nodeSelector: {}
+    imagePullSecrets: []
+    resources: {}
+    affinity: {}
+    podSecurityContext: {}
+    repository: nvcr.io/nvidia/k8s
+    securityContext: {}
+    version: 'sha256:85016e39f73749ef9769a083ceb849cae80c31c5a7f22485b3ba4aa590ec7b88'
+    image: dcgm-exporter
+    tolerations: 
+    - key: "workload"
+      operator: "Equal"
+      value: "ai-ml"
+      effect: "NoSchedule"
+  devicePlugin:
+    nodeSelector: {}
+    imagePullSecrets: []
+    resources: {}
+    affinity: {}
+    podSecurityContext: {}
+    repository: nvcr.io/nvidia
+    securityContext: {}
+    version: 'sha256:45b459c59d13a1ebf37260a33c4498046d4ade7cc243f2ed71115cd81054cd85'
+    image: k8s-device-plugin
+    tolerations:
+    - key: "workload"
+      operator: "Equal"
+      value: "ai-ml"
+      effect: "NoSchedule"    
+  driver:
+    nodeSelector: {}
+    imagePullSecrets: []
+    resources: {}
+    affinity: {}
+    podSecurityContext: {}
+    repository: nvcr.io/nvidia
+    securityContext: {}
+    repoConfig:
+      configMapName: ''
+      destinationDir: ''
+    version: 'sha256:324e9dc265dec320207206aa94226b0c8735fd93ce19b36a415478c95826d934'
+    image: driver
+    tolerations:
+    - key: "workload"
+      operator: "Equal"
+      value: "ai-ml"
+      effect: "NoSchedule"    
+  gfd:
+    nodeSelector: {}
+    imagePullSecrets: []
+    resources: {}
+    affinity: {}
+    podSecurityContext: {}
+    repository: nvcr.io/nvidia
+    securityContext: {}
+    version: 'sha256:82e6f61b715d710c60ac14be78953336ea5dbc712244beb51036139d1cc8d526'
+    image: gpu-feature-discovery
+    tolerations:
+    - key: "workload"
+      operator: "Equal"
+      value: "ai-ml"
+      effect: "NoSchedule"    
+    migStrategy: none
+    sleepInterval: 60s
+  operator:
+    defaultRuntime: crio
+    deployGFD: true
+    validator:
+      image: cuda-sample
+      imagePullSecrets: []
+      repository: nvcr.io/nvidia/k8s
+      version: 'sha256:2a30fe7e23067bc2c3f8f62a6867702a016af2b80b9f6ce861f3fea4dfd85bc2'
+  toolkit:
+    nodeSelector: {}
+    imagePullSecrets: []
+    resources: {}
+    affinity: {}
+    podSecurityContext: {}
+    repository: nvcr.io/nvidia/k8s
+    securityContext: {}
+    version: 'sha256:b3f48033d7d9e1d5703b6ecffe35d219a45a17bdcf85374d78924dee9c8917be'
+    image: container-toolkit
+    tolerations:
+    - key: "workload"
+      operator: "Equal"
+      value: "ai-ml"
+      effect: "NoSchedule"    

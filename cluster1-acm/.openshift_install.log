@@ -1,3 +1,0 @@
-time="2020-11-11T10:50:31-05:00" level=debug msg="OpenShift Installer 4.5.7"
-time="2020-11-11T10:50:31-05:00" level=debug msg="Built from commit baccbcfbbeed464b45a33f00ced17dfe8134fd7b"
-time="2020-11-11T10:50:31-05:00" level=fatal msg="Failed while preparing to destroy cluster: open cluster1-acm/metadata.json: no such file or directory"

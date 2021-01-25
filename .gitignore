@@ -19,3 +19,7 @@ misc4.0/vault/values.yaml
 misc4.0/externalDNS/charts
 misc4.0/redis/charts
 4.0/pullsecret.json
+
+misc4.0/gpu/subscription/
+misc4.0/gpu/subscription/consumer_export.zip
+misc4.0/gpu/entitlement_copy.yaml

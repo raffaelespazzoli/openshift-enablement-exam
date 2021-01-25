@@ -1,0 +1,68 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  labels:
+    machine.openshift.io/cluster-api-cluster: ${cluster_name}
+  name: ${cluster_name}-${machine_type}-${zone}
+  namespace: openshift-machine-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: ${cluster_name}
+      machine.openshift.io/cluster-api-machineset: ${cluster_name}-${machine_type}-${zone}
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: ${cluster_name}
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: ${machine_type}
+        machine.openshift.io/cluster-api-machineset: ${cluster_name}-${machine_type}-${zone}
+    spec:
+      metadata: 
+        labels:
+          workload: ${machine_type}
+      taints:
+      - effect: NoSchedule
+        key: workload
+        value: ${machine_type}    
+      providerSpec:
+        value:
+          ami:
+            id: ${ami}
+          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          blockDevices:
+          - ebs:
+              encrypted: true
+              iops: 2000
+              kmsKey:
+                arn: ""
+              volumeSize: 100
+              volumeType: io1
+          credentialsSecret:
+            name: aws-cloud-credentials
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: ${cluster_name}-worker-profile
+          instanceType: ${instance_type}
+          kind: AWSMachineProviderConfig
+          metadata:
+            creationTimestamp: null
+          placement:
+            availabilityZone: ${zone}
+            region: ${region}
+          securityGroups:
+          - filters:
+            - name: tag:Name
+              values:
+              - ${cluster_name}-worker-sg
+          subnet:
+            filters:
+            - name: tag:Name
+              values:
+              - ${cluster_name}-private-${zone}
+          tags:
+          - name: kubernetes.io/cluster/${cluster_name}
+            value: owned
+          userDataSecret:
+            name: worker-user-data
