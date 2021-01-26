@@ -3,7 +3,7 @@
 follow instructions here to download subscription certificate:
 https://access.redhat.com/solutions/4908771
 
-copy teh content to the local `./subscription` folder
+copy the content to the local `./subscription` folder
 
 ## Create GPU-enabled nodes
 
@@ -38,5 +38,24 @@ oc new-project gpu-operator-resources
 oc apply -f cluster-policy.yaml -n gpu-operator-resources
 ```
 
+## Clean up
+
+```
+oc delete ClusterPolicy gpu-cluster-policy -n gpu-operator-resources
+oc delete NodeFeatureDiscovery nfd-master-server -n openshift-operators
+
+oc delete Subscription gpu-operator-certified -n openshift-operators
+oc delete Subscription nfd -n openshift-operators
+
+for z in a b c; do
+    export zone=${region}${z}
+    oc delete machineset ${cluster_name}-${machine_type}-${zone} -n openshift-machine-api
+done  
+
+# All nodes will reboot after deleting the following
+oc delete MachineConfig rhel-entitlement
+
+oc delete project gpu-operator-resources
+```
 
 https://gitlab.consulting.redhat.com/jhankes/gpu-cpu-benchmarks/-/blob/master/nvidia-disconnected/nvd-driver/Dockerfile.base
