@@ -38,6 +38,15 @@ oc new-project gpu-operator-resources
 oc apply -f cluster-policy.yaml -n gpu-operator-resources
 ```
 
+## Test/View GPU utilization
+
+```
+for pod in $(oc get pods --selector app=nvidia-driver-daemonset -o jsonpath='{.items[*].metadata.name}'); do
+  echo -e "\n=============================\n$pod\n=============================\n"
+  oc exec $pod -- nvidia-smi
+done
+```
+
 ## Clean up
 
 ```
