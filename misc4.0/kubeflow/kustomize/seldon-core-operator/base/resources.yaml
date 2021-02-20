@@ -3457,7 +3457,7 @@ spec:
           secretName: seldon-webhook-server-cert
 ---
 # Source: seldon-core-operator/templates/certificate_seldon-serving-cert.yaml
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
   labels:
@@ -3478,7 +3478,7 @@ spec:
   secretName: seldon-webhook-server-cert
 ---
 # Source: seldon-core-operator/templates/issuer_seldon-selfsigned-issuer.yaml
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: certmanager.k8s.io/v1alpha1
 kind: Issuer
 metadata:
   labels:
