@@ -6,7 +6,7 @@ set -o errexit
 function stop() {
   for region in us-east-1 us-east-2 us-west-1 us-west-2; do
     for clusterid in $@; do
-      instances=$(aws --region ${region} ec2 describe-instances --filters "Name=tag:kubernetes.io/cluster/${clusterid},Values=owned" | jq -r .Reservations[].Instances[].InstanceId | tr "\n" " ")
+      instances=$(aws --region ${region} ec2 describe-instances --filters Name=tag:kubernetes.io/cluster/${clusterid},Values=owned Name=instance-state-name,Values=running | jq -r .Reservations[].Instances[].InstanceId | tr "\n" " ")
       if [ ! -z "${instances}" ]; then
         aws --region ${region} ec2 stop-instances --instance-ids ${instances}
       fi
@@ -17,7 +17,7 @@ function stop() {
 function start() {
   for region in us-east-1 us-east-2 us-west-1 us-west-2; do
     for clusterid in $@; do
-      instances=$(aws --region ${region} ec2 describe-instances --filters "Name=tag:kubernetes.io/cluster/${clusterid},Values=owned" | jq -r .Reservations[].Instances[].InstanceId | tr "\n" " ")
+      instances=$(aws --region ${region} ec2 describe-instances --filters Name=tag:kubernetes.io/cluster/${clusterid},Values=owned Name=instance-state-name,Values=stopped | jq -r .Reservations[].Instances[].InstanceId | tr "\n" " ")
       echo for region $region found instances $instances
       if [ ! -z "${instances}" ]; then
         aws --region ${region} ec2 start-instances --instance-ids ${instances}

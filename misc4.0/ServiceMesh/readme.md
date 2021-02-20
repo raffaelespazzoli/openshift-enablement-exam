@@ -1,7 +1,7 @@
 ```shell
 oc new-project istio-system
 oc apply -f operators.yaml
-oc apply -f control_plane.yaml
+oc apply -f control_plane.yaml -n istio-system
 ```
 
 Testing:
