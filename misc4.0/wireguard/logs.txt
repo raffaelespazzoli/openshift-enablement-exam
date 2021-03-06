@@ -1,0 +1,1239 @@
++ dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm https://www.elrepo.org/elrepo-release-8.el8.elrepo.noarch.rpm
+Updating Subscription Management repositories.
+Unable to read consumer identity
+Subscription Manager is operating in container mode.
+Red Hat Enterprise Linux 8 for x86_64 - AppStre  18 MB/s |  26 MB     00:01    
+Red Hat Enterprise Linux 8 for x86_64 - BaseOS   20 MB/s |  28 MB     00:01    
+Red Hat Universal Base Image 8 (RPMs) - BaseOS  5.1 MB/s | 775 kB     00:00    
+Red Hat Universal Base Image 8 (RPMs) - AppStre  31 MB/s | 5.1 MB     00:00    
+Red Hat Universal Base Image 8 (RPMs) - CodeRea  69 kB/s |  13 kB     00:00    
+epel-release-latest-8.noarch.rpm                 63 kB/s |  22 kB     00:00    
+elrepo-release-8.el8.elrepo.noarch.rpm           69 kB/s |  13 kB     00:00    
+Dependencies resolved.
+================================================================================
+ Package             Arch        Version                Repository         Size
+================================================================================
+Installing:
+ elrepo-release      noarch      8.2-1.el8.elrepo       @commandline       13 k
+ epel-release        noarch      8-10.el8               @commandline       22 k
+
+Transaction Summary
+================================================================================
+Install  2 Packages
+
+Total size: 35 k
+Installed size: 37 k
+Downloading Packages:
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                        1/1 
+  Installing       : elrepo-release-8.2-1.el8.elrepo.noarch                 1/2 
+  Installing       : epel-release-8-10.el8.noarch                           2/2 
+  Running scriptlet: epel-release-8-10.el8.noarch                           2/2 
+  Verifying        : epel-release-8-10.el8.noarch                           1/2 
+  Verifying        : elrepo-release-8.2-1.el8.elrepo.noarch                 2/2 
+Installed products updated.
+
+Installed:
+  elrepo-release-8.2-1.el8.elrepo.noarch      epel-release-8-10.el8.noarch     
+
+Complete!
++ dnf install -y kmod-wireguard wireguard-tools iproute
+Updating Subscription Management repositories.
+Unable to read consumer identity
+Subscription Manager is operating in container mode.
+ELRepo.org Community Enterprise Linux Repositor 167 kB/s | 237 kB     00:01    
+Extra Packages for Enterprise Linux Modular 8 - 645 kB/s | 556 kB     00:00    
+Extra Packages for Enterprise Linux 8 - x86_64   14 MB/s | 8.9 MB     00:00    
+Dependencies resolved.
+================================================================================================
+ Package             Arch    Version                        Repository                      Size
+================================================================================================
+Installing:
+ iproute             x86_64  5.3.0-5.el8                    rhel-8-for-x86_64-baseos-rpms  665 k
+ kmod-wireguard      x86_64  3:1.0.20210219-1.el8_3.elrepo  elrepo                         112 k
+ wireguard-tools     x86_64  1.0.20200827-1.el8             epel                           123 k
+Installing dependencies:
+ cpio                x86_64  2.12-8.el8                     rhel-8-for-x86_64-baseos-rpms  265 k
+ dracut              x86_64  049-95.git20200804.el8_3.4     rhel-8-for-x86_64-baseos-rpms  368 k
+ kbd-legacy          noarch  2.0.4-10.el8                   rhel-8-for-x86_64-baseos-rpms  481 k
+ kbd-misc            noarch  2.0.4-10.el8                   rhel-8-for-x86_64-baseos-rpms  1.5 M
+ kernel-core         x86_64  4.18.0-240.15.1.el8_3          rhel-8-for-x86_64-baseos-rpms   30 M
+ kmod                x86_64  25-16.el8_3.1                  rhel-8-for-x86_64-baseos-rpms  126 k
+ libkcapi            x86_64  1.2.0-2.el8                    rhel-8-for-x86_64-baseos-rpms   48 k
+ libkcapi-hmaccalc   x86_64  1.2.0-2.el8                    rhel-8-for-x86_64-baseos-rpms   31 k
+ libmnl              x86_64  1.0.4-6.el8                    rhel-8-for-x86_64-baseos-rpms   30 k
+ linux-firmware      noarch  20200619-101.git3890db36.el8_3 rhel-8-for-x86_64-baseos-rpms  101 M
+ procps-ng           x86_64  3.3.15-3.el8                   rhel-8-for-x86_64-baseos-rpms  328 k
+ systemd-udev        x86_64  239-41.el8_3.1                 rhel-8-for-x86_64-baseos-rpms  1.3 M
+ xz                  x86_64  5.2.4-3.el8                    rhel-8-for-x86_64-baseos-rpms  153 k
+Installing weak dependencies:
+ hardlink            x86_64  1:1.3-6.el8                    rhel-8-for-x86_64-baseos-rpms   29 k
+ kbd                 x86_64  2.0.4-10.el8                   rhel-8-for-x86_64-baseos-rpms  390 k
+ kpartx              x86_64  0.8.4-5.el8                    rhel-8-for-x86_64-baseos-rpms  108 k
+ memstrack           x86_64  0.1.11-1.el8                   rhel-8-for-x86_64-baseos-rpms   48 k
+ pigz                x86_64  2.4-4.el8                      rhel-8-for-x86_64-baseos-rpms   79 k
+
+Transaction Summary
+================================================================================================
+Install  21 Packages
+
+Total download size: 138 M
+Installed size: 489 M
+Downloading Packages:
+(1/21): wireguard-tools-1.0.20200827-1.el8.x86_ 2.8 MB/s | 123 kB     00:00    
+(2/21): hardlink-1.3-6.el8.x86_64.rpm           136 kB/s |  29 kB     00:00    
+(3/21): libmnl-1.0.4-6.el8.x86_64.rpm           129 kB/s |  30 kB     00:00    
+(4/21): xz-5.2.4-3.el8.x86_64.rpm               773 kB/s | 153 kB     00:00    
+(5/21): pigz-2.4-4.el8.x86_64.rpm               568 kB/s |  79 kB     00:00    
+(6/21): cpio-2.12-8.el8.x86_64.rpm              625 kB/s | 265 kB     00:00    
+(7/21): memstrack-0.1.11-1.el8.x86_64.rpm       400 kB/s |  48 kB     00:00    
+(8/21): kbd-legacy-2.0.4-10.el8.noarch.rpm      2.7 MB/s | 481 kB     00:00    
+(9/21): kmod-wireguard-1.0.20210219-1.el8_3.elr 137 kB/s | 112 kB     00:00    
+(10/21): kpartx-0.8.4-5.el8.x86_64.rpm          974 kB/s | 108 kB     00:00    
+(11/21): kbd-2.0.4-10.el8.x86_64.rpm            2.8 MB/s | 390 kB     00:00    
+(12/21): procps-ng-3.3.15-3.el8.x86_64.rpm      2.6 MB/s | 328 kB     00:00    
+(13/21): libkcapi-hmaccalc-1.2.0-2.el8.x86_64.r 133 kB/s |  31 kB     00:00    
+(14/21): kbd-misc-2.0.4-10.el8.noarch.rpm       7.9 MB/s | 1.5 MB     00:00    
+(15/21): libkcapi-1.2.0-2.el8.x86_64.rpm        448 kB/s |  48 kB     00:00    
+(16/21): iproute-5.3.0-5.el8.x86_64.rpm         2.9 MB/s | 665 kB     00:00    
+(17/21): systemd-udev-239-41.el8_3.1.x86_64.rpm 7.6 MB/s | 1.3 MB     00:00    
+(18/21): dracut-049-95.git20200804.el8_3.4.x86_ 2.6 MB/s | 368 kB     00:00    
+(19/21): kmod-25-16.el8_3.1.x86_64.rpm          1.0 MB/s | 126 kB     00:00    
+(20/21): kernel-core-4.18.0-240.15.1.el8_3.x86_  40 MB/s |  30 MB     00:00    
+(21/21): linux-firmware-20200619-101.git3890db3  48 MB/s | 101 MB     00:02    
+--------------------------------------------------------------------------------
+Total                                            38 MB/s | 138 MB     00:03     
+warning: /var/cache/dnf/elrepo-f1a1068afed4d133/packages/kmod-wireguard-1.0.20210219-1.el8_3.elrepo.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID baadae52: NOKEY
+ELRepo.org Community Enterprise Linux Repositor 1.6 MB/s | 1.7 kB     00:00    
+Importing GPG key 0xBAADAE52:
+ Userid     : "elrepo.org (RPM Signing Key for elrepo.org) <secure@elrepo.org>"
+ Fingerprint: 96C0 104F 6315 4731 1E0B B1AE 309B C305 BAAD AE52
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-elrepo.org
+Key imported successfully
+warning: /var/cache/dnf/epel-fafd94c310c51e1e/packages/wireguard-tools-1.0.20200827-1.el8.x86_64.rpm: Header V4 RSA/SHA256 Signature, key ID 2f86d6a1: NOKEY
+Extra Packages for Enterprise Linux 8 - x86_64  1.6 MB/s | 1.6 kB     00:00    
+Importing GPG key 0x2F86D6A1:
+ Userid     : "Fedora EPEL (8) <epel@fedoraproject.org>"
+ Fingerprint: 94E2 79EB 8D8F 25B2 1810 ADF1 21EA 45AB 2F86 D6A1
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-8
+Key imported successfully
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                        1/1 
+  Installing       : kmod-25-16.el8_3.1.x86_64                             1/21 
+  Installing       : linux-firmware-20200619-101.git3890db36.el8_3.noar    2/21 
+  Installing       : libkcapi-1.2.0-2.el8.x86_64                           3/21 
+  Installing       : libkcapi-hmaccalc-1.2.0-2.el8.x86_64                  4/21 
+  Installing       : procps-ng-3.3.15-3.el8.x86_64                         5/21 
+  Installing       : kbd-misc-2.0.4-10.el8.noarch                          6/21 
+  Installing       : kpartx-0.8.4-5.el8.x86_64                             7/21 
+  Installing       : memstrack-0.1.11-1.el8.x86_64                         8/21 
+  Installing       : kbd-legacy-2.0.4-10.el8.noarch                        9/21 
+  Installing       : kbd-2.0.4-10.el8.x86_64                              10/21 
+  Installing       : systemd-udev-239-41.el8_3.1.x86_64                   11/21 
+  Running scriptlet: systemd-udev-239-41.el8_3.1.x86_64                   11/21 
+  Installing       : pigz-2.4-4.el8.x86_64                                12/21 
+  Installing       : xz-5.2.4-3.el8.x86_64                                13/21 
+  Installing       : cpio-2.12-8.el8.x86_64                               14/21 
+  Installing       : libmnl-1.0.4-6.el8.x86_64                            15/21 
+  Running scriptlet: libmnl-1.0.4-6.el8.x86_64                            15/21 
+  Installing       : hardlink-1:1.3-6.el8.x86_64                          16/21 
+  Installing       : dracut-049-95.git20200804.el8_3.4.x86_64             17/21 
+  Installing       : kernel-core-4.18.0-240.15.1.el8_3.x86_64             18/21 
+  Running scriptlet: kernel-core-4.18.0-240.15.1.el8_3.x86_64             18/21 
+  Installing       : kmod-wireguard-3:1.0.20210219-1.el8_3.elrepo.x86_6   19/21 
+  Running scriptlet: kmod-wireguard-3:1.0.20210219-1.el8_3.elrepo.x86_6   19/21 
+  Installing       : iproute-5.3.0-5.el8.x86_64                           20/21 
+  Installing       : wireguard-tools-1.0.20200827-1.el8.x86_64            21/21 
+  Running scriptlet: kernel-core-4.18.0-240.15.1.el8_3.x86_64             21/21 
+  Running scriptlet: kmod-wireguard-3:1.0.20210219-1.el8_3.elrepo.x86_6   21/21 
+dracut: No '/dev/log' or 'logger' included for syslog logging
+findmnt: can't read (null): No such file or directory
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs/etc/hostname': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs/etc/machine-id': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs/etc/vconsole.conf': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs/etc/locale.conf': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs/etc/sysctl.conf': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs/etc/udev/udev.conf': Operation not supported
+Failed to add dependency on unit, unit systemd-ask-password-plymouth.service does not exist.
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/161.cp.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/162.cp.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/163.cp.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/164.cp.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/165.cp.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/737.cp.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/880.cp.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/928.cp.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/972.cp.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/Agafari-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/Agafari-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/Agafari-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/Cyr_a8x14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/Cyr_a8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/Cyr_a8x8.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/ERRORS': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/Goha-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/Goha-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/Goha-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/GohaClassic-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/GohaClassic-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/GohaClassic-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/Lat2-Terminus16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/LatArCyrHeb-08.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/LatArCyrHeb-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/LatArCyrHeb-16+.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/LatArCyrHeb-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/LatArCyrHeb-19.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/LatGrkCyr-12x22.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/LatGrkCyr-8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/LatKaCyrHeb-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/Mik_8x16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.12x22': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.Arabic': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.Cyrillic': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.Ethiopic': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.Greek': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.Hebrew': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.Lat2-Terminus16': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.LatGrkCyr': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.Sun': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.cp1250': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.cybercafe': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.drdos': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.eurlatgr': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.eurlatgr.mappings': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.lat0': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.lat7': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.lat9': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/README.psfu': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/UniCyrExt_8x16.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/UniCyr_8x14.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/UniCyr_8x16.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/UniCyr_8x8.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/alt-8x14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/alt-8x16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/alt-8x8.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/altc-8x16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/aply16.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/arm8.fnt.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp1250.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp850-8x14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp850-8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp850-8x8.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp857.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp857.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp857.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp865-8x14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp865-8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp865-8x8.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp866-8x14.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp866-8x16.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cp866-8x8.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cybercafe.fnt.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/cyr-sun16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/default8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/default8x9.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/drdos8x14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/drdos8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/drdos8x6.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/drdos8x8.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/eurlatgr.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr737a-8x8.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr737a-9x14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr737a-9x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr737b-8x11.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr737b-9x16-medieval.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr737c-8x14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr737c-8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr737c-8x6.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr737c-8x7.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr737c-8x8.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr737d-8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr928-8x16-thin.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr928-9x14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr928-9x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr928a-8x14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr928a-8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr928b-8x14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/gr928b-8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/greek-polytonic.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso01-12x22.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso01.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso01.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso01.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso02-12x22.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso02.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso02.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso02.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso03.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso03.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso03.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso04.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso04.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso04.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso05.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso05.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso05.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso06.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso06.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso06.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso07.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso07.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso07u-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso08.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso08.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso08.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso09.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso09.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso09.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso10.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso10.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/iso10.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/koi8-14.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/koi8c-8x16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/koi8r-8x14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/koi8r-8x16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/koi8r-8x8.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/koi8r.8x8.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/koi8u_8x14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/koi8u_8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/koi8u_8x8.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat0-08.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat0-10.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat0-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat0-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat0-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat0-sun16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat1-08.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat1-10.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat1-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat1-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat1-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat2-08.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat2-10.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat2-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat2-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat2-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat2-sun16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat2a-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4-08.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4-10.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4-16+.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4-19.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4a-08.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4a-10.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4a-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4a-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4a-16+.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4a-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat4a-19.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat5-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat5-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat5-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat7-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat7a-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat7a-16.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9-08.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9-10.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9-12.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9-14.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9-16.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9u-08.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9u-10.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9u-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9u-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9u-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9v-08.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9v-10.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9v-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9v-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9v-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9w-08.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9w-10.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9w-12.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9w-14.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/lat9w-16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/latarcyrheb-sun16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/latarcyrheb-sun32.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/pancyrillic.f16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-5.a0-ff.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-6.a0-ff.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-6.a0-ff.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-1.a0-ff.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-1.a0-ff.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-10.a0-ff.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-10.a0-ff.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-10.a0-ff.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-2.a0-ff.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-2.a0-ff.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-2.a0-ff.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-3.a0-ff.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-3.a0-ff.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-3.a0-ff.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-4.a0-ff.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-4.a0-ff.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-4.a0-ff.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-5.a0-ff.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-5.a0-ff.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-6.a0-ff.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-7.a0-ff.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-7.a0-ff.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-7.a0-ff.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-8.a0-ff.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-8.a0-ff.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-8.a0-ff.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-9.a0-ff.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-9.a0-ff.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-9.a0-ff.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/ascii.20-7f.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/ascii.20-7f.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/ascii.20-7f.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/cp437.00-1f.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/cp437.00-1f.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/cp437.00-1f.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/none.00-17.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/none.00-17.14.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/none.00-17.16.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts/8859-1.a0-ff.08.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/partialfonts': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/ruscii_8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/ruscii_8x8.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/sun12x22.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/t.fnt.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/t850b.fnt.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/tcvn8x16.psf.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consolefonts/viscii10-8x16.psfu.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-10_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-13_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-14_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-15_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-1_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-2_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-3_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-4_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-5_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-6_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-7_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-8_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/8859-9_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/baltic.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp1250_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp1251_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp437_to_iso01.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp437_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp737_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp775_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp850_to_iso01.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp850_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp852_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp853_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp855_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp857_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp860_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp861_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp862_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp863_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp864_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp865_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp866_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp869_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/cp874_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/iso02_to_cp1250.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/koi2alt': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/koi8-r_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/koi8-u_to_uni.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/koi8u2ruscii': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/latin2u.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/null': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/space': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/trivial': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/utflist': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/vga2iso': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/viscii1.0_to_tcvn.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/viscii1.0_to_viscii1.1.trans': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/consoletrans/zero': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-be.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-de-latin1-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-de-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-de_CH.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-dk-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-es.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-fi-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-fr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-fr_CH-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-it.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-pl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-pt-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-se.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-template.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-uk.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all/mac-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/all': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/include/mac-azerty-layout.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/include/mac-euro.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/include/mac-euro2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/include/mac-linux-keys-bare.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/include/mac-qwerty-layout.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/include/mac-qwertz-layout.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac/include': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/mac': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sun-pl-altgraph.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sun-pl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sundvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunkeymap.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt4-es.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt4-fi-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt4-no-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt5-cz-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt5-de-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt5-es.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt5-fi-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt5-fr-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt5-ru.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt5-uk.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt5-us-cz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun/sunt6-uk.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/sun': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-be.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-de-latin1-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-de-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-de_CH.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-dk-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-es.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-fi-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-fr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-fr_CH-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-it.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-pl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-pt-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-se.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-template.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-uk.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all/mac-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/all': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/include/mac-azerty-layout.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/include/mac-euro.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/include/mac-euro2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/include/mac-linux-keys-bare.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/include/mac-qwerty-layout.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/include/mac-qwertz-layout.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc/include': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/ppc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/amiga/amiga-de.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/amiga/amiga-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/amiga': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/atari/atari-de.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/atari/atari-se.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/atari/atari-uk-falcon.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/atari/atari-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/atari': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/azerty/azerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/azerty/be-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/azerty/fr-latin0.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/azerty/fr-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/azerty/fr-latin9.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/azerty/fr-old.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/azerty/fr-pc.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/azerty/fr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/azerty/wangbe.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/azerty/wangbe2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/azerty': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/bepo/fr-bepo-latin9.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/bepo/fr-bepo.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/bepo': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/carpalx/carpalx-full.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/carpalx/carpalx.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/carpalx': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/colemak/en-latin9.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/colemak': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/ANSI-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak-ca-fr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak-es.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak-fr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak-l.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak-la.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak-programmer.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak-r.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak-ru.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak-sv-a1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak-sv-a5.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak-uk.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak/no-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/dvorak': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/fgGIod/tr_f-latin5.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/fgGIod/trf-fgGIod.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/fgGIod': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/applkey.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/azerty-layout.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/backspace.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/compose.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/ctrl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/euro.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/euro1.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/euro1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/euro2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/keypad.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/linux-keys-bare.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/linux-keys-extd.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/linux-with-alt-and-altgr.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/linux-with-modeshift-altgr.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/linux-with-two-alt-keys.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/qwerty-layout.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/qwertz-layout.inc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/unicode.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include/windowkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/include': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/olpc/es-olpc.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/olpc/pt-olpc.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/olpc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/nl2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/no-latin1.doc': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/no-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/no.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/pc110.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/pl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/pl1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/pl2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/pl3.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/pl4.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/pt-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/pt-latin9.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/pt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ro.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ro_std.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ru-cp1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ru-ms.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ru-yawerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ru.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ru1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ru2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ru3.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ru4.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ru_win.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_alt-CP1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_alt-KOI8-R.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_alt-UTF-8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_alt_sh-UTF-8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_cplk-CP1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_cplk-KOI8-R.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_cplk-UTF-8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_ct_sh-CP1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_ct_sh-KOI8-R.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_ct_sh-UTF-8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_ctrl-CP1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_ctrl-KOI8-R.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ruwin_ctrl-UTF-8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/se-fi-ir209.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/se-fi-lat6.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/se-ir209.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/se-lat6.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/se-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/sk-prog-qwerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/sk-qwerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/sr-cy.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/sr-latin.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/sv-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/tj_alt-UTF8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/tr_q-latin5.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/tralt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/trf.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/trq.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ttwin_alt-UTF-8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ttwin_cplk-UTF-8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ttwin_ct_sh-UTF-8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ttwin_ctrl-UTF-8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ua-cp1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ua-utf-ws.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ua-utf.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ua-ws.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ua.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/uk.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/us-acentos.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/bashkir.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/bg-cp1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/bg-cp855.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/bg_bds-cp1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/bg_bds-utf8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/bg_pho-cp1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/bg_pho-utf8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/br-abnt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/br-abnt2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/br-latin1-abnt2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/br-latin1-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/by-cp1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/by.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/bywin-cp1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/cf.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/cz-cp1250.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/cz-lat2-prog.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/cz-lat2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/cz-qwerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/defkeymap.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/defkeymap_V1.0.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/dk-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/dk.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/emacs.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/emacs2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/es-cp850.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/es.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/et-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/et.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/fi.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/gr-pc.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/gr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/hu101.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/hypermap.m4': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/il-heb.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/il-phonetic.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/il.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/is-latin1-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/is-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/it-ibm.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/it.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/it2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/jp106.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/kazakh.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ko.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/ky_alt_sh-UTF-8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/kyrgyz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/la-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/lt.baltic.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/lt.l4.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/lt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/lv-tilde.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/lv.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/mk-cp1251.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/mk-utf.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/mk.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/mk0.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty/nl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwerty': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/croat.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/cz-us-qwertz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/cz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/de-latin1-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/de-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/de-mobii.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/de.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/de_CH-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/de_alt_UTF-8.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/fr_CH-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/fr_CH.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/hu.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/sg-latin1-lk450.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/sg-latin1.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/sg.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/sg.map.sg-decimal-separator': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/sk-prog-qwertz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/sk-qwertz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz/slovene.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386/qwertz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/i386': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/include/compose.8859_7': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/include/compose.8859_8': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/include/compose.latin': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/include/compose.latin1': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/include/compose.latin2': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/include/compose.latin3': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/include/compose.latin4': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/include/vim-compose.latin1': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy/include': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/legacy': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/al-plisi.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/al.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/at-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/at-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/at-sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/at.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/az.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ba-alternatequotes.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ba-unicode.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ba-unicodeus.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ba-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ba.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/be-iso-alternate.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/be-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/be-oss.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/be-oss_latin9.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/be-oss_sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/be-sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/be-wang.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/be.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/br-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/br-nativo-epo.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/br-nativo-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/br-nativo.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/br-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/br-thinkpad.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/br.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/by-latin.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ca-eng.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ca-fr-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ca-fr-legacy.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ca-multi.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ca-multix.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ca.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ch-de_mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ch-de_nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ch-de_sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ch-fr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ch-fr_mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ch-fr_nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ch-fr_sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ch-legacy.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ch.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cm-azerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cm-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cm-french.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cm-mmuock.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cm-qwerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cm.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cn-altgr-pinyin.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cn.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cz-bksl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cz-dvorak-ucw.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cz-qwerty-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cz-qwerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cz-qwerty_bksl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cz-rus.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/cz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-T3.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-deadacute.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-deadgraveacute.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-deadtilde.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-dsb.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-dsb_qwertz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-mac_nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-neo.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-qwerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-ro.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-ro_nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de-tr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/de.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/dk-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/dk-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/dk-mac_nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/dk-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/dk-winkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/dk.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/dz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ee-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ee-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ee-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ee.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/epo-legacy.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/epo.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/es-ast.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/es-cat.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/es-deadtilde.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/es-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/es-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/es-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/es-sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/es-winkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/es.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fi-classic.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fi-kotoistus.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fi-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fi-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fi-smi.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fi-winkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fo-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fo.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-afnor.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-azerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-bepo.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-bepo_afnor.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-bepo_latin9.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-bre.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-latin9.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-latin9_nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-latin9_sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-oci.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-oss.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-oss_latin9.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-oss_nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-oss_sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/fr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gb-colemak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gb-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gb-dvorakukp.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gb-extd.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gb-intl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gb-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gb-mac_intl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gb-pl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gb.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ge-ergonomic.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ge-mess.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ge-ru.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ge.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gh-akan.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gh-avn.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gh-ewe.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gh-fula.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gh-ga.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gh-generic.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gh-gillbt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gh-hausa.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/gh.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hr-alternatequotes.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hr-unicode.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hr-unicodeus.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hr-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-101_qwerty_comma_dead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-101_qwerty_comma_nodead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-101_qwerty_dot_dead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-101_qwerty_dot_nodead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-101_qwertz_comma_dead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-101_qwertz_comma_nodead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-101_qwertz_dot_dead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-101_qwertz_dot_nodead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-102_qwerty_comma_dead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-102_qwerty_comma_nodead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-102_qwerty_dot_dead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-102_qwerty_dot_nodead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-102_qwertz_comma_dead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-102_qwertz_comma_nodead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-102_qwertz_dot_dead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-102_qwertz_dot_nodead.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-qwerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu-standard.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/hu.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ie-CloGaelach.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ie-UnicodeExpert.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ie-ogam_is434.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ie.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/il.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/in-eng.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/iq-ku.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/iq-ku_alt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/iq-ku_ara.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/iq-ku_f.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ir-ku.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ir-ku_alt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ir-ku_ara.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ir-ku_f.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/is-Sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/is-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/is-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/is-mac_legacy.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/is-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/is.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/it-fur.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/it-geo.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/it-ibm.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/it-intl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/it-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/it-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/it-scn.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/it-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/it-winkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/it.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/jp-OADG109A.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/jp-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/jp-kana86.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/jp.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ke-kik.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ke.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/kr-kr104.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/kr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/kz-latin.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/latam-colemak-gaming.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/latam-colemak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/latam-deadtilde.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/latam-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/latam-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/latam-sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/latam.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lk-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lt-ibm.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lt-lekp.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lt-lekpa.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lt-std.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lt-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lv-adapted.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lv-apostrophe.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lv-ergonomic.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lv-fkey.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lv-modern.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lv-tilde.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/lv.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ma-french.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/md-gag.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/md.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/me-latinalternatequotes.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/me-latinunicode.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/me-latinunicodeyz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/me-latinyz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/me.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ml-fr-oss.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ml-us-intl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ml-us-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ml.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/mm.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/mt-alt-gb.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/mt-alt-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/mt-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/mt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ng-hausa.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ng-igbo.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ng-yoruba.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ng.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/nl-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/nl-std.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/nl-sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/nl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/no-colemak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/no-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/no-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/no-mac_nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/no-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/no-smi.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/no-smi_nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/no-winkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/no.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ph-capewell-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ph-capewell-qwerf2k6.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ph-colemak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ph-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ph.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pl-csb.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pl-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pl-dvorak_altquotes.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pl-dvorak_quotes.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pl-dvp.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pl-legacy.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pl-qwertz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pl-szl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pt-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pt-mac_nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pt-mac_sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pt-nativo-epo.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pt-nativo-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pt-nativo.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pt-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pt-sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/pt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ro-cedilla.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ro-std.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ro-std_cedilla.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ro-winkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ro.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/rs-latin.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/rs-latinalternatequotes.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/rs-latinunicode.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/rs-latinunicodeyz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/rs-latinyz.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/ru-cv_latin.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/se-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/se-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/se-nodeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/se-smi.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/se-svdvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/se-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/se-us_dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/se.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/si-alternatequotes.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/si-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/si.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/sk-bksl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/sk-qwerty.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/sk-qwerty_bksl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/sk.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/sy-ku.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/sy-ku_alt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/sy-ku_f.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tm-alt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tm.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tr-alt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tr-crh.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tr-crh_alt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tr-crh_f.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tr-f.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tr-intl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tr-ku.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tr-ku_alt.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tr-ku_f.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tr-sundeadkeys.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tw-indigenous.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tw-saisiyat.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/tw.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-alt-intl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-altgr-intl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-colemak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-dvorak-alt-intl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-dvorak-classic.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-dvorak-intl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-dvorak-l.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-dvorak-r.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-dvorak.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-dvp.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-euro.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-hbs.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-intl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-mac.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-norman.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-olpc2.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-workman-intl.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us-workman.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/uz-latin.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/vn-fr.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/vn-us.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb/vn.map.gz': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/keymaps/xkb': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-1.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-10.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-13.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-14.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-15.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-2.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-3.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-4.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-5.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-6.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-7.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-8.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/8859-9.a0-ff.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/ECMA144.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/README': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/armscii8.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/ascii.20-7f.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp1250.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp437.00-1f.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp437.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp737.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp737a.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp737b.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp737c.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp850.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp850a.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp850b.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp850z.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp865.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp865a.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp866.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cp866a.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cybercafe.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/cyralt.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/def.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/empty.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/ethiopic.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso01.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso02.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso03.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso04.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso05.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso06.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso07.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso07u.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso08.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso09.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso10.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/iso15.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/koi8r.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/koi8u.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/lat1.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/lat1u.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/lat2.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/lat2u.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/lat4.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/lat4u.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/lat7.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/lat9u.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/lat9v.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/lat9w.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/ruscii.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/tcvn.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/lib/kbd/unimaps/viscii.uni': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/share/terminfo/l/linux': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/share/terminfo/v/vt100': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/share/terminfo/v/vt102': Operation not supported
+cp: setting attributes for '/var/tmp/dracut.zV9FdD/initramfs//usr/share/terminfo/v/vt220': Operation not supported
+/var/tmp/rpm-tmp.u93v0b: line 17: cmp: command not found
+
+  Running scriptlet: wireguard-tools-1.0.20200827-1.el8.x86_64            21/21 
+  Running scriptlet: systemd-udev-239-41.el8_3.1.x86_64                   21/21 
+  Verifying        : kmod-wireguard-3:1.0.20210219-1.el8_3.elrepo.x86_6    1/21 
+  Verifying        : wireguard-tools-1.0.20200827-1.el8.x86_64             2/21 
+  Verifying        : hardlink-1:1.3-6.el8.x86_64                           3/21 
+  Verifying        : libmnl-1.0.4-6.el8.x86_64                             4/21 
+  Verifying        : cpio-2.12-8.el8.x86_64                                5/21 
+  Verifying        : xz-5.2.4-3.el8.x86_64                                 6/21 
+  Verifying        : pigz-2.4-4.el8.x86_64                                 7/21 
+  Verifying        : kbd-legacy-2.0.4-10.el8.noarch                        8/21 
+  Verifying        : memstrack-0.1.11-1.el8.x86_64                         9/21 
+  Verifying        : kpartx-0.8.4-5.el8.x86_64                            10/21 
+  Verifying        : kbd-2.0.4-10.el8.x86_64                              11/21 
+  Verifying        : libkcapi-hmaccalc-1.2.0-2.el8.x86_64                 12/21 
+  Verifying        : kbd-misc-2.0.4-10.el8.noarch                         13/21 
+  Verifying        : procps-ng-3.3.15-3.el8.x86_64                        14/21 
+  Verifying        : libkcapi-1.2.0-2.el8.x86_64                          15/21 
+  Verifying        : iproute-5.3.0-5.el8.x86_64                           16/21 
+  Verifying        : linux-firmware-20200619-101.git3890db36.el8_3.noar   17/21 
+  Verifying        : systemd-udev-239-41.el8_3.1.x86_64                   18/21 
+  Verifying        : dracut-049-95.git20200804.el8_3.4.x86_64             19/21 
+  Verifying        : kmod-25-16.el8_3.1.x86_64                            20/21 
+  Verifying        : kernel-core-4.18.0-240.15.1.el8_3.x86_64             21/21 
+Installed products updated.
+
+Installed:
+  cpio-2.12-8.el8.x86_64                                                        
+  dracut-049-95.git20200804.el8_3.4.x86_64                                      
+  hardlink-1:1.3-6.el8.x86_64                                                   
+  iproute-5.3.0-5.el8.x86_64                                                    
+  kbd-2.0.4-10.el8.x86_64                                                       
+  kbd-legacy-2.0.4-10.el8.noarch                                                
+  kbd-misc-2.0.4-10.el8.noarch                                                  
+  kernel-core-4.18.0-240.15.1.el8_3.x86_64                                      
+  kmod-25-16.el8_3.1.x86_64                                                     
+  kmod-wireguard-3:1.0.20210219-1.el8_3.elrepo.x86_64                           
+  kpartx-0.8.4-5.el8.x86_64                                                     
+  libkcapi-1.2.0-2.el8.x86_64                                                   
+  libkcapi-hmaccalc-1.2.0-2.el8.x86_64                                          
+  libmnl-1.0.4-6.el8.x86_64                                                     
+  linux-firmware-20200619-101.git3890db36.el8_3.noarch                          
+  memstrack-0.1.11-1.el8.x86_64                                                 
+  pigz-2.4-4.el8.x86_64                                                         
+  procps-ng-3.3.15-3.el8.x86_64                                                 
+  systemd-udev-239-41.el8_3.1.x86_64                                            
+  wireguard-tools-1.0.20200827-1.el8.x86_64                                     
+  xz-5.2.4-3.el8.x86_64                                                         
+
+Complete!
++ dnf clean packages
+Updating Subscription Management repositories.
+Unable to read consumer identity
+Subscription Manager is operating in container mode.
+0 files removed
++ modprobe wireguard
+modprobe: FATAL: Module wireguard not found in directory /lib/modules/4.18.0-240.10.1.el8_3.x86_64

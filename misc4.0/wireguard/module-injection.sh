@@ -16,11 +16,15 @@ if [ -z "${KERNEL_CORE}" ] || [ -z "${KERNEL_DEVEL}" ] || [ -z "${KERNEL_HEADERS
   KERNEL_HEADERS=kernel-headers-${KERNEL_VERSION}
 fi
 
-#dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm https://www.elrepo.org/elrepo-release-8.el8.elrepo.noarch.rpm
-dnf install -y --enablerepo=rhocp-${RHOCP_VERSION}-for-rhel-8-x86_64-rpms ${KERNEL_DEVEL} ${KERNEL_HEADERS} ${KERNEL_CORE}
-dnf install -y iproute iputils kmod-wireguard wireguard-tools
+dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm https://www.elrepo.org/elrepo-release-8.el8.elrepo.noarch.rpm
+#dnf install -y --enablerepo=rhocp-${RHOCP_VERSION}-for-rhel-8-x86_64-rpms ${KERNEL_DEVEL} ${KERNEL_HEADERS} ${KERNEL_CORE}
+dnf install -y ${KERNEL_DEVEL} ${KERNEL_HEADERS} ${KERNEL_CORE}
+dnf install -y kmod-wireguard wireguard-tools iproute
 dnf clean packages
 
 modprobe wireguard
+
+ip link add dev wg0-test type wireguard
+ip link delete dev wg0-test
 
 sleep infinity
