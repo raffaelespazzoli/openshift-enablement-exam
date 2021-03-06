@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: wg-ds
+spec:
+  selector:
+    matchLabels:
+      name: wg-ds
+  template:
+    metadata:
+      labels:
+        name: wg-ds      
+    spec:
+      containers:                            
+      - image: registry.access.redhat.com/ubi8
+        imagePullPolicy: Always
+        name: wg-rhcos
+        securityContext:
+          privileged: true
+        command: ["/bin/bash", "-c", "/injection/module-injection.sh"]  
+        volumeMounts:
+          - name: overlay
+            mountPath: /tmp/overlay
+            readOnly: true
+          - name: secret-entitlement
+            mountPath: /etc/pki/entitlement
+            readOnly: true
+          - name: module-injection
+            mountPath: /injection
+            readOnly: true                        
+      restartPolicy: Always
+      volumes:
+      - name: overlay
+        hostPath:
+          path: /var/lib/containers/storage/overlay
+      - name: secret-entitlement
+        secret:
+          secretName: entitlement
+      - name: module-injection
+        configMap:
+          name: module-injection
+          defaultMode: 0777   

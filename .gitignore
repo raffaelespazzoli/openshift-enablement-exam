@@ -23,3 +23,5 @@ misc4.0/redis/charts
 misc4.0/gpu/subscription/
 misc4.0/gpu/subscription/consumer_export.zip
 misc4.0/gpu/entitlement_copy.yaml
+
+misc4.0/wireguard/entitlements/

@@ -1,6 +1,8 @@
 ```shell
-oc new-project istio-system
+
+oc create namespace openshift-operators-redhat
 oc apply -f operators.yaml
+oc new-project istio-system
 oc apply -f control_plane.yaml -n istio-system
 ```
 

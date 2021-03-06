@@ -1,10 +1,17 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: global-operators
+  namespace: openshift-operators-redhat
+spec: {}
+---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: "elasticsearch-operator"
   namespace: "openshift-operators-redhat" 
 spec:
-  channel: '4.6'
+  channel: '5.0'
   installPlanApproval: Automatic
   name: elasticsearch-operator
   source: redhat-operators
