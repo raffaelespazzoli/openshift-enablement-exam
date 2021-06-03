@@ -55,11 +55,11 @@ envsubst < ./cert-patches.yaml | oc apply -f - -n ${project}
 
 
 # if you didn't install resource-locker-operator run this (and re-run it every time certificates are renewed)
-oc get secret amq-amqp-tls-secret -o jsonpath='{.data.keystore\.jks}' -n ${project} | base64 -d > /tmp/broker.ks
-oc get secret amq-amqp-tls-secret -o jsonpath='{.data.truststore\.jks}' -n ${project} | base64 -d > /tmp/client.ts
+oc extract secret/amq-amqp-tls-secret --keys=keystore.jks --to - -n ${project} > /tmp/broker.ks
+oc extract secret/amq-amqp-tls-secret --keys=truststore.jks --to - -n ${project} > /tmp/client.ts
 oc set data secret/amq-amqp-tls-secret --from-file=/tmp/broker.ks --from-file=/tmp/client.ts -n ${project}
-oc get secret amq-console-secret -o jsonpath='{.data.keystore\.jks}' -n ${project} | base64 -d > /tmp/broker.ks
-oc get secret amq-console-secret -o jsonpath='{.data.truststore\.jks}' -n ${project} | base64 -d > /tmp/client.ts
+oc extract secret/amq-console-secret --keys=keystore.jks --to - -n ${project} > /tmp/broker.ks
+oc extract secret/amq-console-secret --keys=truststore.jks --to - -n ${project} > /tmp/client.ts
 oc set data secret/amq-console-secret --from-file=/tmp/broker.ks --from-file=/tmp/client.ts -n ${project}
 ```
 
@@ -118,7 +118,7 @@ patching the certs
 envsubst < ./interconnect-cert-patches.yaml | oc apply -f - -n ${project}
 
 # If you didn't install resource locker, run the following (and every time the certificates are renewed)
-oc get secret amq-amqp-mesh-client-tls-secret -o jsonpath='{.data.ca.crt}' -n ${project} | base64 -d > /tmp/tls.crt
+oc extract secret/amq-amqp-tls-secret --keys=ca.crt --to - -n ${project} > /tmp/tls.crt
 oc set data secret/amq-amqp-mesh-client-tls-secret --from-file=/tmp/tls.crt -n ${project}
 ```
 
