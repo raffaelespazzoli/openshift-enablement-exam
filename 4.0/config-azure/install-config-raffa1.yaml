@@ -1,17 +1,17 @@
 apiVersion: v1
-baseDomain: catchall.azure.devcluster.openshift.com
+baseDomain: acm-demo.azure.devcluster.openshift.com
 compute:
 - hyperthreading: Enabled
   name: worker
   platform: {}
-  replicas: 4
+  replicas: 6
 controlPlane:
   hyperthreading: Enabled
   name: master
   platform: {}
   replicas: 3
 metadata:
-  name: cluster-raffa
+  name: control-cluster
 networking:
   clusterNetwork:
   - cidr: 10.128.0.0/14

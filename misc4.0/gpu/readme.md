@@ -31,9 +31,11 @@ sed  "s/BASE64_ENCODED_PEM_FILE/$(base64 -w0 ${file})/g" entitlement.yaml | oc a
 ## Deploy operators and policy
 
 ```shell
-oc apply -f nfd-operator.yaml
-oc apply -f gpu-operator.yaml
-oc apply -f nfd-discovery.yaml -n openshift-operators
+oc new-project nfd-operator
+oc apply -f nfd-operator.yaml -n nfd-operator
+oc new-project gpu-operator
+oc apply -f gpu-operator.yaml -n gpu-operator
+oc apply -f nfd-discovery.yaml -n nfd-operator
 oc new-project gpu-operator-resources
 oc apply -f cluster-policy.yaml -n gpu-operator-resources
 ```

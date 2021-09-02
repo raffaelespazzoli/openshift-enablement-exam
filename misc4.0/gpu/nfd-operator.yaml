@@ -1,3 +1,9 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: "nfd-operator"
+spec: {}
+---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
@@ -5,7 +11,6 @@ metadata:
   labels:
     operators.coreos.com/nfd.openshift-operators: ""
   name: nfd
-  namespace: openshift-operators
 spec:
   channel: "4.6"
   installPlanApproval: Automatic

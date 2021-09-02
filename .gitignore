@@ -25,3 +25,6 @@ misc4.0/gpu/subscription/consumer_export.zip
 misc4.0/gpu/entitlement_copy.yaml
 
 misc4.0/wireguard/entitlements/
+4.0/azure/service-principal.json
+misc4.0/github-actions-runner-controller/raffa-actions-runner-controller.2021-08-19.private-key.pem
+misc4.0/github-actions-runner-controller/client-secret.txt

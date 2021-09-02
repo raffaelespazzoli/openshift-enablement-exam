@@ -1,0 +1,35 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: example-runner-deployment
+spec:
+  template:
+    spec:
+      repository: raffaelespazzoli/actions-runner-controller
+      dockerdWithinRunnerContainer: false
+      dockerEnabled: false
+      #image: quay.io/redhat-github-actions/java-runner-11:latest
+      ephemeral: true
+      #pod spec
+      enableServiceLinks: false
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: example-runner-deployment-autoscaler
+spec:
+  scaleTargetRef:
+    name: example-runner-deployment
+  scaleUpTriggers:
+  - githubEvent:
+      checkRun:
+        types: ["created"]
+        status: "queued"
+    amount: 1
+    duration: "5m"    
+  minReplicas: 0
+  maxReplicas: 3
+  metrics:
+  - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
+    repositoryNames:
+    - raffaelespazzoli/actions-runner-controller

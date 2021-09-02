@@ -1,0 +1,35 @@
+apiVersion: v1
+baseDomain: demo.gcp.red-chesterfield.com
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  platform: {}
+  replicas: 3
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  platform: {}
+  replicas: 3
+metadata:
+  creationTimestamp: null
+  name: control-cluster
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 10.0.0.0/16
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  gcp:
+    projectID: gc-acm-leads
+    region: us-east4
+publish: External
+pullSecret: |
+  ${pull_secret}
+sshKey: |
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC68Y4aTWi9up2NlwpuZ7s8ZrLlEniik4DSD7moH2yu8PRaGKIAGfCLbsLUAIurMhLC9gs2+CN/Q5NY74/0Pdt5PST/f3z5ORlIMTEJQVW3ytBD5Qe5ccQZt2xUVK2qcDLfWuHoEACIvZlUd/SaoOizBzSrzqo1iqq/UVBWYdL6/TcWsxGYSa0k5lWvMeE402t/thEl5S61SCGwCk+BJn5QTpyu4HqH+1tLa4nVvmNMoVP0nMIPU76zZAoiYpvJak+wl6+zMMbR1vNtTnZjGC6QQVOtlPiU2Q/Z3WpQuhTDy6QruSmWG9v/Iad9Z+RwNM6pozGgsI82DMcuJQxjN84L457UlDC0dp2VvNR7PhLhaIrR4cpMo0tjpk1Ss0lMqbz6QOUdRGVDL95KYG4BwFxTo2scBcx/0owk7gnTCbZVP6dNdxe8U74Wb/dIVsDUm0O4Y7orzxKYTJoLUdyqcij49gYPqGWyLQAV7nQ50pJVhMjfqFf0ixZ8kfPSkmM4eC8= rspazzol@rspazzol
