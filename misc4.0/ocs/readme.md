@@ -24,7 +24,8 @@ done
 ## deploy storage operator
 
 ```shell
-oc new-project openshift-storage
+oc adm new-project openshift-storage
+oc label namespace openshift-storage openshift.io/cluster-monitoring="true"
 oc apply -f operator.yaml
 ```
 

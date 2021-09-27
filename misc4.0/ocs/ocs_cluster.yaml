@@ -5,6 +5,8 @@ metadata:
   namespace: openshift-storage
 spec:
   managedNodes: false
+  encryption:
+    enable: true
   storageDeviceSets:
     - count: 3
       dataPVCTemplate:
