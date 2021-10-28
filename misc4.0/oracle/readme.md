@@ -1,3 +1,6 @@
+# Oracle set up sharded mode
+
+```shell
 oc apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.0/cert-manager.yaml
 oc apply -f https://raw.githubusercontent.com/oracle/oracle-database-operator/main/oracle-database-operator.yaml
 
@@ -40,3 +43,4 @@ oc create secret docker-registry ocr-reg-cred --from-file=.dockerconfigjson=${XD
 
 oc adm policy add-scc-to-user privileged -z default -n shns
 oc apply -f ./sharded-deployment.yaml -n shns
+```
