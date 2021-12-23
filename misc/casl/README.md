@@ -54,6 +54,7 @@ git fetch upstream
 git rebase upstream/master
 git push origin
 
+git checkout main
 git fetch upstream
 git rebase upstream/main
 git push origin
