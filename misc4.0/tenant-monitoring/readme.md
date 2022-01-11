@@ -7,18 +7,10 @@ export deploy_namespace=tenant-monitoring
 oc new-project ${deploy_namespace}
 ```
 
-Deploy prometheus operator
+Deploy prometheus and grafana operators
 
 ```shell
-envsubst < prometheus-operator.yaml | oc apply -f - -n ${deploy_namespace}
-```
-
-Deploy grafana operator
-
-```shell
-oc apply -f ./grafana-operator/crds
-oc apply -f ./grafana-operator/manifests -n ${deploy_namespace}
-cat ./grafana-operator/cluster_role_binding_grafana_operator.yaml | envsubst | oc apply -f -
+envsubst < prometheus-grafana-operators.yaml | oc apply -f - -n ${deploy_namespace}
 ```
 
 Deploy stack
