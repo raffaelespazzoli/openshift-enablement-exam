@@ -1,0 +1,14 @@
+apiVersion: network.openshift.io/v1
+kind: HostSubnet
+metadata:
+  name: openshfit-f5-node
+  annotations:
+    pod.network.openshift.io/fixed-vnid-host: "0"
+    pod.network.openshift.io/assign-subnet: "true"
+# provide a name for the node that will serve as BIG-IP's entry into the cluster
+host: openshfit-f5-node
+# The hostIP address will be the BIG-IP interface address routable to the
+# OpenShift Origin nodes.
+# This address is the BIG-IP VTEP in the SDN's VXLAN.
+hostIP: 10.0.14.122
+subnet: "10.131.2.0/23"

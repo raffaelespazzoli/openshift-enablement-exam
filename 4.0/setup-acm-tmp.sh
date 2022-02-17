@@ -20,5 +20,5 @@ function create_openshift()
 
 #download_installer
 #configure_aws_credentials
-CLUSTER_ID=1-acm create_openshift 
-#CLUSTER_ID=2-acm create_openshift 
+#CLUSTER_ID=1-acm create_openshift 
+CLUSTER_ID=2-acm create_openshift 

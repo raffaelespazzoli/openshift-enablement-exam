@@ -1,0 +1,58 @@
+ bigip_login_secret: bigip-login
+ rbac:
+   create: true
+ serviceAccount:
+   # Specifies whether a service account should be created
+   create: true
+   # The name of the service account to use.
+   # If not set and create is true, a name is generated using the fullname template
+   name: k8s-bigip-ctlr
+ # This namespace is where the Controller lives;
+ namespace: f5cis
+ args:
+   # See https://clouddocs.f5.com/containers/latest/userguide/config-parameters.html
+   # NOTE: helm has difficulty with values using `-`; `_` are used for naming
+   # and are replaced with `-` during rendering.
+   # REQUIRED Params
+   bigip_url: https://ip-10-0-14-122.us-west-2.compute.internal:8443
+   bigip_partition: ocp
+   # OPTIONAL PARAMS -- uncomment and provide values for those you wish to use.
+   # verify_interval:
+   # node-poll_interval:
+   # log_level:
+   # python_basedir: ~
+   # VXLAN
+   openshift_sdn_name: openshift_vxlan
+   # flannel_name:
+   # KUBERNETES
+   # default_ingress_ip:
+   # kubeconfig:
+   namespace: f5cis
+   manage-routes: true
+   # namespace_label:
+   # node_label_selector:
+   pool_member_type: cluster
+   insecure: true
+   # resolve_ingress_names:
+   # running_in_cluster:
+   # use_node_internal:
+   # use_secrets:
+   custom-resource-mode: false
+   # log-as3-response: true
+   route-vserver-addr: '10.0.14.122'
+   agent: as3
+ image:
+   # Use the tag to target a specific version of the Controller
+   user: f5networks
+   repo: k8s-bigip-ctlr
+   pullPolicy: Always
+ resources: {}
+   # If you want to specify resources, uncomment the following
+   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+   # limits:
+   #  cpu: 100m
+   #  memory: 128Mi
+   # requests:
+   #  cpu: 100m
+   #  memory: 128Mi
+ version: latest

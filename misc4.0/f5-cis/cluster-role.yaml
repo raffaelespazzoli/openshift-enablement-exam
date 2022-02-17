@@ -1,0 +1,61 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: f5cis-f5-bigip-ctlr-manual
+rules:
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - ''
+      - apps
+      - extensions
+      - route.openshift.io
+      - networking.k8s.io
+    resources:
+      - nodes
+      - services
+      - endpoints
+      - namespaces
+      - ingresses
+      - ingressclasses
+      - secrets
+      - pods
+      - routes
+  - verbs:
+      - get
+      - list
+      - watch
+      - update
+      - create
+      - patch
+    apiGroups:
+      - ''
+      - apps
+      - extensions
+      - route.openshift.io
+      - networking.k8s.io
+    resources:
+      - configmaps
+      - events
+      - ingresses/status
+      - routes/status
+      - services/status
+  - verbs:
+      - get
+      - list
+      - watch
+      - update
+      - patch
+    apiGroups:
+      - cis.f5.com
+    resources:
+      - virtualservers
+      - tlsprofiles
+      - transportservers
+      - externaldnses
+      - ingresslinks
+      - virtualservers/status
+      - ingresslinks/status
+      - policies

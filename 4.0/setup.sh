@@ -5,10 +5,11 @@ set -o errexit
 function create_openshift()
 {
   mkdir -p ./cluster$CLUSTER_ID
-  cp ./config/install-config-raffa$CLUSTER_ID.yaml ./cluster$CLUSTER_ID/install-config.yaml
+  export pull_secret=$(cat ./pullsecret.json)
+  envsubst < ./config/config-acm/install-config-raffa$CLUSTER_ID.yaml > ./cluster$CLUSTER_ID/install-config.yaml
   #~/Downloads/openshift-install-linux-4.4.0-0.nightly-2020-02-17-103442/openshift-install create cluster --dir ./cluster$CLUSTER_ID --log-level debug
   openshift-install create cluster --dir ./cluster$CLUSTER_ID --log-level debug
-  export KUBECONFIG=/home/rspazzol/git/openshift-enablement-exam/4.0/cluster1/auth/kubeconfig
+  export KUBECONFIG=/home/rspazzol/git/openshift-enablement-exam/4.0/cluster${CLUSTER_ID}/auth/kubeconfig
   # create route 
   oc create route reencrypt apiserver --service kubernetes --port https -n default
   # add simple user
