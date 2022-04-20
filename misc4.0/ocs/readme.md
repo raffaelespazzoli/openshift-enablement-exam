@@ -47,3 +47,29 @@ curl -s https://raw.githubusercontent.com/rook/rook/release-1.1/cluster/examples
 TOOLS_POD=$(oc get pods -n openshift-storage -l app=rook-ceph-tools -o name)
 oc rsh -n openshift-storage $TOOLS_POD
 ```
+
+test storage
+
+test block and file storage
+`oc apply -f ./statefulset-ocs-test.yaml -n openshift-storage`
+wait for completion
+
+then to clean-up 
+`oc delete -f ./statefulset-ocs-test.yaml -n openshift-storage`
+
+
+
+## To enable vault encryption
+
+assume you have vault installed and the kubernetes auth method configured
+
+```shell
+./vault-config.sh
+export VAULT_ADDR=https://vault.apps.control-cluster-raffa.demo.red-chesterfield.com
+export VAULT_TOKEN=$(oc get secret vault-init -n vault -o jsonpath="{.data.root_token}" | base64 -d )
+envsubst < ocs-cluster-vault.yaml | oc apply -f - -n openshift-storage
+envsubst < vault-encryption-token-secret.yaml | oc apply -f - -n openshift-storage
+oc apply -f vault-encryption-configmap.yaml -n openshift-storage
+oc apply -f vault-encryption-rbac.yaml -n openshift-storage
+oc apply -f vault-encryption-storage-class.yaml
+```

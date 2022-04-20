@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: csi-kms-connection-details
+data:
+  vault-encryption : |- 
+    {
+      "encryptionKMSType": "vault",
+      "vaultAddress": "https://vault.vault.svc:8200", 
+      "vaultAuthPath": "/v1/auth/kubernetes/login",
+      "vaultRole": "csi-kubernetes",
+      "vaultPassphraseRoot": "/v1/csi-secret",
+      "vaultPassphrasePath": "ceph-csi/",
+      "vaultCAVerify": "false"
+    }
+  vault-encryption-token : |- 
+    {
+      "encryptionKMSType": "vault",
+      "vaultAddress": "https://vault.vault.svc:8200", 
+      "vaultAuthPath": "/v1/auth/kubernetes/login",
+      "vaultRole": "csi-kubernetes",
+      "vaultPassphraseRoot": "/v1/csi-secret",
+      "vaultPassphrasePath": "ceph-csi-token/",
+      "vaultCAVerify": "false" 
+      "KMS_PROVIDER": "vaulttokens",
+      "KMS_SERVICE_NAME": "vault",
+      "VAULT_BACKEND": "kv-v2"
+    }    

@@ -1,0 +1,15 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDataSource
+metadata:
+  name: loki
+  labels:
+    {{- include "grafana-ocp.labels" . | nindent 4 }}  
+spec:
+  datasources:
+    - access: proxy
+      editable: false
+      isDefault: true
+      name: loki
+      type: loki
+      url: http://loki:3100
+  name: loki.yaml

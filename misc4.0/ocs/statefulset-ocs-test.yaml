@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ocs-test
+spec:
+  selector:
+    matchLabels:
+      app: ocs-test # has to match .spec.template.metadata.labels
+  serviceName: ocs-test
+  replicas: 1 # by default is 1
+  minReadySeconds: 10 # by default is 0
+  template:
+    metadata:
+      labels:
+        app: ocs-test # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: nginx
+        image: registry.redhat.io/openshift4/ose-cli
+        volumeMounts:
+        - name: block
+          mountPath: /test-block
+        - name: file
+          mountPath: /test-file
+        command:
+        - /bin/bash
+        - -c
+        - sleep infinity            
+  volumeClaimTemplates:
+  - metadata:
+      name: block
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "ocs-storagecluster-ceph-rbd"
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: file
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "ocs-storagecluster-cephfs"
+      resources:
+        requests:
+          storage: 1Gi          

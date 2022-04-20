@@ -1,0 +1,119 @@
+apiVersion: ocs.openshift.io/v1
+kind: StorageCluster
+metadata:
+  name: ocs-storagecluster
+  namespace: openshift-storage
+spec:
+  managedNodes: false
+  encryption:
+    enable: true
+    kms:
+      enable: true
+  storageDeviceSets:
+    - count: 3
+      dataPVCTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Ti
+          storageClassName: gp2
+          volumeMode: Block
+      name: ocs-deviceset
+      placement: {}
+      portable: true
+      resources: {}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ceph-csi-kms-token
+stringData:
+  token: ${VAULT_TOKEN}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ocs-kms-token
+stringData:
+  token: ${VAULT_TOKEN}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: csi-kms-connection-details
+data:
+  # vault-granular-encryption-token-authentication : |- 
+  #   {
+  #     "encryptionKMSType": "vault",
+  #     "vaultAddress": "https://vault.vault.svc:8200", 
+  #     "vaultAuthPath": "/v1/auth/kubernetes/login",
+  #     "vaultRole": "csi-kubernetes",
+  #     "vaultPassphraseRoot": "/v1/csi-secret",
+  #     "vaultPassphrasePath": "ceph-csi-token/",
+  #     "vaultCAVerify": "false" 
+  #     "KMS_PROVIDER": "vaulttokens",
+  #     "KMS_SERVICE_NAME": "vault",
+  #     "VAULT_BACKEND": "kv-v2"
+  #   }
+  vault-cluster-wide: >-
+    {
+      "KMS_PROVIDER":"vaulttokens",
+      "KMS_SERVICE_NAME":"vault-cluster-wide",
+      "VAULT_ADDR":"https://vault.vault.svc:8200",
+      "VAULT_AUTH_PATH": "/v1/auth/kubernetes/login",
+      "VAULT_ROLE": "csi-kubernetes",
+      "VAULT_BACKEND_PATH":"csi-secret",
+      "VAULT_TLS_SERVER_NAME":"",
+      "VAULT_NAMESPACE":"",
+      "VAULT_TOKEN_NAME":"ocs-kms-token",
+      "VAULT_CACERT_FILE":"",
+      "VAULT_CLIENT_CERT_FILE":"",
+      "VAULT_CLIENT_KEY_FILE":"",
+      "VAULT_BACKEND": "kv-v2",
+      "VAULT_CA_VERIFY": "false",
+      "VAULT_SKIP_VERIFY": "true" 
+      }
+---    
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ocs-kms-connection-details
+data:
+  KMS_PROVIDER: vault
+  KMS_SERVICE_NAME: vault-cluster-wide
+  VAULT_ADDR: 'https://vault.vault.svc:8200'
+  VAULT_AUTH_PATH: "/v1/auth/kubernetes/login"
+  VAULT_ROLE: "csi-kubernetes"
+  VAULT_BACKEND_PATH: "csi-secret"
+  VAULT_NAMESPACE: ''
+  VAULT_TLS_SERVER_NAME: ''
+  VAULT_BACKEND: v2
+  VAULT_CA_VERIFY: "false"
+  VAULT_SKIP_VERIFY: "true"
+--- 
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: vault-granular-encryption-token-authentication
+  annotations:
+    description: vault-granular-encryption-token-authentication
+provisioner: openshift-storage.rbd.csi.ceph.com
+parameters:
+  csi.storage.k8s.io/fstype: ext4
+  csi.storage.k8s.io/provisioner-secret-namespace: openshift-storage
+  encrypted: 'true'
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+  encryptionKMSID: vault-cluster-wide
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+  imageFormat: '2'
+  clusterID: openshift-storage
+  imageFeatures: layering
+  csi.storage.k8s.io/controller-expand-secret-namespace: openshift-storage
+  pool: ocs-storagecluster-cephblockpool
+  csi.storage.k8s.io/node-stage-secret-namespace: openshift-storage
+reclaimPolicy: Delete
+allowVolumeExpansion: false
+volumeBindingMode: Immediate

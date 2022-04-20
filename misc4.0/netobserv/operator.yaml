@@ -1,0 +1,13 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    operators.coreos.com/netobserv-operator.openshift-operators: ""
+  name: netobserv-operator
+  namespace: openshift-operators
+spec:
+  channel: alpha
+  installPlanApproval: Automatic
+  name: netobserv-operator
+  source: community-operators
+  sourceNamespace: openshift-marketplace

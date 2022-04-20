@@ -1,0 +1,9 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: netobserv
+  labels:
+    app: grafana
+    {{- include "grafana-ocp.labels" . | nindent 4 }}    
+spec:
+  json: {{ .Files.Get "dashboards/netobserv.json" | toPrettyJson }} 
