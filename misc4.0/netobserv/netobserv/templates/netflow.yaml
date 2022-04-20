@@ -2,24 +2,21 @@ apiVersion: flows.netobserv.io/v1alpha1
 kind: FlowCollector
 metadata:
   name: cluster
-  labels:
-    {{- include "netobserv.labels" . | nindent 4 }}  
 spec:
   namespace: "network-observability"
   ipfix:
     cacheActiveTimeout: 60s
     cacheMaxFlows: 400
     sampling: 100
-  #flowlogsPipeline:
-  #  kind: DaemonSet
-#    kind: Deployment
-#    replicas: 1
-  #  port: 2055
-  #  image: 'quay.io/netobserv/flowlogs-pipeline:main'
-  #  imagePullPolicy: IfNotPresent
-    #logLevel: info
-  #  enableKubeProbes: true
-  #  healthPort: 8080
+  goflowkube:
+    kind: Deployment
+    replicas: 1
+    port: 2055
+    image: 'quay.io/netobserv/goflow2-kube:main'
+    imagePullPolicy: IfNotPresent
+    logLevel: info
+    printOutput: false
+    healthPort: 8080
   loki:
     url: 'http://loki:3100/'
     batchWait: 1s
@@ -34,10 +31,5 @@ spec:
     image: 'quay.io/netobserv/network-observability-console-plugin:main'
     imagePullPolicy: IfNotPresent
     port: 9001
-    #logLevel: info
-    #portNaming:
-    #  enable: true
-    #  portNames:
-    #    "3100": loki
-  #clusterNetworkOperator:
-    #namespace: "openshift-network-operator"
+  cno:
+    namespace: "openshift-network-operator"
