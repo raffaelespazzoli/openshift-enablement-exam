@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: nginx
+spec:
+  replicas: 5
+  workloadRef: 
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nginx
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: nginx
+  strategy:
+    canary:
+      steps:
+      - setWeight: 20
+      - pause: {}
+      - setWeight: 40
+      - pause: {duration: 10}
+      - setWeight: 60
+      - pause: {duration: 10}
+      - setWeight: 80
+      - pause: {duration: 10}
+      # Reference to a Service which the controller updates to point to the canary ReplicaSet
+      canaryService: nginx-canary
+      # Reference to a Service which the controller updates to point to the stable ReplicaSet
+      stableService: nginx-stable
+      trafficRouting:
+        istio:
+          virtualServices:
+          # One or more virtualServices can be configured
+          # Reference to a VirtualService which the controller updates with canary weights
+          - name: nginx

@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: nginx
+spec:
+  gateways:
+    - istio-system/mesh-gateway
+  hosts:
+    - >-
+      nginx-argo-rollout-test.mesh.apps.control-cluster-raffa.demo.red-chesterfield.com
+  http:             
+    - route:
+        - destination:
+            host: nginx-canary
+            port:
+              number: 80
+          weight: 0    
+        - destination:
+            host: nginx-stable
+            port:
+              number: 80
+          weight: 100                 

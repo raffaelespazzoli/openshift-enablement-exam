@@ -3,33 +3,65 @@ kind: FlowCollector
 metadata:
   name: cluster
 spec:
-  namespace: "network-observability"
-  ipfix:
-    cacheActiveTimeout: 60s
-    cacheMaxFlows: 400
-    sampling: 100
-  goflowkube:
-    kind: Deployment
-    replicas: 1
-    port: 2055
-    image: 'quay.io/netobserv/goflow2-kube:main'
+  agent: ipfix
+  clusterNetworkOperator:
+    namespace: openshift-network-operator
+  consolePlugin:
+    image: 'quay.io/netobserv/network-observability-console-plugin:v0.1.2'
     imagePullPolicy: IfNotPresent
     logLevel: info
-    printOutput: false
+    port: 9001
+    portNaming:
+      enable: true
+      portNames:
+        '3100': loki
+    register: true
+    replicas: 1
+    resources:
+      limits:
+        memory: 100Mi
+      requests:
+        cpu: 100m
+        memory: 50Mi
+  ebpf:
+    cacheActiveTimeout: 5s
+    cacheMaxFlows: 1000
+    excludeInterfaces:
+      - lo
+    image: 'quay.io/netobserv/netobserv-ebpf-agent:v0.1.0'
+    imagePullPolicy: IfNotPresent
+    interfaces: []
+    logLevel: info
+    sampling: 0
+  flowlogsPipeline:
+    logLevel: info
+    port: 2055
+    resources:
+      limits:
+        memory: 300Mi
+      requests:
+        cpu: 100m
+        memory: 100Mi
+    prometheusPort: 9090
+    imagePullPolicy: IfNotPresent
+    enableKubeProbes: true
+    kind: DaemonSet
+    image: 'quay.io/netobserv/flowlogs-pipeline:v0.1.1'
+    replicas: 1
     healthPort: 8080
+  ipfix:
+    cacheActiveTimeout: 60s
+    cacheMaxFlows: 100
+    sampling: 400
   loki:
-    url: 'http://loki:3100/'
-    batchWait: 1s
-    batchSize: 102400
-    minBackoff: 1s
-    maxBackoff: 300s
+    timeout: 10s
     maxRetries: 10
-    timestampLabel: TimeFlowEnd
+    maxBackoff: 300s
     staticLabels:
       app: netobserv-flowcollector
-  consolePlugin:
-    image: 'quay.io/netobserv/network-observability-console-plugin:main'
-    imagePullPolicy: IfNotPresent
-    port: 9001
-  cno:
-    namespace: "openshift-network-operator"
+    url: 'http://loki:3100/'
+    batchWait: 1s
+    minBackoff: 1s
+    batchSize: 102400
+    timestampLabel: TimeFlowEnd
+  namespace: network-observability

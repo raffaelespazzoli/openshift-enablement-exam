@@ -11,3 +11,4 @@ spec:
   name: netobserv-operator
   source: community-operators
   sourceNamespace: openshift-marketplace
+  #startingCSV: "0.1.1"
