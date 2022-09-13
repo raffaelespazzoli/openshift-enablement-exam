@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/rspazzol/git/openshift-enablement-exam'
+make: Leaving directory '/home/rspazzol/git/openshift-enablement-exam'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+

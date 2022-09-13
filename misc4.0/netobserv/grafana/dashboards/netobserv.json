@@ -657,8 +657,7 @@
               "mappings": [],
               "thresholds": {
                 "mode": "absolute",
-                "steps": [
-                  {
+                "steps": [images
                     "color": "green"
                   },
                   {
