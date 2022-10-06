@@ -1,0 +1,27 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: mesh-gateway
+  namespace: istio-system
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - name: plaintext
+      hosts:
+        - '*'
+      port:
+        name: grpc
+        number: 9000
+        protocol: GRPC
+    - name: tls
+      hosts:
+        - '*'
+      port:
+        name: https
+        number: 9443
+        protocol: HTTPS
+      tls:
+        httpsRedirect: true
+        mode: SIMPLE
+        credentialName: lets-encrypt-certs-tls-istio

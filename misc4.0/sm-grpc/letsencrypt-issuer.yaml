@@ -1,0 +1,44 @@
+apiVersion: cloudcredential.openshift.io/v1
+kind: CredentialsRequest
+metadata:
+  name: letsencrypt-cert-manager-dns
+  namespace: openshift-cloud-credential-operator
+spec:
+  providerSpec:
+    apiVersion: cloudcredential.openshift.io/v1
+    kind: AWSProviderSpec
+    statementEntries:
+    - action:
+      - 'route53:ChangeResourceRecordSets'
+      - 'route53:GetChange'
+      - 'route53:ListHostedZonesByName'
+      - 'route53:ListHostedZones'
+      effect: Allow
+      resource: '*'
+  secretRef:
+    name: cert-manager-dns-credentials
+    namespace: cert-manager
+---    
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-issuer
+  namespace: cert-manager
+spec:
+  acme:
+    server: 'https://acme-v02.api.letsencrypt.org/directory'
+    email: raffaele.spazzoli@gmail.com
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:  
+    # ACME DNS-01 provider configurations
+    - dns01:
+      # Here we define a list of DNS-01 providers that can solve DNS challenges
+        route53:
+          accessKeyID: AKIAQ2TJYMEVK2E3SBIT
+          secretAccessKeySecretRef:
+            name: cert-manager-dns-credentials
+            key: aws_secret_access_key
+          region: us-west-2
+          hostedZoneID: Z158N1W3LXEFES 

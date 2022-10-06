@@ -1,0 +1,50 @@
+apiVersion: maistra.io/v2
+kind: ServiceMeshControlPlane
+metadata:
+  name: basic
+  namespace: istio-system
+spec:
+  version: v2.2
+  security:
+    dataPlane:
+      mtls: true
+  tracing:
+    type: Jaeger
+    sampling: 10000
+  addons:
+    jaeger:
+      name: jaeger
+      install:
+        storage:
+          type: Memory
+    kiali:
+      enabled: true
+      name: kiali
+    grafana:
+      enabled: true
+    prometheus:
+      enabled: true      
+  gateways:
+    ingress: # _the_ istio-ingressgateway
+      # same settings as ilb gateway above
+      service:
+        metadata:
+          annotations:
+            service.beta.kubernetes.io/aws-load-balancer-type: "nlb"  
+        type: LoadBalancer
+        ports:
+        - name: status-port
+          port: 15020
+        - name: http2
+          port: 9000
+          targetPort: 9000
+        - name: https
+          port: 9443
+          targetPort: 9443      
+  runtime:
+    components:
+      tracing.jaeger:
+        container:
+          env:
+            METRICS_STORAGE_TYPE: prometheus
+            PROMETHEUS_SERVER_URL: http://prometheus.istio-system.svc.cluster.local:9090

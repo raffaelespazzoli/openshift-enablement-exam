@@ -1,0 +1,46 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: topic-clone-policy
+spec:
+  validationFailureAction: enforce
+  rules:
+  - name: topic-compliance-policy
+    match:
+      any:
+      - resources:
+          apiVersion: kafka.strimzi.io/v1beta2
+          kinds: 
+          - KafkaTopic
+          namespaceSelector:
+            matchLabels:
+              tenant: "true" 
+    validate:
+      message: "All topics must have at least three partitions."
+      pattern:
+        spec:
+          partitions: ">= 3"              
+  - name: topic-clone-policy
+    match:
+      any:
+      - resources:
+          apiVersion: kafka.strimzi.io/v1beta2
+          kinds: 
+          - KafkaTopic
+          namespaceSelector:
+            matchLabels:
+              tenant: "true"
+    generate:
+      # Kind of generated resource
+      kind: KafkaTopic
+      # apiVersion of the generated resource
+      apiVersion: kafka.strimzi.io/v1beta2
+      # Name of the generated resource
+      name: "{{request.object.metadata.name}}"
+      # namespace for the generated resource
+      namespace: "my-kafka"
+      # propagate changes from the upstream resource
+      synchronize : true
+      clone:
+        namespace: "{{request.object.metadata.namespace}}"
+        name: "{{request.object.metadata.name}}"

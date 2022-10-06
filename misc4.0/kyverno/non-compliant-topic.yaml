@@ -1,0 +1,12 @@
+kind: KafkaTopic
+apiVersion: kafka.strimzi.io/v1beta2
+metadata:
+  name: my-non-compliant-topic
+  labels:
+    strimzi.io/cluster: my-kafka
+spec:
+  partitions: 2
+  replicas: 3
+  config:
+    retention.ms: 604800000
+    segment.bytes: 1073741824
