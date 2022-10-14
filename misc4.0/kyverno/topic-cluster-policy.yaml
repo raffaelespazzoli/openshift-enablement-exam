@@ -15,11 +15,24 @@ spec:
           namespaceSelector:
             matchLabels:
               tenant: "true" 
+    preconditions:
+      all:
+      - key: "{{ request.operation }}"
+        operator: Equals
+        value: UPDATE              
     validate:
-      message: "All topics must have at least three partitions."
-      pattern:
-        spec:
-          partitions: ">= 3"              
+      message: "when updating a topic, replicas cannot change and partitions can only be increased"
+      deny:
+        conditions:
+          any:
+          # replicas must not change
+            - key: "{{ request.object.spec.replicas }}"
+              operator: NotEquals
+              value: "{{ request.oldObject.spec.replicas }}"
+          # partition can only increase              
+            - key: "{{ request.object.spec.partitions }}"
+              operator: LessThan
+              value: "{{ request.oldObject.spec.partitions }}"              
   - name: topic-clone-policy
     match:
       any:

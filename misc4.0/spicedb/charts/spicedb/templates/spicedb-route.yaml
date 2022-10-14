@@ -1,0 +1,16 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ include "spicedb.fullname" . }}
+  labels:
+    {{- include "spicedb.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"     
+spec:
+  to:
+    kind: Service
+    name: {{ include "spicedb.fullname" . }}
+    weight: 100
+  port:
+    targetPort: 8080
+  wildcardPolicy: None

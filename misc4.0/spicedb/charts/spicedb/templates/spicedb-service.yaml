@@ -1,0 +1,33 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "spicedb.fullname" . }}
+  labels:
+    {{- include "spicedb.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"     
+spec:
+  ports:
+    - name: dahsboard
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: grpc
+      protocol: TCP
+      port: 50051
+      targetPort: 50051
+    - name: dispatch
+      protocol: TCP
+      port: 50053
+      targetPort: 50053
+    - name: gateway
+      protocol: TCP
+      port: 8443
+      targetPort: 8443
+    - name: metrics
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+  type: ClusterIP
+  selector:
+    {{- include "spicedb.selectorLabels" . | nindent 4 }}

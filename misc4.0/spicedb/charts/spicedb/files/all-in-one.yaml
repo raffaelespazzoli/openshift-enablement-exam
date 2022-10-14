@@ -1,0 +1,691 @@
+schema: |-
+  definition user {}
+
+  definition group {
+    relation member: user | group#member
+  }
+  
+  definition role {
+    // location
+  	relation location_viewer: user:*
+  	relation location_creator: user:*
+    relation location_updater: user:*
+    relation location_deleter: user:*
+  
+    //item
+    relation item_viewer: user:*
+  	relation item_creator: user:*
+    relation item_updater: user:*
+    relation item_deleter: user:*
+  
+    //sku
+    relation sku_viewer: user:*
+  	relation sku_creator: user:*
+    relation sku_updater: user:*
+    relation sku_deleter: user:* 
+  
+    //purchase_requisition
+    relation purchase_requisition_viewer: user:*
+  	relation purchase_requisition_creator: user:*  
+  
+    //item_requisition
+    relation item_requisition_viewer: user:*
+  	relation item_requisition_creator: user:*  
+  
+    //transfer_requisition
+    relation transfer_requisition_viewer: user:*
+  	relation transfer_requisition_creator: user:*   
+  
+    //purchase_order
+    relation purchase_order_viewer: user:*
+  	relation purchase_order_creator: user:*    
+  
+    //kit
+  	relation kit_creator: user:*
+    relation kit_updater: user:*
+    relation kit_deleter: user:*  
+  
+    //supplier
+    relation supplier_viewer: user:*
+  	relation supplier_creator: user:*
+    relation supplier_updater: user:*
+    relation supplier_deleter: user:* 
+  
+    //physical_count
+  	relation physical_count_viewer: user:*
+    relation physical_count_creator: user:*  
+  
+    //picklist
+  	relation picklist_viewer: user:*
+    relation picklist_updater: user:*
+    relation picklist_creator: user:* 
+  
+    //manufacturer
+    relation manufacturer_viewer: user:*
+  	relation manufacturer_creator: user:*
+    relation manufacturer_updater: user:*
+    relation manufacturer_deleter: user:*  
+  
+    //workflow (a.k.a. status)
+    relation workflow_viewer: user:*
+  	relation workflow_creator: user:*
+    relation workflow_updater: user:*
+    relation workflow_deleter: user:*   
+  
+  }
+
+  definition grant {
+  	relation role: role
+  	relation actor: group#member
+  
+    //location
+  	permission location_view = role->location_viewer & actor
+  	permission location_create = role->location_creator & actor
+    permission location_update = role->location_updater & actor
+    permission location_delete = role->location_deleter  & actor
+  
+    //permission
+  	permission item_view = role->item_viewer & actor
+  	permission item_create = role->item_creator & actor
+    permission item_update = role->item_updater & actor
+    permission item_delete = role->item_deleter  & actor  
+  
+    //sku
+  	permission sku_view = role->sku_viewer & actor
+  	permission sku_create = role->sku_creator & actor
+    permission sku_update = role->sku_updater & actor
+    permission sku_delete = role->sku_deleter  & actor  
+  
+    //purchase_requisition
+  	permission purchase_requisition_view = role->purchase_requisition_viewer & actor
+  	permission purchase_requisition_create = role->purchase_requisition_creator & actor  
+  
+    //item_requisition
+  	permission item_requisition_view = role->item_requisition_viewer & actor
+  	permission item_requisition_create = role->item_requisition_creator & actor
+  
+    //transfer_requisition
+  	permission transfer_requisition_view = role->transfer_requisition_viewer & actor
+  	permission transfer_requisition_create = role->transfer_requisition_creator & actor
+  
+    //purchase_order
+  	permission purchase_order_view = role->purchase_order_viewer & actor
+  	permission purchase_order_create = role->purchase_order_creator & actor 
+  
+    //kit
+  	permission kit_create = role->kit_creator & actor
+    permission kit_update = role->kit_updater & actor
+    permission kit_delete = role->kit_deleter  & actor
+  
+    //supplier
+  	permission supplier_view = role->supplier_viewer & actor
+  	permission supplier_create = role->supplier_creator & actor
+    permission supplier_update = role->supplier_updater & actor
+    permission supplier_delete = role->supplier_deleter  & actor  
+  
+    //physical_count
+  	permission physical_count_view = role->physical_count_viewer & actor
+  	permission physical_count_create = role->physical_count_creator & actor
+  
+    //picklist
+  	permission picklist_view = role->picklist_viewer & actor
+  	permission picklist_create = role->picklist_creator & actor
+    permission picklist_update = role->picklist_updater & actor  
+  
+    //manufacturer
+  	permission manufacturer_view = role->manufacturer_viewer & actor
+  	permission manufacturer_create = role->manufacturer_creator & actor
+    permission manufacturer_update = role->manufacturer_updater & actor
+    permission manufacturer_delete = role->manufacturer_deleter  & actor 
+  
+    //workflow (a.k.a. status)
+  	permission workflow_view = role->workflow_viewer & actor
+  	permission workflow_create = role->workflow_creator & actor
+    permission workflow_update = role->workflow_updater & actor
+    permission workflow_delete = role->workflow_deleter  & actor   
+  
+  }  
+
+  definition location {
+      relation granter: grant
+      relation parent: location
+      permission location_create = granter -> location_create + parent -> location_create
+      permission location_update = granter -> location_update + parent -> location_update
+      permission location_delete = granter -> location_delete + parent -> location_delete
+      permission location_view = location_create + location_update + location_delete + granter -> location_view + parent -> location_view
+
+      //item permissions
+      permission item_create = granter -> item_create + parent -> item_create
+      permission item_update = granter -> item_update + parent -> item_update
+      permission item_delete = granter -> item_delete + parent -> item_delete
+      permission item_view = granter -> item_view + parent -> item_view
+  
+      //sku permissions
+      permission sku_create = granter -> sku_create + parent -> sku_create
+      permission sku_update = granter -> sku_update + parent -> sku_update
+      permission sku_delete = granter -> sku_delete + parent -> sku_delete
+      permission sku_view = granter -> sku_view + parent -> sku_view
+
+      //purchase_requisition permissions
+      permission purchase_requisition_create = granter -> purchase_requisition_create + parent -> purchase_requisition_create
+      permission purchase_requisition_view = granter -> purchase_requisition_view + parent -> purchase_requisition_view
+
+      //item_requisition permissions
+      permission item_requisition_create = granter -> item_requisition_create + parent -> item_requisition_create
+      permission item_requisition_view = granter -> item_requisition_view + parent -> item_requisition_view
+
+      //transfer_requisition permissions
+      permission transfer_requisition_create = granter -> transfer_requisition_create + parent -> transfer_requisition_create
+      permission transfer_requisition_view = granter -> transfer_requisition_view + parent -> transfer_requisition_view
+
+      //purchase_order permissions
+      permission purchase_order_create = granter -> purchase_order_create + parent -> purchase_order_create
+      permission purchase_order_view = granter -> purchase_order_view + parent -> purchase_order_create
+
+      //kit permissions
+      permission kit_create = granter -> kit_create + parent -> kit_create
+      permission kit_update = granter -> kit_update + parent -> kit_update
+      permission kit_delete = granter -> kit_delete + parent -> kit_delete
+
+      //supplier
+      permission supplier_create = granter -> supplier_create + parent -> supplier_create
+      permission supplier_update = granter -> supplier_update + parent -> supplier_update
+      permission supplier_delete = granter -> supplier_delete + parent -> supplier_delete
+
+      //physical_count
+      permission physical_count_create = granter -> physical_count_create + parent -> physical_count_create
+      permission physical_count_view = granter -> physical_count_view + parent -> physical_count_view
+  
+      //picklist
+      permission picklist_create = granter -> picklist_create + parent -> picklist_create
+      permission picklist_update = granter -> picklist_update + parent -> picklist_update
+      permission picklist_view = granter -> picklist_view + parent -> picklist_view
+  
+      //manufacturer (only top level location)
+      permission manufacturer_create = granter -> manufacturer_create
+      permission manufacturer_update = granter -> manufacturer_update
+      permission manufacturer_delete = granter -> manufacturer_delete
+      permission manufacturer_view = granter -> manufacturer_view
+
+      //workflow (a.k.a status) (only top level location)
+      permission workflow_create = granter -> workflow_create
+      permission workflow_update = granter -> workflow_update
+      permission workflow_delete = granter -> workflow_delete
+      permission workflow_view = granter -> workflow_view
+  }
+
+  definition item {
+      relation location: location
+      permission update = location -> item_update
+      permission delete = location -> item_delete
+      permission view = location -> item_update + location -> item_delete + location -> item_view
+  }
+  
+  definition sku {
+      relation location: location
+      permission update = location -> item_update
+      permission delete = location -> item_delete
+      permission view = location -> item_update + location -> item_delete + location -> item_view
+  }  
+
+  definition purchase_requisition {
+      relation created_by: user
+      relation assigned_to: user
+      relation location: location
+      
+      permission update = created_by
+      permission view = created_by + assigned_to + location -> purchase_requisition_view
+  }
+
+  definition item_requisition {
+      relation created_by: user
+      relation assigned_to: user
+      relation location: location
+      
+      permission update = created_by
+      permission view = created_by + assigned_to + location -> item_requisition_view
+  }
+
+  definition transfer_requisition {
+      relation created_by: user
+      relation assigned_to: user
+      relation location: location
+      
+      permission update = created_by
+      permission view = created_by + assigned_to + location -> transfer_requisition_view
+  }
+
+  definition purchase_order {
+      relation location: location
+      relation assigned_to: user
+      relation created_by: user
+
+      permission update = created_by
+      permission view = created_by + assigned_to + location -> purchase_order_view    
+  }
+
+  definition kit{
+      relation location: location
+      permission update = location -> kit_update
+      permission delete = location -> kit_delete
+      permission view = location -> kit_update + location -> kit_delete + location -> item_viewer
+  }
+
+  definition supplier {
+      relation location: location
+      relation parent: supplier
+      permission update = location -> supplier_update + parent -> update
+      permission delete = location -> supplier_delete + parent -> delete
+      permission view = location -> supplier_update + location -> supplier_delete + location -> view + parent -> view
+  }
+
+  definition physical_count {
+      relation location: location
+      relation assigned_to: user
+      relation created_by: user
+      permission update = assigned_to + created_by + location -> physical_count_create
+      permission view = assigned_to + created_by + location -> physical_count_view
+  }
+  
+  definition picklist {
+      relation location: location
+      relation assigned_to: user
+      relation created_by: user
+      permission update = assigned_to + created_by + location -> picklist_update
+      permission delete = location -> picklist_delete
+      permission view = assigned_to + created_by + location -> picklist_update + location -> picklist_delete + location -> picklist_view
+  }  
+  
+  definition manufacturer {
+      relation location: location
+      permission update = location -> manufacturer_update
+      permission delete = location -> manufacturer_delete
+      permission view = location -> manufacturer_update + location -> manufacturer_delete + location -> manufacturer_view
+  }  
+
+  definition workflow {
+      relation location: location
+      permission update = location -> workflow_update
+      permission delete = location -> workflow_delete
+      permission view = location -> workflow_update + location -> workflow_delete + location -> workflow_view
+  }
+
+
+
+relationships: |-
+  // Create a "inventory_clerk" role 
+  //location
+  role:inventory_clerk#location_viewer@user:*
+  
+  //item  
+  role:inventory_clerk#item_viewer@user:*
+  
+  //sku
+  role:inventory_clerk#sku_viewer@user:* 
+  
+  //purchase_requisition
+  role:inventory_clerk#purchase_requisition_viewer@user:*
+  
+  //item_requisition
+  role:inventory_clerk#item_requisition_viewer@user:* 
+  
+  //transfer_requisition
+  role:inventory_clerk#transfer_requisition_viewer@user:*   
+  
+  //purchase_order
+  role:inventory_clerk#purchase_order_viewer@user:*   
+  
+  //kit  
+  
+  //supplier
+  role:inventory_clerk#supplier_viewer@user:* 
+  
+  //physical_count
+  role:inventory_clerk#physical_count_viewer@user:* 
+  
+  //picklist
+  role:inventory_clerk#picklist_viewer@user:*
+  
+  //manufacturer
+  role:inventory_clerk#manufacturer_viewer@user:* 
+  
+  //workflow (a.k.a. status)
+  role:inventory_clerk#workflow_viewer@user:* 
+
+  // Create a "inventory_manager" role 
+  //location
+  role:inventory_manager#location_viewer@user:*
+  role:inventory_manager#location_creator@user:*
+  role:inventory_manager#location_updater@user:*
+  role:inventory_manager#location_deleter@user:*
+  
+  //item  
+  role:inventory_manager#item_viewer@user:*
+  role:inventory_manager#item_creator@user:*
+  role:inventory_manager#item_updater@user:*
+  role:inventory_manager#item_deleter@user:*
+  
+  //sku
+  role:inventory_manager#sku_viewer@user:*
+  role:inventory_manager#sku_creator@user:*
+  role:inventory_manager#sku_updater@user:*
+  role:inventory_manager#sku_deleter@user:* 
+  
+  //purchase_requisition
+  role:inventory_manager#purchase_requisition_viewer@user:*
+  role:inventory_manager#purchase_requisition_creator@user:*  
+  
+  //item_requisition
+  role:inventory_manager#item_requisition_viewer@user:*
+  role:inventory_manager#item_requisition_creator@user:*  
+  
+  //transfer_requisition
+  role:inventory_manager#transfer_requisition_viewer@user:*
+  role:inventory_manager#transfer_requisition_creator@user:*   
+  
+  //purchase_order
+  role:inventory_manager#purchase_order_viewer@user:*
+  role:inventory_manager#purchase_order_creator@user:*    
+  
+  //kit
+  role:inventory_manager#kit_creator@user:*
+  role:inventory_manager#kit_updater@user:*
+  role:inventory_manager#kit_deleter@user:*  
+  
+  //supplier
+  role:inventory_manager#supplier_viewer@user:*
+  role:inventory_manager#supplier_creator@user:*
+  role:inventory_manager#supplier_updater@user:*
+  role:inventory_manager#supplier_deleter@user:* 
+  
+  //physical_count
+  role:inventory_manager#physical_count_viewer@user:*
+  role:inventory_manager#physical_count_creator@user:*  
+  
+  //picklist
+  role:inventory_manager#picklist_viewer@user:*
+  role:inventory_manager#picklist_updater@user:*
+  role:inventory_manager#picklist_creator@user:* 
+  
+  //manufacturer
+  role:inventory_manager#manufacturer_viewer@user:*
+  role:inventory_manager#manufacturer_creator@user:*
+  role:inventory_manager#manufacturer_updater@user:*
+  role:inventory_manager#manufacturer_deleter@user:*  
+  
+  //workflow (a.k.a. status)
+  role:inventory_manager#workflow_viewer@user:*
+  role:inventory_manager#workflow_creator@user:*
+  role:inventory_manager#workflow_updater@user:*
+  role:inventory_manager#workflow_deleter@user:*  
+  
+  //create a group inventory_managers for tenant 1
+  group:ten1_inventory_managers#member@user:mary
+  
+  // Grant inventory_manager over tenant 1
+  grant:ten1_inventory_managers#role@role:inventory_manager
+  grant:ten1_inventory_managers#actor@group:ten1_inventory_managers#member
+  
+  //associate grant with tenant 1
+  location:ten1#granter@grant:ten1_inventory_managers
+  
+  //create a group inventory_managers for tenant 1 location 1
+  group:ten1_inventory_managers_loc1#member@user:jane
+  
+  // Grant inventory_manager over tenant 1 location 1
+  grant:ten1_inventory_managers_loc1#role@role:inventory_manager
+  grant:ten1_inventory_managers_loc1#actor@group:ten1_inventory_managers_loc1#member
+  
+  //associate grant with tenant 1 location 1
+  location:ten1_loc1#granter@grant:ten1_inventory_managers_loc1  
+  
+  //create a group inventory_managers for tenant 1 location 2
+  group:ten1_inventory_managers_loc2#member@user:sandy
+  
+  // Grant inventory_manager over tenant 1 location 2
+  grant:ten1_inventory_managers_loc2#role@role:inventory_manager
+  grant:ten1_inventory_managers_loc2#actor@group:ten1_inventory_managers_loc2#member    
+  
+  //associate grant with tenant 1 location 2
+  location:ten1_loc2#granter@grant:ten1_inventory_managers_loc2
+  
+  //create a group inventory_managers for tenant 2
+  group:ten2_inventory_managers#member@user:john 
+  
+  // Grant inventory_manager over tenant 2  
+  grant:ten2_inventory_managers#role@role:inventory_manager
+  grant:ten2_inventory_managers#actor@group:ten2_inventory_managers#member    
+  
+  //associate grant with tenant 1 location 2
+  location:ten2#granter@grant:ten2_inventory_managers  
+  
+  //create a group inventory_managers for tenant 2 location1
+  group:ten2_inventory_managers_loc1#member@user:silver
+  
+  // Grant inventory_manager over tenant 2 location 1
+  grant:ten2_inventory_managers_loc1#role@role:inventory_manager
+  grant:ten2_inventory_managers_loc1#actor@group:ten2_inventory_managers_loc1#member  
+  
+  //associate grant with tenant 2 location 1
+  location:ten2_loc1#granter@grant:ten2_inventory_managers_loc1  
+  
+  //create a group inventory_clerks for tenant 1 location 1
+  group:ten1_inventory_clerks_loc1#member@user:giano
+  
+  // Grant inventory_clerk over tenant 1 location 1
+  grant:ten1_inventory_clerks_loc1#role@role:inventory_clerk
+  grant:ten1_inventory_clerks_loc1#actor@group:ten1_inventory_clerks_loc1#member  
+  
+  //associate grant with tenant 1 location 1
+  location:ten1_loc1#granter@grant:ten1_inventory_clerks_loc1   
+  
+  //create a group inventory_clerks for tenant 2 location 2
+  group:ten1_inventory_clerks_loc2#member@user:pier  
+  
+  // Grant inventory_clerk over tenant 1 location 2
+  grant:ten1_inventory_clerks_loc2#role@role:inventory_clerk
+  grant:ten1_inventory_clerks_loc2#actor@group:ten1_inventory_clerks_loc2#member 
+  
+  //associate grant with tenant 1 location 2
+  location:ten1_loc2#granter@grant:ten1_inventory_clerks_loc2   
+  
+  //create a group inventory_clerks for tenant 2 location 1
+  group:ten2_inventory_clerks_loc1#member@user:giano
+  
+  // Grant inventory_clerk over tenant 2 location 1
+  grant:ten2_inventory_clerks_loc1#role@role:inventory_clerk
+  grant:ten2_inventory_clerks_loc1#actor@group:ten2_inventory_clerks_loc1#member   
+  
+  //associate grant with tenant 2 location 1
+  location:ten2_loc1#granter@grant:ten2_inventory_clerks_loc1   
+  
+  //add ten1_loc1 under tenant 1
+  location:ten1_loc1#parent@location:ten1
+  
+  //add ten1_loc2 under ten1_loc1
+  location:ten1_loc2#parent@location:ten1_loc1
+  
+  //add ten2_loc1 under tenant 2
+  location:ten2_loc1#parent@location:ten2  
+  
+  // create one item per location
+  item:ten1_item1#location@location:ten1_loc1
+  item:ten1_item2#location@location:ten1_loc2
+  item:ten2_item1#location@location:ten2_loc1
+  
+  // create one purchase_requisition per location
+  item:ten1_purchase_requisition1#location@location:ten1_loc1
+  item:ten1_purchase_requisition2#location@location:ten1_loc2
+  item:ten2_purchase_requisition1#location@location:ten2_loc1  
+  
+  // create one item_requisition per location
+  item:ten1_item_requisition1#location@location:ten1_loc1
+  item:ten1_item_requisition2#location@location:ten1_loc2
+  item:ten2_item_requisition1#location@location:ten2_loc1  
+  
+  // create one transfer_requisition per location
+  item:ten1_transfer_requisition1#location@location:ten1_loc1
+  item:ten1_transfer_requisition2#location@location:ten1_loc2
+  item:ten2_transfer_requisition1#location@location:ten2_loc1  
+  
+  // create one purchase_order per location
+  item:ten1_purchase_order1#location@location:ten1_loc1
+  item:ten1_purchase_order2#location@location:ten1_loc2
+  item:ten2_purchase_order1#location@location:ten2_loc1   
+  
+  // create one kit per location
+  item:ten1_kit1#location@location:ten1_loc1
+  item:ten1_kit2#location@location:ten1_loc2
+  item:ten2_kit1#location@location:ten2_loc1 
+  
+  // create one supplier per location
+  item:ten1_supplier1#location@location:ten1_loc1
+  item:ten1_supplier2#location@location:ten1_loc2
+  item:ten2_supplier1#location@location:ten2_loc1  
+  
+  // create one physical_count per location
+  item:ten1_physical_count1#location@location:ten1_loc1
+  item:ten1_physical_count2#location@location:ten1_loc2
+  item:ten2_physical_count1#location@location:ten2_loc1 
+  
+  // create one picklist per location
+  item:ten1_picklist1#location@location:ten1_loc1
+  item:ten1_picklist2#location@location:ten1_loc2
+  item:ten2_picklist1#location@location:ten2_loc1   
+  
+  // create one manufacturer per tenant
+  item:ten1_manufacturer1#location@location:ten1
+  item:ten2_manufacturer1#location@location:ten2
+  
+  // create one workflow per tenant
+  item:ten1_workflow1#location@location:ten1
+  item:ten2_workflow1#location@location:ten2
+
+assertions:
+    #complete set of assertions per item
+    assertTrue:
+      # mary inventory_manager at ten1
+      - item:ten1_item1#view@user:mary
+      - location:ten1_loc1#item_create@user:mary
+      - item:ten1_item1#delete@user:mary
+      - item:ten1_item1#update@user:mary
+
+      - item:ten1_item2#view@user:mary
+      - location:ten1_loc2#item_create@user:mary
+      - item:ten1_item2#delete@user:mary
+      - item:ten1_item2#update@user:mary
+
+      # jane inventory_manager at ten1_loc1
+      - item:ten1_item1#view@user:jane
+      - location:ten1_loc1#item_create@user:jane
+      - item:ten1_item1#delete@user:jane
+      - item:ten1_item1#update@user:jane
+
+      - item:ten1_item2#view@user:jane
+      - location:ten1_loc2#item_create@user:jane
+      - item:ten1_item2#delete@user:jane
+      - item:ten1_item2#update@user:jane
+
+      # sandy inventory_manager at ten1_loc2
+      - item:ten1_item2#view@user:sandy
+      - location:ten1_loc2#item_create@user:sandy
+      - item:ten1_item2#delete@user:sandy
+      - item:ten1_item2#update@user:sandy
+
+      # john inventory_manager at ten2
+      - item:ten2_item1#view@user:john
+      - location:ten2_loc1#item_create@user:john
+      - item:ten2_item1#delete@user:john
+      - item:ten2_item1#update@user:john
+
+      # silver inventory_manager at ten2_loc1
+      - item:ten2_item1#view@user:silver
+      - location:ten2_loc1#item_create@user:silver
+      - item:ten2_item1#delete@user:silver
+      - item:ten2_item1#update@user:silver
+
+      # giano inventory_clerk at ten1_loc1 and ten2_loc1
+      - item:ten1_item1#view@user:giano
+
+      - item:ten1_item2#view@user:giano
+
+      - item:ten2_item1#view@user:giano
+
+      # pier inventory_clerk at ten1_loc2
+      - item:ten1_item2#view@user:pier
+
+    assertFalse:
+      # mary tenant inventory_manager at ten1
+      - item:ten2_item1#view@user:mary
+      - location:ten2_loc1#item_create@user:mary
+      - item:ten2_item1#delete@user:mary
+      - item:ten2_item1#update@user:mary
+
+      # jane inventory_manager at ten1_loc1
+      - item:ten2_item1#view@user:jane
+      - location:ten2_loc1#item_create@user:jane
+      - item:ten2_item1#delete@user:jane
+      - item:ten2_item1#update@user:jane
+
+      # sandy inventory_manager at ten1_loc2
+      - item:ten1_item1#view@user:sandy
+      - location:ten1_loc1#item_create@user:sandy
+      - item:ten1_item1#delete@user:sandy
+      - item:ten1_item1#update@user:sandy
+
+      - item:ten2_item1#view@user:sandy
+      - location:ten2_loc1#item_create@user:sandy
+      - item:ten2_item1#delete@user:sandy
+      - item:ten2_item1#update@user:sandy
+
+      # john inventory_manager at ten2
+      - item:ten1_item1#view@user:john
+      - location:ten1_loc1#item_create@user:john
+      - item:ten1_item1#delete@user:john
+      - item:ten1_item1#update@user:john
+
+      - item:ten1_item2#view@user:john
+      - location:ten1_loc2#item_create@user:john
+      - item:ten1_item2#delete@user:john
+      - item:ten1_item2#update@user:john
+
+      # silver inventory_manager at ten2_loc1
+      - item:ten1_item1#view@user:silver
+      - location:ten1_loc1#item_create@user:silver
+      - item:ten1_item1#delete@user:silver
+      - item:ten1_item1#update@user:silver
+
+      - item:ten1_item2#view@user:silver
+      - location:ten1_loc2#item_create@user:silver
+      - item:ten1_item2#delete@user:silver
+      - item:ten1_item2#update@user:silver
+
+      # giano inventory_clerk at ten1_loc1 and ten2_loc1
+      - location:ten1_loc1#item_create@user:giano
+      - item:ten1_item1#delete@user:giano
+      - item:ten1_item1#update@user:giano
+
+      - location:ten1_loc2#item_create@user:giano
+      - item:ten1_item2#delete@user:giano
+      - item:ten1_item2#update@user:giano
+
+      - location:ten2_loc1#item_create@user:giano
+      - item:ten2_item1#delete@user:giano
+      - item:ten2_item1#update@user:giano
+
+      # pier inventory_clerk at ten1_loc2
+      - item:ten1_item1#view@user:pier
+      - location:ten1_loc1#item_create@user:pier
+      - item:ten1_item1#delete@user:pier
+      - item:ten1_item1#update@user:pier
+
+      - location:ten1_loc2#item_create@user:pier
+      - item:ten1_item2#delete@user:pier
+      - item:ten1_item2#update@user:pier
+
+      - item:ten2_item1#view@user:pier
+      - location:ten2_loc1#item_create@user:pier
+      - item:ten2_item1#delete@user:pier
+      - item:ten2_item1#update@user:pier
+
+validation: {}

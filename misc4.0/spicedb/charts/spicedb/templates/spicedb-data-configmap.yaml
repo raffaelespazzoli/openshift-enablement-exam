@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "spicedb.fullname" . }}
+  labels:
+    {{- include "spicedb.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"     
+data:
+  schema: {{ .Files.Get "files/permission-schema.txt" | quote }}
+  data: {{ .Files.Get "files/permission-relations.txt" | quote }}
+  all-in-one: {{ .Files.Get "files/all-in-one.yaml" | quote }}

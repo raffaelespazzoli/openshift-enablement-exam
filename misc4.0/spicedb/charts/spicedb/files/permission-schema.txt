@@ -1,0 +1,310 @@
+definition user {}
+
+  definition group {
+    relation member: user | group#member
+  }
+
+  definition role {
+    // location
+  	relation location_viewer: user:*
+  	relation location_creator: user:*
+    relation location_updater: user:*
+    relation location_deleter: user:*
+
+    //item
+    relation item_viewer: user:*
+  	relation item_creator: user:*
+    relation item_updater: user:*
+    relation item_deleter: user:*
+
+    //sku
+    relation sku_viewer: user:*
+  	relation sku_creator: user:*
+    relation sku_updater: user:*
+    relation sku_deleter: user:*
+
+    //purchase_requisition
+    relation purchase_requisition_viewer: user:*
+  	relation purchase_requisition_creator: user:*
+
+    //item_requisition
+    relation item_requisition_viewer: user:*
+  	relation item_requisition_creator: user:*
+
+    //transfer_requisition
+    relation transfer_requisition_viewer: user:*
+  	relation transfer_requisition_creator: user:*
+
+    //purchase_order
+    relation purchase_order_viewer: user:*
+  	relation purchase_order_creator: user:*
+
+    //kit
+  	relation kit_creator: user:*
+    relation kit_updater: user:*
+    relation kit_deleter: user:*
+
+    //supplier
+    relation supplier_viewer: user:*
+  	relation supplier_creator: user:*
+    relation supplier_updater: user:*
+    relation supplier_deleter: user:*
+
+    //physical_count
+  	relation physical_count_viewer: user:*
+    relation physical_count_creator: user:*
+
+    //picklist
+  	relation picklist_viewer: user:*
+    relation picklist_updater: user:*
+    relation picklist_creator: user:*
+
+    //manufacturer
+    relation manufacturer_viewer: user:*
+  	relation manufacturer_creator: user:*
+    relation manufacturer_updater: user:*
+    relation manufacturer_deleter: user:*
+
+    //workflow (a.k.a. status)
+    relation workflow_viewer: user:*
+  	relation workflow_creator: user:*
+    relation workflow_updater: user:*
+    relation workflow_deleter: user:*
+
+  }
+
+  definition grant {
+  	relation role: role
+  	relation actor: group#member
+
+    //location
+  	permission location_view = role->location_viewer & actor
+  	permission location_create = role->location_creator & actor
+    permission location_update = role->location_updater & actor
+    permission location_delete = role->location_deleter  & actor
+
+    //permission
+  	permission item_view = role->item_viewer & actor
+  	permission item_create = role->item_creator & actor
+    permission item_update = role->item_updater & actor
+    permission item_delete = role->item_deleter  & actor
+
+    //sku
+  	permission sku_view = role->sku_viewer & actor
+  	permission sku_create = role->sku_creator & actor
+    permission sku_update = role->sku_updater & actor
+    permission sku_delete = role->sku_deleter  & actor
+
+    //purchase_requisition
+  	permission purchase_requisition_view = role->purchase_requisition_viewer & actor
+  	permission purchase_requisition_create = role->purchase_requisition_creator & actor
+
+    //item_requisition
+  	permission item_requisition_view = role->item_requisition_viewer & actor
+  	permission item_requisition_create = role->item_requisition_creator & actor
+
+    //transfer_requisition
+  	permission transfer_requisition_view = role->transfer_requisition_viewer & actor
+  	permission transfer_requisition_create = role->transfer_requisition_creator & actor
+
+    //purchase_order
+  	permission purchase_order_view = role->purchase_order_viewer & actor
+  	permission purchase_order_create = role->purchase_order_creator & actor
+
+    //kit
+  	permission kit_create = role->kit_creator & actor
+    permission kit_update = role->kit_updater & actor
+    permission kit_delete = role->kit_deleter  & actor
+
+    //supplier
+  	permission supplier_view = role->supplier_viewer & actor
+  	permission supplier_create = role->supplier_creator & actor
+    permission supplier_update = role->supplier_updater & actor
+    permission supplier_delete = role->supplier_deleter  & actor
+
+    //physical_count
+  	permission physical_count_view = role->physical_count_viewer & actor
+  	permission physical_count_create = role->physical_count_creator & actor
+
+    //picklist
+  	permission picklist_view = role->picklist_viewer & actor
+  	permission picklist_create = role->picklist_creator & actor
+    permission picklist_update = role->picklist_updater & actor
+
+    //manufacturer
+  	permission manufacturer_view = role->manufacturer_viewer & actor
+  	permission manufacturer_create = role->manufacturer_creator & actor
+    permission manufacturer_update = role->manufacturer_updater & actor
+    permission manufacturer_delete = role->manufacturer_deleter  & actor
+
+    //workflow (a.k.a. status)
+  	permission workflow_view = role->workflow_viewer & actor
+  	permission workflow_create = role->workflow_creator & actor
+    permission workflow_update = role->workflow_updater & actor
+    permission workflow_delete = role->workflow_deleter  & actor
+
+  }
+
+  definition location {
+      relation granter: grant
+      relation parent: location
+      permission location_create = granter -> location_create + parent -> location_create
+      permission location_update = granter -> location_update + parent -> location_update
+      permission location_delete = granter -> location_delete + parent -> location_delete
+      permission location_view = location_create + location_update + location_delete + granter -> location_view + parent -> location_view
+
+      //item permissions
+      permission item_create = granter -> item_create + parent -> item_create
+      permission item_update = granter -> item_update + parent -> item_update
+      permission item_delete = granter -> item_delete + parent -> item_delete
+      permission item_view = granter -> item_view + parent -> item_view
+
+      //sku permissions
+      permission sku_create = granter -> sku_create + parent -> sku_create
+      permission sku_update = granter -> sku_update + parent -> sku_update
+      permission sku_delete = granter -> sku_delete + parent -> sku_delete
+      permission sku_view = granter -> sku_view + parent -> sku_view
+
+      //purchase_requisition permissions
+      permission purchase_requisition_create = granter -> purchase_requisition_create + parent -> purchase_requisition_create
+      permission purchase_requisition_view = granter -> purchase_requisition_view + parent -> purchase_requisition_view
+
+      //item_requisition permissions
+      permission item_requisition_create = granter -> item_requisition_create + parent -> item_requisition_create
+      permission item_requisition_view = granter -> item_requisition_view + parent -> item_requisition_view
+
+      //transfer_requisition permissions
+      permission transfer_requisition_create = granter -> transfer_requisition_create + parent -> transfer_requisition_create
+      permission transfer_requisition_view = granter -> transfer_requisition_view + parent -> transfer_requisition_view
+
+      //purchase_order permissions
+      permission purchase_order_create = granter -> purchase_order_create + parent -> purchase_order_create
+      permission purchase_order_view = granter -> purchase_order_view + parent -> purchase_order_create
+
+      //kit permissions
+      permission kit_create = granter -> kit_create + parent -> kit_create
+      permission kit_update = granter -> kit_update + parent -> kit_update
+      permission kit_delete = granter -> kit_delete + parent -> kit_delete
+
+      //supplier
+      permission supplier_create = granter -> supplier_create + parent -> supplier_create
+      permission supplier_update = granter -> supplier_update + parent -> supplier_update
+      permission supplier_delete = granter -> supplier_delete + parent -> supplier_delete
+
+      //physical_count
+      permission physical_count_create = granter -> physical_count_create + parent -> physical_count_create
+      permission physical_count_view = granter -> physical_count_view + parent -> physical_count_view
+
+      //picklist
+      permission picklist_create = granter -> picklist_create + parent -> picklist_create
+      permission picklist_update = granter -> picklist_update + parent -> picklist_update
+      permission picklist_view = granter -> picklist_view + parent -> picklist_view
+
+      //manufacturer (only top level location)
+      permission manufacturer_create = granter -> manufacturer_create
+      permission manufacturer_update = granter -> manufacturer_update
+      permission manufacturer_delete = granter -> manufacturer_delete
+      permission manufacturer_view = granter -> manufacturer_view
+
+      //workflow (a.k.a status) (only top level location)
+      permission workflow_create = granter -> workflow_create
+      permission workflow_update = granter -> workflow_update
+      permission workflow_delete = granter -> workflow_delete
+      permission workflow_view = granter -> workflow_view
+  }
+
+  definition item {
+      relation location: location
+      permission update = location -> item_update
+      permission delete = location -> item_delete
+      permission view = location -> item_update + location -> item_delete + location -> item_view
+  }
+
+  definition sku {
+      relation location: location
+      permission update = location -> item_update
+      permission delete = location -> item_delete
+      permission view = location -> item_update + location -> item_delete + location -> item_view
+  }
+
+  definition purchase_requisition {
+      relation created_by: user
+      relation assigned_to: user
+      relation location: location
+
+      permission update = created_by
+      permission view = created_by + assigned_to + location -> purchase_requisition_view
+  }
+
+  definition item_requisition {
+      relation created_by: user
+      relation assigned_to: user
+      relation location: location
+
+      permission update = created_by
+      permission view = created_by + assigned_to + location -> item_requisition_view
+  }
+
+  definition transfer_requisition {
+      relation created_by: user
+      relation assigned_to: user
+      relation location: location
+
+      permission update = created_by
+      permission view = created_by + assigned_to + location -> transfer_requisition_view
+  }
+
+  definition purchase_order {
+      relation location: location
+      relation assigned_to: user
+      relation created_by: user
+
+      permission update = created_by
+      permission view = created_by + assigned_to + location -> purchase_order_view
+  }
+
+  definition kit{
+      relation location: location
+      permission update = location -> kit_update
+      permission delete = location -> kit_delete
+      permission view = location -> kit_update + location -> kit_delete + location -> item_viewer
+  }
+
+  definition supplier {
+      relation location: location
+      relation parent: supplier
+      permission update = location -> supplier_update + parent -> update
+      permission delete = location -> supplier_delete + parent -> delete
+      permission view = location -> supplier_update + location -> supplier_delete + location -> view + parent -> view
+  }
+
+  definition physical_count {
+      relation location: location
+      relation assigned_to: user
+      relation created_by: user
+      permission update = assigned_to + created_by + location -> physical_count_create
+      permission view = assigned_to + created_by + location -> physical_count_view
+  }
+
+  definition picklist {
+      relation location: location
+      relation assigned_to: user
+      relation created_by: user
+      permission update = assigned_to + created_by + location -> picklist_update
+      permission delete = location -> picklist_delete
+      permission view = assigned_to + created_by + location -> picklist_update + location -> picklist_delete + location -> picklist_view
+  }
+
+  definition manufacturer {
+      relation location: location
+      permission update = location -> manufacturer_update
+      permission delete = location -> manufacturer_delete
+      permission view = location -> manufacturer_update + location -> manufacturer_delete + location -> manufacturer_view
+  }
+
+  definition workflow {
+      relation location: location
+      permission update = location -> workflow_update
+      permission delete = location -> workflow_delete
+      permission view = location -> workflow_update + location -> workflow_delete + location -> workflow_view
+  }

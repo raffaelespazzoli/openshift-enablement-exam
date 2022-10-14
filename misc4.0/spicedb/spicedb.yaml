@@ -1,15 +1,21 @@
 apiVersion: authzed.com/v1alpha1
 kind: SpiceDBCluster
 metadata:
-  name: dev
+  name: dev-operator
 spec:
   config:
-    datastoreEngine: memory 
-  secretName: dev-spicedb-config
+    #datastoreEngine: memory
+    #datastoreEngine: cockroachdb
+    datastoreEngine: postgres
+    replicas: 3
+    logLevel: debug    
+  secretName: dev-operator-spicedb-config
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: dev-spicedb-config
+  name: dev-operator-spicedb-config
 stringData:
   preshared_key: "averysecretpresharedkey"
+  #datastore_uri: postgres://admin@cockroachdb-public:26257/defaultdb?sslmode=disable
+  datastore_uri: postgres://spicedb1:spicedb1@spicedb1-database:5432/spicedb?sslmode=disable

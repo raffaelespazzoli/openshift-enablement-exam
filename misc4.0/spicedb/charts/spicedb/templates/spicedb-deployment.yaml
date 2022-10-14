@@ -1,0 +1,98 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ include "spicedb.fullname" . }}
+  labels:
+    {{- include "spicedb.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"     
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      {{- include "spicedb.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "spicedb.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - resources: {}
+          readinessProbe:
+            exec:
+              command:
+                - grpc_health_probe
+                - '-v'
+                - '-addr=localhost:50051'
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 5
+          terminationMessagePath: /dev/termination-log
+          name: {{ include "spicedb.fullname" . }}-spicedb
+          command:
+            - spicedb
+            - serve
+          livenessProbe:
+            exec:
+              command:
+                - grpc_health_probe
+                - '-v'
+                - '-addr=localhost:50051'
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 5
+          env:
+            - name: SPICEDB_LOG_LEVEL
+              value: debug
+            - name: SPICEDB_DISPATCH_UPSTREAM_ADDR
+              value: 'kubernetes:///{{ include "spicedb.fullname" . }}.{{.Release.Namespace}}:dispatch'
+            - name: SPICEDB_GRPC_PRESHARED_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "spicedb.fullname" . }}
+                  key: preshared_key
+            - name: SPICEDB_DATASTORE_CONN_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "spicedb.fullname" . }}
+                  key: datastore_uri
+            - name: SPICEDB_DATASTORE_ENGINE
+              value: postgres
+            - name: SPICEDB_DISPATCH_CLUSTER_ENABLED
+              value: 'true'
+          ports:
+            - name: dahsboard
+              protocol: TCP
+              containerPort: 8080          
+            - name: grpc
+              containerPort: 50051
+              protocol: TCP
+            - name: dispatch
+              containerPort: 50053
+              protocol: TCP
+            - name: gateway
+              containerPort: 8443
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          terminationMessagePolicy: File
+          image: 'ghcr.io/authzed/spicedb:v1.13.0'
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: {{ include "spicedb.fullname" . }}
+      serviceAccount: {{ include "spicedb.fullname" . }}
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
