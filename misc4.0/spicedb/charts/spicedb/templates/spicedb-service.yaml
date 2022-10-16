@@ -5,7 +5,9 @@ metadata:
   labels:
     {{- include "spicedb.labels" . | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "1"     
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "1" 
+    service.beta.openshift.io/serving-cert-secret-name: {{ include "spicedb.fullname" . }}-tls         
 spec:
   ports:
     - name: dahsboard

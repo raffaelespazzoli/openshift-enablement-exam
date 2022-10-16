@@ -1,5 +1,5 @@
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: ConfigMap
 metadata:
   name: postgresql-{{ include "spicedb.fullname" . }}
   labels:
@@ -7,11 +7,8 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install
     "helm.sh/hook-weight": "1"     
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: gp2
-  volumeMode: Filesystem
+data: 
+  ssl.conf: |-
+    ssl = on
+    ssl_cert_file = '/certs/tls.crt' 
+    ssl_key_file =  '/certs/tls.key'

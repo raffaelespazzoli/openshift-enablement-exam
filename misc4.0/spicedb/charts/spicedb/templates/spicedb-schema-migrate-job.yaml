@@ -5,7 +5,8 @@ metadata:
   labels:
     {{- include "spicedb.labels" . | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "2" 
 spec:
   ttlSecondsAfterFinished: 600
   backoffLimit: 4
@@ -40,4 +41,11 @@ spec:
               value: 'true'
           terminationMessagePolicy: FallbackToLogsOnError
           image: 'ghcr.io/authzed/spicedb:v1.11.0'
+          volumeMounts:
+          - name: ca
+            mountPath: /ca          
+      volumes:
+      - name: ca
+        configMap:
+          name: openshift-service-ca.crt      
   

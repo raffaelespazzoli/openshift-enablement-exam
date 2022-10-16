@@ -5,7 +5,8 @@ metadata:
   labels:
     {{- include "spicedb.labels" . | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "1"     
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "1"      
 spec:
   to:
     kind: Service
@@ -14,3 +15,5 @@ spec:
   port:
     targetPort: 8080
   wildcardPolicy: None
+  tls:
+    termination: reencrypt

@@ -5,7 +5,8 @@ metadata:
   labels:
     {{- include "spicedb.labels" . | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "1"     
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "1"      
 subjects:
   - kind: ServiceAccount
     name: {{ include "spicedb.fullname" . }}

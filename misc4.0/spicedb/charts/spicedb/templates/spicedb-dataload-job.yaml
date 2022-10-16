@@ -5,7 +5,8 @@ metadata:
   labels:
     {{- include "spicedb.labels" . | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "4"
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
 spec:
   ttlSecondsAfterFinished: 600
   backoffLimit: 4
@@ -24,7 +25,7 @@ spec:
             - averysecretpresharedkey
             - --endpoint 
             - "{{ include "spicedb.fullname" . }}:50051"
-            - --insecure
+            - --no-verify-ca
           env:
             - name: KEY
               valueFrom:
@@ -34,11 +35,16 @@ spec:
           volumeMounts:
           - name: data
             mountPath: "/data"
-            readOnly: true                  
+            readOnly: true
+          - name: ca
+            mountPath: /ca                              
           terminationMessagePolicy: FallbackToLogsOnError
           image: 'quay.io/authzed/zed:v0.7.4'
       volumes:
         - name: data
           configMap:
-            name: {{ include "spicedb.fullname" . }}          
+            name: {{ include "spicedb.fullname" . }}
+        - name: ca
+          configMap:
+            name: openshift-service-ca.crt                    
   

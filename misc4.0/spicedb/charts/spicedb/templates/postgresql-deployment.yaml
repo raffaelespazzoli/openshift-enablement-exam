@@ -5,7 +5,8 @@ metadata:
   labels:
     {{- include "spicedb.labels" . | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "1"    
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "1"     
 spec:
   replicas: 1
   selector:
@@ -20,6 +21,13 @@ spec:
         - name: postgresql-data
           persistentVolumeClaim:
             claimName: postgresql-{{ include "spicedb.fullname" . }}
+        - name: certs
+          secret:
+            secretName: postgresql-{{ include "spicedb.fullname" . }}-tls
+            defaultMode: 0640
+        - name: conf
+          configMap:
+            name: postgresql-{{ include "spicedb.fullname" . }}                        
       containers:
         - resources:
             limits:
@@ -73,6 +81,10 @@ spec:
           volumeMounts:
             - name: postgresql-data
               mountPath: /var/lib/pgsql/data
+            - name: certs
+              mountPath: /certs
+            - name: conf
+              mountPath: /opt/app-root/src/postgresql-cfg                      
           terminationMessagePolicy: File
           image: 'registry.redhat.io/rhel8/postgresql-13:latest'
           args:

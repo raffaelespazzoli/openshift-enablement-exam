@@ -3,9 +3,7 @@ apiVersion: apps/v1
 metadata:
   name: {{ include "spicedb.fullname" . }}
   labels:
-    {{- include "spicedb.labels" . | nindent 4 }}
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"     
+    {{- include "spicedb.labels" . | nindent 4 }}  
 spec:
   replicas: 3
   selector:
@@ -24,6 +22,8 @@ spec:
                 - grpc_health_probe
                 - '-v'
                 - '-addr=localhost:50051'
+                - '-tls'
+                - '-tls-no-verify'
             timeoutSeconds: 5
             periodSeconds: 10
             successThreshold: 1
@@ -33,6 +33,20 @@ spec:
           command:
             - spicedb
             - serve
+            - --grpc-tls-cert-path
+            - /certs/tls.crt
+            - --grpc-tls-key-path
+            - /certs/tls.key
+            - --dashboard-tls-cert-path
+            - /certs/tls.crt
+            - --dashboard-tls-key-path
+            - /certs/tls.key
+            - --dispatch-cluster-tls-cert-path
+            - /certs/tls.crt
+            - --dispatch-cluster-tls-key-path
+            - /certs/tls.key
+            - --dispatch-upstream-ca-path
+            - /ca/service-ca.crt                                                    
           livenessProbe:
             exec:
               command:
@@ -82,6 +96,11 @@ spec:
           imagePullPolicy: IfNotPresent
           terminationMessagePolicy: File
           image: 'ghcr.io/authzed/spicedb:v1.13.0'
+          volumeMounts:
+          - name: certs
+            mountPath: /certs       
+          - name: ca
+            mountPath: /ca               
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
@@ -89,6 +108,13 @@ spec:
       serviceAccount: {{ include "spicedb.fullname" . }}
       securityContext: {}
       schedulerName: default-scheduler
+      volumes:      
+      - name: certs
+        secret:
+          secretName: {{ include "spicedb.fullname" . }}-tls   
+      - name: ca
+        configMap:
+          name: openshift-service-ca.crt
   strategy:
     type: RollingUpdate
     rollingUpdate:
