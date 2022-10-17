@@ -42,11 +42,11 @@ spec:
             - --dashboard-tls-key-path
             - /certs/tls.key
             - --dispatch-cluster-tls-cert-path
-            - /certs/tls.crt
+            - /dispatcher-certs/tls.crt
             - --dispatch-cluster-tls-key-path
-            - /certs/tls.key
+            - /dispatcher-certs/tls.key
             - --dispatch-upstream-ca-path
-            - /ca/service-ca.crt                                                    
+            - /dispatcher-certs/ca.crt                                                    
           livenessProbe:
             exec:
               command:
@@ -98,7 +98,9 @@ spec:
           image: 'ghcr.io/authzed/spicedb:v1.13.0'
           volumeMounts:
           - name: certs
-            mountPath: /certs       
+            mountPath: /certs
+          - name: dispatcher-certs
+            mountPath: /dispatcher-certs                   
           - name: ca
             mountPath: /ca               
       restartPolicy: Always
@@ -111,7 +113,10 @@ spec:
       volumes:      
       - name: certs
         secret:
-          secretName: {{ include "spicedb.fullname" . }}-tls   
+          secretName: {{ include "spicedb.fullname" . }}-tls
+      - name: dispatcher-certs
+        secret:
+          secretName: {{ include "spicedb.fullname" . }}-dispatcher-tls             
       - name: ca
         configMap:
           name: openshift-service-ca.crt

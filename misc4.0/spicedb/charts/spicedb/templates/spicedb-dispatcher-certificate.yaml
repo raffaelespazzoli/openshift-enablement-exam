@@ -1,0 +1,30 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "spicedb.fullname" . }}-dispatcher
+  labels:
+    {{- include "spicedb.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "1"      
+spec:
+  # Secret names are always required.
+  secretName: {{ include "spicedb.fullname" . }}-dispatcher-tls
+  commonName: dispatcher
+  usages:
+    - server auth
+  dnsNames:
+    - "{{ include "spicedb.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
+    - "{{ include "spicedb.fullname" . }}.{{ .Release.Namespace }}.svc"
+    - "{{ include "spicedb.fullname" . }}.{{ .Release.Namespace }}"
+    - "{{ include "spicedb.fullname" . }}"
+  duration: 168h
+  renewBefore: 1h
+  issuerRef:
+    name: local-issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: Issuer
+    # This is optional since cert-manager will default to this value however
+    # if you are using an external issuer, change this to that issuer group.
+    group: cert-manager.io
