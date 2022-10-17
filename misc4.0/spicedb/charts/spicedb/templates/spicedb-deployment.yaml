@@ -53,6 +53,8 @@ spec:
                 - grpc_health_probe
                 - '-v'
                 - '-addr=localhost:50051'
+                - '-tls'
+                - '-tls-no-verify'                
             initialDelaySeconds: 60
             timeoutSeconds: 5
             periodSeconds: 10
