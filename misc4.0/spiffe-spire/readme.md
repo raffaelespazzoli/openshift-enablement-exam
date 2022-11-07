@@ -25,9 +25,11 @@ kubectl apply \
     
 kubectl exec -n spire spire-server-0 --     /opt/spire/bin/spire-server entry create     -spiffeID spiffe://example.org/ns/spire/sa/spire-agent     -selector k8s_sat:cluster:demo-cluster     -selector k8s_sat:agent_ns:spire     -selector k8s_sat:agent_sa:spire-agent     -node         
 
-```        
+```
 
 test:
+```shell
 oc new-project test-spire
 kubectl exec -n spire spire-server-0 --     /opt/spire/bin/spire-server entry create     -spiffeID spiffe://example.org/ns/test-spire/sa/default     -parentID spiffe://example.org/ns/spire/sa/spire-agent     -selector k8s:ns:test-spire     -selector k8s:sa:default
 oc apply -n test-spire -f ./busybox.yaml
+```
