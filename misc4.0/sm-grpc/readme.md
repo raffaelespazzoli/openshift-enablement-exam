@@ -2,7 +2,6 @@
 
 ```shell
 oc apply -f operators.yaml
-#oc apply -f cert-manager.yaml
 helm upgrade -i \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
@@ -11,11 +10,12 @@ helm upgrade -i \
   --set installCRDs=true \
   --set "extraArgs={--dns01-recursive-nameservers-only,--dns01-recursive-nameservers=8.8.8.8:53}" \
   --set global.leaderElection.namespace=cert-manager
-oc apply -f letsencrypt-issuer.yaml
-oc new-project istio-system
-oc apply -f mesh-certificate.yaml
-oc apply -f control-plane.yaml
-oc apply -f gateway.yaml
+oc apply -f credential-request.yaml
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+export hosted_zone=$(oc get dns cluster -o jsonpath='{.spec.publicZone.id}')
+export region=$(oc get infrastructure cluster -o jsonpath='{.status.platformStatus.aws.region}')
+export aws_key_id=$(oc get secret cert-manager-dns-credentials -n cert-manager -o jsonpath='{.data.aws_secret_access_key}' | base64 -d )
+envsubst < letsencrypt-issuer.yaml | oc apply -f -
 ```
 
 ```shell

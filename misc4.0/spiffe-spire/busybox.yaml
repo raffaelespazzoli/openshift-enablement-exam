@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubi8
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubi8
+  template:
+    metadata:
+      labels:
+        app: ubi8
+    spec:
+      containers:
+      - name: ubi8
+        image: gcr.io/spiffe-io/spire-agent:1.2.3
+        command:
+          - sleep
+          - "3600"
+        env:
+        - name: SPIFFE_ENDPOINT_SOCKET
+          value: unix:///spiffe-workload-api/spire-agent.sock
+        volumeMounts:
+        - name: spiffe-workload-api
+          mountPath: /spiffe-workload-api
+          readOnly: true                        
+      volumes:
+      - name: spiffe-workload-api
+        csi:
+          driver: "csi.spiffe.io"
+          readOnly: true            

@@ -3,12 +3,17 @@ baseDomain: demo.red-chesterfield.com
 compute:
 - hyperthreading: Enabled
   name: worker
-  platform: {}
+  platform: 
+    aws:
+      type: m6i.2xlarge
   replicas: 4
+  
 controlPlane:
   hyperthreading: Enabled
   name: master
-  platform: {}
+  platform: 
+    aws:
+      type: m6i.2xlarge  
   replicas: 3
 metadata:
   name: control-cluster-raffa

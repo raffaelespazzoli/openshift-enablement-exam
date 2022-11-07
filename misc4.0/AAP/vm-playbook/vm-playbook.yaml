@@ -1,0 +1,110 @@
+---
+- name: create VMs
+  hosts: localhost
+
+  tasks:
+  - name: Create a Virtual Machine
+    kubernetes.core.k8s:
+      state: present
+      name: "{{ NAME }}"
+      host: "https://kubernetes.default.svc:443"
+      api_key: "{{ lookup('file', '/var/run/secrets/kubernetes.io/serviceaccount/token') }}"
+      namespace: "{{ NAMESPACE }}"
+      validate_certs: false
+      definition:
+        apiVersion: kubevirt.io/v1
+        kind: VirtualMachine
+        metadata:
+          annotations:
+            vm.kubevirt.io/validations: |
+              [
+                {
+                  "name": "minimal-required-memory",
+                  "path": "jsonpath::.spec.domain.resources.requests.memory",
+                  "rule": "integer",
+                  "message": "This VM requires more memory.",
+                  "min": 1073741824
+                }
+              ]
+          generation: 1
+          labels:
+            app: "{{ NAME }}"
+            vm.kubevirt.io/template: fedora-server-small
+            vm.kubevirt.io/template.namespace: openshift
+            vm.kubevirt.io/template.revision: '1'
+            vm.kubevirt.io/template.version: v0.23.4
+        spec:
+          dataVolumeTemplates:
+            - apiVersion: cdi.kubevirt.io/v1beta1
+              kind: DataVolume
+              metadata:
+                creationTimestamp: null
+                name: "{{ NAME }}"
+              spec:
+                sourceRef:
+                  kind: DataSource
+                  name: fedora
+                  namespace: openshift-virtualization-os-images
+                storage:
+                  resources:
+                    requests:
+                      storage: 30Gi
+          running: false
+          template:
+            metadata:
+              annotations:
+                vm.kubevirt.io/flavor: small
+                vm.kubevirt.io/os: fedora
+                vm.kubevirt.io/workload: server
+              creationTimestamp: null
+              labels:
+                kubevirt.io/domain: "{{ NAME }}"
+                kubevirt.io/size: small
+            spec:
+              domain:
+                cpu:
+                  cores: 1
+                  sockets: 1
+                  threads: 1
+                devices:
+                  disks:
+                    - disk:
+                        bus: virtio
+                      name: rootdisk
+                    - disk:
+                        bus: virtio
+                      name: cloudinitdisk
+                  interfaces:
+                    - macAddress: '02:aa:fd:00:00:02'
+                      masquerade: {}
+                      name: default
+                  networkInterfaceMultiqueue: true
+                  rng: {}
+                features:
+                  acpi: {}
+                  smm:
+                    enabled: true
+                firmware:
+                  bootloader:
+                    efi: {}
+                machine:
+                  type: pc-q35-rhel8.6.0
+                resources:
+                  requests:
+                    memory: 2Gi
+              evictionStrategy: LiveMigrate
+              networks:
+                - name: default
+                  pod: {}
+              terminationGracePeriodSeconds: 180
+              volumes:
+                - dataVolume:
+                    name: "{{ NAME }}"
+                  name: rootdisk
+                - cloudInitNoCloud:
+                    userData: |-
+                      #cloud-config
+                      user: fedora
+                      password: 044v-i82c-pfvm
+                      chpasswd: { expire: False }
+                  name: cloudinitdisk
