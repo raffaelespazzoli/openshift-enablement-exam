@@ -4,6 +4,9 @@ The following instructions will setup an OpenShift OCP 3.3 environment on Google
 
 ![GCP reference architecture](./media/OSE-on-GCE-Architecture-v0.3.png)
 
+
+attention: this is all deprecated now.
+
 ## 3.6 changes
 
 updated to 3.6
