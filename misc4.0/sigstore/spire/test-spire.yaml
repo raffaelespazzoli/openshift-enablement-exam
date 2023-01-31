@@ -20,11 +20,14 @@ spec:
           - "3600"
         env:
         - name: SPIFFE_ENDPOINT_SOCKET
-          value: unix:///spiffe-workload-api/spire-agent.sock
+          value: unix:///spiffe-workload-api/agent.sock
         volumeMounts:
         - name: spiffe-workload-api
           mountPath: /spiffe-workload-api
-          readOnly: true
+          readOnly: true      
+        securityContext:
+          seLinuxOptions:
+            type: allow-csi-socket_openshift-security-profiles.process
       volumes:
       - name: spiffe-workload-api
         csi:

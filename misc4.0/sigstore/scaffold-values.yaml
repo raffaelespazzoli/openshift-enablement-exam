@@ -1,0 +1,77 @@
+copySecretJob:
+  enabled: true
+
+ctlog:
+  namespace:
+    name: ctlog-system
+    create: false
+
+trillian:
+  namespace:
+    name: trillian-system
+    create: false       
+
+rekor:
+  namespace:
+    name: rekor-system
+    create: false
+  server:
+    attestation_storage:
+      enabled: false
+      persistence:
+        enabled: false
+    ingress:
+      className: ""
+      annotations:
+        route.openshift.io/termination: "edge"
+      hosts:
+        - host: rekor.apps.tmp-raffa.demo.red-chesterfield.com
+          path: /
+      # tls:
+      #   - secretName: rekor-tls
+      #     hosts:
+      #       - rekor.sigstore.local
+fulcio:
+  namespace:
+    name: fulcio-system
+    create: false
+  createcerts:
+    enabled: true
+  server:
+    ingress:
+      http:
+        className: ""
+        annotations:
+          route.openshift.io/termination: "edge"
+        hosts:
+          - host: fulcio.apps.tmp-raffa.demo.red-chesterfield.com
+            path: /
+        # tls:
+        #   - secretName: fulcio-tls
+        #     hosts:
+        #       - fulcio.sigstore.local
+  config:
+    contents:
+      OIDCIssuers:
+        https://keycloak-rh-sso.apps.tmp-raffa.demo.red-chesterfield.com/auth/realms/sigstore:
+          IssuerURL: https://keycloak-rh-sso.apps.tmp-raffa.demo.red-chesterfield.com/auth/realms/sigstore
+          ClientID: sigstore
+          Type: email
+
+tuf:
+  namespace:
+    name: tug-system
+    create: false
+  enabled: true
+  ingress:
+    className: ""
+    annotations:
+      route.openshift.io/termination: "edge"
+    http:
+      hosts:
+        - host: tuf.apps.tmp-raffa.demo.red-chesterfield.com
+          path: /
+    # tls:
+    #   - secretName: tuf-tls
+    #     hosts:
+    #       - "tuf.sigstore.local"

@@ -1,0 +1,21 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: sigstore
+  namespace: rh-sso
+  labels:
+    app: sso
+spec:
+  user:
+    username: "sigstore"
+    firstName: "Sigstore"
+    lastName: "User"
+    enabled: True
+    emailVerified: True
+    email: "sigstore@redhat.com"
+    credentials:
+      - type: "password"
+        value: "redhat"
+  realmSelector:
+    matchLabels:
+      app: sso

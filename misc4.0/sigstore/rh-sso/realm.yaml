@@ -1,0 +1,16 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  labels:
+    app: sso
+  name: sigstore
+  namespace: rh-sso
+spec:
+  realm:
+    id: sigstore
+    realm: sigstore
+    enabled: true
+    displayName: sigstore
+  instanceSelector:
+    matchLabels:
+      app: sso

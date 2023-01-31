@@ -1,0 +1,23 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: sigstore
+  namespace: rh-sso
+  labels:
+    app: sso
+spec:
+  realmSelector:
+    matchLabels:
+      app: sso
+  client:
+    clientId: sigstore
+    publicClient: true
+    standardFlowEnabled: true
+    directAccessGrantsEnabled: true
+    implicitFlowEnabled: false
+    defaultClientScopes:
+      - profile
+      - email
+    consentRequired: false
+    redirectUris:
+      - "http://localhost/auth/callback"

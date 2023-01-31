@@ -1,0 +1,23 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-issuer
+  namespace: cert-manager
+spec:
+  acme:
+    server: 'https://acme-v02.api.letsencrypt.org/directory'
+    email: raffaele.spazzoli@gmail.com
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:  
+    # ACME DNS-01 provider configurations
+    - dns01:
+      # Here we define a list of DNS-01 providers that can solve DNS challenges
+        route53:
+          accessKeyID: ${access_key_id}
+          secretAccessKeySecretRef:
+            name: cert-manager-dns-credentials
+            key: aws_secret_access_key
+          region: ${region}
+          hostedZoneID: ${hosted_zone} 

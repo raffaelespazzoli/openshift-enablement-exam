@@ -1,0 +1,154 @@
+global:
+  openshift: true
+  tlsDisable: false
+
+ui:
+  enabled: true
+
+injector:
+  image:
+    tag: "1.1.0"
+    repository: docker.io/hashicorp/vault-k8s
+  agentImage:
+    repository: "docker.io/hashicorp/vault"
+    tag: "1.12.2"  
+
+csi:
+  image:
+    repository: "docker.io/hashicorp/vault-csi-provider"
+    tag: "1.2.1"
+    pullPolicy: IfNotPresent      
+
+server:
+  image:
+    tag: "1.12.2"
+    repository: docker.io/hashicorp/vault
+
+  extraEnvironmentVars:
+    VAULT_CACERT: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+
+
+  route:
+    enabled: true
+    host: vault-vault.apps.${cluster_base_domain}
+    tls:
+      termination: reencrypt    
+
+  extraVolumes:
+    - type: secret
+      name: vault-server-tls # Matches the ${SECRET_NAME} from above
+
+  volumes:    
+    - name: plugins
+      emptyDir: {}
+    - name: vault-root-token
+      secret:
+        secretName: vault-init
+        optional: true  
+
+  volumeMounts:
+    - mountPath: /usr/local/libexec/vault
+      name: plugins
+      readOnly: false 
+
+  standalone:
+    enabled: true
+    config: |
+      ui = true
+      listener "tcp" {
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+        tls_cert_file = "/vault/userconfig/vault-server-tls/tls.crt"
+        tls_key_file  = "/vault/userconfig/vault-server-tls/tls.key"
+        tls_client_ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt"
+      }
+
+      storage "file" {
+        path = "/vault/data"
+      }
+
+      plugin_directory = "/usr/local/libexec/vault"
+
+  service: 
+    annotations:
+      service.beta.openshift.io/serving-cert-secret-name: vault-server-tls
+
+  extraInitContainers:
+    - name: utility-downloader
+      image: registry.access.redhat.com/ubi8/ubi:8.5
+      command: 
+      - /bin/bash
+      - -c
+      - | 
+          cd /usr/local/libexec/vault
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          curl -L -o jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+          chmod +x jq
+      volumeMounts:
+        - name: plugins
+          mountPath: /usr/local/libexec/vault          
+
+  extraContainers:
+    # you should not do this in production
+    - name: auto-initializer
+      image: registry.connect.redhat.com/hashicorp/vault:1.12.0-ubi
+      env: 
+      - name: VAULT_ADDR
+        value: https://vault.vault.svc:8200
+      - name: VAULT_CACERT
+        value: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt  
+      command: 
+      - /bin/bash
+      - -c
+      - | 
+          while true; do
+            sleep 5
+            if [[ $(vault status | grep "Initialized" | grep "false") ]]; then
+              export INIT_RESPONSE=$(vault operator init -format=json -key-shares 1 -key-threshold 1)
+              echo "$INIT_RESPONSE"
+              export UNSEAL_KEY=$(echo "$INIT_RESPONSE" | /usr/local/libexec/vault/jq -r .unseal_keys_b64[0])
+              export ROOT_TOKEN=$(echo "$INIT_RESPONSE" | /usr/local/libexec/vault/jq -r .root_token)
+              echo "$UNSEAL_KEY"
+              echo "$ROOT_TOKEN"
+              /usr/local/libexec/vault/kubectl delete secret vault-init -n vault
+              /usr/local/libexec/vault/kubectl create secret generic vault-init -n vault --from-literal=unseal_key=${UNSEAL_KEY} --from-literal=root_token=${ROOT_TOKEN} 
+            else
+              sleep 5
+            fi    
+          done
+      volumeMounts:
+        - name: plugins
+          mountPath: /usr/local/libexec/vault          
+    # you should not do this in production      
+    - name: auto-unsealer
+      image: registry.connect.redhat.com/hashicorp/vault:1.12.0-ubi
+      env: 
+      - name: VAULT_ADDR
+        value: https://vault.vault.svc:8200
+      - name: VAULT_CACERT
+        value: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt  
+      command: 
+      - /bin/bash
+      - -c
+      - | 
+          while true; do
+            sleep 5
+            if [[ $(vault status | grep "Initialized" | grep "true") ]]; then
+              if [[ $(vault status | grep "Sealed" | grep "true") ]]; then
+                if [[ -f /vault-root-token/unseal_key ]]; then
+                  #vault operator unseal -reset $(cat /vault-root-token/unseal_key)
+                  vault operator unseal $(cat /vault-root-token/unseal_key)
+                else
+                  echo unseal key not initialized yet  
+                fi
+              else  
+                echo vault already unsealed
+              fi
+            else  
+              echo Vault not initialized yet
+            fi     
+          done
+      volumeMounts:
+        - name: vault-root-token
+          mountPath: /vault-root-token  

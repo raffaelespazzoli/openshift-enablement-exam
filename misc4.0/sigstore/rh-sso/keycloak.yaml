@@ -1,0 +1,16 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  labels:
+    app: sso
+  name: keycloak
+  namespace: rh-sso
+spec:
+  externalAccess:
+    enabled: true
+    tlsTermination: reencrypt
+  instances: 1
+  keycloakDeploymentSpec:
+    imagePullPolicy: Always
+  postgresDeploymentSpec:
+    imagePullPolicy: Always
