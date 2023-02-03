@@ -1,0 +1,263 @@
+# ServiceAccount used by the SPIRE server.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: spire-server
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}
+
+---
+
+# Required cluster role to allow spire-server to query k8s API server
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: spire-server-cluster-role
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}  
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get"]
+  # allow TokenReview requests (to verify service account tokens for PSAT
+  # attestation)
+- apiGroups: ["authentication.k8s.io"]
+  resources: ["tokenreviews"]
+  verbs: ["get", "create"]
+
+---
+
+# Binds above cluster role to spire-server service account
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: spire-server-cluster-role-binding
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}
+subjects:
+- kind: ServiceAccount
+  name: spire-server
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: spire-server-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+# Role for the SPIRE server
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: spire-server-role
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}  
+rules:
+  # allow "get" access to pods (to resolve selectors for PSAT attestation)
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get"]
+  # allow access to "get" and "patch" the spire-bundle ConfigMap (for SPIRE
+  # agent bootstrapping, see the spire-bundle ConfigMap below)
+- apiGroups: [""]
+  resources: ["configmaps"]
+  resourceNames: ["spire-bundle"]
+  verbs: ["get", "patch"]
+
+---
+
+# RoleBinding granting the spire-server-role to the SPIRE server
+# service account.
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: spire-server-role-binding
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}
+subjects:
+- kind: ServiceAccount
+  name: spire-server
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: spire-server-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+# ConfigMap containing the latest trust bundle for the trust domain. It is
+# updated by SPIRE using the k8sbundle notifier plugin. SPIRE agents mount
+# this config map and use the certificate to bootstrap trust with the SPIRE
+# server during attestation.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spire-bundle
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: spire-server
+  labels:
+    app: spire-server
+    {{- include "spire.labels" . | nindent 4 }}    
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spire-server
+  serviceName: spire-server    
+  template:
+    metadata:
+      labels:
+        app: spire-server
+    spec:
+      serviceAccountName: spire-server
+      shareProcessNamespace: true
+      containers:
+        - name: spire-server
+          image: ghcr.io/spiffe/spire-server:1.5.4
+          imagePullPolicy: IfNotPresent
+          args: ["-config", "/run/spire/server/config/server.conf"]
+          ports:
+            - containerPort: 8081
+          volumeMounts:
+            - name: spire-config
+              mountPath: /run/spire/server/config
+              readOnly: true
+            - name: spire-server-socket
+              mountPath: /tmp/spire-server/private
+        - name: spire-controller-manager
+          image: ghcr.io/spiffe/spire-controller-manager:nightly
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9443
+          args:
+          - "--config=spire-controller-manager-config.yaml"
+          volumeMounts:
+          - name: spire-server-socket
+            mountPath: /spire-server
+            readOnly: true
+          - name: spire-controller-manager-config
+            mountPath: /spire-controller-manager-config.yaml
+            subPath: spire-controller-manager-config.yaml
+          - name: spire-data
+            mountPath: /run/spire/data
+            readOnly: false              
+        - name: spire-oidc
+          image: ghcr.io/spiffe/oidc-discovery-provider:1.5.4
+          args:
+          - -config
+          - /run/spire/oidc/config/oidc-discovery-provider.conf
+          ports:
+          - containerPort: 443
+            name: spire-oidc-port
+          volumeMounts:
+          - name: spire-server-socket
+            mountPath: /tmp/spire-server/private
+            readOnly: true
+          - name: spire-oidc-config
+            mountPath: /run/spire/oidc/config/
+            readOnly: true
+          - name: spire-data
+            mountPath: /run/spire/data
+            readOnly: false
+          readinessProbe:
+            httpGet:
+              path: /keys # TODO: Change this to /ready when using 1.5.2+
+              port: 443
+            failureThreshold: 5
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3              
+        # - name: troubleshoot
+        #   image: ghcr.io/spiffe/spire-server:1.5.4
+        #   command:
+        #   - /bin/sh
+        #   - -c
+        #   - | 
+        #     sleep infinity
+        #   volumeMounts:
+        #     - name: spire-server-socket
+        #       mountPath: /spire-server              
+      volumes:
+        - name: spire-config
+          configMap:
+            name: spire-server
+        - name: spire-server-socket
+          emptyDir: {}
+        - name: spire-controller-manager-config
+          configMap:
+            name: spire-controller-manager-config
+        - name: spire-oidc-config
+          configMap:
+            name: oidc-discovery-provider            
+  volumeClaimTemplates:
+    - metadata:
+        name: spire-data
+        namespace: spire
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi            
+
+---
+
+# Service definition for SPIRE server defining the gRPC port.
+apiVersion: v1
+kind: Service
+metadata:
+  name: spire-server
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - name: api
+      port: 8081
+      targetPort: 8081
+      protocol: TCP
+  selector:
+    app: spire-server
+
+---
+
+# Service definition for SPIRE server bundle endpoint
+apiVersion: v1
+kind: Service
+metadata:
+  name: spire-server-bundle-endpoint
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - name: api
+      port: 8443
+      protocol: TCP
+  selector:
+    app: spire-server
+
+
+---
+#
+# Service definition for SPIRE controller manager webhook
+apiVersion: v1
+kind: Service
+metadata:
+  name: spire-controller-manager-webhook-service
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}
+spec:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 9443
+  selector:
+    app: spire-server

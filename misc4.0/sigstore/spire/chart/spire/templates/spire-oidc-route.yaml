@@ -1,0 +1,16 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: spire-oidc
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}   
+spec:
+  port:
+    targetPort: 443
+  tls:
+    termination: edge
+  to:
+    kind: Service
+    name: spire-oidc
+    weight: 100
+  wildcardPolicy: None

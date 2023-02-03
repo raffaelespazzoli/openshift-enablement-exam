@@ -50,37 +50,15 @@ oc apply -f ./security-profiles-operator/operator.yaml
 oc apply -f ./security-profiles-operator/selinux-profile.yaml -n openshift-security-profiles
 
 # install spiffe/spire
-oc new-project spire
-oc adm policy add-scc-to-user anyuid -z spire-server -n spire
-oc adm policy add-scc-to-user privileged -z spire-agent -n spire
-oc adm policy add-scc-to-user privileged -z spiffe-csi-driver -n spire
-oc apply -f https://raw.githubusercontent.com/spiffe/spiffe-csi/main/example/config/spiffe-csi-driver.yaml
-
-kubectl apply \
-    -f https://raw.githubusercontent.com/spiffe/spire-tutorials/main/k8s/quickstart/server-account.yaml \
-    -f https://raw.githubusercontent.com/spiffe/spire-tutorials/main/k8s/quickstart/spire-bundle-configmap.yaml \
-    -f https://raw.githubusercontent.com/spiffe/spire-tutorials/main/k8s/quickstart/server-cluster-role.yaml
-
-kubectl apply \
-    -f https://raw.githubusercontent.com/spiffe/spire-tutorials/main/k8s/quickstart/server-configmap.yaml \
-    -f https://raw.githubusercontent.com/spiffe/spire-tutorials/main/k8s/quickstart/server-statefulset.yaml \
-    -f https://raw.githubusercontent.com/spiffe/spire-tutorials/main/k8s/quickstart/server-service.yaml
-
-kubectl apply \
-    -f https://raw.githubusercontent.com/spiffe/spire-tutorials/main/k8s/quickstart/agent-account.yaml \
-    -f https://raw.githubusercontent.com/spiffe/spire-tutorials/main/k8s/quickstart/agent-cluster-role.yaml
-
-kubectl apply \
-    -f https://raw.githubusercontent.com/spiffe/spire-tutorials/main/k8s/quickstart/agent-configmap.yaml \
-    -f ./spire/spire-agent.yaml
-
-oc apply -f ./spire/spire-scc.yaml    
+oc new-project spire-system   
+helm upgrade spire ./spire/chart/spire -i --create-namespace -n spire-system
 ```
 
 test spire
 
 ```sh
 oc new-project test-spire
+oc label namespace test-spire spiffe-enabled=true
 oc adm policy add-scc-to-user restricted-csi -z default -n test-spire
 oc apply -n test-spire -f ./spire/test-spire.yaml
 # in the container run the following to test:
@@ -114,7 +92,7 @@ helm upgrade -i scaffold sigstore/scaffold -n sigstore --values scaffold-values.
 ```
 
 
-# Install Vault
+## Install Vault + transit KMS for sigstore
 
 ```sh
 helm repo add hashicorp https://helm.releases.hashicorp.com
@@ -134,4 +112,23 @@ vault write auth/kubernetes/role/policy-admin bound_service_account_names=pipeli
 
 #configure transit
 vault secrets enable transit
+```
+
+## Install tekton and tekton chain configured to use cosign + OCI store for attestations
+
+```sh
+oc apply -f ./openshift-pipelines/operator.yaml
+```
+
+## Configure openshift pipelines
+
+```sh
+oc apply -f ./openshift-pipelines/tektonchain.yaml
+oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.oci.storage": "oci"}}' 
+oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.taskrun.format": "in-toto"}}'
+oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.taskrun.storage": "oci"}}'
+oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"transparency.enabled": "false"}}'
+oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.pipelinerun.format": "in-toto"}}'
+oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.pipelinerun.storage": "oci"}}'
+cosign generate-key-pair k8s://openshift-pipelines/signing-secrets
 ```

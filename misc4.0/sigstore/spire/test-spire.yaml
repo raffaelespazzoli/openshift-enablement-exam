@@ -14,10 +14,16 @@ spec:
     spec:
       containers:
       - name: ubi8
-        image: gcr.io/spiffe-io/spire-agent:1.2.3
+        image: gcr.io/spiffe-io/spire-agent:1.5.4
         command:
-          - sleep
-          - "3600"
+          - /bin/sh
+          - -c
+          - | 
+            while true 
+            do 
+              /opt/spire/bin/spire-agent api fetch -socketPath /spiffe-workload-api/agent.sock
+              sleep "5"
+            done  
         env:
         - name: SPIFFE_ENDPOINT_SOCKET
           value: unix:///spiffe-workload-api/agent.sock

@@ -1,0 +1,39 @@
+# ConfigMap for the SPIRE agent featuring:
+# 1) PSAT node attestation
+# 2) K8S Workload Attestation over the secure kubelet port
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spire-agent
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}
+data:
+  agent.conf: |
+    agent {
+      data_dir = "/run/spire"
+      log_level = "DEBUG"
+      server_address = "spire-server"
+      server_port = "8081"
+      socket_path = "/run/spire/sockets/agent.sock"
+      trust_bundle_path = "/run/spire/bundle/bundle.crt"
+      trust_domain = "cluster1.demo"
+    }
+
+    plugins {
+      NodeAttestor "k8s_psat" {
+        plugin_data {
+          cluster = "cluster1"
+        }
+      }
+
+      KeyManager "memory" {
+        plugin_data {
+        }
+      }
+
+      WorkloadAttestor "k8s" {
+        plugin_data {
+          skip_kubelet_verification = true
+        }
+      }
+    }

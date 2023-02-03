@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oidc-discovery-provider
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}    
+data:
+  oidc-discovery-provider.conf: |
+    log_level = "DEBUG"
+    insecure_addr = "0.0.0.0:443"
+    server_api {
+      address = "unix:///tmp/spire-server/private/api.sock"
+    }
+    health_checks {}
+    domains = ["spire-oidc-spire-system.apps.tmp-raffa.demo.red-chesterfield.com"]

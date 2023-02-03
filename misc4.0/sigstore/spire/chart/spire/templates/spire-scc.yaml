@@ -1,3 +1,17 @@
+
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}
+  annotations:
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    include.release.openshift.io/single-node-developer: "true"
+  name: restricted-csi
+fsGroup:
+  type: MustRunAs
+groups: []
 allowHostDirVolumePlugin: false
 allowHostIPC: false
 allowHostNetwork: false
@@ -5,17 +19,6 @@ allowHostPID: false
 allowHostPorts: false
 allowPrivilegeEscalation: true
 allowPrivilegedContainer: false
-apiVersion: security.openshift.io/v1
-fsGroup:
-  type: MustRunAs
-groups: []
-kind: SecurityContextConstraints
-metadata:
-  annotations:
-    include.release.openshift.io/ibm-cloud-managed: "true"
-    include.release.openshift.io/self-managed-high-availability: "true"
-    include.release.openshift.io/single-node-developer: "true"
-  name: restricted-csi
 readOnlyRootFilesystem: false
 requiredDropCapabilities:
 - KILL

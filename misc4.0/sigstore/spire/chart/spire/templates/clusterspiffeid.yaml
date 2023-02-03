@@ -1,0 +1,11 @@
+apiVersion: spire.spiffe.io/v1alpha1
+kind: ClusterSPIFFEID
+metadata:
+  name: spiffe-enabled-pods
+  labels:
+    {{- include "spire.labels" . | nindent 4 }}   
+spec:
+  spiffeIDTemplate: "spiffe://cluster1.demo/ns/{{ "{{" }} .PodMeta.Namespace {{ "}}" }}/sa/{{ "{{" }} .PodSpec.ServiceAccountName {{ "}}" }}"
+  namespaceSelector:
+    matchLabels:
+      spiffe-enabled: "true"
