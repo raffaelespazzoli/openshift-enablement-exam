@@ -58,6 +58,12 @@ fulcio:
           ClientID: sigstore
           Type: email
 
+        https://spire-oidc-spire-system.apps.tmp-raffa.demo.red-chesterfield.com: 
+          ClientID: sigstore
+          IssuerURL: https://spire-oidc-spire-system.apps.tmp-raffa.demo.red-chesterfield.com
+          Type: spiffe
+          SPIFFETrustDomain: cluster1.demo
+
 tuf:
   namespace:
     name: tug-system

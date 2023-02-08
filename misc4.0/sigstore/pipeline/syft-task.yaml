@@ -1,0 +1,73 @@
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+metadata:
+  name: syft
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/categories: Security
+    tekton.dev/tags: CLI, syft
+    tekton.dev/displayName: syft
+    tekton.dev/platforms: "linux/amd64,linux/arm64"
+    vault.hashicorp.com/agent-inject: "true"
+    vault.hashicorp.com/agent-pre-populate-only: "true"
+    vault.hashicorp.com/agent-inject-token: "true"
+    vault.hashicorp.com/role: "ci-system"
+    vault.hashicorp.com/tls-skip-verify: "true"
+spec:
+  description: >-
+   CLI tool and library for generating a Software Bill of Materials from container images and filesystem
+  workspaces:
+    - name: source-dir
+      optional: true
+  params:
+    - name: SYFT_ARGS
+      description: The Arguments to be passed to Syft command.
+      type: array
+    - name: COSIGN_SCRIPT
+      description: The Arguments to be passed to cosign command.
+      type: string      
+    - name: SYFT_IMAGE
+      default: docker.io/anchore/syft@sha256:2b71d0408aa5254704340e642687c0dd926563c258aaa0832da2c3c1ecd0c8e2 # v0.66.2
+      description: Syft image to be used
+      type: string
+    - name: COSIGN_IMAGE
+      default: bitnami/cosign:latest
+      description: Cosing image to be used
+      type: string      
+  steps:
+    - name: syft
+      image: $(params.SYFT_IMAGE)
+      workingDir: $(workspaces.source-dir.path)
+      args:
+        - "$(params.SYFT_ARGS)"
+      volumeMounts:
+      - name: tmp
+        mountPath: /attestation_tmp              
+    - name: cosign
+      image: $(params.COSIGN_IMAGE)
+      command:
+        - /bin/bash
+      args:
+        - -c 
+        - "$(params.COSIGN_SCRIPT)"
+      env:
+      - name: DOCKER_CONFIG
+        value: /dockerconfig
+      - name: VAULT_ADDR
+        value: https://vault.vault.svc:8200
+      - name: VAULT_SKIP_VERIFY
+        value: "true"            
+      volumeMounts:
+      - name: tmp
+        mountPath: /attestation_tmp
+      - name: dockerconfig
+        mountPath: /dockerconfig
+        readOnly: true     
+  volumes:
+    - name: tmp
+      emptyDir: {}
+    - name: dockerconfig
+      secret:
+        secretName: quay-push      

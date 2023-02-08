@@ -108,10 +108,11 @@ export VAULT_TOKEN=$(oc get secret vault-init -n vault -o jsonpath='{.data.root_
 vault policy write vault-admin  ./vault/vault-admin-policy.hcl
 vault auth enable kubernetes
 vault write auth/kubernetes/config kubernetes_host=https://kubernetes.default.svc:443
-vault write auth/kubernetes/role/policy-admin bound_service_account_names=pipeline bound_service_account_namespaces='*' policies=vault-admin ttl=10s
+vault write auth/kubernetes/role/ci-system bound_service_account_names=pipeline bound_service_account_namespaces='*' policies=vault-admin ttl=10s
 
 #configure transit
 vault secrets enable transit
+cosign generate-key-pair --kms hashivault://ci-system
 ```
 
 ## Install tekton and tekton chain configured to use cosign + OCI store for attestations
@@ -131,4 +132,33 @@ oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"transparen
 oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.pipelinerun.format": "in-toto"}}'
 oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.pipelinerun.storage": "oci"}}'
 cosign generate-key-pair k8s://openshift-pipelines/signing-secrets
+```
+
+## Create a simple pipeline to test
+
+This pipeline demonstrates the use of three signing approaches (one would never do this in a real environment)
+
+- key-based signing, performed by the tekton chain controller
+- KMS-based signing, performed during the SBOM task
+- keyless signing, performed during the vulnerability scan task
+
+create the pipeline
+
+```sh
+oc new-project test-sigstore
+oc create secret docker-registry quay-push --docker-username=raffaelespazzoli --docker-password=<password> --docker-server=quay.io -n test-sigstore
+oc patch serviceaccount pipeline -p "{\"imagePullSecrets\": [{\"name\": \"quay-push\"}]}" -n test-sigstore
+oc patch secret quay-push -n test-sigstore -p "{\"data\": {\"config.json\": \"$(oc get secret quay-push -n test-sigstore -o jsonpath={.data."\.dockerconfigjson"})\"}}"
+oc label namespace test-sigstore spiffe-enabled=true
+oc adm policy add-scc-to-user restricted-csi -z pipeline -n test-sigstore
+oc apply -f ./pipeline/syft-task.yaml 
+oc apply -f ./pipeline/grype-task.yaml 
+oc apply -f ./pipeline/pipeline-pvc.yaml -n test-sigstore
+oc apply -f ./pipeline/pipeline-ci.yaml -n test-sigstore
+```
+
+run the pipeline
+
+```sh
+oc create -f ./pipeline/pipeline-ci-run.yaml -n test-sigstore
 ```

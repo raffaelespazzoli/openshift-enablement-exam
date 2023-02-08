@@ -1,0 +1,85 @@
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+metadata:
+  name: grype
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/categories: Security
+    tekton.dev/tags: CLI, syft
+    tekton.dev/displayName: syft
+    tekton.dev/platforms: "linux/amd64,linux/arm64"    
+spec:
+  description: >-
+   Task and library for scanning a SBOM and and creating an attestation
+  workspaces:
+    - name: source-dir
+      optional: true
+  params:
+    - name: GRYPE_ARGS
+      description: The Arguments to be passed to Syft command.
+      type: array
+    - name: COSIGN_SCRIPT
+      description: The Arguments to be passed to cosign command.
+      type: string      
+    - name: GRYPE_IMAGE
+      default: docker.io/anchore/grype:v0.56.0
+      description: Grype image to be used
+      type: string
+    - name: COSIGN_IMAGE
+      default: bitnami/cosign:latest
+      description: Cosing image to be used
+      type: string      
+  steps:
+    - name: grype
+      image: $(params.GRYPE_IMAGE)
+      workingDir: $(workspaces.source-dir.path)
+      args:
+        - "$(params.GRYPE_ARGS)"
+      volumeMounts:
+      - name: tmp
+        mountPath: /attestation_tmp
+      - name: tmp
+        mountPath: /tmp        
+      env:
+      - name: GRYPE_DB_CACHE_DIR
+        value: /tmp/.cache             
+    - name: cosign
+      image: $(params.COSIGN_IMAGE)
+      command:
+        - /bin/bash
+      args:
+        - -c 
+        - "$(params.COSIGN_SCRIPT)"
+      env:
+      - name: DOCKER_CONFIG
+        value: /dockerconfig
+      - name: TUF_URL
+        value: http://tuf-server.tuf-system.svc.cluster.local
+      - name: COSIGN_EXPERIMENTAL
+        value: "1"
+      - name: SPIFFE_ENDPOINT_SOCKET
+        value: "/spiffe-workload-api/agent.sock"                    
+      volumeMounts:
+      - name: tmp
+        mountPath: /attestation_tmp        
+      - name: dockerconfig
+        mountPath: /dockerconfig
+        readOnly: true
+      - name: spiffe-workload-api
+        mountPath: /spiffe-workload-api
+        readOnly: true
+      securityContext:
+        seLinuxOptions:
+          type: allow-csi-socket_openshift-security-profiles.process                     
+  volumes:
+    - name: tmp
+      emptyDir: {}
+    - name: dockerconfig
+      secret:
+        secretName: quay-push
+    - name: spiffe-workload-api
+      csi:
+        driver: "csi.spiffe.io"
+        readOnly: true                   

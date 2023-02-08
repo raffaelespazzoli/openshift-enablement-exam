@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: build-run-
+spec:
+  pipelineRef:
+    name: build
+  params:
+  - name: deployment-name
+    value: pipelines-vote-api
+  - name: git-url
+    value: https://github.com/openshift/pipelines-vote-api.git
+  - name: IMAGE
+    value: quay.io/raffaelespazzoli/pipelines-vote-api
+  - name: fulcio-url
+    value: https://fulcio.apps.tmp-raffa.demo.red-chesterfield.com/
+  - name: rekor-url
+    value: https://rekor.apps.tmp-raffa.demo.red-chesterfield.com/
+  - name: oidc-issuer-url
+    value: https://spire-oidc-spire-system.apps.tmp-raffa.demo.red-chesterfield.com  
+  workspaces:
+  - name: shared-workspace
+    persistentVolumeClaim:
+      claimName: build
+  - name: dockerconfig
+    secret:
+      secretName: quay-push    

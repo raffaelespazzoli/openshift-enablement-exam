@@ -114,6 +114,7 @@ server:
               /usr/local/libexec/vault/kubectl delete secret vault-init -n vault
               /usr/local/libexec/vault/kubectl create secret generic vault-init -n vault --from-literal=unseal_key=${UNSEAL_KEY} --from-literal=root_token=${ROOT_TOKEN} 
             else
+              echo vault already initialized
               sleep 5
             fi    
           done
