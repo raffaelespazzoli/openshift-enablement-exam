@@ -4,13 +4,10 @@ metadata:
   name: allow-csi-socket
 spec:
   allow:
-    container_var_run_t:
-      sock_file:
-        - write
     var_run_t:
       sock_file:
         - write        
   inherit:
     - kind: System
-      name: container
+      name: net_container
   permissive: false
