@@ -47,11 +47,13 @@ oc apply -f ./rh-sso/user.yaml -n rh-sso
 # Install security profile
 oc create namespace openshift-security-profiles
 oc apply -f ./security-profiles-operator/operator.yaml
+oc patch spod spod -n openshift-security-profiles --type='json' -p='[{"op": "add", "path": "/spec/selinuxOptions/allowedSystemProfiles/-", "value":"net_container"}]'
 oc apply -f ./security-profiles-operator/selinux-profile.yaml -n openshift-security-profiles
 
 # install spiffe/spire
-oc new-project spire-system   
-helm upgrade spire ./spire/chart/spire -i --create-namespace -n spire-system
+oc new-project spire-system
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+helm upgrade spire ./spire/chart/spire -i --create-namespace -n spire-system --set base_domain=${base_domain}
 ```
 
 test spire
@@ -85,10 +87,10 @@ oc adm policy add-scc-to-user nonroot-v2 -z scaffold-ctlog-createctconfig -n ctl
 oc adm policy add-scc-to-user nonroot-v2 -z ctlog -n ctlog-system
 oc adm policy add-scc-to-user anyuid -z tuf -n tuf-system
 
-
-
 helm repo add sigstore https://sigstore.github.io/helm-charts
-helm upgrade -i scaffold sigstore/scaffold -n sigstore --values scaffold-values.yaml
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+envsubst < ./sigstore/scaffold-values-tpl.yaml > /tmp/scaffold-values.yaml
+helm upgrade -i scaffold sigstore/scaffold -n sigstore --values /tmp/scaffold-values.yaml
 ```
 
 
@@ -98,11 +100,11 @@ helm upgrade -i scaffold sigstore/scaffold -n sigstore --values scaffold-values.
 helm repo add hashicorp https://helm.releases.hashicorp.com
 oc new-project vault
 oc adm policy add-role-to-user admin -z vault -n vault
-export cluster_base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
-helm upgrade vault hashicorp/vault -i --create-namespace -n vault --atomic -f ./vault/vault-values.yaml --set server.route.host=vault-vault.apps.${cluster_base_domain}
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+helm upgrade vault hashicorp/vault -i --create-namespace -n vault --atomic -f ./vault/vault-values.yaml --set server.route.host=vault-vault.apps.${base_domain}
 
 #configure kube auth
-export VAULT_ADDR=https://vault-vault.apps.${cluster_base_domain}
+export VAULT_ADDR=https://vault-vault.apps.${base_domain}
 export VAULT_TOKEN=$(oc get secret vault-init -n vault -o jsonpath='{.data.root_token}' | base64 -d )
 # this policy is intentionally broad to allow to test anything in Vault. In a real life scenario this policy would be scoped down.
 vault policy write vault-admin  ./vault/vault-admin-policy.hcl
@@ -162,3 +164,51 @@ run the pipeline
 ```sh
 oc create -f ./pipeline/pipeline-ci-run.yaml -n test-sigstore
 ```
+
+
+## Deploying sigstore admission controller
+
+```sh
+helm upgrade policy-controller sigstore/policy-controller -i --create-namespace -n cosign-system -f ./sigstore/policy-controller-values.yaml --devel
+oc adm policy add-scc-to-user nonroot-v2 -z policy-controller-webhook -n cosign-system
+oc create secret signing-secrets -n cosign-system
+oc patch secret signing-secrets -n cosign-system -p '{"data": {"cosign.pub": "'"$(oc get secret signing-secrets -n openshift-pipelines -o jsonpath={.data."cosign\.pub"})"'"}}'
+```
+
+
+## Verifying policies
+
+create policies
+
+```sh
+oc label namespace test-sigstore policy.sigstore.dev/include=true
+oc apply -f ./policies/tekton-attestation.yaml
+oc apply -f ./policies/sbom-attestation.yaml
+oc apply -f ./policies/sarif-attestation.yaml
+```
+
+test policies:
+
+```sh
+oc apply -f ./policies/deployment.yaml -n test-sigstore
+```
+
+
+## Deploy kyverno admission controller
+
+```sh
+helm repo add kyverno https://kyverno.github.io/kyverno/
+helm upgrade kyverno kyverno/kyverno -i -n kyverno --create-namespace --set replicaCount=3
+```
+
+Deploy kyverno policy
+
+```sh
+oc apply -f ./policies/kyverno-cluster-policy.yaml
+```
+
+```sh
+oc new-project test-kyverno
+oc apply -f ./policies/deployment.yaml -n test-kyverno
+```
+

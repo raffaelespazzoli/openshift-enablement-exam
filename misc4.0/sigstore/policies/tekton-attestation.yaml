@@ -1,0 +1,19 @@
+apiVersion: policy.sigstore.dev/v1beta1
+kind: ClusterImagePolicy
+metadata:
+  name: tekton-attestation
+spec:
+  authorities:
+    - attestations:
+        - name: must-have-slsaprovenance-attestation
+          predicateType: slsaprovenance
+      # ctlog:
+      #   url: 'https://rekor.apps.tmp-raffa.demo.red-chesterfield.com'
+      key:
+        secretRef:
+          name: signing-secrets
+          namespace: openshift-pipelines
+      name: static-key
+  images:
+    - glob: quay.io/raffaelespazzoli/**
+  mode: enforce

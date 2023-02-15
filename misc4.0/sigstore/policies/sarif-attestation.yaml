@@ -1,0 +1,19 @@
+apiVersion: policy.sigstore.dev/v1alpha1
+kind: ClusterImagePolicy
+metadata:
+  name: sarif-attestation
+spec:
+  images:
+  - glob: "quay.io/raffaelespazzoli/**"
+  authorities:
+  - name: keyless-key
+    keyless:
+      url: "https://fulcio.apps.tmp-raffa.demo.red-chesterfield.com/"
+      identities:
+        - issuer: https://spire-oidc-spire-system.apps.tmp-raffa.demo.red-chesterfield.com
+          subject: "https://github.com/sigstore/policy-controller/.github/workflows/policy-tester-examples.yml@refs/heads/main"
+    ctlog:
+      url: https://rekor.apps.tmp-raffa.demo.red-chesterfield.com
+    attestations:
+    - name: must-have-vuln-attestation
+      predicateType: vuln

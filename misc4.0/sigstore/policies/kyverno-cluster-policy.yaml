@@ -1,0 +1,66 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tekton-built-image-check
+spec:
+  validationFailureAction: Enforce
+  background: false
+  webhookTimeoutSeconds: 30
+  failurePolicy: Fail
+  rules:
+    - name: verify-signature
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+            namespace:
+              - test-kyverno  
+      verifyImages:
+      - imageReferences:
+        - "quay.io/raffaelespazzoli/*"
+        attestors:
+        - count: 1
+          entries:
+          - keys:
+              secret:
+                name: signing-secrets
+                namespace: openshift-pipelines
+    - name: verify-provenance-attestation
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+            namespace:
+              - test-kyverno    
+      verifyImages:   
+      - imageReferences:
+        - "quay.io/raffaelespazzoli/*"
+        attestations:
+          - predicateType: https://slsa.dev/provenance/v0.2
+            attestors:
+              - count: 1
+                entries:
+                  - keys:
+                      secret:
+                        name: signing-secrets
+                        namespace: openshift-pipelines
+    - name: verify-sbom-attestation
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+            namespace:
+              - test-kyverno    
+      verifyImages:   
+      - imageReferences:
+        - "quay.io/raffaelespazzoli/*"
+        attestations:
+          - predicateType: sbom
+            attestors:
+              - count: 1
+                entries:
+                  - keys:
+                     kms: hashivault://ci-system

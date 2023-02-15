@@ -25,7 +25,7 @@ rekor:
       annotations:
         route.openshift.io/termination: "edge"
       hosts:
-        - host: rekor.apps.tmp-raffa.demo.red-chesterfield.com
+        - host: rekor.apps.${base_domain}
           path: /
       # tls:
       #   - secretName: rekor-tls
@@ -44,7 +44,7 @@ fulcio:
         annotations:
           route.openshift.io/termination: "edge"
         hosts:
-          - host: fulcio.apps.tmp-raffa.demo.red-chesterfield.com
+          - host: fulcio.apps.${base_domain}
             path: /
         # tls:
         #   - secretName: fulcio-tls
@@ -53,14 +53,14 @@ fulcio:
   config:
     contents:
       OIDCIssuers:
-        https://keycloak-rh-sso.apps.tmp-raffa.demo.red-chesterfield.com/auth/realms/sigstore:
-          IssuerURL: https://keycloak-rh-sso.apps.tmp-raffa.demo.red-chesterfield.com/auth/realms/sigstore
+        https://keycloak-rh-sso.apps.${base_domain}/auth/realms/sigstore:
+          IssuerURL: https://keycloak-rh-sso.apps.${base_domain}/auth/realms/sigstore
           ClientID: sigstore
           Type: email
 
-        https://spire-oidc-spire-system.apps.tmp-raffa.demo.red-chesterfield.com: 
+        https://spire-oidc-spire-system.apps.${base_domain}: 
           ClientID: sigstore
-          IssuerURL: https://spire-oidc-spire-system.apps.tmp-raffa.demo.red-chesterfield.com
+          IssuerURL: https://spire-oidc-spire-system.apps.${base_domain}
           Type: spiffe
           SPIFFETrustDomain: cluster1.demo
 
@@ -75,7 +75,7 @@ tuf:
       route.openshift.io/termination: "edge"
     http:
       hosts:
-        - host: tuf.apps.tmp-raffa.demo.red-chesterfield.com
+        - host: tuf.apps.${base_domain}
           path: /
     # tls:
     #   - secretName: tuf-tls

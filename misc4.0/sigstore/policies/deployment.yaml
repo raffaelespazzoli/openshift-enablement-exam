@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pipelines-vote-api
+  labels:
+    app: pipelines-vote-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pipelines-vote-api
+  template:
+    metadata:
+      labels:
+        app: pipelines-vote-api
+    spec:
+      containers:
+      - name: pipelines-vote-api
+        image: quay.io/raffaelespazzoli/pipelines-vote-api:latest
+        ports:
+        - containerPort: 8080

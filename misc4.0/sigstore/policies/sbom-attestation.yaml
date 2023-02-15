@@ -1,0 +1,18 @@
+apiVersion: policy.sigstore.dev/v1alpha1
+kind: ClusterImagePolicy
+metadata:
+  name: sbom-attestation
+spec:
+  images:
+  - glob: "quay.io/raffaelespazzoli/**"
+  authorities:
+  - name: kms-key
+    key:
+      # NB: the policy controller must have kms.DescribeKey, kms.GetPublicKey
+      # and kms.Verify IAM permissions on the relevant key.
+      kms: hashivault://ci-system
+    ctlog:
+      url: https://rekor.apps.tmp-raffa.demo.red-chesterfield.com
+    attestations:
+    - name: must-have-spdxjson-attestation
+      predicateType: spdxjson

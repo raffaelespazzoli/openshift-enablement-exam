@@ -10,7 +10,7 @@ data:
     server {
       bind_address = "0.0.0.0"
       bind_port = "8081"
-      jwt_issuer = "https://spire-oidc-spire-system.apps.tmp-raffa.demo.red-chesterfield.com"
+      jwt_issuer = "https://spire-oidc-spire-system.apps.{{ .Values.base_domain }}"
       trust_domain = "cluster1.demo"
       data_dir = "/run/spire/server/data"
       log_level = "DEBUG"

@@ -12,4 +12,4 @@ data:
       address = "unix:///tmp/spire-server/private/api.sock"
     }
     health_checks {}
-    domains = ["spire-oidc-spire-system.apps.tmp-raffa.demo.red-chesterfield.com"]
+    domains = ["spire-oidc-spire-system.apps.{{ .Values.base_domain }}"]
