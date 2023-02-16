@@ -9,5 +9,5 @@ spec:
         - write        
   inherit:
     - kind: System
-      name: net_container
-  permissive: false
+      name: container
+  permissive: true

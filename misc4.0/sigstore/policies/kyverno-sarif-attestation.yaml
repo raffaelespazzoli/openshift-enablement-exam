@@ -1,0 +1,31 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-sarif-attestation
+spec:
+  validationFailureAction: Enforce
+  background: false
+  webhookTimeoutSeconds: 30
+  failurePolicy: Fail
+  rules:
+    - name: verify-sarif-attestation
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+            namespace:
+              - test-kyverno    
+      verifyImages:   
+      - imageReferences:
+        - "quay.io/raffaelespazzoli/*"
+        attestations:
+          - predicateType: serif
+            attestors:
+              - count: 1
+                entries:
+                  - keyless:
+                      rekor: 
+                        url: https://rekor.apps.${base_domain}
+                      issuer: https://spire-oidc-spire-system.apps.${base_domain}
+                      subject: spiffe://cluster1.demo/ns/test-sigstore/sa/pipeline

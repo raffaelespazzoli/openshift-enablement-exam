@@ -1,0 +1,28 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-sbom-attestation
+spec:
+  validationFailureAction: Enforce
+  background: false
+  webhookTimeoutSeconds: 30
+  failurePolicy: Fail
+  rules:
+    - name: verify-sbom-attestation
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+            namespace:
+              - test-kyverno    
+      verifyImages:   
+      - imageReferences:
+        - "quay.io/raffaelespazzoli/*"
+        attestations:
+          - predicateType: sbom
+            attestors:
+              - count: 1
+                entries:
+                  - keys:
+                     kms: hashivault://ci-system

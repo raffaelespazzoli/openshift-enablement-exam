@@ -12,7 +12,7 @@ spec:
       # and kms.Verify IAM permissions on the relevant key.
       kms: hashivault://ci-system
     ctlog:
-      url: https://rekor.apps.tmp-raffa.demo.red-chesterfield.com
+      url: https://rekor.apps.${base_domain}
     attestations:
     - name: must-have-spdxjson-attestation
       predicateType: spdxjson

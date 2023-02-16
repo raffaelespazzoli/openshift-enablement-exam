@@ -47,7 +47,7 @@ oc apply -f ./rh-sso/user.yaml -n rh-sso
 # Install security profile
 oc create namespace openshift-security-profiles
 oc apply -f ./security-profiles-operator/operator.yaml
-oc patch spod spod -n openshift-security-profiles --type='json' -p='[{"op": "add", "path": "/spec/selinuxOptions/allowedSystemProfiles/-", "value":"net_container"}]'
+#oc patch spod spod -n openshift-security-profiles --type='json' -p='[{"op": "add", "path": "/spec/selinuxOptions/allowedSystemProfiles/-", "value":"net_container"}]'
 oc apply -f ./security-profiles-operator/selinux-profile.yaml -n openshift-security-profiles
 
 # install spiffe/spire
@@ -93,6 +93,17 @@ envsubst < ./sigstore/scaffold-values-tpl.yaml > /tmp/scaffold-values.yaml
 helm upgrade -i scaffold sigstore/scaffold -n sigstore --values /tmp/scaffold-values.yaml
 ```
 
+verify keyless for humans works
+
+```sh
+export image=quay.io/raffaelespazzoli/pipelines-vote-api:latest
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+
+COSIGN_EXPERIMENTAL=1 cosign sign --force -y --fulcio-url=https://fulcio.apps.${base_domain} --rekor-url=https://rekor.apps.${base_domain} --oidc-issuer=https://keycloak-rh-sso.apps.${base_domain}/auth/realms/sigstore ${image}
+
+COSIGN_EXPERIMENTAL=1 cosign verify --rekor-url=https://rekor.apps.${base_domain} ${image}
+```
+
 
 ## Install Vault + transit KMS for sigstore
 
@@ -130,9 +141,15 @@ oc apply -f ./openshift-pipelines/tektonchain.yaml
 oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.oci.storage": "oci"}}' 
 oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.taskrun.format": "in-toto"}}'
 oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.taskrun.storage": "oci"}}'
-oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"transparency.enabled": "false"}}'
+
 oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.pipelinerun.format": "in-toto"}}'
 oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"artifacts.pipelinerun.storage": "oci"}}'
+
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"transparency.enabled": "true"}}'
+oc patch configmap chains-config -n openshift-pipelines -p='{"data":{"transparency.url": "https://rekor.apps.'"${base_domain}"'"}}'
+
+
 cosign generate-key-pair k8s://openshift-pipelines/signing-secrets
 ```
 
@@ -165,6 +182,30 @@ run the pipeline
 oc create -f ./pipeline/pipeline-ci-run.yaml -n test-sigstore
 ```
 
+Manually verify the signatures and attestations created by the pipeline:
+
+```sh
+export image=quay.io/raffaelespazzoli/pipelines-vote-api:latest
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+
+# verify using byo key
+oc get secret signing-secrets -n openshift-pipelines -o jsonpath='{.data.cosign\.pub}' | base64 -d > ./cosign.pub
+cosign verify --key ./cosign.pub ${image}
+cosign verify-attestation --key ./cosign.pub --type slsaprovenance ${image}
+
+# verify using kms
+export VAULT_ADDR=https://vault-vault.apps.${base_domain}
+export VAULT_TOKEN=$(oc get secret vault-init -n vault -o jsonpath='{.data.root_token}' | base64 -d )
+cosign verify-attestation --key hashivault://ci-system --type spdxjson --attachment-tag-prefix sbom- ${image}
+
+# verify using keyless
+cosign initialize --mirror https://tuf.apps.${base_domain} --root=https://tuf.apps.${base_domain}/root.json
+COSIGN_EXPERIMENTAL=1 cosign verify-attestation --rekor-url http://rekor-rekor-system.apps.${base_domain} --certificate-oidc-issuer https://spire-oidc-spire-system.apps.${base_domain} --type vuln --attachment-tag-prefix sarif- ${image}
+
+## reset cosign to public instance
+cosign initialize
+```
+
 
 ## Deploying sigstore admission controller
 
@@ -181,16 +222,19 @@ oc patch secret signing-secrets -n cosign-system -p '{"data": {"cosign.pub": "'"
 create policies
 
 ```sh
-oc label namespace test-sigstore policy.sigstore.dev/include=true
-oc apply -f ./policies/tekton-attestation.yaml
-oc apply -f ./policies/sbom-attestation.yaml
-oc apply -f ./policies/sarif-attestation.yaml
+oc new-project test-policy-controller
+oc label namespace test-policy-controller policy.sigstore.dev/include=true
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+envsubst < ./policies/tekton-attestation.yaml | oc apply -f -
+# envsubst < ./policies/sbom-attestation.yaml | oc apply -f -
+# envsubst < ./policies/sarif-attestation.yaml | oc apply -f -
 ```
 
 test policies:
 
 ```sh
-oc apply -f ./policies/deployment.yaml -n test-sigstore
+oc delete -f ./policies/deployment.yaml -n test-policy-controller
+oc apply -f ./policies/deployment.yaml -n test-policy-controller
 ```
 
 
@@ -204,11 +248,15 @@ helm upgrade kyverno kyverno/kyverno -i -n kyverno --create-namespace --set repl
 Deploy kyverno policy
 
 ```sh
-oc apply -f ./policies/kyverno-cluster-policy.yaml
+envsubst < ./policies/kyverno-tekton-attestation.yaml | oc apply -f -
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+# envsubst < ./policies/kyverno-sbom-attestation.yaml | oc apply -f -
+#envsubst < ./policies/kyverno-sarif-attestation.yaml | oc apply -f -
 ```
 
 ```sh
 oc new-project test-kyverno
+oc delete -f ./policies/deployment.yaml -n test-kyverno
 oc apply -f ./policies/deployment.yaml -n test-kyverno
 ```
 
