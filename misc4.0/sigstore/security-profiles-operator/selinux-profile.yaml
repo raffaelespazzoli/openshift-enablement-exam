@@ -8,6 +8,6 @@ spec:
       sock_file:
         - write        
   inherit:
-    - kind: System
-      name: container
-  permissive: true
+    - name: net_container
+    - name: container
+  permissive: false

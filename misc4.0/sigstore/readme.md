@@ -47,7 +47,7 @@ oc apply -f ./rh-sso/user.yaml -n rh-sso
 # Install security profile
 oc create namespace openshift-security-profiles
 oc apply -f ./security-profiles-operator/operator.yaml
-#oc patch spod spod -n openshift-security-profiles --type='json' -p='[{"op": "add", "path": "/spec/selinuxOptions/allowedSystemProfiles/-", "value":"net_container"}]'
+oc patch spod spod -n openshift-security-profiles --type='json' -p='[{"op": "add", "path": "/spec/selinuxOptions/allowedSystemProfiles/-", "value":"net_container"}]'
 oc apply -f ./security-profiles-operator/selinux-profile.yaml -n openshift-security-profiles
 
 # install spiffe/spire
@@ -200,7 +200,7 @@ cosign verify-attestation --key hashivault://ci-system --type spdxjson --attachm
 
 # verify using keyless
 cosign initialize --mirror https://tuf.apps.${base_domain} --root=https://tuf.apps.${base_domain}/root.json
-COSIGN_EXPERIMENTAL=1 cosign verify-attestation --rekor-url http://rekor-rekor-system.apps.${base_domain} --certificate-oidc-issuer https://spire-oidc-spire-system.apps.${base_domain} --type vuln --attachment-tag-prefix sarif- ${image}
+COSIGN_EXPERIMENTAL=1 cosign verify-attestation --rekor-url https://rekor-rekor-system.apps.${base_domain} --certificate-oidc-issuer https://spire-oidc-spire-system.apps.${base_domain} --type vuln --attachment-tag-prefix sarif- ${image}
 
 ## reset cosign to public instance
 cosign initialize

@@ -30,3 +30,4 @@ misc4.0/github-actions-runner-controller/raffa-actions-runner-controller.2021-08
 misc4.0/github-actions-runner-controller/client-secret.txt
 misc4.0/backstage/pat.txt
 misc4.0/sigstore/cosign.pub
+cosign.pub
