@@ -1,0 +1,50 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: raffa-qrs7-for-andy
+  namespace: myapp1-build
+spec:
+  params:
+    - name: repo-name
+      value: raffa-qrs7
+    - name: repo-owner
+      value: raf-backstage-demo
+    - name: repo-url
+      value: 'https://github.com/raf-backstage-demo/raffa-qrs6.git'
+    - name: revision
+      value: 86506c28242cbabc2fa99d42c4dd100ac75a3fa9
+    - name: image
+      value: >-
+        quay.io/raf-backstage-demo/raffa-qrs7:86506c28242cbabc2fa99d42c4dd100ac75a3fa9
+    - name: gitops-repo-url
+      value: 'https://github.com/raf-backstage-demo/myapp1-gitops.git'
+    - name: application-name
+      value: myapp1
+    - name: sonarcloud-organization
+      value: raf-backstage-demo
+    - name: tasks-to-skip
+      value:
+        - placeholder
+  pipelineRef:
+    name: raffa-qrs6
+  serviceAccountName: pipeline
+  timeout: 1h0m0s
+  workspaces:
+    - name: source-workspace
+      persistentVolumeClaim:
+        claimName: raffa-qrs6-code-workspace
+      subPath: source
+    - name: maven-settings
+      persistentVolumeClaim:
+        claimName: raffa-qrs6-code-workspace
+      subPath: maven-repo-cache
+    - name: dockerconfig
+      secret:
+        secretName: quay-push-secret
+    - name: basic-auth
+      secret:
+        secretName: github-credentials
+    - name: gitops-source-workspace
+      persistentVolumeClaim:
+        claimName: raffa-qrs6-code-workspace
+      subPath: gitops-source

@@ -1,6 +1,9 @@
 copySecretJob:
   enabled: true
 
+tsa:
+  enabled: false  
+
 ctlog:
   namespace:
     name: ctlog-system
@@ -9,7 +12,11 @@ ctlog:
 trillian:
   namespace:
     name: trillian-system
-    create: false       
+    create: false
+  mysql:
+    auth:
+      password: changeit
+      rootPassword: changeit         
 
 rekor:
   namespace:

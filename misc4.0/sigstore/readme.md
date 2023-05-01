@@ -35,6 +35,9 @@ oc patch IngressController default -n openshift-ingress-operator -p '{"spec": {"
 ```sh
 oc new-project rh-sso
 oc apply -f ./rh-sso/operator.yaml -n rh-sso
+
+# wait a few seconds
+
 oc apply -f ./rh-sso/keycloak.yaml -n rh-sso
 oc apply -f ./rh-sso/client.yaml -n rh-sso
 oc apply -f ./rh-sso/realm.yaml -n rh-sso
@@ -47,6 +50,10 @@ oc apply -f ./rh-sso/user.yaml -n rh-sso
 # Install security profile
 oc create namespace openshift-security-profiles
 oc apply -f ./security-profiles-operator/operator.yaml
+
+# wait a few seconds
+
+
 oc patch spod spod -n openshift-security-profiles --type='json' -p='[{"op": "add", "path": "/spec/selinuxOptions/allowedSystemProfiles/-", "value":"net_container"}]'
 oc apply -f ./security-profiles-operator/selinux-profile.yaml -n openshift-security-profiles
 
@@ -99,9 +106,13 @@ verify keyless for humans works
 export image=quay.io/raffaelespazzoli/pipelines-vote-api:latest
 export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
 
-COSIGN_EXPERIMENTAL=1 cosign sign --force -y --fulcio-url=https://fulcio.apps.${base_domain} --rekor-url=https://rekor.apps.${base_domain} --oidc-issuer=https://keycloak-rh-sso.apps.${base_domain}/auth/realms/sigstore ${image}
+cosign initialize --mirror https://tuf.apps.${base_domain} --root=https://tuf.apps.${base_domain}/root.json
 
-COSIGN_EXPERIMENTAL=1 cosign verify --rekor-url=https://rekor.apps.${base_domain} ${image}
+COSIGN_EXPERIMENTAL=1 cosign sign -y --fulcio-url=https://fulcio.apps.${base_domain} --rekor-url=https://rekor.apps.${base_domain} --oidc-issuer=https://keycloak-rh-sso.apps.${base_domain}/auth/realms/sigstore ${image}
+
+#sigstore/redhat
+
+COSIGN_EXPERIMENTAL=1 cosign verify --rekor-url=https://rekor.apps.${base_domain} --certificate-oidc-issuer https://keycloak-rh-sso.apps.${base_domain}/auth/realms/sigstore --certificate-identity sigstore@redhat.com ${image}
 ```
 
 
@@ -179,7 +190,8 @@ oc apply -f ./pipeline/pipeline-ci.yaml -n test-sigstore
 run the pipeline
 
 ```sh
-oc create -f ./pipeline/pipeline-ci-run.yaml -n test-sigstore
+export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+envsubst < ./pipeline/pipeline-ci-run.yaml | oc create -n test-sigstore -f - 
 ```
 
 Manually verify the signatures and attestations created by the pipeline:
@@ -260,3 +272,18 @@ oc delete -f ./policies/deployment.yaml -n test-kyverno
 oc apply -f ./policies/deployment.yaml -n test-kyverno
 ```
 
+
+
+
+# clean-up
+
+## Sigstore
+
+```sh
+oc delete project fulcio-system 
+oc delete project rekor-system 
+oc delete project ctlog-system 
+oc delete project trillian-system
+oc delete project tuf-system 
+oc delete project sigstore
+```

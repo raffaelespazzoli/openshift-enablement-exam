@@ -82,7 +82,8 @@ spec:
     - name: COSIGN_SCRIPT
       value: | 
         export VAULT_TOKEN=$(cat /vault/secrets/token)
-        cosign attest quay.io/raffaelespazzoli/pipelines-vote-api@$(tasks.build-image.results.IMAGE_DIGEST) --key hashivault://ci-system --predicate /attestation_tmp/attestation.sbom --type spdxjson --attachment-tag-prefix sbom-    
+        cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json
+        cosign attest quay.io/raffaelespazzoli/pipelines-vote-api@$(tasks.build-image.results.IMAGE_DIGEST) -y --key hashivault://ci-system --predicate /attestation_tmp/attestation.sbom --type spdxjson --attachment-tag-prefix sbom-    
   - name: create-vulnerability-attestation
     taskRef:
       name: grype
@@ -100,6 +101,6 @@ spec:
     - name: COSIGN_SCRIPT
       value: | 
         cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json
-        cosign attest quay.io/raffaelespazzoli/pipelines-vote-api@$(tasks.build-image.results.IMAGE_DIGEST) -f -y --fulcio-url=$(params.fulcio-url) --rekor-url=$(params.rekor-url) --oidc-issuer=$(params.oidc-issuer-url) --predicate /attestation_tmp/attestation.sarif --type vuln --attachment-tag-prefix sarif-    
+        cosign attest quay.io/raffaelespazzoli/pipelines-vote-api@$(tasks.build-image.results.IMAGE_DIGEST) -y --fulcio-url=$(params.fulcio-url) --rekor-url=$(params.rekor-url) --oidc-issuer=$(params.oidc-issuer-url) --predicate /attestation_tmp/attestation.sarif --type vuln --attachment-tag-prefix sarif-    
 
 

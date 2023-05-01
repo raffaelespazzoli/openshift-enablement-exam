@@ -1,0 +1,9 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: registry
+  namespace: openshift-storage
+spec:
+  #storageClassName: noobaa-default-bucket-class
+  storageClassName: openshift-storage.noobaa.io
+  generateBucketName: registry-bucket

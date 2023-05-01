@@ -94,3 +94,10 @@ prometheus targets
 
 oc port-forward pod/prometheus-k8s-0 -n openshift-monitoring 9090:9090
 http://localhost:9090/rules 
+
+approve csr:
+oc --kubeconfig <path> get csr -o go-template='{{range .items}}{{if not .status}}{{.metadata.name}}{{"\n"}}{{end}}{{end}}' | xargs oc --kubeconfig <path> adm certificate approve
+
+delete pods
+kubectl delete pod --field-selector=status.phase==Succeeded -n <namespace>
+kubectl delete pod --field-selector=status.phase==Failed -n <namespace>

@@ -1,0 +1,29 @@
+global:
+  name: consul
+  datacenter: dc1
+  image: registry.connect.redhat.com/hashicorp/consul:1.14.3-ubi 
+  imageK8S: registry.connect.redhat.com/hashicorp/consul-k8s-control-plane:1.0.2-ubi
+  imageConsulDataplane: registry.connect.redhat.com/hashicorp/consul-dataplane:1.0.0-ubi
+  openshift:
+    enabled: true
+    
+server:
+  replicas: 1
+  bootstrapExpect: 1
+  disruptionBudget:
+    enabled: true
+    maxUnavailable: 0
+    
+ui:
+  enabled: true 
+    
+connectInject:
+  enabled: true
+  default: true
+  cni:
+    enabled: true
+    logLevel: info
+    multus: true
+    cniBinDir: /var/lib/cni/bin
+    cniNetDir: /etc/kubernetes/cni/net.d
+
