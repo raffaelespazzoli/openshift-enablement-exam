@@ -11,3 +11,28 @@ oc apply -f cluster-logging.yaml
 or
 oc apply -f cluster-logging-ocs.yaml
 ```
+
+```sh
+oc apply -f logging-operators.yaml
+oc apply -f cluster-logging.yaml
+oc apply -f log-forwarding.yaml
+oc process -f event-router.yaml | oc apply -n openshift-logging -f -
+```
+
+loki
+```sh
+oc apply -f loki-operator.yaml
+```
+
+network observability operator
+
+```sh
+oc apply -f minio.yaml
+```
+
+network policy demo
+https://examples.openshift.pub/networking/network-policy/network-policy-demo/
+
+```sh
+oc apply -k https://github.com/openshift-examples/network-policy-demo.git/deployment/
+```

@@ -1,0 +1,9 @@
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  generateName: my-crossplane-bucket-
+spec:
+  forProvider:
+    region: us-east-2
+  providerConfigRef:
+    name: default

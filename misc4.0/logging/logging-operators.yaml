@@ -21,42 +21,42 @@ metadata:
   name: "elasticsearch-logging"
   namespace: "openshift-operators-redhat" 
 spec:
-  channel: "4.2" 
+  channel: "stable" 
   installPlanApproval: "Automatic"
   source: "redhat-operators"
   sourceNamespace: "openshift-marketplace"
   name: "elasticsearch-operator"
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: prometheus-k8s
-  namespace: openshift-operators-redhat
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - services
-  - endpoints
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: prometheus-k8s
-  namespace: openshift-operators-redhat
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: prometheus-k8s
-subjects:
-- kind: ServiceAccount
-  name: prometheus-k8s
-namespace: openshift-operators-redhat
+# ---
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: Role
+# metadata:
+#   name: prometheus-k8s
+#   namespace: openshift-operators-redhat
+# rules:
+# - apiGroups:
+#   - ""
+#   resources:
+#   - services
+#   - endpoints
+#   - pods
+#   verbs:
+#   - get
+#   - list
+#   - watch
+# ---
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: RoleBinding
+# metadata:
+#   name: prometheus-k8s
+#   namespace: openshift-operators-redhat
+# roleRef:
+#   apiGroup: rbac.authorization.k8s.io
+#   kind: Role
+#   name: prometheus-k8s
+# subjects:
+# - kind: ServiceAccount
+#   name: prometheus-k8s
+# namespace: openshift-operators-redhat
 ---    
 apiVersion: v1
 kind: Namespace
@@ -83,12 +83,11 @@ metadata:
   name: openshift-logging
   namespace: openshift-logging
 spec:
-  channel: '4.2'
+  channel: 'stable'
   installPlanApproval: Automatic
   name: cluster-logging
   source: redhat-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: clusterlogging.4.2.1-201910221723
 
 
     

@@ -1,0 +1,15 @@
+apiVersion: noobaa.io/v1alpha1
+kind: BucketClass
+metadata:
+  name: tenat-bucket-class
+  namespace: openshift-storage
+spec:
+  placementPolicy:
+    tiers:
+    - backingStores:
+      - tenant-bucket-store1
+      - tenant-bucket-store1
+      placement: Mirror
+  quota:
+    maxObjects: "200"
+    maxSize: 50Gi

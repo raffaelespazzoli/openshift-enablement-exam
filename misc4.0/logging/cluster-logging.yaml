@@ -7,33 +7,34 @@ spec:
   managementState: "Managed"  
   logStore:
     type: "elasticsearch"  
+    retentionPolicy: 
+      application:
+        maxAge: 1d
+      infra:
+        maxAge: 7d
+      audit:
+        maxAge: 7d
     elasticsearch:
-      resources:
-        limits:
-          cpu: '1'
-          memory: 8Gi
-        requests:
-          cpu: '1'
-          memory: 8Gi
-      nodeCount: 3
-      nodeSelector:
-        'node-role.kubernetes.io/es': "es"
-      tolerations:
-      - key: node-role.kubernetes.io/es
-        operator: Exists
-        effect: NoSchedule   
+      nodeCount: 3 
       storage:
-        storageClassName: gp2
+        storageClassName: "gp3-csi"
         size: 200G
+      resources: 
+          limits:
+            memory: "8Gi"
+          requests:
+            memory: "8Gi"
+      proxy: 
+        resources:
+          limits:
+            memory: 256Mi
+          requests:
+            memory: 256Mi
       redundancyPolicy: "SingleRedundancy"
   visualization:
     type: "kibana"  
     kibana:
       replicas: 1
-  curation:
-    type: "curator"  
-    curator:
-      schedule: "30 3 * * *"
   collection:
     logs:
       type: "fluentd"  

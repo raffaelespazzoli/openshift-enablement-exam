@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: reviews
+spec:
+  replicas: 5
+  workloadRef: 
+    apiVersion: apps/v1
+    kind: Deployment
+    name: reviews
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: reviews  
+  progressDeadlineSeconds: 600
+  progressDeadlineAbort: true
+  strategy:
+    canary:
+      analisys:
+        templates:
+        - templateName: success-rate
+        args:
+        - name: service-name
+          value: reviews     
+      trafficRouting:
+        istio:
+          virtualService:
+            name: reviews        # required
+          destinationRule:
+            name: reviews    # required
+            canarySubsetName: canary  # required
+            stableSubsetName: stable  # required
+      steps:
+      - setWeight: 20
+      - pause: {duration: 10}
+      - setWeight: 40
+      - pause: {duration: 10}
+      - setWeight: 60
+      - pause: {duration: 10}
+      - setWeight: 80
+      - pause: {duration: 10}

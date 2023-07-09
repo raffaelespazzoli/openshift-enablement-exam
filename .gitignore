@@ -31,3 +31,5 @@ misc4.0/github-actions-runner-controller/client-secret.txt
 misc4.0/backstage/pat.txt
 misc4.0/sigstore/cosign.pub
 cosign.pub
+4.0/pwd/htpasswd
+misc4.0/crossplane/aws-credentials.txt

@@ -1,0 +1,14 @@
+apiVersion: secrets.crossplane.io/v1alpha1
+kind: VaultConfig
+metadata:
+  name: vault-internal
+spec:
+  server: http://vault.vault:8200
+  mountPath: secret/
+  version: v2
+  auth:
+    method: Token
+    token:
+      source: Filesystem
+      fs:
+        path: /vault/secrets/token

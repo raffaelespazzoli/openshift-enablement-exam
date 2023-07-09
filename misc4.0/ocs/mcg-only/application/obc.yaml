@@ -1,0 +1,11 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: mybucket
+  namespace: tenant
+spec:
+  #storageClassName: noobaa-default-bucket-class
+  storageClassName: openshift-storage.noobaa.io
+  generateBucketName: mybucket-bucket
+  additionalConfig:
+    bucketclass: tenant-bucket-class

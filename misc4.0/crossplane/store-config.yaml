@@ -1,0 +1,13 @@
+apiVersion: secrets.crossplane.io/v1alpha1
+kind: StoreConfig
+metadata:
+  name: vault
+spec:
+  type: Plugin
+  defaultScope: crossplane-system
+  plugin:
+    endpoint: ess-plugin-vault.crossplane-system:4040
+    configRef:
+      apiVersion: secrets.crossplane.io/v1alpha1
+      kind: VaultConfig
+      name: vault-internal
