@@ -21,7 +21,11 @@ spec:
         - templateName: success-rate
         args:
         - name: service-name
-          value: reviews     
+          value: reviews
+        - name:
+          # encoded for
+          # sum(irate(istio_requests_total{reporter="source",destination_service=~"reviews",response_code!~"5.*"}[5m])) / sum(irate(istio_requests_total{reporter="source",destination_service=~"reviews"}[5m]))       
+          query: sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_service%3D~%22reviews%22%2Cresponse_code%21~%225.%2A%22%7D%5B5m%5D%29%29%20%2F%20sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_service%3D~%22reviews%22%7D%5B5m%5D%29%29%20%20%20%20%20%20%20          
       trafficRouting:
         istio:
           virtualService:

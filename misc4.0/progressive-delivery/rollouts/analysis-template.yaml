@@ -7,8 +7,8 @@ spec:
   - name: sa-token
     valueFrom:
       secretKeyRef:
-        name: sa-default-token-secret
-        key: token  
+        name: rollouts-sa-token
+        key: token         
   metrics:
   - name: success-rate
     interval: 5m
@@ -17,15 +17,9 @@ spec:
     successCondition: result[0] >= 0.95
     failureLimit: 3
     provider:
-      prometheus:
+      web:
+        url: http://prometheus.istio-system.svc.cluster.local:9090/api/v1/query?query={{ args.query }}
         headers:
         - key: Authorization
           value: "Bearer {{ args.sa-token }}"
-        address: http://prometheus.istio-system.svc.cluster.local:9090
-        query: |
-          sum(irate(
-            istio_requests_total{reporter="source",destination_service=~"{{args.service-name}}",response_code!~"5.*"}[5m]
-          )) /
-          sum(irate(
-            istio_requests_total{reporter="source",destination_service=~"{{args.service-name}}"}[5m]
-          ))
+        jsonPath: "{$.data.result}"

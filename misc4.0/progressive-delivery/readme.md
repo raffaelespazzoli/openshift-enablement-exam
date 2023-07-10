@@ -41,6 +41,7 @@ oc delete deployment reviews-v1 -n bookinfo
 oc delete deployment reviews-v2 -n bookinfo
 oc delete deployment reviews-v3 -n bookinfo
 oc apply -f ./rollouts/rollout-controller.yaml -n bookinfo
+oc apply -f ./rollouts/rollout-sa-secret.yaml -n bookinfo
 oc apply -f ./rollouts/deployment.yaml -n bookinfo
 oc apply -f ./rollouts/virtual-service.yaml -n bookinfo
 oc apply -f ./rollouts/destination-rule.yaml -n bookinfo
