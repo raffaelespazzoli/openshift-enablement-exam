@@ -16,16 +16,17 @@ spec:
   progressDeadlineAbort: true
   strategy:
     canary:
-      analisys:
+      analysis:
         templates:
         - templateName: success-rate
+        startingStep: 1
         args:
-        - name: service-name
-          value: reviews
-        - name:
+        - name: service-url
+          value: http://reviews:9080
+        - name: query
           # encoded for
-          # sum(irate(istio_requests_total{reporter="source",destination_service=~"reviews",response_code!~"5.*"}[5m])) / sum(irate(istio_requests_total{reporter="source",destination_service=~"reviews"}[5m]))       
-          query: sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_service%3D~%22reviews%22%2Cresponse_code%21~%225.%2A%22%7D%5B5m%5D%29%29%20%2F%20sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_service%3D~%22reviews%22%7D%5B5m%5D%29%29%20%20%20%20%20%20%20          
+          # sum(irate(istio_requests_total{reporter="source",destination_service_name="reviews",response_code!~"5.*"}[5m])) / sum(irate(istio_requests_total{reporter="source",destination_service_name="reviews"}[5m]))       
+          value: sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_service_name%3D%22reviews%22%2Cresponse_code%21~%225.%2A%22%7D%5B5m%5D%29%29%20%2F%20sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_service_name%3D%22reviews%22%7D%5B5m%5D%29%29
       trafficRouting:
         istio:
           virtualService:
@@ -36,10 +37,10 @@ spec:
             stableSubsetName: stable  # required
       steps:
       - setWeight: 20
-      - pause: {duration: 10}
+      - pause: {duration: 5m}
       - setWeight: 40
-      - pause: {duration: 10}
+      - pause: {duration: 5m}
       - setWeight: 60
-      - pause: {duration: 10}
+      - pause: {duration: 5m}
       - setWeight: 80
-      - pause: {duration: 10}
+      - pause: {duration: 5m}

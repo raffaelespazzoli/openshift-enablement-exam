@@ -8,18 +8,40 @@ spec:
     valueFrom:
       secretKeyRef:
         name: rollouts-sa-token
-        key: token         
+        key: token
+  - name: query
+  - name: service-url            
   metrics:
   - name: success-rate
-    interval: 5m
+    initialDelay: 1m
+    interval: 1m
     # NOTE: prometheus queries return results in the form of a vector.
     # So it is common to access the index 0 of the returned array to obtain the value
-    successCondition: result[0] >= 0.95
+    #successCondition: len(result) == 0 || isInf(result[0].value[1]) || isNaN(asFloat(result[0].value[1])) || asFloat(result[0].value[1]) >= 0.95
+    successCondition: len(result) == 0 || isNaN(asFloat(result[0].value[1])) || asFloat(result[0].value[1]) >= 0.95
     failureLimit: 3
     provider:
       web:
-        url: http://prometheus.istio-system.svc.cluster.local:9090/api/v1/query?query={{ args.query }}
+        url: http://10.129.2.71:9090/api/v1/query?query={{ args.query }}
+        #url: https://prometheus.istio-system.svc.cluster.local:9090/api/v1/query?query={{ args.query }}
         headers:
         - key: Authorization
           value: "Bearer {{ args.sa-token }}"
         jsonPath: "{$.data.result}"
+        insecure: true
+  - name: run-load
+    provider:
+      job:
+        spec:
+          backoffLimit: 1
+          template:
+            metadata:
+              annotations:
+                sidecar.istio.io/inject: 'true'
+            spec:
+              containers:
+              - name: siege
+                image: quay.io/gnunn/tools:latest
+                command: [sh, -c]
+                args: ["siege -c 20 -r 20 -d10 -v {{args.service-url}}"]
+              restartPolicy: Never        

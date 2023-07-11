@@ -42,11 +42,13 @@ oc delete deployment reviews-v2 -n bookinfo
 oc delete deployment reviews-v3 -n bookinfo
 oc apply -f ./rollouts/rollout-controller.yaml -n bookinfo
 oc apply -f ./rollouts/rollout-sa-secret.yaml -n bookinfo
+oc apply -f ./rollouts/role-binding.yaml
 oc apply -f ./rollouts/deployment.yaml -n bookinfo
 oc apply -f ./rollouts/virtual-service.yaml -n bookinfo
 oc apply -f ./rollouts/destination-rule.yaml -n bookinfo
 oc apply -f ./rollouts/analysis-template.yaml -n bookinfo
 oc apply -f ./rollouts/rollout.yaml -n bookinfo
+
 ```
 
 first rollout:
