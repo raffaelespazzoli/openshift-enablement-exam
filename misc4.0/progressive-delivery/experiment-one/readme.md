@@ -40,9 +40,11 @@ The following commands prepare the environment.
 oc delete deployment reviews-v1 -n bookinfo
 oc delete deployment reviews-v2 -n bookinfo
 oc delete deployment reviews-v3 -n bookinfo
+#password=($ oc -n istio-system get cm istio-grafana -o jsonpath='{.data.datasources\.yaml}' | yq .datasources[0].basicAuthPassword)
+#oc create secret generic prometheus-password from-literal=password=${password} -n bookinfo
 oc apply -f ./rollouts/rollout-controller.yaml -n bookinfo
-oc apply -f ./rollouts/rollout-sa-secret.yaml -n bookinfo
-oc apply -f ./rollouts/role-binding.yaml
+#oc apply -f ./rollouts/rollout-sa-secret.yaml -n bookinfo
+#oc apply -f ./rollouts/role-binding.yaml
 oc apply -f ./rollouts/deployment.yaml -n bookinfo
 oc apply -f ./rollouts/virtual-service.yaml -n bookinfo
 oc apply -f ./rollouts/destination-rule.yaml -n bookinfo

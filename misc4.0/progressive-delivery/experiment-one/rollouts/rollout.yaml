@@ -22,15 +22,19 @@ spec:
         startingStep: 1
         args:
         - name: service-url
-          value: http://reviews:9080
-        - name: query
-          # encoded for
-          # sum(irate(istio_requests_total{reporter="source",destination_service_name="reviews",response_code!~"5.*"}[5m])) / sum(irate(istio_requests_total{reporter="source",destination_service_name="reviews"}[5m]))       
-          value: sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_service_name%3D%22reviews%22%2Cresponse_code%21~%225.%2A%22%7D%5B5m%5D%29%29%20%2F%20sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_service_name%3D%22reviews%22%7D%5B5m%5D%29%29
+          value: http://reviews:9080/reviews/1234567890
+        - name: service-name
+          value: reviews  
+        # - name: query
+        #   # encoded for
+        #   # sum(irate(istio_requests_total{reporter="source",destination_service_name="reviews",response_code!~"5.*"}[5m])) / sum(irate(istio_requests_total{reporter="source",destination_service_name="reviews"}[5m]))       
+        #   value: sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_service_name%3D%22reviews%22%2Cresponse_code%21~%225.%2A%22%7D%5B5m%5D%29%29%20%2F%20sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_service_name%3D%22reviews%22%7D%5B5m%5D%29%29
       trafficRouting:
         istio:
           virtualService:
             name: reviews        # required
+            routes:
+            - primary
           destinationRule:
             name: reviews    # required
             canarySubsetName: canary  # required
