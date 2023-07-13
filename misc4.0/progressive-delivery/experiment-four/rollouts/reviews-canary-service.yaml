@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: reviews-canary
+  labels:
+    app: reviews
+    service: reviews
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9080
+      targetPort: 9080
+  type: ClusterIP
+  selector:
+    app: reviews

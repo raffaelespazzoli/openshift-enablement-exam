@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: reviews
+  labels:
+    app: reviews
+    service: reviews
+spec:
+  type: ExternalName
+  externalName: reviews.gwapi.apps.cluster-nmpt8.nmpt8.sandbox213.opentlc.com

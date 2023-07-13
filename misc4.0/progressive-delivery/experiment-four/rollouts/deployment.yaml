@@ -1,0 +1,56 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: reviews
+  namespace: bookinfo
+  labels:
+    app: reviews
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: reviews
+  template:
+    metadata:
+      labels:
+        app: reviews
+      annotations:
+        sidecar.istio.io/inject: 'true'
+    spec:
+      restartPolicy: Always
+      serviceAccountName: bookinfo-reviews
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      securityContext: {}
+      containers:
+        - resources: {}
+          terminationMessagePath: /dev/termination-log
+          name: reviews
+          env:
+            - name: LOG_DIR
+              value: /tmp/logs
+          ports:
+            - containerPort: 9080
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: wlp-output
+              mountPath: /opt/ibm/wlp/output
+          terminationMessagePolicy: File
+          image: 'quay.io/maistra/examples-bookinfo-reviews-v1:2.4.0'
+      serviceAccount: bookinfo-reviews
+      volumes:
+        - name: wlp-output
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+      dnsPolicy: ClusterFirst
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

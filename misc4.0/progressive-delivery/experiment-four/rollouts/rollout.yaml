@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: reviews
+spec:
+  replicas: 5
+  workloadRef: 
+    apiVersion: apps/v1
+    kind: Deployment
+    name: reviews
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: reviews  
+  progressDeadlineSeconds: 600
+  progressDeadlineAbort: true
+  strategy:
+    canary:
+      analysis:
+        templates:
+        - templateName: success-rate
+        startingStep: 1
+        args:
+        - name: service-url
+          value: http://reviews.gwapi.apps.cluster-nmpt8.nmpt8.sandbox213.opentlc.com/reviews/1234567890
+        # - name: service-name
+        #   value: reviews  
+        - name: query
+          # encoded for
+          # sum(irate(istio_requests_total{reporter="source",destination_canonical_service="reviews",response_code!~"5.*"}[5m])) / sum(irate(istio_requests_total{reporter="source",destination_canonical_service="reviews"}[5m]))       
+          value: sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_canonical_service%3D%22reviews%22%2Cresponse_code%21~%225.%2A%22%7D%5B5m%5D%29%29%20%2F%20sum%28irate%28istio_requests_total%7Breporter%3D%22source%22%2Cdestination_canonical_service%3D%22reviews%22%7D%5B5m%5D%29%29
+      canaryService: reviews-canary  # required
+      stableService: reviews-stable  # required      
+      trafficRouting:
+        plugins:
+          argoproj-labs/gatewayAPI:
+            httpRoute: reviews # our created httproute
+            namespace: bookinfo # namespace where this rollout resides
+      steps:
+      - setWeight: 20
+      - pause: {duration: 5m}
+      - setWeight: 40
+      - pause: {duration: 5m}
+      - setWeight: 60
+      - pause: {duration: 5m}
+      - setWeight: 80
+      - pause: {duration: 5m}

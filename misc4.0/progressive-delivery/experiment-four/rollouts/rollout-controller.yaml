@@ -1,0 +1,8 @@
+apiVersion: argoproj.io/v1alpha1
+kind: RolloutManager
+metadata:
+  name: argo-rollout
+labels:
+    example: basic
+spec: 
+  image: quay.io/argoproj/argo-rollouts
