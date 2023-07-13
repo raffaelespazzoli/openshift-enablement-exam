@@ -1,8 +1,7 @@
-kind: RoleBinding
+kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: argo-rollouts-prometheus-reader
-  namespace: istio-system
+  name: argo-rollouts-bookinfo-prometheus-reader
 subjects:
   - kind: ServiceAccount
     name: argo-rollouts
@@ -10,4 +9,4 @@ subjects:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: view
+  name: cluster-monitoring-view

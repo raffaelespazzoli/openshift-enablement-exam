@@ -6,6 +6,7 @@
 oc apply -f ./servicemesh/operators.yaml
 oc new-project istio-system
 oc apply -f ./servicemesh/control-plane.yaml -n istio-system
+oc apply -f ./servicemesh/user-workload-monitoring.yaml
 ```
 
 ### Deploy test application
@@ -13,7 +14,7 @@ oc apply -f ./servicemesh/control-plane.yaml -n istio-system
 oc new-project bookinfo
 oc label namespace bookinfo istio-injection=enabled
 oc apply -n bookinfo -f https://raw.githubusercontent.com/Maistra/istio/maistra-2.4/samples/bookinfo/platform/kube/bookinfo.yaml
-oc apply -n bookinfo -f https://raw.githubusercontent.com/Maistra/istio/maistra-2.4/samples/bookinfo/networking/bookinfo-gateway.yaml
+oc apply -n bookinfo -f https://raw.githubusercontent.com/Maistra/istio/maistra-2.4/samples/bookinfo/networking/bookinfo-gateway.yaml 
 export istio_gateway_url=$(oc get route istio-ingressgateway -n istio-system -o jsonpath='{.spec.host}')
 curl http://${istio_gateway_url}/productpage
 ```
@@ -40,12 +41,15 @@ oc delete deployment reviews-v1 -n bookinfo
 oc delete deployment reviews-v2 -n bookinfo
 oc delete deployment reviews-v3 -n bookinfo
 oc apply -f ./rollouts/rollout-controller.yaml -n bookinfo
+oc apply -f ./rollouts/pod-monitor.yaml -n bookinfo
+oc apply -f ./rollouts/rollout-sa-secret.yaml -n bookinfo
+oc apply -f ./rollouts/role-binding.yaml -n bookinfo
 oc apply -f ./rollouts/deployment.yaml -n bookinfo
+oc apply -f ./rollouts/reviews-stable-service.yaml -n bookinfo
+oc apply -f ./rollouts/reviews-canary-service.yaml -n bookinfo
 oc apply -f ./rollouts/virtual-service.yaml -n bookinfo
-oc apply -f ./rollouts/destination-rule.yaml -n bookinfo
 oc apply -f ./rollouts/analysis-template.yaml -n bookinfo
 oc apply -f ./rollouts/rollout.yaml -n bookinfo
-
 ```
 
 first rollout:

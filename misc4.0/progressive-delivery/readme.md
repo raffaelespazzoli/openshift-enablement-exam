@@ -6,3 +6,8 @@ Some experiment with progressive delivery. All experiments involve the booking a
 - Traffic Management with [Istio Subset-level splitting](https://argo-rollouts.readthedocs.io/en/stable/features/traffic-management/istio/#subset-level-traffic-splitting).
 - Analysis with [Prometheus Analysis](https://argo-rollouts.readthedocs.io/en/stable/analysis/prometheus/)
 - Metrics from Service Mesh prometheus
+
+[Experiment #2](./experiment-two/):
+- Traffic Management with [Istio Host-level splitting](https://argo-rollouts.readthedocs.io/en/stable/features/traffic-management/istio/#host-level-traffic-splitting).
+- Analysis with [Prometheus Analysis](https://argo-rollouts.readthedocs.io/en/stable/analysis/prometheus/)
+- Metrics from Service Mesh prometheus

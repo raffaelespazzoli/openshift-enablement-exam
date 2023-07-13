@@ -1,0 +1,190 @@
+
+apiVersion: maistra.io/v2
+kind: ServiceMeshControlPlane
+metadata:
+  name: basic
+spec:
+  version: v2.4
+  mode: ClusterWide
+  meshConfig:
+    extensionProviders:
+    - name: prometheus
+      prometheus: {}
+  # techPreview:
+  #   gatewayAPI:
+  #     enabled: true 
+  security:
+    manageNetworkPolicy: false            
+  proxy:
+    runtime:
+      container:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 128Mi
+  tracing:
+    type: Jaeger
+  gateways:
+    ingress: # istio-ingressgateway
+      service:
+        type: ClusterIP
+        ports:
+        - name: status-port
+          port: 15020
+        - name: http2
+          port: 80
+          targetPort: 8080
+        - name: https
+          port: 443
+          targetPort: 8443
+      meshExpansionPorts: []
+    egress: # istio-egressgateway
+      service:
+        type: ClusterIP
+        ports:
+        - name: status-port
+          port: 15020
+        - name: http2
+          port: 80
+          targetPort: 8080
+        - name: https
+          port: 443
+          targetPort: 8443
+    additionalIngress:
+      some-other-ingress-gateway: {}
+    additionalEgress:
+      some-other-egress-gateway: {}
+
+  policy:
+    type: Istiod
+
+  telemetry:
+    type: Istiod # or Mixer
+
+  addons:
+    prometheus:
+      enabled:  false  
+    grafana:
+      enabled: true
+      install:
+        config:
+          env: {}
+          envSecrets: {}
+        persistence:
+          enabled: true
+          storageClassName: ""
+          accessMode: ReadWriteOnce
+          capacity:
+            requests:
+              storage: 5Gi
+        service:
+          ingress:
+            contextPath: /grafana
+            tls:
+              termination: reencrypt
+    kiali:
+      name: kiali
+      enabled: true
+      install: # install kiali CR if not present
+        dashboard:
+          viewOnly: false
+          enableGrafana: true
+          enableTracing: true
+          enablePrometheus: true
+      service:
+        ingress:
+          contextPath: /kiali
+    jaeger:
+      name: jaeger
+      install:
+        storage:
+          type: Elasticsearch # or Memory
+          memory:
+            maxTraces: 100000
+          elasticsearch:
+            nodeCount: 3
+            storage: {}
+            redundancyPolicy: SingleRedundancy
+            indexCleaner: {}
+        ingress: {} # jaeger ingress configuration
+  runtime:
+    components:
+      pilot:
+        deployment:
+          replicas: 2
+        pod:
+          affinity: {}
+      grafana:
+        deployment: {}
+        pod: {}
+      kiali:
+        deployment: {}
+        pod: {}  
+---
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: enable-prometheus-metrics
+spec:
+  metrics:
+  - providers:
+    - name: prometheus
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: istiod-monitor
+  namespace: istio-system
+spec:
+  targetLabels:
+  - app
+  selector:
+    matchLabels:
+      istio: pilot
+  endpoints:
+  - port: http-monitoring
+    interval: 30s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: istio-proxies-monitor
+  namespace: istio-system 
+spec:
+  selector:
+    matchExpressions:
+    - key: istio-prometheus-ignore
+      operator: DoesNotExist
+  podMetricsEndpoints:
+  - path: /stats/prometheus
+    interval: 30s
+    relabelings:
+    - action: keep
+      sourceLabels: [__meta_kubernetes_pod_container_name]
+      regex: "istio-proxy"
+    - action: keep
+      sourceLabels: [__meta_kubernetes_pod_annotationpresent_prometheus_io_scrape]
+    - action: replace
+      regex: (\d+);(([A-Fa-f0-9]{1,4}::?){1,7}[A-Fa-f0-9]{1,4})
+      replacement: '[$2]:$1'
+      sourceLabels: [__meta_kubernetes_pod_annotation_prometheus_io_port, __meta_kubernetes_pod_ip]
+      targetLabel: __address__
+    - action: replace
+      regex: (\d+);((([0-9]+?)(\.|$)){4})
+      replacement: $2:$1
+      sourceLabels: [__meta_kubernetes_pod_annotation_prometheus_io_port, __meta_kubernetes_pod_ip]
+      targetLabel: __address__
+    - action: labeldrop
+      regex: "__meta_kubernetes_pod_label_(.+)"
+    - sourceLabels: [__meta_kubernetes_namespace]
+      action: replace
+      targetLabel: namespace
+    - sourceLabels: [__meta_kubernetes_pod_name]
+      action: replace
+      targetLabel: pod_name
+    - action: replace
+      replacement: "basic-istio-system" 
+      targetLabel: mesh_id               
