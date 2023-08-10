@@ -1,0 +1,17 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: set-cmdbid-label
+spec:
+  rules:
+    - name: set-cmdbid-label
+      match:
+        any:
+        - resources:
+            kinds:
+            - Pod
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              cmdbID: {{ .Labels.cmdbID }}

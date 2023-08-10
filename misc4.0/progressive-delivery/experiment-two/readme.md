@@ -9,6 +9,15 @@ oc apply -f ./servicemesh/control-plane.yaml -n istio-system
 oc apply -f ./servicemesh/user-workload-monitoring.yaml
 ```
 
+## Deploy Istio-Grafana
+
+```shell
+helm upgrade -i grafana-operator -n openshift-operators helm/grafana-operator
+helm upgrade -i grafana -n istio-system helm/grafana
+oc create token grafana-instance-sa --duration=8760h -n istio-system
+helm upgrade -i grafana -n istio-system helm/grafana --set grafana.token=$()
+```
+
 ### Deploy test application
 ```shell
 oc new-project bookinfo

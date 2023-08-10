@@ -1,0 +1,11 @@
+apiVersion: authorization.openshift.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: grafana-proxy
+roleRef:
+  kind: ClusterRole
+  name: grafana-proxy
+subjects:
+  - kind: ServiceAccount
+    name: grafana-instance-sa
+    namespace: {{ .Release.Namespace }}

@@ -1,0 +1,37 @@
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: declarative-rosa
+  namespace: flux-system
+spec:
+  interval: 1m
+  approvePlan: auto
+  path: ./examples/create_rosa_sts_cluster/oidc_configuration/cluster_with_managed_oidc_config
+  sourceRef:
+    kind: GitRepository
+    name: declarative-rosa
+    namespace: flux-system
+  varsFrom:
+  - kind: Secret
+    name: ocm-token
+  dependsOn:
+  - name: declarative-rosa-prereqs    
+  vars: 
+  - name: account_role_prefix
+    value:  declarative-rosa 
+  - name: availability_zones
+    #value: [us-west-1a,us-west-1b,us-west-1c]
+    value: [us-west-1b]
+  - name: cloud_region
+    value:  us-west-1 
+  - name: cluster_name
+    value: dcl-rosa
+  - name: operator_role_prefix
+    value: declarative-rosa
+  - name: openshift_version
+    value: "4.13.6"  
+  runnerPodTemplate:
+    spec:
+      envFrom:
+      - secretRef:
+          name: aws-credentials    

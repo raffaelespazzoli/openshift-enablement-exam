@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: declarative-rosa
+  namespace: flux-system
+spec:
+  interval: 30s
+  url: https://github.com/terraform-redhat/terraform-provider-rhcs
+  ref:
+    tag: v1.2.2

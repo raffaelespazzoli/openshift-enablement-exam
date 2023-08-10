@@ -1,0 +1,28 @@
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: declarative-rosa-prereqs
+  namespace: flux-system
+spec:
+  interval: 1m
+  approvePlan: auto
+  path: ./examples/create_account_roles
+  sourceRef:
+    kind: GitRepository
+    name: declarative-rosa
+    namespace: flux-system
+  varsFrom:
+  - kind: Secret
+    name: ocm-token
+  #- kind: Secret
+  #  name: aws-credentials  
+  vars:
+  - name: operator_role_prefix
+    value: declarative-rosa
+  - name: account_role_prefix
+    value: declarative-rosa
+  runnerPodTemplate:
+    spec:
+      envFrom:
+      - secretRef:
+          name: aws-credentials  

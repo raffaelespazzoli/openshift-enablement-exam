@@ -1,0 +1,32 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: prometheus
+spec:
+  valuesFrom:
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-token"
+          key: "token"
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  datasource:
+    name: Prometheus
+    type: prometheus
+    access: proxy
+    basicAuth: false
+    url: 'https://thanos-querier.openshift-monitoring.svc.cluster.local:9091'
+    isDefault: true
+    jsonData:
+      "tlsSkipVerify": true
+      "timeInterval": "5s"
+      httpHeaderName1: 'Authorization'
+      customQueryParameters: "mesh_id=istio-system/full-install"
+    secureJsonData:
+      "httpHeaderValue1": "Bearer ${token}" # Notice the brakes around token
+    editable: true
+  plugins:
+    - name: grafana-clock-panel
+      version: 1.3.0
