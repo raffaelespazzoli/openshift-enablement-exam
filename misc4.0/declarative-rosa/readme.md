@@ -19,7 +19,7 @@ oc create secret generic ocm-token --from-literal=token=$(ocm token --refresh) -
 oc create secret generic aws-credentials --from-literal=AWS_ACCESS_KEY_ID=$(aws --profile rosa configure export-credentials | jq -r .AccessKeyId) --from-literal=AWS_SECRET_ACCESS_KEY=$(aws --profile rosa configure export-credentials | jq -r .SecretAccessKey) --from-literal=AWS_REGION=us-west-1 -n flux-system
 ```
 
-# Deploy manifest to create a ROSA cluster
+## Deploy manifests to create a ROSA cluster
 
 These manifest could exist in a gitops repo.
 
