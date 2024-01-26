@@ -1,0 +1,19 @@
+apiVersion: kyverno.io/v1
+kind: Policy
+metadata:
+  name: add-label    
+spec:
+  rules:
+  - name: add-label
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    # Adds the `nodeSelector` field to any Pod with two labels.
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          labels:
+            foo: bar
+            color: orange

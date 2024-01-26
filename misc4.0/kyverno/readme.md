@@ -18,3 +18,11 @@ oc label namespace my-tenant tenant=true
 oc apply -f topic.yaml -n my-tenant
 oc apply -f non-compliant-topic.yaml -n my-tenant
 ```
+
+pod label
+
+```sh
+oc new-project my-tenant
+oc apply -f ./policy.yaml -n my-tenant
+oc new-app centos/ruby-25-centos7~https://github.com/sclorg/ruby-ex.git -l preexisting=true -n my-tenant
+```

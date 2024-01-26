@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+  namespace: verify-audit-logging
+spec:
+  podSelector:
+    matchLabels: {}
+  policyTypes:
+  - Ingress
+  #- Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-same-namespace
+  namespace: verify-audit-logging
+spec:
+  podSelector: 
+    #matchLabels: {}
+    matchExpressions:
+      - key: app
+        operator: NotIn
+        values:
+          - reviews  
+  policyTypes:
+   - Ingress
+  ingress:
+    - from:
+      - podSelector: 
+          matchLabels: {}
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: openshift-ingress        
+  # egress:
+  #   - to:
+  #      - namespaceSelector:
+  #         matchLabels:
+  #           kubernetes.io/metadata.name: verify-audit-logging

@@ -33,3 +33,5 @@ misc4.0/sigstore/cosign.pub
 cosign.pub
 4.0/pwd/htpasswd
 misc4.0/crossplane/aws-credentials.txt
+misc4.0/netobserv/secret.sh
+misc4.0/network-policy-audit-logs/DFS-Calico-to-OVN-analisys.md

@@ -1,0 +1,169 @@
+apiVersion: flows.netobserv.io/v1beta1
+kind: FlowCollector
+metadata:
+  name: cluster
+  namespace: netobserv
+spec:
+  agent:
+    ebpf:
+      enablePktDrop: true
+      logLevel: info
+      cacheMaxFlows: 100000
+      resources:
+        limits:
+          memory: 2000Mi
+        requests:
+          cpu: 100m
+          memory: 200Mi
+      sampling: 1
+      imagePullPolicy: IfNotPresent
+      excludeInterfaces:
+        - lo
+      kafkaBatchSize: 10485760
+      cacheActiveTimeout: 5s
+      interfaces: []
+      privileged: true
+      features:
+        - DNSTracking
+        - PacketDrop
+    ipfix:
+      cacheActiveTimeout: 20s
+      cacheMaxFlows: 400
+      clusterNetworkOperator:
+        namespace: openshift-network-operator
+      forceSampleAll: false
+      ovnKubernetes:
+        containerName: ovnkube-node
+        daemonSetName: ovnkube-node
+        namespace: ovn-kubernetes
+      sampling: 400
+    type: EBPF
+  consolePlugin:
+    logLevel: info
+    port: 9001
+    enable: true
+    register: true
+    portNaming:
+      enable: true
+      portNames:
+        '3100': loki
+    quickFilters:
+      - default: true
+        filter:
+          dst_namespace!: 'openshift-,netobserv'
+          src_namespace!: 'openshift-,netobserv'
+        name: Applications
+      - filter:
+          dst_namespace: 'openshift-,netobserv'
+          src_namespace: 'openshift-,netobserv'
+        name: Infrastructure
+      - default: true
+        filter:
+          dst_kind: Pod
+          src_kind: Pod
+        name: Pods network
+      - filter:
+          dst_kind: Service
+        name: Services network
+    imagePullPolicy: IfNotPresent
+    autoscaler:
+      maxReplicas: 3
+      metrics:
+        - resource:
+            target:
+              averageUtilization: 50
+              type: Utilization
+            name: cpu
+          type: Resource
+      minReplicas: 1
+      status: DISABLED
+    replicas: 1
+  deploymentModel: DIRECT
+  exporters: []
+  kafka:
+    address: kafka-cluster-kafka-bootstrap.netobserv
+    sasl:
+      type: DISABLED
+    tls:
+      caCert:
+        certFile: ca.crt
+        name: kafka-cluster-cluster-ca-cert
+        type: secret
+      enable: false
+      insecureSkipVerify: false
+      userCert:
+        certFile: user.crt
+        certKey: user.key
+        name: flp-kafka
+        type: secret
+    topic: network-flows
+  loki:
+    timeout: 10s
+    maxRetries: 2
+    enable: true
+    maxBackoff: 5s
+    tenantID: netobserv
+    statusTls:
+      caCert:
+        certFile: service-ca.crt
+        name: loki-ca-bundle
+        type: configmap
+      enable: true
+      insecureSkipVerify: false
+      userCert:
+        certFile: tls.crt
+        certKey: tls.key
+        name: loki-query-frontend-http
+        type: secret
+    url: 'https://loki-gateway-http.netobserv.svc:8080/api/logs/v1/network'
+    batchWait: 1s
+    authToken: FORWARD
+    minBackoff: 1s
+    tls:
+      caCert:
+        certFile: service-ca.crt
+        name: loki-gateway-ca-bundle
+        type: configmap
+      enable: true
+      insecureSkipVerify: false
+    batchSize: 10485760
+    statusUrl: 'https://loki-query-frontend-http.netobserv.svc:3100/'
+  namespace: netobserv
+  processor:
+    logLevel: info
+    port: 2055
+    metrics:
+      disableAlerts: []
+      ignoreTags:
+        - egress
+        - packets
+        - nodes-flows
+        - namespaces-flows
+        - workloads-flows
+        - namespaces
+      server:
+        port: 9102
+        tls:
+          insecureSkipVerify: false
+          type: DISABLED
+    resources:
+      limits:
+        memory: 800Mi
+      requests:
+        cpu: 100m
+        memory: 100Mi
+    conversationTerminatingTimeout: 5s
+    conversationEndTimeout: 10s
+    kafkaConsumerQueueCapacity: 1000
+    imagePullPolicy: IfNotPresent
+    kafkaConsumerAutoscaler:
+      maxReplicas: 3
+      status: DISABLED
+    enableKubeProbes: true
+    logTypes: FLOWS
+    kafkaConsumerReplicas: 3
+    healthPort: 8080
+    dropUnusedFields: true
+    conversationHeartbeatInterval: 30s
+    kafkaConsumerBatchSize: 10485760
+    profilePort: 6060

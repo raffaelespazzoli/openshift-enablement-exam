@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+ name: h2o-stateful-set
+spec:
+  serviceName: h2o-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: h2o-k8s  
+  template:
+    metadata:
+      labels:
+        app: h2o-k8s
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: h2o-k8s
+        image: 'gcr.io/vorvan/h2oai/h2o-llmstudio:nightly'
+        resources:
+        requests:
+        memory: "4Gi"
+        ports:
+        - containerPort: 54321
+          protocol: TCP
+        env:
+        - name: H2O_KUBERNETES_SERVICE_DNS
+          value: h2o-service.h2o-statefulset.svc.cluster.local
+        - name: H2O_NODE_LOOKUP_TIMEOUT
+          value: '180'
+        - name: H2O_NODE_EXPECTED_COUNT
+          value: '3'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: h2o-service
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: h2o-k8s
+  ports:
+  - protocol: TCP
+    port: 54321

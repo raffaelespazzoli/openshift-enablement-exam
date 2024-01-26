@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client
+spec:
+  containers:
+    - name: client
+      image: registry.access.redhat.com/rhel7/rhel-tools
+      command: ["/bin/sh", "-c"]
+      args:
+        ["sleep inf"]
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: server
+spec:
+  containers:
+    - name: server
+      image: registry.access.redhat.com/rhel7/rhel-tools
+      command: ["/bin/sh", "-c"]
+      args:
+        ["sleep inf"]        

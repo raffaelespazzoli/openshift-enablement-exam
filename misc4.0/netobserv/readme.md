@@ -3,30 +3,37 @@
 ## Install operator
 
 ```shell
-oc apply -f ./operator.yaml -n openshift-operators
-oc new-project network-observability
-oc apply -f ./operator-grafana.yaml -n network-observability
+oc adm new-project openshift-netobserv-operator 
+oc adm new-project openshift-operators-redhat
+oc label namespace openshift-operators-redhat openshift.io/cluster-monitoring=true
+oc label namespace openshift-netobserv-operator openshift.io/cluster-monitoring=true
+oc new-project netobserv
+oc apply -f ./operator.yaml
+oc create secret generic -n netobserv lokistack-dev-s3 \
+  --from-literal=bucketnames="loki-flow-logs" \
+  --from-literal=endpoint="https://loki-flow-logs.s3.us-east-2.amazonaws.com" \
+  --from-literal=access_key_id="${AWS_ACCESS_KEY_ID}" \
+  --from-literal=access_key_secret="${AWS_ACCESS_KEY_SECRET}" \
+  --from-literal=sse_type="SSE-S3" \
+  --from-literal=region="us-east-2"
+oc apply -f ./loki.yaml
+oc apply -f ./loki-rbac.yaml
+oc apply -f ./flow-collector.yaml
+#oc apply -f ./operator-grafana.yaml -n network-observability
 ```
 
-## Install the stack
+Note, for the admin view to work the user need to belong to one of three specific groups: 
+system:cluster-admins
+cluster-admin
+dedicated-admin
+see also: https://access.redhat.com/solutions/7018952
 
-```shell
-helm upgrade -i -n network-observability --atomic netobserv ./netobserv
-```
 
-enable the flow, only <4.10
+## enable minio
 
-```shell
-GF_IP=`oc get svc flowlogs-pipeline -n network-observability -ojsonpath='{.spec.clusterIP}'` && echo $GF_IP
-oc patch networks.operator.openshift.io cluster --type='json' -p "[{'op': 'add', 'path': '/spec', 'value': {'exportNetworkFlows': {'ipfix': { 'collectors': ['$GF_IP:2055']}}}}]"
-```
-
-## Enable the console plugin
-
-only 4.10
-
-```shell
-oc patch console.operator.openshift.io cluster --type='json' -p '[{"op": "add", "path": "/spec/plugins", "value": ["network-observability-plugin"]}]'
+```sh
+oc adm policy add-scc-to-user nonroot-v2 -z loki-sa -n netobserv
+oc apply -f ./minio/tenant.yaml -n netobserv
 ```
 
 ## Install grafana

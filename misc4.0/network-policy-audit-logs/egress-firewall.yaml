@@ -1,0 +1,15 @@
+apiVersion: k8s.ovn.org/v1
+kind: EgressFirewall
+metadata:
+  name: default
+spec:
+  egress:
+  - to:
+      dnsName: www.google.com 
+    type: Allow
+  - to:
+      dnsName: www.expedia.com 
+    type: Allow    
+  - to:
+      cidrSelector: 0.0.0.0/0 
+    type: Deny

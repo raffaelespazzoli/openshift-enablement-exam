@@ -1,14 +1,87 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-operators-redhat
+  labels:
+    openshift.io/cluster-monitoring: 'true'
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-netobserv-operator
+  labels:
+    openshift.io/cluster-monitoring: 'true'   
+---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  labels:
-    operators.coreos.com/netobserv-operator.openshift-operators: ""
-  name: netobserv-operator
-  namespace: openshift-operators
+  name: loki-operator
+  namespace: openshift-operators-redhat 
 spec:
-  channel: alpha
+  channel: stable-5.8
+  name: loki-operator
+  source: redhat-operators 
+  sourceNamespace: openshift-marketplace
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: netobserv-operator
+  namespace: openshift-netobserv-operator
+spec:
+  channel: stable
   installPlanApproval: Automatic
   name: netobserv-operator
-  source: community-operators
+  source: redhat-operators
   sourceNamespace: openshift-marketplace
-  #startingCSV: "0.1.1"
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: openshift-netobserv-operator
+  namespace: openshift-netobserv-operator
+spec:
+  upgradeStrategy: Default
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: openshift-operators-redhat
+  namespace: openshift-operators-redhat
+spec:
+  upgradeStrategy: Default
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: "minio-operator"
+  namespace: "openshift-operators" 
+spec:
+    channel: stable
+    installPlanApproval: Automatic
+    name: minio-operator
+    source: certified-operators
+    sourceNamespace: openshift-marketplace
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: minio
+  namespace: openshift-operators
+  labels:
+    app.kubernetes.io/instance: minio-operator
+    app.kubernetes.io/name: operator
+    name: console
+    operators.coreos.com/minio-operator.openshift-operators: ''
+spec:
+  to:
+    kind: Service
+    name: console
+  tls:
+    termination: reencrypt
+    insecureEdgeTerminationPolicy: Redirect
+    destinationCACertificate: ''
+  port:
+    targetPort: https    
+
+

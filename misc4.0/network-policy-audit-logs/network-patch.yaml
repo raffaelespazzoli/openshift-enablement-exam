@@ -1,0 +1,12 @@
+apiVersion: operator.openshift.io/v1
+kind: Network
+metadata:
+  name: cluster
+spec:
+  defaultNetwork:
+    ovnKubernetesConfig:
+      policyAuditConfig:
+        destination: "udp:rsyslog-service.rsyslogd.svc.cluster.local:514"
+        maxFileSize: 50
+        rateLimit: 20
+        syslogFacility: local0
