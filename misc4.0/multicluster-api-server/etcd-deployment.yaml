@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etcd
+  labels:
+    etcd: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      etcd: "true"    
+  template:
+    metadata:
+      labels:
+        etcd: "true"
+    spec:
+      volumes:
+        - name: etcd-tls
+          secret:
+            secretName: etcd-tls
+      containers:
+      - command:
+        - etcd
+        - --advertise-client-urls=https://etcd.h2.svc:2379
+        - --cert-file=/etc/etcd-tls/tls.crt
+        - --client-cert-auth=true
+        - --data-dir=/var/lib/minikube/etcd
+        - --experimental-initial-corrupt-check=true
+        - --experimental-watch-progress-notify-interval=5s
+        #- --initial-advertise-peer-urls=https://${POD_IP}:2380
+        #- --initial-cluster=cluster2=https://${POD_IP}:2380
+        - --key-file=/etc/etcd-tls/tls.key
+        - --listen-client-urls=https://0.0.0.0:2379
+        - --listen-metrics-urls=http://127.0.0.1:2381
+        - --listen-peer-urls=https://0.0.0.0:2380
+        - --name=cluster2
+        - --peer-cert-file=/etc/etcd-tls/tls.crt
+        - --peer-client-cert-auth=true
+        - --peer-key-file=/etc/etcd-tls/tls.key
+        - --peer-trusted-ca-file=/etc/etcd-tls/ca.crt
+        - --proxy-refresh-interval=70000
+        - --snapshot-count=10000
+        - --trusted-ca-file=/etc/etcd-tls/ca.crt        
+        image: registry.k8s.io/etcd:3.5.9-0
+        volumeMounts:
+          - mountPath: /etc/etcd-tls
+            name: etcd-tls
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP         
+        livenessProbe:
+          failureThreshold: 8
+          httpGet:
+            host: 127.0.0.1
+            path: /health?exclude=NOSPACE&serializable=true
+            port: 2381
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 15
+        name: etcd
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        startupProbe:
+          failureThreshold: 24
+          httpGet:
+            host: 127.0.0.1
+            path: /health?serializable=false
+            port: 2381
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: etcd
+spec:
+  ports:
+  - port: 2379
+    protocol: TCP
+    targetPort: 2379
+  selector:
+    etcd: "true"
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: etcd
+spec:
+  # Secret names are always required.
+  secretName: etcd-tls
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  isCA: false
+  usages:
+    - server auth
+    - client auth
+  # At least one of a DNS Name, URI, IP address or otherName is required.
+  dnsNames:
+    - etcd.h2.svc
+    - etcd.h2.svc.cluster.local
+  # Issuer references are always required.
+  issuerRef:
+    name: in-cluster-issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: ClusterIssuer
+    # This is optional since cert-manager will default to this value however
+    # if you are using an external issuer, change this to that issuer group.
+    group: cert-manager.io          
+

@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "tiger-bettle.fullname" . }}
+  labels:
+    {{- include "tiger-bettle.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "tiger-bettle.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "tiger-bettle.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "tiger-bettle.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "tiger-bettle.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}-storage-prep 
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+          - name: ORDINAL_NUMBER
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['apps.kubernetes.io/pod-index']        
+        cmd:
+        - /bin/bash
+        - c
+        - | 
+          if ! test -f /data/{{ .Values.clusterID }}_${ORDINAL_NUMBER}.tigerbeetle; then
+            format --cluster={{ .Values.clusterID }} --replica=${ORDINAL_NUMBER} --replica-count={{ .Values.replicaCount }} /data/{{ .Values.clusterID }}_${ORDINAL_NUMBER}.tigerbeetle 
+          fi                         
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+          - name: ORDINAL_NUMBER
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['apps.kubernetes.io/pod-index']        
+        args:
+        - start
+        {{- $dot := . -}}
+        {{- $addresses := list -}}
+        {{- range (until (.Values.replicaCount | int)) -}}
+        {{ $addresses = append $addresses (cat (include "tiger-bettle.fullname" $dot) "-" . "." $dot.Release.Namespace ".svc" | nospace ) -}}
+        {{- end }}
+        - --addresses={{ $addresses | join "," }}
+        - /data/{{ .Values.clusterID }}_${ORDINAL_NUMBER}.tigerbeetle
+        ports:
+        - containerPort: 3001
+          name: db
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}          
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

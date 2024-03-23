@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-server
+  labels:
+    apiserver: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      apiserver: "true"
+  template:
+    metadata:
+      labels:
+        apiserver: "true"
+    spec:    
+      volumes:
+        - name: api-server-tls
+          secret:
+            secretName: api-server-tls
+      containers:
+      - command:
+        - kube-apiserver
+        #- --advertise-address=https://api-server.h2.svc
+        - --allow-privileged=true
+        - --authorization-mode=AlwaysAllow
+        - --client-ca-file=/etc/api-server-tls/ca.crt
+        - --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota
+        - --enable-bootstrap-token-auth=true
+        - --etcd-cafile=/etc/api-server-tls/ca.crt
+        - --etcd-certfile=/etc/api-server-tls/tls.crt
+        - --etcd-keyfile=/etc/api-server-tls/tls.key
+        - --etcd-servers=https://etcd.h2.svc:2379
+        - --kubelet-client-certificate=/etc/api-server-tls/tls.crt
+        - --kubelet-client-key=/etc/api-server-tls/tls.key
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --proxy-client-cert-file=/etc/api-server-tls/ca.crt
+        - --proxy-client-key-file=/etc/api-server-tls/tls.key
+        - --requestheader-allowed-names=front-proxy-client
+        - --requestheader-client-ca-file=/etc/api-server-tls/ca.crt
+        - --requestheader-extra-headers-prefix=X-Remote-Extra-
+        - --requestheader-group-headers=X-Remote-Group
+        - --requestheader-username-headers=X-Remote-User
+        - --secure-port=8443
+        - --service-account-issuer=https://api-server.h2.svc.cluster.local
+        - --service-account-key-file=/etc/api-server-tls/tls.key
+        - --service-account-key-file=/etc/api-server-tls/tls.crt
+        - --service-account-key-file=/etc/api-server-tls/ca.crt
+        - --service-account-signing-key-file=/etc/api-server-tls/tls.key
+        - --tls-cert-file=/etc/api-server-tls/tls.crt
+        - --tls-private-key-file=/etc/api-server-tls/tls.key
+        image: registry.k8s.io/kube-apiserver:v1.28.3
+        volumeMounts:
+          - mountPath: /etc/api-server-tls
+            name: api-server-tls
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP        
+        livenessProbe:
+          failureThreshold: 8
+          httpGet:
+            path: /livez
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 15
+        name: kube-apiserver
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /readyz
+            port: 8443
+            scheme: HTTPS
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 15
+        resources:
+          requests:
+            cpu: 250m
+        startupProbe:
+          failureThreshold: 24
+          httpGet:
+            path: /livez
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-server
+spec:
+  ports:
+  - port: 8443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    ai-server: "true"
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ai-server
+spec:
+  # Secret names are always required.
+  isCA: true
+  secretName: api-server-tls
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  usages:
+    - server auth
+    - client auth
+  # At least one of a DNS Name, URI, IP address or otherName is required.
+  dnsNames:
+    - api-server.h2.svc
+    - api-server.h2.svc.cluster.local
+  # Issuer references are always required.
+  issuerRef:
+    name: in-cluster-issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: ClusterIssuer
+    # This is optional since cert-manager will default to this value however
+    # if you are using an external issuer, change this to that issuer group.
+    group: cert-manager.io          

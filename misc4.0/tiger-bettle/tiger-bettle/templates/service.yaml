@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "tiger-bettle.fullname" . }}
+  labels:
+    {{- include "tiger-bettle.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  clusterIP: None
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: db
+      protocol: TCP
+      name: db
+  selector:
+    {{- include "tiger-bettle.selectorLabels" . | nindent 4 }}
