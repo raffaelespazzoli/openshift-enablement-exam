@@ -29,6 +29,8 @@ for cluster in cluster1 cluster2 cluster3; do
 done
 ```
 
+deploy h2 apiserver
+
 ```
 for cluster in cluster1 cluster2 cluster3; do
   kubectl --context ${cluster} create namespace h2
