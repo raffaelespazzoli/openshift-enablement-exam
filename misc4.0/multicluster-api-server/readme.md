@@ -32,8 +32,13 @@ done
 deploy h2 apiserver
 
 ```
+ssh-keygen -m pem -b 4096 -t rsa -f sa.key.pem -N '' -C "key for sa"
+openssl rsa -in sa.key.pem -pubout -out sa.key.pub.pem
+
+
 for cluster in cluster1 cluster2 cluster3; do
   kubectl --context ${cluster} create namespace h2
+  kubectl --context ${cluster} create secret generic sa-key --from-file=sa.pub=sa.key.pub.pem --from-file=sa.key=sa.key.pem -n h2
   kubectl --context ${cluster} apply -f ./etcd-deployment.yaml -n h2
   kubectl --context ${cluster} apply -f ./api-server-deployment.yaml -n h2
   kubectl --context ${cluster} apply -f ./apiservice.yaml

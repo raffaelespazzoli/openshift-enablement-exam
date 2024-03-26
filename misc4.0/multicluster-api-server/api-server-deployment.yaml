@@ -18,6 +18,9 @@ spec:
         - name: api-server-tls
           secret:
             secretName: api-server-tls
+        - name: sa-key
+          secret:
+            secretName: sa-key            
       containers:
       - command:
         - kube-apiserver
@@ -34,7 +37,7 @@ spec:
         - --kubelet-client-certificate=/etc/api-server-tls/tls.crt
         - --kubelet-client-key=/etc/api-server-tls/tls.key
         - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-        - --proxy-client-cert-file=/etc/api-server-tls/ca.crt
+        - --proxy-client-cert-file=/etc/api-server-tls/tls.crt
         - --proxy-client-key-file=/etc/api-server-tls/tls.key
         - --requestheader-allowed-names=front-proxy-client
         - --requestheader-client-ca-file=/etc/api-server-tls/ca.crt
@@ -43,16 +46,16 @@ spec:
         - --requestheader-username-headers=X-Remote-User
         - --secure-port=8443
         - --service-account-issuer=https://api-server.h2.svc.cluster.local
-        - --service-account-key-file=/etc/api-server-tls/tls.key
-        - --service-account-key-file=/etc/api-server-tls/tls.crt
-        - --service-account-key-file=/etc/api-server-tls/ca.crt
-        - --service-account-signing-key-file=/etc/api-server-tls/tls.key
+        - --service-account-key-file=/etc/sa-key/sa.pub
+        - --service-account-signing-key-file=/etc/sa-key/sa.key
         - --tls-cert-file=/etc/api-server-tls/tls.crt
         - --tls-private-key-file=/etc/api-server-tls/tls.key
         image: registry.k8s.io/kube-apiserver:v1.28.3
         volumeMounts:
           - mountPath: /etc/api-server-tls
             name: api-server-tls
+          - mountPath: /etc/sa-key
+            name: sa-key            
         imagePullPolicy: IfNotPresent
         env:
         - name: POD_IP

@@ -35,3 +35,9 @@ cosign.pub
 misc4.0/crossplane/aws-credentials.txt
 misc4.0/netobserv/secret.sh
 misc4.0/network-policy-audit-logs/DFS-Calico-to-OVN-analisys.md
+misc4.0/multicluster-api-server/sa.key
+misc4.0/multicluster-api-server/sa.key.pub
+misc4.0/multicluster-api-server/sakey.pub.pem
+misc4.0/multicluster-api-server/sa.key.pem
+misc4.0/multicluster-api-server/sa.key.pem.pub
+misc4.0/multicluster-api-server/sa.key.pub.pem
