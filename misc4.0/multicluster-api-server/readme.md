@@ -17,6 +17,7 @@ for cluster in cluster1 cluster2 cluster3; do
   minikube --profile ${cluster} addons disable storage-provisioner
   minikube --profile ${cluster} addons disable default-storageclass
   kubectl --context ${cluster} patch storageclass csi-hostpath-sc -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  minikube --profile ${cluster} dashboard
 done
 ```
 
