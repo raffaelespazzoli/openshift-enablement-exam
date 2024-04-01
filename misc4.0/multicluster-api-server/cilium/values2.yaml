@@ -1,0 +1,71 @@
+securityContext:
+  privileged: true
+
+image:
+  pullPolicy: IfNotPresent
+
+ipam:
+  mode: kubernetes
+
+operator:
+  replicas: 1  
+
+cluster:
+  name: ${cluster}
+  id: ${ordinal}
+
+nodePort:
+  enabled: true  
+ 
+
+clustermesh:
+  useAPIServer: false
+  config:
+    enabled: true
+    clusters: 
+    - name: cluster1
+      port: 2379
+      addresses: cluster1.mesh.cilium.io
+      ips: 
+      - ${cluster1_ip}
+    - name: cluster2
+      port: 2379
+      addresses: cluster2.mesh.cilium.io
+      ips: 
+      - ${cluster2_ip}
+    - name: cluster3
+      port: 2379
+      addresses: cluster3.mesh.cilium.io
+      ips: 
+      - ${cluster3_ip}   
+  apiserver:
+    tls:
+      auto:
+        certManagerIssuerRef:
+          name: in-cluster-issuer
+          kind: ClusterIssuer
+          group: cert-manager.io        
+        method: certmanager
+    service:
+      type: LoadBalancer
+      loadBalancerIP: ${apiserver_ip}
+
+gatewayAPI:
+  enabled: true
+
+ingressController:
+  enabled: true
+  default: true
+
+hubble:
+  enabled: false
+  tls:
+    auto:
+      method: certmanager
+      certManagerIssuerRef:
+        name: in-cluster-issuer
+        kind: ClusterIssuer
+        group: cert-manager.io         
+
+
+     

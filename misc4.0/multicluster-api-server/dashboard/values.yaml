@@ -1,0 +1,3 @@
+kong:
+  ingressController:
+    enabled: true

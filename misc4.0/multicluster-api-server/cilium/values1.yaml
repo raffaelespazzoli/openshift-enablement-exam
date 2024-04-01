@@ -1,0 +1,24 @@
+securityContext:
+  privileged: true
+
+image:
+  pullPolicy: IfNotPresent
+
+ipam:
+  mode: kubernetes
+
+operator:
+  replicas: 1  
+
+cluster:
+  name: ${cluster}
+  id: ${ordinal}
+
+nodePort:
+  enabled: true   
+
+
+
+
+
+     
