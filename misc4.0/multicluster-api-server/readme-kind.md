@@ -53,7 +53,7 @@ done
 
 
 
-## deploy dashboard
+## deploy dashboard (optional)
 
 ```sh
 for cluster in cluster1 cluster2 cluster3; do
@@ -109,6 +109,14 @@ for cluster in cluster1 cluster2 cluster3; do
   helm --kube-context kind-${cluster} upgrade -i cilium cilium/cilium --version "1.16.0-pre.0" --namespace kube-system -f /tmp/${cluster}-values.yaml
 done
 ```   
+
+verify that clusters are successfully connected:
+
+```sh
+cilium clustermesh status --context kind-context1
+cilium clustermesh status --context kind-context2
+cilium clustermesh status --context kind-context3
+```
 
 ### uninstall cilium 
 ```sh
