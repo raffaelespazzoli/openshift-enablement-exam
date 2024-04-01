@@ -19,7 +19,7 @@ nodePort:
  
 
 clustermesh:
-  useAPIServer: false
+  useAPIServer: true
   config:
     enabled: true
     clusters: 
@@ -51,10 +51,10 @@ clustermesh:
       loadBalancerIP: ${apiserver_ip}
 
 gatewayAPI:
-  enabled: true
+  enabled: false
 
 ingressController:
-  enabled: true
+  enabled: false
   default: true
 
 hubble:

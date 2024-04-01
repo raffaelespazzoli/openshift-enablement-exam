@@ -37,7 +37,12 @@ kubectl --context kind-cluster1 get pods -A
 this sort of hack is to share the CA across clusters
 
 ```sh
-kubectl --context kind-cluster1 apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.yaml
+for cluster in cluster2 cluster3; do
+  kubectl --context kind-${cluster} apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.yaml
+done
+```
+
+```sh
 kubectl --context kind-cluster1 apply -f ./cert-manager/issuer-cluster1.yaml -n cert-manager
 kubectl --context kind-cluster1 get secret root-secret -n cert-manager -o yaml > /tmp/root-secret.yaml
 ```
@@ -45,7 +50,6 @@ kubectl --context kind-cluster1 get secret root-secret -n cert-manager -o yaml >
 
 ```sh
 for cluster in cluster2 cluster3; do
-  kubectl --context kind-${cluster} apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.yaml
   kubectl --context kind-${cluster} apply -f /tmp/root-secret.yaml
   kubectl --context kind-${cluster} apply -f ./cert-manager/issuer-others.yaml -n cert-manager
 done
@@ -113,9 +117,12 @@ done
 verify that clusters are successfully connected:
 
 ```sh
-cilium clustermesh status --context kind-context1
-cilium clustermesh status --context kind-context2
-cilium clustermesh status --context kind-context3
+cilium status --context kind-cluster1
+cilium status --context kind-cluster2
+cilium status --context kind-cluster3
+cilium clustermesh status --context kind-cluster1
+cilium clustermesh status --context kind-cluster2
+cilium clustermesh status --context kind-cluster3
 ```
 
 ### uninstall cilium 
