@@ -5,6 +5,7 @@ networking:
   podSubnet: "10.244.1.0/24"
   serviceSubnet: "10.96.1.0/24"
   disableDefaultCNI: true
+  kubeProxyMode: "none"
 nodes:
 - role: control-plane
   kubeadmConfigPatches:

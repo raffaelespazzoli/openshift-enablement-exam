@@ -17,6 +17,22 @@ cluster:
 nodePort:
   enabled: true   
 
+l2announcements: 
+  enabled: true
+  interface: eth0
+   
+k8sClientRateLimit:
+  qps: 32
+  burst: 68
+
+externalIPs:
+  enabled: true   
+
+kubeProxyReplacement: true 
+
+k8sServiceHost: localhost
+k8sServicePort: 6443  
+
 
 
 
