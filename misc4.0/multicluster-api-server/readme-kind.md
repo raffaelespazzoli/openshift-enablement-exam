@@ -108,6 +108,26 @@ cilium clustermesh status --context kind-cluster2
 cilium clustermesh status --context kind-cluster3
 ```
 
+## Install prometheus and grafana (optional)
+
+```sh
+for cluster in cluster1 cluster2 cluster3; do
+  kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/cilium/cilium/1.16.0-pre.0/examples/kubernetes/addons/prometheus/monitoring-example.yaml
+done
+```
+
+access grafana
+
+```sh
+kubectl --context kind-${cluster} -n cilium-monitoring port-forward service/grafana --address 0.0.0.0 --address :: 3000:3000
+```
+
+access hubble ui
+
+```sh
+cilium --context kind-${cluster} hubble ui
+```
+
 ## deploy dashboard (optional)
 
 ```sh

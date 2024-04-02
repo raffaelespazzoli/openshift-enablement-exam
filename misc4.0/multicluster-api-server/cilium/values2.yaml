@@ -8,7 +8,9 @@ ipam:
   mode: kubernetes
 
 operator:
-  replicas: 1  
+  replicas: 1
+  prometheus:
+    enabled: true    
 
 cluster:
   name: ${cluster}
@@ -73,8 +75,15 @@ ingressController:
   enabled: false
   default: true
 
+prometheus:
+  enabled: true 
+
 hubble:
-  enabled: false
+  enabled: true
+  relay:
+    enabled: true
+  ui:
+    enabled: true
   tls:
     auto:
       method: certmanager
