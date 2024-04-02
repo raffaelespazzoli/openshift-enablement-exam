@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: etcd
   labels:
     etcd: "true"
 spec:
+  serviceName: etcd-headless
   replicas: 1
   selector:
     matchLabels:
@@ -21,19 +22,19 @@ spec:
       containers:
       - command:
         - etcd
-        - --advertise-client-urls=https://etcd.h2.svc:2379
+        - --advertise-client-urls=https://etcd.h2:2379
         - --cert-file=/etc/etcd-tls/tls.crt
         - --client-cert-auth=true
         - --data-dir=/var/lib/minikube/etcd
         - --experimental-initial-corrupt-check=true
         - --experimental-watch-progress-notify-interval=5s
-        #- --initial-advertise-peer-urls=https://${POD_IP}:2380
-        #- --initial-cluster=cluster2=https://${POD_IP}:2380
+        - --initial-advertise-peer-urls=https://etcd-0.etcd-headless.h2.cluster.cluster1:2380,https://etcd-0.etcd-headless.h2.cluster.cluster2:2380,https://etcd-0.etcd-headless.h2.cluster.cluster3:2380
+        - --initial-cluster=${cluster}=https://etcd-0.etcd-headless.h2.cluster.${cluster}:2380
         - --key-file=/etc/etcd-tls/tls.key
         - --listen-client-urls=https://0.0.0.0:2379
         - --listen-metrics-urls=http://127.0.0.1:2381
         - --listen-peer-urls=https://0.0.0.0:2380
-        - --name=cluster2
+        - --name=${cluster}
         - --peer-cert-file=/etc/etcd-tls/tls.crt
         - --peer-client-cert-auth=true
         - --peer-key-file=/etc/etcd-tls/tls.key
@@ -82,7 +83,22 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: etcd-headless
+spec:
+  clusterIP: None
+  ports:
+  - port: 2380
+    protocol: TCP
+    targetPort: 2380
+  selector:
+    etcd: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: etcd
+  annotations:
+    service.cilium.io/global: "true"  
 spec:
   ports:
   - port: 2379
@@ -106,15 +122,13 @@ spec:
     - client auth
   # At least one of a DNS Name, URI, IP address or otherName is required.
   dnsNames:
-    - etcd.h2.svc
+    - etcd.h2
     - etcd.h2.svc.cluster.local
+    - etcd-0.etcd-headless.h2.cluster.${cluster}
+    - etcd-0.etcd-headless.h2
   # Issuer references are always required.
   issuerRef:
     name: in-cluster-issuer
-    # We can reference ClusterIssuers by changing the kind here.
-    # The default value is Issuer (i.e. a locally namespaced Issuer)
     kind: ClusterIssuer
-    # This is optional since cert-manager will default to this value however
-    # if you are using an external issuer, change this to that issuer group.
     group: cert-manager.io          
 

@@ -12,9 +12,10 @@ helm repo add cilium https://helm.cilium.io/
 ```sh
 sudo su #cilium does not work with rootless containers
 setenforce 0
-kind create cluster -n cluster1 --config ./kind-config/config-cluster1.yaml
-kind create cluster -n cluster2 --config ./kind-config/config-cluster2.yaml
+kind create cluster -n cluster1 --config ./kind-config/config-cluster1.yaml & \ 
+kind create cluster -n cluster2 --config ./kind-config/config-cluster2.yaml & \
 kind create cluster -n cluster3 --config ./kind-config/config-cluster3.yaml
+wait
 ```
 
 ## deploy cert-manager
@@ -37,7 +38,10 @@ done
 wait for all the pods to be up
 
 ```sh
-watch kubectl --context kind-cluster1 get pods -A
+kubectl --context kind-cluster1 wait pod --all --for=condition=Ready -A --timeout=600s & \
+kubectl --context kind-cluster2 wait pod --all --for=condition=Ready -A --timeout=600s & \
+kubectl --context kind-cluster3 wait pod --all --for=condition=Ready -A --timeout=600s
+wait
 ```
 
 ## deploy cert-manager
@@ -46,6 +50,7 @@ this sort of hack is to share the CA across clusters
 
 ```sh
 kubectl --context kind-cluster1 apply -f ./cert-manager/issuer-cluster1.yaml -n cert-manager
+sleep 1
 kubectl --context kind-cluster1 get secret root-secret -n cert-manager -o yaml > /tmp/root-secret.yaml
 ```
 
@@ -106,6 +111,45 @@ cilium status --context kind-cluster3
 cilium clustermesh status --context kind-cluster1
 cilium clustermesh status --context kind-cluster2
 cilium clustermesh status --context kind-cluster3
+```
+
+patch core-dns to have headless services resolve
+
+```sh
+export cluster1_coredns_ip="10.89.0.225"
+export cluster2_coredns_ip="10.89.0.233"
+export cluster3_coredns_ip="10.89.0.241"
+declare -A coredns_ips
+coredns_ips["cluster1"]="10.89.0.225"
+coredns_ips["cluster2"]="10.89.0.233"
+coredns_ips["cluster3"]="10.89.0.241"
+for cluster in cluster1 cluster2 cluster3; do
+  envsubst < ./core-dns/corefile-configmap-${cluster}.yaml | kubectl --context kind-${cluster} apply -f -
+  coredns_ip=${coredns_ips[${cluster}]} envsubst < ./core-dns/coredns-service.yaml | kubectl --context kind-${cluster} apply -f -
+done
+```
+
+## create h2 namespace
+
+```sh
+for cluster in cluster1 cluster2 cluster3; do
+  kubectl --context kind-${cluster} create namespace h2
+done
+```
+
+## Deploy h2 shared etcd
+
+```sh
+for cluster in cluster1 cluster2 cluster3; do
+  cluster=${cluster} envsubst < ./shared-etcd/etcd-deployment.yaml | kubectl --context kind-${cluster} apply -f - -n h2
+done 
+```
+
+restart statefulsets
+```sh
+for cluster in cluster1 cluster2 cluster3; do
+  kubectl --context kind-${cluster} delete pod etcd-0 -n h2
+done
 ```
 
 ## Install prometheus and grafana (optional)

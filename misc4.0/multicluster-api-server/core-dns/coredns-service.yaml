@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: core-dns-ext
+    kubernetes.io/name: CoreDNS
+  name: core-dns-ext
+  namespace: kube-system
+spec:
+  ports:
+  - name: dns
+    port: 53
+    protocol: UDP
+    targetPort: 53
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+    targetPort: 53
+  selector:
+    k8s-app: kube-dns
+  sessionAffinity: None
+  type: LoadBalancer
+  loadBalancerIP: ${coredns_ip}
