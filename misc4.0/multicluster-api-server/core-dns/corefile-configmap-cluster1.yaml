@@ -6,12 +6,13 @@ metadata:
 data:
   Corefile: |
     .:53 {
+        log . "catch-all logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
         errors
         health {
            lameduck 5s
         }
         ready
-        rewrite name substring cluster.cluster1 svc.cluster.local
+        rewrite name suffix .cluster.cluster1 .cluster.local answer auto
         kubernetes cluster.local in-addr.arpa ip6.arpa {
            pods insecure
            fallthrough in-addr.arpa ip6.arpa
@@ -26,8 +27,10 @@ data:
         reload
         loadbalance
     }
+
     cluster.cluster2:53 {
-        rewrite name substring cluster.cluster2 svc.cluster.local
+        log . "cluster2 logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
+        rewrite name suffix .cluster.cluster2 .cluster.local answer auto
 
         forward . ${cluster2_coredns_ip}:53 {
             expire 10s
@@ -35,13 +38,25 @@ data:
         }
         cache 10
     }
+
     cluster.cluster3:53 {
-        rewrite name substring cluster.cluster3 svc.cluster.local
+        log . "cluster3 logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
+        rewrite name suffix .cluster.cluster3 .cluster.local answer auto
 
         forward . ${cluster3_coredns_ip}:53 {
             expire 10s
             policy round_robin
         }
         cache 10
-    }        
+    }
+
+    cluster.all:53 {
+      log . "sub-query logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
+      gathersrv cluster.all. {
+          cluster.cluster1. c1-
+          cluster.cluster2. c2-
+          cluster.cluster3. c3-
+      }
+      forward . 127.0.0.1:53
+    }            
 

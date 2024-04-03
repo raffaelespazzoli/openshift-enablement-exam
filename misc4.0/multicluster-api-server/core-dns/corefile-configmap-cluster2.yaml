@@ -11,7 +11,7 @@ data:
            lameduck 5s
         }
         ready
-        rewrite name substring cluster.cluster2 svc.cluster.local
+        rewrite name suffix .cluster.cluster2 .cluster.local answer auto
         kubernetes cluster.local in-addr.arpa ip6.arpa {
            pods insecure
            fallthrough in-addr.arpa ip6.arpa
@@ -27,7 +27,7 @@ data:
         loadbalance
     }
     cluster.cluster1:53 {
-        rewrite name substring cluster.cluster1 svc.cluster.local
+        rewrite name suffix .cluster.cluster1 .cluster.local answer auto
 
         forward . ${cluster1_coredns_ip}:53 {
             expire 10s
@@ -36,12 +36,21 @@ data:
         cache 10
     }
     cluster.cluster3:53 {
-        rewrite name substring cluster.cluster3 svc.cluster.local
+        rewrite name suffix .cluster.cluster3 .cluster.local answer auto
 
         forward . ${cluster3_coredns_ip}:53 {
             expire 10s
             policy round_robin
         }
         cache 10
-    }        
+    }
+
+    cluster.all:53 {
+      gathersrv cluster.all. {
+          cluster.cluster1. c1-
+          cluster.cluster2. c2-
+          cluster.cluster3. c3-
+      }
+      forward . 127.0.0.1:53
+    }            
 

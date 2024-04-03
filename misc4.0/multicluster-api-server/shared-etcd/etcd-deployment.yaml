@@ -28,8 +28,8 @@ spec:
         - --data-dir=/var/lib/minikube/etcd
         - --experimental-initial-corrupt-check=true
         - --experimental-watch-progress-notify-interval=5s
-        - --initial-advertise-peer-urls=https://etcd-0.etcd-headless.h2.cluster.cluster1:2380,https://etcd-0.etcd-headless.h2.cluster.cluster2:2380,https://etcd-0.etcd-headless.h2.cluster.cluster3:2380
-        - --initial-cluster=${cluster}=https://etcd-0.etcd-headless.h2.cluster.${cluster}:2380
+        - --initial-advertise-peer-urls=https://etcd-0.etcd-headless.h2.svc.cluster.${cluster}:2380
+        - --initial-cluster=${cluster}=https://etcd-0.etcd-headless.h2.svc.cluster.${cluster}:2380
         - --key-file=/etc/etcd-tls/tls.key
         - --listen-client-urls=https://0.0.0.0:2379
         - --listen-metrics-urls=http://127.0.0.1:2381
@@ -83,20 +83,21 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: etcd-headless
+  name: etcd
 spec:
   clusterIP: None
   ports:
   - port: 2380
     protocol: TCP
     targetPort: 2380
+    name: clients
   selector:
     etcd: "true"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: etcd
+  name: etcd-headless
   annotations:
     service.cilium.io/global: "true"  
 spec:
@@ -104,6 +105,7 @@ spec:
   - port: 2379
     protocol: TCP
     targetPort: 2379
+    name: peers
   selector:
     etcd: "true"
 ---

@@ -5,6 +5,7 @@
 ```sh
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 helm repo add cilium https://helm.cilium.io/
+helm repo add yugabytedb https://charts.yugabyte.com
 ```
 
 ## deploy kind clusters
@@ -14,7 +15,7 @@ sudo su #cilium does not work with rootless containers
 setenforce 0
 kind create cluster -n cluster1 --config ./kind-config/config-cluster1.yaml & \ 
 kind create cluster -n cluster2 --config ./kind-config/config-cluster2.yaml & \
-kind create cluster -n cluster3 --config ./kind-config/config-cluster3.yaml
+kind create cluster -n cluster3 --config ./kind-config/config-cluster3.yaml &
 wait
 ```
 
@@ -31,7 +32,7 @@ done
 ```sh
 for cluster in cluster1 cluster2 cluster3; do
   cluster=${cluster} ordinal=${cluster: -1} envsubst < ./cilium/values1.yaml > /tmp/${cluster}-values.yaml
-  helm --kube-context kind-${cluster} upgrade -i cilium cilium/cilium --version "1.16.0-pre.0" --namespace kube-system -f /tmp/${cluster}-values.yaml
+  helm --kube-context kind-${cluster} upgrade -i cilium cilium/cilium --version "1.16.0-pre.0" --namespace kube-system -f /tmp/${cluster}-values.yaml 
 done
 ```  
 
@@ -40,7 +41,7 @@ wait for all the pods to be up
 ```sh
 kubectl --context kind-cluster1 wait pod --all --for=condition=Ready -A --timeout=600s & \
 kubectl --context kind-cluster2 wait pod --all --for=condition=Ready -A --timeout=600s & \
-kubectl --context kind-cluster3 wait pod --all --for=condition=Ready -A --timeout=600s
+kubectl --context kind-cluster3 wait pod --all --for=condition=Ready -A --timeout=600s &
 wait
 ```
 
@@ -77,9 +78,6 @@ carve three non overlapping subnets out of that CIDR starting from the end for t
 export cidr_cluster1="10.89.0.224/29"
 export cidr_cluster2="10.89.0.232/29"
 export cidr_cluster3="10.89.0.240/29"
-```
-
-```sh
 for cluster in cluster1 cluster2 cluster3; do
   vcidr=cidr_${cluster}
   cidr=${!vcidr} envsubst < ./cilium/ippool.yaml | kubectl --context kind-${cluster} apply -f -
@@ -101,6 +99,15 @@ for cluster in cluster1 cluster2 cluster3; do
   helm --kube-context kind-${cluster} upgrade -i cilium cilium/cilium --version "1.16.0-pre.0" --namespace kube-system -f /tmp/${cluster}-values.yaml
 done
 ```   
+
+wait for all the pods to be up
+
+```sh
+kubectl --context kind-cluster1 wait pod --all --for=condition=Ready -A --timeout=600s & \
+kubectl --context kind-cluster2 wait pod --all --for=condition=Ready -A --timeout=600s & \
+kubectl --context kind-cluster3 wait pod --all --for=condition=Ready -A --timeout=600s &
+wait
+```
 
 verify that clusters are successfully connected:
 
@@ -124,8 +131,17 @@ coredns_ips["cluster1"]="10.89.0.225"
 coredns_ips["cluster2"]="10.89.0.233"
 coredns_ips["cluster3"]="10.89.0.241"
 for cluster in cluster1 cluster2 cluster3; do
+  kubectl --context kind-${cluster} patch deployment coredns -n kube-system -p '{"spec":{"replicas": 1,"template":{"spec":{"containers": [{"name":"coredns","image":"quay.io/raffaelespazzoli/coredns:arm64-gathersrv-root", "imagePullPolicy": "Always", "resources": {"limits":{"memory":"512Mi"}}}]}}}}'
   envsubst < ./core-dns/corefile-configmap-${cluster}.yaml | kubectl --context kind-${cluster} apply -f -
   coredns_ip=${coredns_ips[${cluster}]} envsubst < ./core-dns/coredns-service.yaml | kubectl --context kind-${cluster} apply -f -
+done
+```
+
+rollout new coredns
+
+```sh
+for cluster in cluster1 cluster2 cluster3; do
+  kubectl --context kind-${cluster} rollout restart deployment/coredns -n kube-system
 done
 ```
 
@@ -149,6 +165,15 @@ restart statefulsets
 ```sh
 for cluster in cluster1 cluster2 cluster3; do
   kubectl --context kind-${cluster} delete pod etcd-0 -n h2
+done
+```
+
+## deploy yugabyte
+
+```sh
+for cluster in cluster1 cluster2 cluster3; do
+  envsubst < ./yugabyte/values.yaml > /tmp/values.yaml
+  helm upgrade -i yugabytedb yugabytedb/yugabyte --version 2.21.0 --namespace h2 -f /tmp/values.yaml --kube-context kind-${cluster}
 done
 ```
 
