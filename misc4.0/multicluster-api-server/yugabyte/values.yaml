@@ -26,3 +26,21 @@ gflags:
     placement_region: "${cluster}"
     #placement_zone: "us-west1-b"
     leader_failure_max_missed_heartbeat_periods: 10
+
+serviceEndpoints:
+  - name: "yb-master-ui"
+    type: ClusterIP
+    app: "yb-master"
+    ports:
+      http-ui: "7000"
+
+  - name: "yb-tserver-service"
+    type: ClusterIP
+    app: "yb-tserver"
+    ports:
+      tcp-yql-port: "9042"
+      tcp-yedis-port: "6379"
+      tcp-ysql-port: "5433" 
+
+tls:
+  enabled: true          

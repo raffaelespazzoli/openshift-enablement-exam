@@ -6,7 +6,6 @@ metadata:
 data:
   Corefile: |
     .:53 {
-        log . "catch-all logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
         errors
         health {
            lameduck 5s
@@ -29,7 +28,6 @@ data:
     }
 
     cluster.cluster2:53 {
-        log . "cluster2 logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
         rewrite name suffix .cluster.cluster2 .cluster.local answer auto
 
         forward . ${cluster2_coredns_ip}:53 {
@@ -40,7 +38,6 @@ data:
     }
 
     cluster.cluster3:53 {
-        log . "cluster3 logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
         rewrite name suffix .cluster.cluster3 .cluster.local answer auto
 
         forward . ${cluster3_coredns_ip}:53 {
@@ -51,7 +48,6 @@ data:
     }
 
     cluster.all:53 {
-      log . "sub-query logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
       gathersrv cluster.all. {
           cluster.cluster1. c1-
           cluster.cluster2. c2-

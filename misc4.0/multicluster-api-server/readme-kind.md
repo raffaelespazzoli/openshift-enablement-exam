@@ -6,6 +6,7 @@
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 helm repo add cilium https://helm.cilium.io/
 helm repo add yugabytedb https://charts.yugabyte.com
+helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
 ## deploy kind clusters
@@ -13,8 +14,8 @@ helm repo add yugabytedb https://charts.yugabyte.com
 ```sh
 sudo su #cilium does not work with rootless containers
 setenforce 0
-kind create cluster -n cluster1 --config ./kind-config/config-cluster1.yaml & \ 
-kind create cluster -n cluster2 --config ./kind-config/config-cluster2.yaml & \
+kind create cluster -n cluster1 --config ./kind-config/config-cluster1.yaml & 
+kind create cluster -n cluster2 --config ./kind-config/config-cluster2.yaml &
 kind create cluster -n cluster3 --config ./kind-config/config-cluster3.yaml &
 wait
 ```
@@ -24,6 +25,19 @@ wait
 ```sh
 for cluster in cluster1 cluster2 cluster3; do
   kubectl --context kind-${cluster} apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.yaml
+done
+```
+
+## deploy gateway-api CRDs
+
+```sh
+for cluster in cluster1 cluster2 cluster3; do
+kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/standard/gateway.networking.k8s.io_gatewayclasses.yaml
+kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/standard/gateway.networking.k8s.io_gateways.yaml
+kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/standard/gateway.networking.k8s.io_httproutes.yaml
+kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/standard/gateway.networking.k8s.io_referencegrants.yaml
+kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/experimental/gateway.networking.k8s.io_grpcroutes.yaml
+kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/experimental/gateway.networking.k8s.io_tlsroutes.yaml
 done
 ```
 
@@ -39,8 +53,8 @@ done
 wait for all the pods to be up
 
 ```sh
-kubectl --context kind-cluster1 wait pod --all --for=condition=Ready -A --timeout=600s & \
-kubectl --context kind-cluster2 wait pod --all --for=condition=Ready -A --timeout=600s & \
+kubectl --context kind-cluster1 wait pod --all --for=condition=Ready -A --timeout=600s & 
+kubectl --context kind-cluster2 wait pod --all --for=condition=Ready -A --timeout=600s & 
 kubectl --context kind-cluster3 wait pod --all --for=condition=Ready -A --timeout=600s &
 wait
 ```
@@ -84,6 +98,31 @@ for cluster in cluster1 cluster2 cluster3; do
 done
 ```
 
+patch core-dns to have headless services resolve
+
+```sh
+export cluster1_coredns_ip="10.89.0.225"
+export cluster2_coredns_ip="10.89.0.233"
+export cluster3_coredns_ip="10.89.0.241"
+declare -A coredns_ips
+coredns_ips["cluster1"]="10.89.0.225"
+coredns_ips["cluster2"]="10.89.0.233"
+coredns_ips["cluster3"]="10.89.0.241"
+for cluster in cluster1 cluster2 cluster3; do
+  kubectl --context kind-${cluster} patch deployment coredns -n kube-system -p '{"spec":{"replicas": 1,"template":{"spec":{"containers": [{"name":"coredns","image":"quay.io/raffaelespazzoli/coredns:arm64-gathersrv-root", "imagePullPolicy": "Always", "resources": {"limits":{"memory":"512Mi"}}}]}}}}'
+  envsubst < ./core-dns/corefile-configmap-${cluster}.yaml | kubectl --context kind-${cluster} apply -f -
+  coredns_ip=${coredns_ips[${cluster}]} envsubst < ./core-dns/coredns-service.yaml | kubectl --context kind-${cluster} apply -f -
+done
+```
+
+rollout new coredns
+
+```sh
+for cluster in cluster1 cluster2 cluster3; do
+  kubectl --context kind-${cluster} rollout restart deployment/coredns -n kube-system
+done
+```
+
 ## install cilium step2
 
 ```sh
@@ -120,36 +159,14 @@ cilium clustermesh status --context kind-cluster2
 cilium clustermesh status --context kind-cluster3
 ```
 
-patch core-dns to have headless services resolve
-
-```sh
-export cluster1_coredns_ip="10.89.0.225"
-export cluster2_coredns_ip="10.89.0.233"
-export cluster3_coredns_ip="10.89.0.241"
-declare -A coredns_ips
-coredns_ips["cluster1"]="10.89.0.225"
-coredns_ips["cluster2"]="10.89.0.233"
-coredns_ips["cluster3"]="10.89.0.241"
-for cluster in cluster1 cluster2 cluster3; do
-  kubectl --context kind-${cluster} patch deployment coredns -n kube-system -p '{"spec":{"replicas": 1,"template":{"spec":{"containers": [{"name":"coredns","image":"quay.io/raffaelespazzoli/coredns:arm64-gathersrv-root", "imagePullPolicy": "Always", "resources": {"limits":{"memory":"512Mi"}}}]}}}}'
-  envsubst < ./core-dns/corefile-configmap-${cluster}.yaml | kubectl --context kind-${cluster} apply -f -
-  coredns_ip=${coredns_ips[${cluster}]} envsubst < ./core-dns/coredns-service.yaml | kubectl --context kind-${cluster} apply -f -
-done
-```
-
-rollout new coredns
-
-```sh
-for cluster in cluster1 cluster2 cluster3; do
-  kubectl --context kind-${cluster} rollout restart deployment/coredns -n kube-system
-done
-```
-
 ## create h2 namespace
 
 ```sh
+ssh-keygen -m pem -b 4096 -t rsa -f sa.key.pem -N '' -C "key for sa"
+openssl rsa -in sa.key.pem -pubout -out sa.key.pub.pem
 for cluster in cluster1 cluster2 cluster3; do
   kubectl --context kind-${cluster} create namespace h2
+  kubectl --context kind-${cluster} create secret generic sa-key --from-file=sa.pub=sa.key.pub.pem --from-file=sa.key=sa.key.pem -n h2
 done
 ```
 
@@ -158,6 +175,7 @@ done
 ```sh
 for cluster in cluster1 cluster2 cluster3; do
   cluster=${cluster} envsubst < ./shared-etcd/etcd-deployment.yaml | kubectl --context kind-${cluster} apply -f - -n h2
+  kubectl --context kind-${cluster} apply -f ./shared-etcd/api-server-deployment.yaml -n h2
 done 
 ```
 
@@ -172,8 +190,29 @@ done
 
 ```sh
 for cluster in cluster1 cluster2 cluster3; do
-  envsubst < ./yugabyte/values.yaml > /tmp/values.yaml
-  helm upgrade -i yugabytedb yugabytedb/yugabyte --version 2.21.0 --namespace h2 -f /tmp/values.yaml --kube-context kind-${cluster}
+  #envsubst < ./yugabyte/manifge.yaml > /tmp/values.yaml
+  #helm upgrade -i yugabytedb yugabytedb/yugabyte --version 2.21.0 --namespace h2 -f /tmp/values.yaml --kube-context kind-${cluster}
+  cluster=${cluster} envsubst < ./yugabyte/manifests/yugabyte.yaml | kubectl --context kind-${cluster} apply -f - -n h2
+done
+```
+
+```sh
+for cluster in cluster1 cluster2 cluster3; do
+  kubectl --context kind-${cluster} delete pod yb-master-0 -n h2
+  kubectl --context kind-${cluster} delete pod yb-tserver-0 -n h2
+done
+```
+
+## Deploy Ingress gateway contour
+
+```sh
+declare -A ingress_ips
+ingress_ips["cluster1"]="10.89.0.226"
+ingress_ips["cluster2"]="10.89.0.234"
+ingress_ips["cluster3"]="10.89.0.242"
+for cluster in cluster1 cluster2 cluster3; do
+  ingress_ip=${ingress_ips[${cluster}]}  envsubst < ./contour/values.yaml > /tmp/values.yaml
+  helm --kube-context kind-${cluster} upgrade -i contour bitnami/contour --namespace projectcontour --create-namespace -f /tmp/values.yaml
 done
 ```
 
@@ -201,10 +240,8 @@ cilium --context kind-${cluster} hubble ui
 
 ```sh
 for cluster in cluster1 cluster2 cluster3; do
-  #kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/Kong/kubernetes-ingress-controller/master/deploy/single/all-in-one-dbless.yaml
-  #kubectl --context kind-${cluster} patch deployment -n kong proxy-kong -p '{"spec":{"replicas":1,"template":{"spec":{"containers":[{"name":"proxy","ports":[{"containerPort":8e3,"hostPort":80,"name":"proxy-tcp","protocol":"TCP"},{"containerPort":8443,"hostPort":443,"name":"proxy-ssl","protocol":"TCP"}]}],"nodeSelector":{"ingress-ready":"true"},"tolerations":[{"key":"node-role.kubernetes.io/control-plane","operator":"Equal","effect":"NoSchedule"},{"key":"node-role.kubernetes.io/master","operator":"Equal","effect":"NoSchedule"}]}}}}'
-  #kubectl --context kind-${cluster} patch service -n kong kong-proxy -p '{"spec":{"type":"NodePort"}}'
-  helm --kube-context kind-${cluster} upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+  cluster=${cluster}  envsubst < ./dashboard/values.yaml > /tmp/values.yaml
+  helm --kube-context kind-${cluster} upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard -f /tmp/values.yaml
 done
 ```
 
@@ -218,7 +255,8 @@ done
 ## remove everything
 
 ```sh
-kind delete cluster -n cluster1
-kind delete cluster -n cluster2
-kind delete cluster -n cluster3
+kind delete cluster -n cluster1 & 
+kind delete cluster -n cluster2 & 
+kind delete cluster -n cluster3 &
+wait
 ```

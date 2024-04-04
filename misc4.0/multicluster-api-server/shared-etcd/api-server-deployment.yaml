@@ -26,14 +26,14 @@ spec:
         - kube-apiserver
         #- --advertise-address=https://api-server.h2.svc
         - --allow-privileged=true
-        - --authorization-mode=AlwaysAllow
+        - --authorization-mode=Node,RBAC
         - --client-ca-file=/etc/api-server-tls/ca.crt
         - --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota
         - --enable-bootstrap-token-auth=true
         - --etcd-cafile=/etc/api-server-tls/ca.crt
         - --etcd-certfile=/etc/api-server-tls/tls.crt
         - --etcd-keyfile=/etc/api-server-tls/tls.key
-        - --etcd-servers=https://etcd.h2.svc:2379
+        - --etcd-servers=https://etcd-0.etcd-headless.h2.svc.cluster.cluster1:2379,https://etcd-0.etcd-headless.h2.svc.cluster.cluster2:2379,https://etcd-0.etcd-headless.h2.svc.cluster.cluster3:2379
         - --kubelet-client-certificate=/etc/api-server-tls/tls.crt
         - --kubelet-client-key=/etc/api-server-tls/tls.key
         - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
@@ -106,12 +106,12 @@ spec:
     protocol: TCP
     targetPort: 8443
   selector:
-    ai-server: "true"
+    api-server: "true"
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: ai-server
+  name: api-server
 spec:
   # Secret names are always required.
   isCA: true

@@ -29,7 +29,7 @@ spec:
         - --experimental-initial-corrupt-check=true
         - --experimental-watch-progress-notify-interval=5s
         - --initial-advertise-peer-urls=https://etcd-0.etcd-headless.h2.svc.cluster.${cluster}:2380
-        - --initial-cluster=${cluster}=https://etcd-0.etcd-headless.h2.svc.cluster.${cluster}:2380
+        - --initial-cluster=cluster1=https://etcd-0.etcd-headless.h2.svc.cluster.cluster1:2380,cluster2=https://etcd-0.etcd-headless.h2.svc.cluster.cluster2:2380,cluster3=https://etcd-0.etcd-headless.h2.svc.cluster.cluster3:2380
         - --key-file=/etc/etcd-tls/tls.key
         - --listen-client-urls=https://0.0.0.0:2379
         - --listen-metrics-urls=http://127.0.0.1:2381
@@ -126,7 +126,7 @@ spec:
   dnsNames:
     - etcd.h2
     - etcd.h2.svc.cluster.local
-    - etcd-0.etcd-headless.h2.cluster.${cluster}
+    - etcd-0.etcd-headless.h2.svc.cluster.${cluster}
     - etcd-0.etcd-headless.h2
   # Issuer references are always required.
   issuerRef:
