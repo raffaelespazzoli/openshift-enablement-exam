@@ -28,19 +28,6 @@ for cluster in cluster1 cluster2 cluster3; do
 done
 ```
 
-## deploy gateway-api CRDs
-
-```sh
-for cluster in cluster1 cluster2 cluster3; do
-kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/standard/gateway.networking.k8s.io_gatewayclasses.yaml
-kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/standard/gateway.networking.k8s.io_gateways.yaml
-kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/standard/gateway.networking.k8s.io_httproutes.yaml
-kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/standard/gateway.networking.k8s.io_referencegrants.yaml
-kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/experimental/gateway.networking.k8s.io_grpcroutes.yaml
-kubectl --context kind-${cluster} apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.0.0/config/crd/experimental/gateway.networking.k8s.io_tlsroutes.yaml
-done
-```
-
 ## install cilium -- step 1
 
 ```sh
@@ -142,8 +129,8 @@ done
 wait for all the pods to be up
 
 ```sh
-kubectl --context kind-cluster1 wait pod --all --for=condition=Ready -A --timeout=600s & \
-kubectl --context kind-cluster2 wait pod --all --for=condition=Ready -A --timeout=600s & \
+kubectl --context kind-cluster1 wait pod --all --for=condition=Ready -A --timeout=600s & 
+kubectl --context kind-cluster2 wait pod --all --for=condition=Ready -A --timeout=600s & 
 kubectl --context kind-cluster3 wait pod --all --for=condition=Ready -A --timeout=600s &
 wait
 ```
@@ -170,12 +157,20 @@ for cluster in cluster1 cluster2 cluster3; do
 done
 ```
 
-## Deploy h2 shared etcd
+## Deploy h2 shared etcd and api-server
 
+api-server
 ```sh
 for cluster in cluster1 cluster2 cluster3; do
   cluster=${cluster} envsubst < ./shared-etcd/etcd-deployment.yaml | kubectl --context kind-${cluster} apply -f - -n h2
-  kubectl --context kind-${cluster} apply -f ./shared-etcd/api-server-deployment.yaml -n h2
+  kubectl --context kind-${cluster} apply -f ./shared-etcd/api-server-deployment.yaml -n h2 
+done 
+```
+kcp
+```sh
+for cluster in cluster1 cluster2 cluster3; do
+  cluster=${cluster} envsubst < ./shared-etcd/etcd-deployment.yaml | kubectl --context kind-${cluster} apply -f - -n h2
+  helm --kube-context kind-${cluster} upgrade -i kcp ./kcp/charts/kcp -n h2 -f ./kcp/values.yaml
 done 
 ```
 

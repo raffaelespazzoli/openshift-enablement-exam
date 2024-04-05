@@ -1,0 +1,40 @@
+{{- if .Values.etcd.enabled -}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "etcd.fullname" . }}-client-ca
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "etcd"
+spec:
+  isCA: true
+  duration: 87600h # 3650d = 10y
+  commonName: {{ include "etcd.fullname" . }}-client-ca
+  secretName: {{ include "etcd.fullname" . }}-client-ca
+  privateKey:
+    {{- toYaml .Values.certificates.privateKeys | nindent 4 }}
+  issuerRef:
+    name: {{ include "kcp.fullname" . }}-pki
+    kind: Issuer
+    group: cert-manager.io
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "etcd.fullname" . }}-peer-ca
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "etcd"
+spec:
+  isCA: true
+  duration: 87600h # 3650d = 10y
+  commonName: {{ include "etcd.fullname" . }}-peer-ca
+  secretName: {{ include "etcd.fullname" . }}-peer-ca
+  privateKey:
+    {{- toYaml .Values.certificates.privateKeys | nindent 4 }}
+  issuerRef:
+    name: {{ include "kcp.fullname" . }}-pki
+    kind: Issuer
+    group: cert-manager.io
+{{- end }}

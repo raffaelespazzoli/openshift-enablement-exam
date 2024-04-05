@@ -113,6 +113,8 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: etcd
+  annotations:
+    service.cilium.io/global: "true"  
 spec:
   # Secret names are always required.
   secretName: etcd-tls
@@ -124,6 +126,7 @@ spec:
     - client auth
   # At least one of a DNS Name, URI, IP address or otherName is required.
   dnsNames:
+    - etcd
     - etcd.h2
     - etcd.h2.svc.cluster.local
     - etcd-0.etcd-headless.h2.svc.cluster.${cluster}

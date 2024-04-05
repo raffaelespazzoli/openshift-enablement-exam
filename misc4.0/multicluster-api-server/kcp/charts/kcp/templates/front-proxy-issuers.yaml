@@ -1,0 +1,12 @@
+{{- if .Values.kcpFrontProxy.enabled -}}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "frontproxy.fullname" . }}-client-issuer
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+spec:
+  ca:
+    secretName: {{ include "frontproxy.fullname" . }}-client-ca
+{{- end }}     

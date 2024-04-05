@@ -1,0 +1,46 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "kcp.fullname" . }}-server-issuer
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "server"
+spec:
+  ca:
+    secretName: {{ include "kcp.fullname" . }}-ca
+
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "kcp.fullname" . }}-client-issuer
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "server"
+spec:
+  ca:
+    secretName: {{ include "kcp.fullname" . }}-client-ca
+
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "kcp.fullname" . }}-requestheader-client-issuer
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "server"
+spec:
+  ca:
+    secretName: {{ include "kcp.fullname" . }}-requestheader-client-ca
+
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "kcp.fullname" . }}-service-account-issuer
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+spec:
+  ca:
+    secretName: {{ include "kcp.fullname" . }}-service-account-ca

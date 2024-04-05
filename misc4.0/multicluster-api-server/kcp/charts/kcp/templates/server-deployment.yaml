@@ -1,0 +1,338 @@
+{{- if .Values.audit.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "kcp.fullname" . }}-audit-logs
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "server"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.audit.volumeSize }}
+  {{- with .Values.audit.volumeClassName }}
+  storageClassName: {{ . }}
+  {{- end }}
+{{- end }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kcp.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "server"
+spec:
+  ports:
+    - protocol: TCP
+      name: kcp
+      port: 6443
+      targetPort: 6443
+    - protocol: TCP
+      name: virtual-workspaces
+      port: 6444
+      targetPort: 6444
+  selector:
+    {{- include "common.labels.selector" . | nindent 4 }}
+    app.kubernetes.io/component: "server"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kcp.fullname" . }}-internal
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "server"
+spec:
+  ports:
+    - protocol: TCP
+      name: kcp
+      port: 443
+      targetPort: 6443
+    - protocol: TCP
+      name: virtual-workspaces
+      port: 444
+      targetPort: 6444
+  selector:
+    {{- include "common.labels.selector" . | nindent 4 }}
+    app.kubernetes.io/component: "server"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kcp.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "server"
+spec:
+  replicas: {{ .Values.kcp.replicas | default 1 }}
+  selector:
+    matchLabels:
+      {{- include "common.labels.selector" . | nindent 6 }}
+      app.kubernetes.io/component: "server"
+  {{- with .Values.kcp.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "common.labels" . | nindent 8 }}
+        app.kubernetes.io/component: "server"
+    spec:
+      {{- with .Values.kcp.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.kcp.hostAliases.enabled }}
+      hostAliases:
+        {{- toYaml .Values.kcp.hostAliases.values | nindent 6 }}
+      {{- end }}
+      containers:
+        - name: kcp
+          image: {{ .Values.kcp.image }}:{{- include "kcp.version" . }}
+          imagePullPolicy: {{ .Values.kcp.pullPolicy }}
+          ports:
+            - containerPort: 6443
+            {{- if .Values.kcp.profiling.enabled }}
+            - containerPort: {{ .Values.kcp.profiling.port }}
+              name: profiler
+            {{- end}}
+          command: ["/kcp", "start"]
+          args:
+            {{- if .Values.kcp.etcd.serverAddress }}
+            - --etcd-servers={{ .Values.kcp.etcd.serverAddress }}
+            {{- else if .Values.etcd.enabled }}
+            - --etcd-servers=https://{{ include "etcd.fullname" . }}:2379
+            {{- end }}
+            {{- if ne .Values.kcp.etcd.serverAddress "embedded" }}
+            - --etcd-keyfile=/etc/kcp/tls/etcd-client/tls.key
+            - --etcd-certfile=/etc/kcp/tls/etcd-client/tls.crt
+            - --etcd-cafile=/etc/etcd/tls/client-ca/tls.crt
+            {{- end }}
+            - --client-ca-file=/etc/kcp/tls/client-ca/tls.crt
+            - --tls-private-key-file=/etc/kcp/tls/server/tls.key
+            - --tls-cert-file=/etc/kcp/tls/server/tls.crt
+            - --service-account-key-file=/etc/kcp/tls/service-account/tls.key
+            - --service-account-private-key-file=/etc/kcp/tls/service-account/tls.key
+            - --root-ca-file=/etc/kcp/tls/service-account-ca/tls.crt
+            - --enable-home-workspaces={{ .Values.kcp.homeWorkspaces.enabled }}
+            {{- if .Values.kcp.logicalClusterAdminFlag }}
+            - --logical-cluster-admin-kubeconfig=/etc/kcp/logical-cluster-admin/kubeconfig/kubeconfig
+            {{- end }}
+            {{- if .Values.kcp.externalLogicalClusterAdminFlag }}
+            - --external-logical-cluster-admin-kubeconfig=/etc/kcp/external-logical-cluster-admin/kubeconfig/kubeconfig
+            {{- end }}
+            - --requestheader-client-ca-file=/etc/kcp/tls/requestheader-client-ca/tls.crt
+            - --requestheader-username-headers=X-Remote-User
+            - --requestheader-group-headers=X-Remote-Group
+            - --root-directory=/etc/kcp/config
+            - --shard-virtual-workspace-ca-file=/etc/kcp/tls/ca/tls.crt
+            - --shard-base-url=https://{{ include "kcp.fullname" . }}:6443
+            - --shard-external-url=https://$(EXTERNAL_HOSTNAME):$(EXTERNAL_PORT)
+            - --external-hostname=$(EXTERNAL_HOSTNAME):$(EXTERNAL_PORT)
+            {{- if .Values.oidc.enabled }}
+            - --oidc-issuer-url={{ .Values.oidc.issuerUrl }}
+            - --oidc-client-id={{ .Values.oidc.clientId }}
+            - --oidc-groups-claim={{ .Values.oidc.groupClaim }}
+            - --oidc-username-claim={{ .Values.oidc.usernameClaim }}
+            - '--oidc-username-prefix={{ .Values.oidc.usernamePrefix }}'
+            - '--oidc-groups-prefix={{ .Values.oidc.groupsPrefix }}'
+            {{- if .Values.oidc.caSecretName }}
+            - --oidc-ca-file=/etc/kcp/tls/oidc/{{ .Values.oidc.caSecretKeyName }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.kcp.tokenAuth.enabled }}
+            - --token-auth-file=/etc/kcp/token-auth/{{ .Values.kcp.tokenAuth.fileName }}
+            {{- end }}
+            - --v={{ .Values.kcp.v }}
+            - --logging-format=json
+            {{- if .Values.audit.enabled }}
+            - --audit-log-maxage={{ .Values.audit.log.maxAge }}
+            - --audit-log-maxbackup={{ .Values.audit.log.maxBackup }}
+            - --audit-log-maxsize={{ .Values.audit.log.maxSize }}
+            - --audit-log-path={{ .Values.audit.log.dir }}/kcp.log
+            - --audit-policy-file={{ .Values.audit.policy.dir }}/{{ .Values.audit.policy.fileName }}
+            - --audit-log-compress
+            - --audit-log-format=json
+            {{- end }}
+            {{- if .Values.kcp.profiling.enabled }}
+            - --profiler-address=0.0.0.0:{{- .Values.kcp.profiling.port -}}
+            {{- end }}
+            {{- with .Values.kcp.batteries }}
+            - --batteries-included={{ join "," . }}
+            {{- end }}
+            {{- range .Values.kcp.extraFlags }}
+            - {{ . }}
+            {{- end }}
+          env:
+            - name: EXTERNAL_HOSTNAME
+              value: {{ required "A valid external hostname is required" .Values.externalHostname }}
+            - name: EXTERNAL_PORT
+              value: "{{ if eq .Values.kcpFrontProxy.service.type "LoadBalancer" }}8443{{ else }}443{{- end }}"
+            - name: GOMEMLIMIT
+              valueFrom:
+                resourceFieldRef:
+                  resource: requests.memory
+          livenessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: livez
+              port: 6443
+              scheme: HTTPS
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          startupProbe:
+            httpGet:
+              path: readyz
+              port: 6443
+              scheme: HTTPS
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 36
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: readyz
+              port: 6443
+              scheme: HTTPS
+          {{- with .Values.kcp.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- if ne .Values.kcp.etcd.serverAddress "embedded" }}
+            - name: kcp-etcd-client-cert
+              mountPath: /etc/kcp/tls/etcd-client
+            - name: etcd-client-ca
+              mountPath: /etc/etcd/tls/client-ca
+            {{- end }}
+            - name: kcp-ca
+              mountPath: /etc/kcp/tls/ca
+            - name: kcp-cert
+              mountPath: /etc/kcp/tls/server
+            - name: kcp-client-ca
+              mountPath: /etc/kcp/tls/client-ca
+            - name: kcp-service-account-cert
+              mountPath: /etc/kcp/tls/service-account
+            - name: kcp-service-account-ca
+              mountPath: /etc/kcp/tls/service-account-ca
+            - name: kcp-requestheader-client-ca
+              mountPath: /etc/kcp/tls/requestheader-client-ca
+            {{- if .Values.oidc.enabled }}
+            {{- if .Values.oidc.caSecretName }}
+            - name: oidc-ca
+              mountPath: /etc/kcp/tls/oidc
+            {{- end }}
+            {{- end }}
+            {{- if .Values.kcp.tokenAuth.enabled }}
+            - name: kcp-token-auth-file
+              mountPath: /etc/kcp/token-auth
+            {{- end}}
+            {{- if .Values.audit.enabled }}
+            - name: audit-log
+              mountPath: {{ .Values.audit.log.dir }}
+            - name: audit-policy
+              mountPath: {{ .Values.audit.policy.dir }}
+            {{- end }}
+            - name: logical-cluster-admin-kubeconfig
+              mountPath: /etc/kcp/logical-cluster-admin/kubeconfig
+            - name: logical-cluster-admin-kubeconfig-cert
+              mountPath: /etc/kcp/logical-cluster-admin/kubeconfig-client-cert
+            - name: external-logical-cluster-admin-kubeconfig
+              mountPath: /etc/kcp/external-logical-cluster-admin/kubeconfig
+            - name: external-logical-cluster-admin-kubeconfig-cert
+              mountPath: /etc/kcp/external-logical-cluster-admin/kubeconfig-client-cert
+            - name: kcp-config
+              mountPath: /etc/kcp/config
+      volumes:
+        {{- if ne .Values.kcp.etcd.serverAddress "embedded" }}
+        - name: kcp-etcd-client-cert
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-etcd-client-cert
+        - name: etcd-client-ca
+          secret:
+            secretName: etcd-tls
+        {{- end }}
+        - name: kcp-ca
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-ca
+        - name: kcp-cert
+          secret:
+            secretName: {{ include "kcp.fullname" .}}-cert
+        - name: kcp-client-ca
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-client-ca
+        - name: kcp-service-account-cert
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-service-account-cert
+        - name: kcp-service-account-ca
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-service-account-ca
+        - name: kcp-requestheader-client-ca
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-requestheader-client-ca
+        {{- if .Values.oidc.enabled }}
+        {{- if .Values.oidc.caSecretName }}
+        - name: oidc-ca
+          secret:
+            secretName: {{.Values.oidc.caSecretName }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.kcp.tokenAuth.enabled }}
+        - name: kcp-token-auth-file
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-token-auth-file
+        {{- end }}
+        {{- if .Values.audit.enabled }}
+        - name: audit-policy
+          configMap:
+            name: {{ include "kcp.fullname" . }}-audit-policy
+        - name: audit-log
+          persistentVolumeClaim:
+            claimName: {{ include "kcp.fullname" . }}-audit-logs
+        {{- end }}
+        - name: logical-cluster-admin-kubeconfig
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-internal-admin-kubeconfig
+        - name: logical-cluster-admin-kubeconfig-cert
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-internal-admin-kubeconfig-cert
+        - name: external-logical-cluster-admin-kubeconfig
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-external-admin-kubeconfig
+        - name: external-logical-cluster-admin-kubeconfig-cert
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-external-admin-kubeconfig-cert
+        - name: kcp-config
+          emptyDir:
+            sizeLimit: 50Mi
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "kcp.fullname" . }}-audit-policy
+data:
+  {{ .Values.audit.policy.fileName }}: |
+    {{- .Values.audit.policy.config | nindent 4 }}
+
+{{- if .Values.kcp.tokenAuth.enabled }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "kcp.fullname" . }}-token-auth-file
+stringData:
+  {{ .Values.kcp.tokenAuth.fileName }}: |
+    {{- .Values.kcp.tokenAuth.config | nindent 4 }}
+{{- end}}

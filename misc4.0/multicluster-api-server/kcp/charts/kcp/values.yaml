@@ -1,0 +1,192 @@
+externalHostname: ""
+etcd:
+  enabled: true
+  image: quay.io/coreos/etcd
+  tag: v3.5.4
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      # cpu: 1
+     memory: 20Gi
+  volumeSize: 8Gi
+  profiling:
+    enabled: false
+kcp:
+  replicas: 1
+  strategy:
+    type: Recreate
+  image: ghcr.io/kcp-dev/kcp
+  # set this to override the image tag used for kcp (determined by chart appVersion by default).
+  tag: ""
+  pullPolicy: IfNotPresent
+  v: "3"
+  logicalClusterAdminFlag: true
+  externalLogicalClusterAdminFlag: true
+  # enabled "batteries" (see kcp start --help for available batteries).
+  batteries:
+    - workspace-types
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 100m
+    limits:
+      # cpu: 1
+      memory: 20Gi
+  volumeClassName: ""
+  etcd:
+    # set this if you are using external or embedded etcds.
+    serverAddress: ""
+    clientCertificate:
+      # set this to a cert-manager Issuer that knows how to
+      # issue client certificates for your external etcd if
+      # you are not using the etcd provided by this chart.
+      issuer: ""
+      commonName: root
+  volumeSize: 1Gi
+  extraFlags: []
+  profiling:
+    enabled: false
+    port: 6060
+  tokenAuth:
+    enabled: false
+    fileName: auth-token.csv
+    config: |
+        user-1-token,user-1,1111-1111-1111-1111,"team-1"
+        admin-token,admin,5555-5555-5555-5555,"system:kcp:admin"
+        system-token,system,6666-6666-6666-6666,"system:masters"
+  hostAliases:
+    enabled: false
+  homeWorkspaces:
+    enabled: false
+  securityContext:
+    # this matches the group id as set in the kcp Dockerfile.
+    fsGroup: 65532
+    seccompProfile:
+      type: RuntimeDefault
+kcpFrontProxy:
+  replicas: 1
+  strategy:
+    type: Recreate
+  image: ghcr.io/kcp-dev/kcp
+  # set this to override the image tag used for kcp-front-proxy (determined by chart appVersion by default).
+  tag: ""
+  pullPolicy: IfNotPresent
+  v: "4"
+  shardsKubeConfigFlag: true
+  openshiftRoute:
+    enabled: false
+  ingress:
+    enabled: false
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      acme.cert-manager.io/http01-edit-in-place: "true"
+      # this is ingress-controller-specific and might need configuration
+      # depending on the ingress-controller in use.
+      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    secret: ""
+  gateway:
+    enabled: false
+    className: ""
+  service:
+    annotations: {}
+    # set this to LoadBalancer if you want to publish kcp-front-proxy
+    # directly instead of going via Route/Ingress/Gateway resources.
+    type: ClusterIP
+  # set this if you want kcp-front-proxy to use a specific certificate issuer
+  # (e.g. the Let's Encrypt ones in this chart).
+  # certificateIssuer:
+  #   name: ""
+  #   kind: Issuer
+  profiling:
+    enabled: false
+    port: 6060
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      # cpu: 1
+      memory: 1Gi
+  hostAliases:
+    enabled: false
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
+
+  # The default virtual workspaces run in-process, but you can
+  # extend the path mapping to include custom virtual workspaces
+  # in the front-proxy's routing.
+  additionalPathMappings: []
+  #- path: /services/...
+  #  backend: https://your-external-virtual-workspaces-server:6443
+  # backend_server_ca: /etc/kcp/tls/ca.crt # if your server used a cert from the kcp-server-issuer
+  #  proxy_client_cert: /etc/kcp-front-proxy/requestheader-client/tls/kcp/tls.crt
+  #  proxy_client_key: /etc/kcp-front-proxy/requestheader-client/tls/kcp/tls.key
+
+  # When running external virtual workspaces, kcp-front-proxy needs
+  # access to the CA that signed the VW's serving cert. Unless your
+  # VWs all use the kcp-server-issuer, you must mount all additional
+  # certificates yourself.
+  extraVolumes: []
+  # - name: example-vw-serving-cert
+  #   secret:
+  #     secretName: example-vw-serving-cert
+  #     items:
+  #       - key: ca.crt
+  #         path: ca.crt
+  extraVolumeMounts: []
+  # - name: example-vw-serving-cert
+  #   mountPath: /etc/example-vw-serving-cert
+  extraFlags: []
+oidc:
+  enabled: false
+  caSecretName: ""
+  # assuming you're using cert-manager, you want to mount the CA certificate
+  # directly and use its tls.crt key; if you instead mount a certificate that
+  # is _signed by_ the OIDC CA, then do not use its ca.crt key, as it is the
+  # absolute top root CA, the CA that actually signed the cert is one of the
+  # certs in the tls.crt chain. As you cannot say "use this Secret, but the
+  # second cert in the tls.crt key", it's easier to mount the CA cert secret.
+  caSecretKeyName: "tls.crt"
+audit:
+  enabled: false
+  volumeSize: 1Gi
+  volumeClassName: ""
+  policy:
+    dir: /etc/kcp/audit
+    fileName: audit-policy.yml
+    config: |
+      # Log all requests at the Metadata level.
+      apiVersion: audit.k8s.io/v1
+      kind: Policy
+      rules:
+      - level: Metadata
+  log:
+    maxAge: "10"
+    maxSize: "250"
+    maxBackup: "1"
+    dir: /var/audit
+certificates:
+  privateKeys:
+    algorithm: RSA
+    size: 2048
+  subject: {}
+  # add additional dns names that should be embedded into the kcp server certificate.
+  dnsNames:
+  - localhost
+letsEncrypt:
+  enabled: false
+  staging:
+    enabled: false
+    # You must replace this email address with your own.
+    # Let's Encrypt will use this to contact you about expiring
+    # certificates, and issues related to your account.
+    email: ""
+  production:
+    enabled: false
+    # You must replace this email address with your own.
+    # Let's Encrypt will use this to contact you about expiring
+    # certificates, and issues related to your account.
+    email: ""

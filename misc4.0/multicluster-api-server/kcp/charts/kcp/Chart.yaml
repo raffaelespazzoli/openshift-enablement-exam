@@ -1,0 +1,20 @@
+apiVersion: v2
+name: kcp
+description: A prototype of a multi-tenant Kubernetes control plane for workloads on many clusters
+
+# version information
+version: 0.6.0
+appVersion: "0.23.0"
+
+# optional metadata
+type: application
+home: https://www.kcp.io/
+keywords:
+  - kcp
+  - kubernetes
+  - multitenancy
+  - controlplane
+sources:
+  - https://github.com/kcp-dev/helm-charts
+  - https://github.com/kcp-dev/kcp
+icon: https://raw.githubusercontent.com/kcp-dev/kcp/main/contrib/logo/blue-green.svg

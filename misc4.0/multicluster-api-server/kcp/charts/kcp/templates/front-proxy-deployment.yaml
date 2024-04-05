@@ -1,0 +1,190 @@
+{{- if .Values.kcpFrontProxy.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "frontproxy.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+  {{- with .Values.kcpFrontProxy.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.kcpFrontProxy.service.type }}
+  ports:
+    - protocol: TCP
+      name: kcp-front-proxy
+      port: 8443
+      targetPort: 8443
+  selector:
+    {{- include "common.labels.selector" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "frontproxy.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+spec:
+  replicas: {{ .Values.kcpFrontProxy.replicas | default 1 }}
+  selector:
+    matchLabels:
+      {{- include "common.labels.selector" . | nindent 6 }}
+      app.kubernetes.io/component: "front-proxy"
+  {{- with .Values.kcpFrontProxy.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "common.labels" . | nindent 8 }}
+        app.kubernetes.io/component: "front-proxy"
+    spec:
+      {{- with .Values.kcpFrontProxy.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.kcpFrontProxy.hostAliases.enabled }}
+      hostAliases:
+        {{- toYaml .Values.kcpFrontProxy.hostAliases.values | nindent 6 }}
+      {{- end }}
+      containers:
+        - name: kcp-front-proxy
+          image: "{{ .Values.kcpFrontProxy.image }}:{{- include "frontproxy.version" . }}"
+          imagePullPolicy: {{ .Values.kcpFrontProxy.pullPolicy }}
+          command: ["/kcp-front-proxy"]
+          args:
+            - --secure-port=8443
+            - --root-kubeconfig=/etc/kcp-front-proxy/kubeconfig/kubeconfig
+            {{- if .Values.kcpFrontProxy.shardsKubeConfigFlag }}
+            - --shards-kubeconfig=/etc/kcp-front-proxy/kubeconfig/kubeconfig
+            {{- end }}
+            - --tls-private-key-file=/etc/kcp-front-proxy/tls/tls.key
+            - --tls-cert-file=/etc/kcp-front-proxy/tls/tls.crt
+            - --client-ca-file=/etc/kcp-front-proxy/client-ca/tls.crt
+            - --service-account-key-file=/etc/kcp/tls/service-account/tls.key
+            - --mapping-file=/etc/kcp-front-proxy/config/path-mapping.yaml
+            - --v={{ .Values.kcpFrontProxy.v }}
+            - --logging-format=json
+            {{- if .Values.kcpFrontProxy.profiling.enabled }}
+            - --profiler-address=localhost:{{- .Values.kcpFrontProxy.profiling.port -}}
+            {{- end }}
+            {{- if .Values.oidc.enabled }}
+            - --oidc-issuer-url={{ .Values.oidc.issuerUrl }}
+            - --oidc-client-id={{ .Values.oidc.clientId }}
+            - --oidc-groups-claim={{ .Values.oidc.groupClaim }}
+            - --oidc-username-claim={{ .Values.oidc.usernameClaim }}
+            - '--oidc-username-prefix={{ .Values.oidc.usernamePrefix }}'
+            - '--oidc-groups-prefix={{ .Values.oidc.groupsPrefix }}'
+            {{- if .Values.oidc.caSecretName }}
+            - --oidc-ca-file=/etc/kcp/tls/oidc/{{ .Values.oidc.caSecretKeyName }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.kcp.tokenAuth.enabled }}
+            - --token-auth-file=/etc/kcp/token-auth/{{ .Values.kcp.tokenAuth.fileName }}
+            {{- end }}
+            {{- range .Values.kcpFrontProxy.extraFlags }}
+            - {{ . }}
+            {{- end }}
+          ports:
+            - containerPort: 8443
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: livez
+              port: 8443
+              scheme: HTTPS
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: readyz
+              port: 8443
+              scheme: HTTPS
+          {{- with .Values.kcpFrontProxy.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: kcp-front-proxy-kubeconfig
+              mountPath: /etc/kcp-front-proxy/kubeconfig
+            # this mount is necessary for the paths referenced in kcp-front-proxy-kubeconfig
+            - name: kubeconfig-client-cert
+              mountPath: /etc/kcp-front-proxy/kubeconfig-client-cert
+            - name: kcp-front-proxy-cert
+              mountPath: /etc/kcp-front-proxy/tls
+            - name: kcp-front-proxy-client-ca
+              mountPath: /etc/kcp-front-proxy/client-ca
+            - name: kcp-service-account-cert
+              mountPath: /etc/kcp/tls/service-account
+            - name: kcp-front-proxy-config
+              mountPath: /etc/kcp-front-proxy/config
+            {{- if .Values.oidc.enabled }}
+            {{- if .Values.oidc.caSecretName }}
+            - name: oidc-ca
+              mountPath: /etc/kcp/tls/oidc
+            {{- end }}
+            {{- end }}
+            {{- if .Values.kcp.tokenAuth.enabled }}
+            - name: kcp-token-auth-file
+              mountPath: /etc/kcp/token-auth
+            {{- end}}
+            # these mounts are required for the path-mapping.yaml, which references specific certificates
+            - name: kcp-ca
+              mountPath: /etc/kcp/tls/ca
+            - name: kcp-requestheader-client-cert
+              mountPath: /etc/kcp-front-proxy/requestheader-client
+{{- with .Values.kcpFrontProxy.extraVolumeMounts }}
+{{ . | toYaml | indent 12 }}
+{{- end }}
+      volumes:
+        - name: kcp-front-proxy-kubeconfig
+          secret:
+            secretName: {{ include "frontproxy.fullname" . }}-kubeconfig
+        # this mount is necessary for the paths referenced in kcp-front-proxy-kubeconfig
+        - name: kubeconfig-client-cert
+          secret:
+            secretName: {{ include "frontproxy.fullname" . }}-kubeconfig-cert
+        - name: kcp-front-proxy-cert
+          secret:
+            secretName: {{ include "frontproxy.fullname" . }}-cert
+        - name: kcp-front-proxy-client-ca
+          secret:
+            secretName: {{ include "frontproxy.fullname" . }}-client-ca
+        - name: kcp-service-account-cert
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-service-account-cert
+        - name: kcp-front-proxy-config
+          configMap:
+            name: {{ include "frontproxy.fullname" . }}-config
+        {{- if .Values.oidc.enabled }}
+        {{- if .Values.oidc.caSecretName }}
+        - name: oidc-ca
+          secret:
+            secretName: {{.Values.oidc.caSecretName }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.kcp.tokenAuth.enabled }}
+        - name: kcp-token-auth-file
+          secret:
+            secretName: kcp-token-auth-file
+        {{- end }}
+        # these volumes are necessary for the path-mapping.yaml
+        - name: kcp-ca
+          secret:
+            secretName: {{ include "kcp.fullname" . }}-ca
+        - name: kcp-requestheader-client-cert
+          secret:
+            secretName: {{ include "frontproxy.fullname" . }}-requestheader-cert
+{{- with .Values.kcpFrontProxy.extraVolumes }}
+{{ . | toYaml | indent 8 }}
+{{- end }}
+{{- end }} 

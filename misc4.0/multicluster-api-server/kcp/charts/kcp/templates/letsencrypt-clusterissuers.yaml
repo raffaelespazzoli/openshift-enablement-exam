@@ -1,0 +1,45 @@
+{{ if .Values.letsEncrypt.enabled }}
+{{ if .Values.letsEncrypt.staging.enabled }}
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: kcp-letsencrypt-staging
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "pki"
+spec:
+  acme:
+    email: {{ .Values.letsEncrypt.staging.email }}}
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      # Secret resource that will be used to store the account's private key.
+      name: {{ include "kcp.fullname" . }}-le-issuer-account-key
+    # Add a single challenge solver, HTTP01 using nginx
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+{{ end }}
+{{ if .Values.letsEncrypt.production.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: kcp-letsencrypt-prod
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "pki"
+spec:
+  acme:
+    email: {{ .Values.letsEncrypt.production.email }}
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      # Secret resource that will be used to store the account's private key.
+      name: {{ include "kcp.fullname" . }}-le-issuer-account-key
+    # Add a single challenge solver, HTTP01 using nginx
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+{{ end }}
+{{ end }}

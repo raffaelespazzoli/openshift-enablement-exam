@@ -1,0 +1,24 @@
+{{- if .Values.etcd.enabled -}}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "etcd.fullname" . }}-client-issuer
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "etcd"
+spec:
+  ca:
+    secretName: {{ include "etcd.fullname" . }}-client-ca
+
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "etcd.fullname" . }}-peer-issuer
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "etcd"
+spec:
+  ca:
+    secretName: {{ include "etcd.fullname" . }}-peer-ca
+{{- end }}

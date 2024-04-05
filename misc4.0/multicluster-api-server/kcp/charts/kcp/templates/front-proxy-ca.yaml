@@ -1,0 +1,20 @@
+{{- if .Values.kcpFrontProxy.enabled -}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "frontproxy.fullname" . }}-client-ca
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+spec:
+  isCA: true
+  duration: 87600h # 3650d = 10y
+  commonName: {{ include "frontproxy.fullname" . }}-client-ca
+  secretName: {{ include "frontproxy.fullname" . }}-client-ca
+  privateKey:
+    {{- toYaml .Values.certificates.privateKeys | nindent 4 }}
+  issuerRef:
+    name: {{ include "kcp.fullname" . }}-pki
+    kind: Issuer
+    group: cert-manager.io
+{{- end }}     

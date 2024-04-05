@@ -1,0 +1,107 @@
+{{- if .Values.kcpFrontProxy.enabled -}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "frontproxy.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+spec:
+  secretName: {{ include "frontproxy.fullname" . }}-cert
+  duration: 8760h # 365d
+  renewBefore: 360h # 15d
+  {{- with .Values.certificates.subject }}
+  subject:
+    {{- toYaml . | nindent 4 }}
+  {{ end}}
+  privateKey:
+    {{- toYaml .Values.certificates.privateKeys | nindent 4 }}
+  usages:
+    - server auth
+  dnsNames:
+    - "{{ .Values.externalHostname }}"
+  issuerRef:
+    {{- if .Values.kcpFrontProxy.certificateIssuer }}
+    {{ .Values.kcpFrontProxy.certificateIssuer | toYaml | nindent 4 }}
+    {{- else }}
+    name: {{ include "kcp.fullname" . }}-server-issuer
+    kind: Issuer
+    {{- end }}
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "frontproxy.fullname" . }}-requestheader
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+spec:
+  secretName: {{ include "frontproxy.fullname" . }}-requestheader-cert
+  duration: 8760h # 365d
+  renewBefore: 360h # 15d
+  {{- with .Values.certificates.subject }}
+  subject:
+    {{- toYaml . | nindent 4 }}
+  {{ end}}
+  privateKey:
+    {{- toYaml .Values.certificates.privateKeys | nindent 4 }}
+  usages:
+    - client auth
+  dnsNames:
+    - "{{ include "frontproxy.fullname" . }}"
+  issuerRef:
+    name: {{ include "kcp.fullname" . }}-requestheader-client-issuer
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "frontproxy.fullname" . }}-kubeconfig
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+spec:
+  secretName: {{ include "frontproxy.fullname" . }}-kubeconfig-cert
+  duration: 8760h # 365d
+  renewBefore: 360h # 15d
+  commonName: {{ include "frontproxy.fullname" . }}
+  subject:
+    organizations:
+      - "system:masters"
+  privateKey:
+    {{- toYaml .Values.certificates.privateKeys | nindent 4 }}
+  usages:
+    - client auth
+  issuerRef:
+    name: {{ include "kcp.fullname" . }}-client-issuer
+    kind: Issuer
+    group: cert-manager.io
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "frontproxy.fullname" . }}-vw-client
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+spec:
+  secretName: {{ include "frontproxy.fullname" . }}-vw-client-cert
+  duration: 8760h # 365d
+  renewBefore: 360h # 15d
+  {{- with .Values.certificates.subject }}
+  subject:
+    {{- toYaml . | nindent 4 }}
+  {{ end}}
+  privateKey:
+    {{- toYaml .Values.certificates.privateKeys | nindent 4 }}
+  usages:
+    - client auth
+  dnsNames:
+    - "{{ include "frontproxy.fullname" . }}"
+  issuerRef:
+    name: {{ include "kcp.fullname" . }}-requestheader-client-issuer
+    kind: Issuer
+    group: cert-manager.io
+{{- end }}     

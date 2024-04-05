@@ -1,0 +1,20 @@
+externalHostname: ciao.com
+etcd: 
+  enabled: false
+
+
+kcp: 
+  batteries: []
+
+  etcd:
+    # set this if you are using external or embedded etcds.
+    serverAddress: "https://etcd:2379"
+    clientCertificate:
+      # set this to a cert-manager Issuer that knows how to
+      # issue client certificates for your external etcd if
+      # you are not using the etcd provided by this chart.
+      issuer: "in-cluster-issuer"
+      commonName: root    
+
+kcpFrontProxy:
+  enabled: false  

@@ -1,0 +1,113 @@
+{{- if .Values.etcd.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "etcd.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "etcd"
+spec:
+  clusterIP: None
+  ports:
+    - port: 2379
+      name: client
+    - port: 2380
+      name: peer
+  selector:
+    {{- include "common.labels.selector" . | nindent 4 }}
+    app.kubernetes.io/component: "etcd"
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "etcd.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "etcd"
+spec:
+  serviceName: {{ include "etcd.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "common.labels.selector" . | nindent 6 }}
+      app.kubernetes.io/component: "etcd"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        {{- include "common.labels" . | nindent 8 }}
+        app.kubernetes.io/component: "etcd"
+    spec:
+      containers:
+        - name: etcd
+          image: {{ .Values.etcd.image }}:{{ .Values.etcd.tag }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              PEERS="{{ include "etcd.fullname" . }}-0=https://{{ include "etcd.fullname" . }}-0.{{ include "etcd.fullname" . }}:2380,{{ include "etcd.fullname" . }}-1=https://{{ include "etcd.fullname" . }}-1.{{ include "etcd.fullname" . }}:2380,{{ include "etcd.fullname" . }}-2=https://{{ include "etcd.fullname" . }}-2.{{ include "etcd.fullname" . }}:2380"
+              exec etcd --name ${HOSTNAME} \
+                --listen-peer-urls https://0.0.0.0:2380 \
+                --initial-advertise-peer-urls https://${HOSTNAME}:2380 \
+                --listen-client-urls https://0.0.0.0:2379 \
+                --advertise-client-urls https://${HOSTNAME}:2379 \
+                --initial-cluster-token etcd-cluster-1 \
+                --initial-cluster ${PEERS} \
+                --initial-cluster-state new \
+                --auto-compaction-mode=periodic \
+                --auto-compaction-retention=5m \
+                --data-dir /var/run/etcd/default.etcd \
+                --peer-client-cert-auth=true \
+                --peer-cert-file=/etc/etcd/tls/peer/tls.crt \
+                --peer-key-file=/etc/etcd/tls/peer/tls.key \
+                --peer-trusted-ca-file=/etc/etcd/tls/peer-ca/tls.crt \
+                --client-cert-auth=true \
+                --cert-file=/etc/etcd/tls/server/tls.crt \
+                --key-file=/etc/etcd/tls/server/tls.key \
+                --trusted-ca-file=/etc/etcd/tls/client-ca/tls.crt \
+                {{- if .Values.etcd.profiling.enabled }}
+                --enable-pprof=true \
+                {{- end }}
+                --snapshot-count=5000
+          ports:
+            - containerPort: 2379
+              name: client
+            - containerPort: 2380
+              name: peer
+          {{- with .Values.etcd.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: etcd-data
+              mountPath: /var/run/etcd
+            - name: peer-cert
+              mountPath: /etc/etcd/tls/peer
+            - name: peer-ca
+              mountPath: /etc/etcd/tls/peer-ca
+            - name: server-cert
+              mountPath: /etc/etcd/tls/server
+            - name: client-ca
+              mountPath: /etc/etcd/tls/client-ca
+      volumes:
+        - name: peer-cert
+          secret:
+            secretName: {{ include "etcd.fullname" . }}-peer-cert
+        - name: peer-ca
+          secret:
+            secretName: {{ include "etcd.fullname" . }}-peer-ca
+        - name: server-cert
+          secret:
+            secretName: {{ include "etcd.fullname" . }}-cert
+        - name: client-ca
+          secret:
+            secretName: {{ include "etcd.fullname" . }}-client-ca
+  volumeClaimTemplates:
+    - metadata:
+        name: etcd-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.etcd.volumeSize }}
+{{- end }}

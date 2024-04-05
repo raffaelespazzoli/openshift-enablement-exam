@@ -1,0 +1,93 @@
+{{- if .Values.kcpFrontProxy.enabled -}}
+{{- if .Values.kcpFrontProxy.openshiftRoute.enabled }}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "frontproxy.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+spec:
+  host: {{ .Values.externalHostname }}
+  port:
+    targetPort: 8443
+  tls:
+    termination: passthrough
+  to:
+    kind: Service
+    name: kcp-front-proxy
+    weight: 100
+  wildcardPolicy: None
+{{- end }}
+
+{{- if .Values.kcpFrontProxy.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "frontproxy.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+  annotations:
+    {{- toYaml .Values.kcpFrontProxy.ingress.annotations | nindent 4 }}
+spec:
+  tls:
+    - hosts:
+        - {{ .Values.externalHostname }}
+      {{- if .Values.kcpFrontProxy.ingress.secret }}
+      secretName: {{ .Values.kcpFrontProxy.ingress.secret }}
+      {{- end }}
+  rules:
+    - host: {{ .Values.externalHostname }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kcp-front-proxy
+                port:
+                  number: 8443
+{{- end }}
+
+{{- if .Values.kcpFrontProxy.gateway.enabled }}
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ include "frontproxy.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+spec:
+  gatewayClassName: {{ required "gateway.classname is required" .Values.kcpFrontProxy.gateway.className }}
+  listeners:
+    - name: tls
+      protocol: TLS
+      port: 8443
+      tls:
+        mode: Passthrough
+      hostname: {{ .Values.externalHostname }}
+
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: {{ include "frontproxy.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+spec:
+  parentRefs:
+    - kind: Gateway
+      name: {{ include "frontproxy.fullname" . }}
+  rules:
+    - backendRefs:
+        - name: {{ include "frontproxy.fullname" . }}
+          port: 8443
+  hostnames:
+    - {{ .Values.externalHostname }}
+{{- end }}
+{{- end }} 

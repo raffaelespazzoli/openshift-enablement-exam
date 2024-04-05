@@ -1,0 +1,19 @@
+{{- if .Values.kcpFrontProxy.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "frontproxy.fullname" . }}-config
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "front-proxy"
+data:
+  path-mapping.yaml: |
+    - path: /
+      backend: https://{{ include "kcp.fullname" . }}:6443
+      backend_server_ca: /etc/kcp/tls/ca/tls.crt
+      proxy_client_cert: /etc/kcp-front-proxy/requestheader-client/tls.crt
+      proxy_client_key: /etc/kcp-front-proxy/requestheader-client/tls.key
+    {{- with .Values.kcpFrontProxy.additionalPathMappings }}
+    {{- . | toYaml | nindent 4 }}
+    {{- end }}
+{{- end }}     
