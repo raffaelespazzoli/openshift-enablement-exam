@@ -3,10 +3,13 @@ app:
     global:
       clusterName: ${cluster}
   ingress:
-    enabled: true
+    enabled: false
     hosts:
       - console.${cluster}.raffa
     ingressClassName: contour
+    useDefaultAnnotations: true
+    annotations:
+
     issuer:
       name: in-cluster-issuer
       # Scope determines what kind of issuer annotation will be used on ingress resource

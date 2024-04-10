@@ -1,13 +1,14 @@
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
-  name: v1alpha1.wardle.example.com
+  name: sample.shared.example.com
 spec:
   insecureSkipTLSVerify: true
-  group: wardle.example.com
+  group: shared.example.com
+  version: v1
   groupPriorityMinimum: 1000
   versionPriority: 15
   service:
-    name: api-server
+    name: kcp
     namespace: h2
-  version: v1alpha1
+    port: 6443

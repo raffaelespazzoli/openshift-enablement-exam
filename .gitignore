@@ -41,3 +41,4 @@ misc4.0/multicluster-api-server/sakey.pub.pem
 misc4.0/multicluster-api-server/sa.key.pem
 misc4.0/multicluster-api-server/sa.key.pem.pub
 misc4.0/multicluster-api-server/sa.key.pub.pem
+misc4.0/multicluster-api-server/kcp.kubeconfig

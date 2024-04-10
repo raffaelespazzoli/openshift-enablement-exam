@@ -25,7 +25,11 @@ metadata:
   labels:
     {{- include "common.labels" . | nindent 4 }}
     app.kubernetes.io/component: "server"
+  annotations:
+    service.cilium.io/global: "true"
+    io.cilium/lb-ipam-ips: {{ .Values.externalIP }}     
 spec:
+  type: LoadBalancer 
   ports:
     - protocol: TCP
       name: kcp

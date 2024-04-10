@@ -1,3 +1,4 @@
+{{ if eq "false" "true" }}
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -40,3 +41,4 @@ metadata:
 spec:
   ca:
     secretName: {{ include "kcp.fullname" . }}-pki-ca
+{{ end }}    

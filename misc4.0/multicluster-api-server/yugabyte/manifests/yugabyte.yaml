@@ -329,23 +329,23 @@ spec:
                       cp /home/yugabyte/bin/log_cleanup.sh /mnt/disk0/yb-data/scripts;
                     fi;
                   fi
-        livenessProbe:
-          exec:
-            command:
-            - bash
-            - -v
-            - -c
-            - |
-              echo "disk check at: $(date)" \
-                | tee "/mnt/disk0/disk.check" "/mnt/disk1/disk.check" \
-                && sync "/mnt/disk0/disk.check" "/mnt/disk1/disk.check";
-              exit_code="$?";
-              echo "disk check exited with: ${exit_code}";
-              exit "${exit_code}"
-          failureThreshold: 3
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 1
+        # livenessProbe:
+        #   exec:
+        #     command:
+        #     - bash
+        #     - -v
+        #     - -c
+        #     - |
+        #       echo "disk check at: $(date)" \
+        #         | tee "/mnt/disk0/disk.check" "/mnt/disk1/disk.check" \
+        #         && sync "/mnt/disk0/disk.check" "/mnt/disk1/disk.check";
+        #       exit_code="$?";
+        #       echo "disk check exited with: ${exit_code}";
+        #       exit "${exit_code}"
+        #   failureThreshold: 3
+        #   periodSeconds: 10
+        #   successThreshold: 1
+        #   timeoutSeconds: 1
         env:
         - name: POD_IP
           valueFrom:
@@ -382,6 +382,9 @@ spec:
           - "/bin/bash"
           - "-c"
           - |
+            echo starting
+            sleep 30 || true             
+            echo after sleep
             if [ -f /home/yugabyte/tools/k8s_preflight.py ]; then
               /home/yugabyte/tools/k8s_preflight.py all
             fi && \
@@ -414,6 +417,7 @@ spec:
             else
               k8s_parent=""
             fi && \
+            echo after checks
             exec ${k8s_parent} /home/yugabyte/bin/yb-master \
               --fs_data_dirs=/mnt/disk0,/mnt/disk1 \
               --master_addresses=yb-master-0.yb-masters.h2.svc.cluster.cluster1:7100,yb-master-0.yb-masters.h2.svc.cluster.cluster2:7100,yb-master-0.yb-masters.h2.svc.cluster.cluster3:7100 \
@@ -625,6 +629,9 @@ spec:
                 - "bash"
                 - "-c"
                 - >
+                  echo starting
+                  sleep 30 || true             
+                  echo after sleep                
                   mkdir -p /mnt/disk0/cores;
                   mkdir -p /mnt/disk0/yb-data/scripts;
                   if [ ! -f /mnt/disk0/yb-data/scripts/log_cleanup.sh ]; then

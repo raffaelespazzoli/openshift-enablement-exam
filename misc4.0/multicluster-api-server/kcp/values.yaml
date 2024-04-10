@@ -1,10 +1,12 @@
-externalHostname: ciao.com
+externalHostname: kcp.${cluster}.raffa
+externalIP: ${kcp_ip}
 etcd: 
   enabled: false
 
 
 kcp: 
-  batteries: []
+  batteries: [-admin,-workspace-types]
+  v: 8
 
   etcd:
     # set this if you are using external or embedded etcds.
@@ -15,6 +17,10 @@ kcp:
       # you are not using the etcd provided by this chart.
       issuer: "in-cluster-issuer"
       commonName: root    
+
+certificates:
+  dnsNames:
+  - kcp.${cluster}.raffa
 
 kcpFrontProxy:
   enabled: false  

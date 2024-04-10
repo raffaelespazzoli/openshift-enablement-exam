@@ -84,6 +84,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: etcd
+  annotations:
+    service.cilium.io/global: "true"   
 spec:
   clusterIP: None
   ports:
@@ -97,9 +99,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: etcd-headless
-  annotations:
-    service.cilium.io/global: "true"  
+  name: etcd-headless  
 spec:
   ports:
   - port: 2379
@@ -112,9 +112,7 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: etcd
-  annotations:
-    service.cilium.io/global: "true"  
+  name: etcd 
 spec:
   # Secret names are always required.
   secretName: etcd-tls

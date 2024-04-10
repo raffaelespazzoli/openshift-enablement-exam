@@ -13,8 +13,8 @@ spec:
   privateKey:
     {{- toYaml .Values.certificates.privateKeys | nindent 4 }}
   issuerRef:
-    name: {{ include "kcp.fullname" . }}-pki
-    kind: Issuer
+    name: {{ .Values.kcp.etcd.clientCertificate.issuer }}
+    kind: ClusterIssuer
     group: cert-manager.io
 
 ---
@@ -33,8 +33,8 @@ spec:
   privateKey:
     {{- toYaml .Values.certificates.privateKeys | nindent 4 }}
   issuerRef:
-    name: {{ include "kcp.fullname" . }}-pki
-    kind: Issuer
+    name: {{ .Values.kcp.etcd.clientCertificate.issuer }}
+    kind: ClusterIssuer
     group: cert-manager.io
 
 ---
@@ -53,8 +53,8 @@ spec:
   privateKey:
     {{- toYaml .Values.certificates.privateKeys | nindent 4 }}
   issuerRef:
-    name: {{ include "kcp.fullname" . }}-pki
-    kind: Issuer
+    name: {{ .Values.kcp.etcd.clientCertificate.issuer }}
+    kind: ClusterIssuer
     group: cert-manager.io
 
 ---
@@ -73,7 +73,7 @@ spec:
   privateKey:
     {{- toYaml .Values.certificates.privateKeys | nindent 4 }}
   issuerRef:
-    name: {{ include "kcp.fullname" . }}-pki
-    kind: Issuer
+    name: {{ .Values.kcp.etcd.clientCertificate.issuer }}
+    kind: ClusterIssuer
     group: cert-manager.io
 

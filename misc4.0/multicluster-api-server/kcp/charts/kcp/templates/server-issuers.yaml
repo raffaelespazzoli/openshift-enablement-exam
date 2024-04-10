@@ -43,4 +43,4 @@ metadata:
     app.kubernetes.io/component: "front-proxy"
 spec:
   ca:
-    secretName: {{ include "kcp.fullname" . }}-service-account-ca
+    secretName: {{ include "kcp.fullname" . }}-service-account-ca  
