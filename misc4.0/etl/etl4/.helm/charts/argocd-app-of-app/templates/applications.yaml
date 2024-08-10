@@ -1,0 +1,70 @@
+{{- range $key,$val := .Values.applications }}
+{{- if (hasKey $val "enabled" | ternary $val.enabled $.Values.default.app.enabled) }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $key }}
+{{- if or $val.labels $.Values.default.app.labels }}
+{{- $appLabels := $val.labels }}
+{{- $defaultLabels := $.Values.default.app.labels }}
+{{- $labels := merge $appLabels $defaultLabels }}
+  labels:
+{{- with $labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- end }}
+
+{{- if or $val.annotations $.Values.default.app.annotations }}
+{{- $appAnnotations := $val.annotations }}
+{{- $defaultAnnotations := $.Values.default.app.annotations }}
+{{- $annotations := merge $appAnnotations $defaultAnnotations }}
+  annotations:
+{{- with $annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- end }}
+spec:
+  destination:
+    namespace: {{ (($val.destination).namespace) | default $.Values.default.app.destination.namespace | required (printf "No destination.namespace specified for %s" $key ) }}
+    server: {{ (($val.destination).server) | default $.Values.default.app.destination.server | required (printf "No destination.server specified for %s" $key ) }}
+{{- if $.Values.projectOverride }}
+  project: {{ $.Values.projectOverride }}
+{{- else }}
+  project: {{ $val.project | default $.Values.default.app.project | required (printf "No project specified for %s" $key ) }}
+{{- end }}
+{{- if (hasKey $val "enableAutoSync" | ternary $val.enableAutoSync $.Values.default.app.enableAutoSync) }}
+  syncPolicy:
+    automated:
+      selfHeal: true
+      {{- if (hasKey $val "autoSyncPrune" | ternary $val.autoSyncPrune $.Values.default.app.autoSyncPrune) }}
+      prune: true
+      {{- end }}
+    {{- if or (hasKey $val "syncPolicyRetry") (hasKey $.Values.default.app "syncPolicyRetry") }}
+    {{- $syncPolicyRetry := merge (ternary $val.syncPolicyRetry (dict) (hasKey $val "syncPolicyRetry") ) (ternary $.Values.default.app.syncPolicyRetry (dict) (hasKey $.Values.default.app "syncPolicyRetry") )  }}
+    retry: {{- toYaml $syncPolicyRetry | nindent 6 }}
+    {{- end }}
+    {{- if or (hasKey $val "syncOptions") (hasKey $.Values.default.app "syncOptions") }}
+    {{- $syncOptions := (concat (ternary $val.syncOptions (list) (hasKey $val "syncOptions") ) (ternary $.Values.default.app.syncOptions (list) (hasKey $.Values.default.app "syncOptions") ) ) | uniq }}
+    syncOptions:
+      {{- with $syncOptions }}
+{{ toYaml . | indent 6 }}
+      {{- end }}
+    {{- end}}
+{{- end }}
+  source:
+    path: {{ tpl $val.source.path $ }}
+    repoURL: {{ $val.source.repoURL | default $.Values.default.app.source.repoURL | required (printf "No source.repoURL specified for %s" $key ) }}
+    targetRevision: {{ $val.source.targetRevision | default $.Values.default.app.source.targetRevision | required (printf "No source.targetRevision specified for %s" $key ) }}
+{{- if ($val.source | default dict ).extraSourceFields }}
+{{ tpl $val.source.extraSourceFields $ | indent 4 }}
+{{- else if $.Values.default.app.source.extraSourceFields }}
+{{ tpl $.Values.default.app.source.extraSourceFields $ | indent 4 }}
+{{- end }}
+{{- if $val.extraFields }}
+{{ tpl $val.extraFields $ | indent 2 }}
+{{- else if $.Values.default.app.extraFields }}
+{{ tpl $.Values.default.app.extraFields $ | indent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}

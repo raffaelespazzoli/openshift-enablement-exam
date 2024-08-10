@@ -1,0 +1,68 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: br-ex-3502-5
+spec:
+  nodeSelector: 
+    kubernetes.io/hostname: x240m5-5.etl2.ocp.rht-labs.com
+  desiredState:
+    interfaces:
+    - name: br-ex.3502 
+      type: vlan 
+      state: up 
+      vlan:
+        base-iface: br-ex
+        id: 3502
+      ipv4:
+        enabled: true 
+        address: 
+          - ip: 192.168.50.145
+            prefix-length: 25
+      ipv6:
+        enabled: false
+---
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: br-ex-3502-6
+spec:
+  nodeSelector: 
+    kubernetes.io/hostname: x240m5-6.etl2.ocp.rht-labs.com
+  desiredState:
+    interfaces:
+    - name: br-ex.3502 
+      type: vlan 
+      state: up 
+      vlan:
+        base-iface: br-ex
+        id: 3502
+      ipv4:
+        enabled: true 
+        address: 
+          - ip: 192.168.50.146
+            prefix-length: 25
+      ipv6:
+        enabled: false
+---
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: br-ex-3502-7
+spec:
+  nodeSelector: 
+    kubernetes.io/hostname: x240m5-7.etl2.ocp.rht-labs.com
+  desiredState:
+    interfaces:
+    - name: br-ex.3502 
+      type: vlan 
+      state: up 
+      vlan:
+        base-iface: br-ex
+        id: 3502
+      ipv4:
+        enabled: true 
+        address: 
+          - ip: 192.168.50.147
+            prefix-length: 25
+      ipv6:
+        enabled: false                

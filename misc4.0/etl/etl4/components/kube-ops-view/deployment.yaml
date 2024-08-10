@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    application: kube-ops-view
+    component: frontend
+  name: kube-ops-view
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: kube-ops-view
+      component: frontend
+  template:
+    metadata:
+      labels:
+        application: kube-ops-view
+        component: frontend
+    spec:
+      serviceAccountName: kube-ops-view
+      containers:
+      - name: service
+        # see https://github.com/hjacobs/kube-ops-view/releases
+        image: hjacobs/kube-ops-view:23.5.0
+        args:
+        # remove this option to use built-in memory store
+        - --redis-url=redis://kube-ops-view-redis:6379
+        # example to add external links for nodes and pods
+        # - --node-link-url-template=https://kube-web-view.example.org/clusters/{cluster}/nodes/{name}
+        # - --pod-link-url-template=https://kube-web-view.example.org/clusters/{cluster}/namespaces/{namespace}/pods/{name}
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 5
+        resources:
+          limits:
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000

@@ -1,0 +1,184 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubesan-machine-config
+  namespace: clusters
+data:
+  config: |
+    apiVersion: machineconfiguration.openshift.io/v1
+    kind: MachineConfig
+    metadata:
+      name: kubesan-worker
+      labels:
+        machineconfiguration.openshift.io/role: worker
+    spec:    
+      osImageURL: quay.io/raffaelespazzoli/ocp-kubesan@sha256:bcdfa9ee53c1b9bbe01e4d1533ac632657ea989cc26a53f3baca319022655f8c
+      config:
+        ignition:
+          version: 3.4.0
+        systemd:
+          units:
+          # - name: sanlock.service
+          #   enabled: true  
+          # - name: lvmlockd.service
+          #   enabled: true
+          # - name: multipathd.service
+          #   enabled: true        
+          - contents: |
+              [Unit]
+              Description=Generates host id for kubesan shared lvm
+              Requires=network-online.target
+              Before=sanlock.service lvmlockd.service
+
+              [Service]
+              User=root
+              Group=root          
+              Type=oneshot
+              ExecStart=/bin/bash -c /usr/local/bin/kubesan_assign_lvm_id.sh
+              StandardOutput=journal+console
+              StandardError=journal+console
+
+              [Install]
+              WantedBy=multi-user.target
+            enabled: true
+            name: kubesan_assign_lvm_id.service
+          - contents: |
+              [Unit]
+              Description=Connect iSCSI LUN
+              Documentation=https://github.com/f1linux/iscsi-automount
+              Requires=network-online.target
+              DefaultDependencies=no
+
+              [Service]
+              User=root
+              Group=root
+              Type=oneshot
+              RemainAfterExit=true
+              Environment = "STORAGEIP=192.168.50.228"
+              ExecStart=/bin/bash -c /usr/local/bin/connect_luns.sh
+              StandardOutput=journal
+
+              [Install]
+              WantedBy=multi-user.target
+            enabled: true
+            name: connect-luns.service
+
+          - contents: |
+              [Unit]
+              Description=Initializes vgs
+              Requires=network-online.target
+              DefaultDependencies=no
+              After=connect-luns.service
+
+              [Service]
+              User=root
+              Group=root
+              Type=oneshot
+              RemainAfterExit=true
+              ExecStart=/bin/bash -c /usr/local/bin/initialize_vgs.sh
+              StandardOutput=journal
+
+              [Install]
+              WantedBy=multi-user.target
+            enabled: true
+            name: initialize_vgs.service                                        
+        storage:
+          files:
+            - contents:
+              # local {
+              #   host_id = ${id}
+              # }        
+                source: 'data:text/plain;charset=utf-8;base64,bG9jYWwgewoJaG9zdF9pZCA9ICR7aWR9Cn0='
+              mode: 420
+              overwrite: true
+              path: /etc/lvm/lvmlocal.conf.tmpl     
+            - contents:
+              # export id=$(hostname -I | awk '{ print $3 }' | cut -d . -f 4)
+              # envsubst < /etc/lvm/lvmlocal.conf.tmpl > /etc/lvm/lvmlocal.conf        
+                source: 'data:text/plain;charset=utf-8;base64,ZXhwb3J0IGlkPSQoaG9zdG5hbWUgLUkgfCBhd2sgJ3sgcHJpbnQgJDMgfScgfCBjdXQgLWQgLiAtZiA0KQplbnZzdWJzdCA8IC9ldGMvbHZtL2x2bWxvY2FsLmNvbmYudG1wbCA+IC9ldGMvbHZtL2x2bWxvY2FsLmNvbmY='
+              mode: 493
+              overwrite: true
+              path: /usr/local/bin/kubesan_assign_lvm_id.sh
+            - contents:
+              # nbd
+              # dm-thin-pool
+                source: 'data:text/plain;charset=utf-8;base64,bmJkCmRtLXRoaW4tcG9vbAo='
+              mode: 420
+              overwrite: true
+              path: /etc/modules-load.d/kubesan.conf
+            - contents:
+              # global {
+              #   use_lvmlockd = 1
+              # }        
+                source: 'data:text/plain;charset=utf-8;base64,Z2xvYmFsIHsKCXVzZV9sdm1sb2NrZCA9IDEKfQo='
+              mode: 420
+              overwrite: true
+              path: /etc/lvm/lvm.conf
+            - contents:
+              # use_watchdog = 0
+              # uname = root
+              # gname = root        
+                source: 'data:text/plain;charset=utf-8;base64,dXNlX3dhdGNoZG9nID0gMAp1bmFtZSA9IHJvb3QKZ25hbWUgPSByb290'
+              mode: 420
+              overwrite: true
+              path: /etc/sanlock/sanlock.conf
+            - contents:
+              # defaults {
+              # user_friendly_names no
+              # max_fds max
+              # flush_on_last_del yes
+              # queue_without_daemon no
+              # dev_loss_tmo infinity
+              # fast_io_fail_tmo 5
+              # }
+              # # All data in the following section must be specific to your system.
+              # blacklist {
+              # wwid "SAdaptec*"
+              # devnode "^hd[a-z]"
+              # devnode "^(ram|raw|loop|fd|md|dm-|sr|scd|st)[0-9]*"
+              # devnode "^cciss.*"
+              # }
+              # devices {
+              # device {
+              # vendor "NETAPP"
+              # product "LUN"
+              # path_grouping_policy group_by_prio
+              # features "2 pg_init_retries 50"
+              # no_path_retry queue
+              # prio "alua"
+              # path_checker tur
+              # failback immediate
+              # path_selector "round-robin 0"
+              # hardware_handler "1 alua"
+              # rr_weight uniform
+              # rr_min_io 128
+              # }
+              # }
+                source: 'data:text/plain;charset=utf-8;base64,ZGVmYXVsdHMgewp1c2VyX2ZyaWVuZGx5X25hbWVzIG5vCm1heF9mZHMgbWF4CmZsdXNoX29uX2xhc3RfZGVsIHllcwpxdWV1ZV93aXRob3V0X2RhZW1vbiBubwpkZXZfbG9zc190bW8gaW5maW5pdHkKZmFzdF9pb19mYWlsX3RtbyA1Cn0KIyBBbGwgZGF0YSBpbiB0aGUgZm9sbG93aW5nIHNlY3Rpb24gbXVzdCBiZSBzcGVjaWZpYyB0byB5b3VyIHN5c3RlbS4KYmxhY2tsaXN0IHsKd3dpZCAiU0FkYXB0ZWMqIgpkZXZub2RlICJeaGRbYS16XSIKZGV2bm9kZSAiXihyYW18cmF3fGxvb3B8ZmR8bWR8ZG0tfHNyfHNjZHxzdClbMC05XSoiCmRldm5vZGUgIl5jY2lzcy4qIgp9CmRldmljZXMgewpkZXZpY2Ugewp2ZW5kb3IgIk5FVEFQUCIKcHJvZHVjdCAiTFVOIgpwYXRoX2dyb3VwaW5nX3BvbGljeSBncm91cF9ieV9wcmlvCmZlYXR1cmVzICIyIHBnX2luaXRfcmV0cmllcyA1MCIKbm9fcGF0aF9yZXRyeSBxdWV1ZQpwcmlvICJhbHVhIgpwYXRoX2NoZWNrZXIgdHVyCmZhaWxiYWNrIGltbWVkaWF0ZQpwYXRoX3NlbGVjdG9yICJyb3VuZC1yb2JpbiAwIgpoYXJkd2FyZV9oYW5kbGVyICIxIGFsdWEiCnJyX3dlaWdodCB1bmlmb3JtCnJyX21pbl9pbyAxMjgKfQp9Cgo='
+              mode: 420
+              overwrite: true
+              path: /etc/multipath.conf
+            - contents:
+              # # Use of "sendtargets" to get all of the targets
+              # iscsiadm -m discovery -t sendtargets -p $STORAGEIP
+
+              # # The iscsiadm command to CONNECT all the LUNs
+              # iscsiadm -m node --login
+                source: 'data:text/plain;charset=utf-8;base64,IyBVc2Ugb2YgInNlbmR0YXJnZXRzIiB0byBnZXQgYWxsIG9mIHRoZSB0YXJnZXRzCmlzY3NpYWRtIC1tIGRpc2NvdmVyeSAtdCBzZW5kdGFyZ2V0cyAtcCAkU1RPUkFHRUlQCgojIFRoZSBpc2NzaWFkbSBjb21tYW5kIHRvIENPTk5FQ1QgYWxsIHRoZSBMVU5zCmlzY3NpYWRtIC1tIG5vZGUgLS1sb2dpbg=='
+              mode: 493
+              overwrite: true
+              path: /usr/local/bin/connect_luns.sh
+            - contents:
+              # # we assume that we should initialize anything in dm-*
+              # for filename in /dev/dm-*; do
+              #   # create volume group
+              #   vgcreate --shared vg-$(basename ${filename}) ${filename}
+              #   # create a devices file
+              #   lvmdevices --devicesfile vg-$(basename ${filename}) --adddev ${filename}
+              #   # check if sanlock and lvmlockd are configured correctly
+              #   vgchange --devicesfile vg-$(basename ${filename}) --lock-start vg-$(basename ${filename})
+              # done      
+                source: 'data:text/plain;charset=utf-8;base64,IyB3ZSBhc3N1bWUgdGhhdCB3ZSBzaG91bGQgaW5pdGlhbGl6ZSBhbnl0aGluZyBpbiBkbS0qCmZvciBmaWxlbmFtZSBpbiAvZGV2L2RtLSo7IGRvCiAgIyBjcmVhdGUgdm9sdW1lIGdyb3VwCiAgdmdjcmVhdGUgLS1zaGFyZWQgdmctJChiYXNlbmFtZSAke2ZpbGVuYW1lfSkgJHtmaWxlbmFtZX0KICAjIGNyZWF0ZSBhIGRldmljZXMgZmlsZQogIGx2bWRldmljZXMgLS1kZXZpY2VzZmlsZSB2Zy0kKGJhc2VuYW1lICR7ZmlsZW5hbWV9KSAtLWFkZGRldiAke2ZpbGVuYW1lfQogICMgY2hlY2sgaWYgc2FubG9jayBhbmQgbHZtbG9ja2QgYXJlIGNvbmZpZ3VyZWQgY29ycmVjdGx5CiAgdmdjaGFuZ2UgLS1kZXZpY2VzZmlsZSB2Zy0kKGJhc2VuYW1lICR7ZmlsZW5hbWV9KSAtLWxvY2stc3RhcnQgdmctJChiYXNlbmFtZSAke2ZpbGVuYW1lfSkKZG9uZQ=='
+              mode: 493
+              overwrite: true
+              path: /usr/local/bin/initialize_vgs.sh

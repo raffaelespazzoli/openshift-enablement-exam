@@ -1,0 +1,41 @@
+      
+applications: 
+
+  openshift-virtualization:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-cnv
+    source:
+      path: misc4.0/etl/etl4/components/openshift-virtualization
+
+  trident-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-cnv
+    source:
+      path: misc4.0/etl/etl4/components/trident-operator
+
+  # hyperconverged-instance:
+  #   annotations:
+  #     argocd.argoproj.io/compare-options: IgnoreExtraneous
+  #     argocd.argoproj.io/sync-wave: '15'
+  #   destination:
+  #     namespace: openshift-cnv
+  #   source:
+  #     path: misc4.0/etl/etl4/components/hyperconverged-instance  
+
+  kube-ops-view:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15'
+    destination:
+      namespace: kube-ops-view
+    source:
+      path: misc4.0/etl/etl4/components/kube-ops-view       
+
+
+                          

@@ -1,0 +1,11 @@
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: netapp-trident
+
+helmCharts:
+
+  - name: netapp-trident
+    releaseName: netapp-trident
+    namespace: netapp-trident
+    repo: https://netapp.github.io/trident-helm-chart

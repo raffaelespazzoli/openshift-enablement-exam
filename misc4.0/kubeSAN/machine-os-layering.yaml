@@ -1,0 +1,24 @@
+apiVersion: machineconfiguration.openshift.io/v1alpha1
+kind: MachineOSConfig
+metadata:
+  name: kubesan-layered
+spec:
+  machineConfigPool:
+    name: worker 
+  buildInputs:
+    containerFile: 
+    - containerfileArch: noarch
+      content: |-
+        FROM configs AS final
+        RUN rpm-ostree install lvm2-lockd sanlock && \
+          ostree container commit
+    imageBuilder: 
+      imageBuilderType: PodImageBuilder
+    baseImagePullSecret: 
+      name: pull-secret
+    renderedImagePushspec: image-registry.openshift-image-registry.svc:5000/openshift/kubesan-os-image:latest  
+    renderedImagePushSecret: 
+      name: ${docker_secret}
+  buildOutputs: 
+    currentImagePullSecret:
+      name: ${docker_secret}

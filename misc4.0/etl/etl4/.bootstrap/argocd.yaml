@@ -1,0 +1,650 @@
+---
+apiVersion: argoproj.io/v1beta1
+kind: ArgoCD
+metadata:
+  name: openshift-gitops
+  namespace: openshift-gitops
+spec:
+  resourceTrackingMethod: annotation
+  kustomizeBuildOptions: --enable-alpha-plugins --load-restrictor LoadRestrictionsNone --helm-command /usr/local/bin/helm
+  extraConfig:
+    resource.compareoptions: |
+      ignoreAggregatedRoles: true
+  server:
+    autoscale:
+      enabled: false
+    grpc:
+      ingress:
+        enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 125m
+        memory: 128Mi
+    insecure: true
+    route:
+      enabled: true
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
+    service:
+      type: ""
+  resourceIgnoreDifferences:
+    resourceIdentifiers:
+      - customization:
+          jsonPointers:
+            - /data
+        kind: Secret
+  resourceHealthChecks:
+  - group: argoproj.io
+    kind: Application
+    check: |
+      hs = {}
+      hs.status = "Progressing"
+      hs.message = ""
+      if obj.status ~= nil then
+        if obj.status.health ~= nil then
+          hs.status = obj.status.health.status
+          hs.message = obj.status.health.message
+        end
+      end
+      return hs
+  - group: serving.knative.dev
+    kind: Service
+    check: |      
+      local health_status = {}
+      health_status.status = "Progressing"
+      health_status.message = "Waiting for status update."
+      if obj.status ~= nil and obj.status.conditions ~= nil then
+        local status_true = 0
+        local status_false = 0
+        local status_unknown = 0
+        health_status.message = ""
+        for i, condition in pairs(obj.status.conditions) do
+          if condition.status == "True" and (condition.type == "ConfigurationsReady" or condition.type == "RoutesReady" or condition.type == "Ready") then
+            status_true = status_true + 1
+          elseif condition.status == "False" or condition.status == "Unknown" then
+            msg = condition.type .. " is " .. condition.status
+            if condition.reason ~= nil and condition.reason ~= "" then
+              msg = msg .. ", since " .. condition.reason .. "."
+            end
+            if condition.message ~= nil and condition.message ~= "" then
+              msg = msg .. " " .. condition.message
+            end
+            health_status.message = health_status.message .. msg .. "\n"
+            if condition.status == "False" then
+              status_false = status_false + 1
+            else
+              status_unknown = status_unknown + 1
+            end
+          end
+        end
+        if status_true == 3 and status_false == 0 and status_unknown == 0 then
+          health_status.message = "Knative Service is healthy."
+          health_status.status = "Healthy"
+          return health_status
+        elseif status_false > 0 then
+          health_status.status = "Degraded"
+          return health_status
+        else
+          health_status.status = "Progressing"
+          return health_status
+        end
+      end
+      return health_status      
+  - group: cert-manager.io
+    kind: Certificate
+    check: |
+      local hs = {}
+      if obj.status ~= nil then
+        if obj.status.conditions ~= nil then
+
+          -- Always Handle Issuing First to ensure consistent behaviour
+          for i, condition in ipairs(obj.status.conditions) do
+            if condition.type == "Issuing" and condition.status == "True" then
+              hs.status = "Progressing"
+              hs.message = condition.message
+              return hs
+            end
+          end
+
+          for i, condition in ipairs(obj.status.conditions) do
+            if condition.type == "Ready" and condition.status == "False" then
+              hs.status = "Degraded"
+              hs.message = condition.message
+              return hs
+            end
+            if condition.type == "Ready" and condition.status == "True" then
+              hs.status = "Healthy"
+              hs.message = condition.message
+              return hs
+            end
+          end
+        end
+      end
+
+      hs.status = "Progressing"
+      hs.message = "Waiting for certificate"
+      return hs
+  - group: cert-manager.io
+    kind: ClusterIssuer
+    check: |     
+      local hs = {}
+      if obj.status ~= nil then
+        if obj.status.conditions ~= nil then
+          for i, condition in ipairs(obj.status.conditions) do
+            if condition.type == "Ready" and condition.status == "False" then
+              hs.status = "Degraded"
+              hs.message = condition.message
+              return hs
+            end
+            if condition.type == "Ready" and condition.status == "True" then
+              hs.status = "Healthy"
+              hs.message = condition.message
+              return hs
+            end
+          end
+        end
+      end
+
+      hs.status = "Progressing"
+      hs.message = "Initializing ClusterIssuer"
+      return h
+  - group: cert-manager.io
+    kind: Issuer
+    check: |     
+      local hs = {}
+      if obj.status ~= nil then
+        if obj.status.conditions ~= nil then
+          for i, condition in ipairs(obj.status.conditions) do
+            if condition.type == "Ready" and condition.status == "False" then
+              hs.status = "Degraded"
+              hs.message = condition.message
+              return hs
+            end
+            if condition.type == "Ready" and condition.status == "True" then
+              hs.status = "Healthy"
+              hs.message = condition.message
+              return hs
+            end
+          end
+        end
+      end
+
+      hs.status = "Progressing"
+      hs.message = "Initializing issuer"
+      return hs
+  - group: kiali.io
+    kind: Kiali
+    check: |
+      local health_status = {}
+      if obj.status ~= nil then
+        if obj.status.conditions ~= nil then
+          for i, condition in ipairs(obj.status.conditions) do
+            health_status.message = condition.message
+            if condition.type == "Successful" and condition.status == "True" then
+              health_status.status = "Healthy"
+              return health_status
+            end
+            if condition.type == "Failure" and condition.status == "True" then
+              health_status.status = "Degraded"
+              return health_status
+            end
+            if condition.type == "Running" and condition.reason == "Running" then
+              health_status.status = "Progressing"
+              return health_status
+            end
+          end
+        end
+      end
+      health_status.status = "Progressing"
+      health_status.message = "Waiting for Kiali"
+      return health_status
+  # - group: minio.min.io
+  #   kind: Tenant
+  #   check: |
+  #     local health_status = {}
+  #     if obj.status ~= nil then
+  #         if obj.status.currentState ~= nil then
+  #             if obj.status.currentState == "Initialized" then
+  #                 health_status.status = "Healthy"
+  #                 health_status.message = obj.status.currentState
+  #                 return health_status
+  #             end
+  #             if obj.status.currentState:find("^Provisioning") ~= nil then
+  #                 health_status.status = "Progressing"
+  #                 health_status.message = obj.status.currentState
+  #                 return health_status
+  #             end
+  #             if obj.status.currentState:find("^Waiting") ~= nil then
+  #                 health_status.status = "Progressing"
+  #                 health_status.message = obj.status.currentState
+  #                 return health_status
+  #             end
+  #             if obj.status.currentState:find("^Updating") ~= nil then
+  #                 health_status.status = "Progressing"
+  #                 health_status.message = obj.status.currentState
+  #                 return health_status
+  #             end
+  #             if obj.status.currentState == "Restarting MinIO" then
+  #                 health_status.status = "Progressing"
+  #                 health_status.message = obj.status.currentState
+  #                 return health_status
+  #             end
+  #             if obj.status.currentState == "Statefulset not controlled by operator" then
+  #                 health_status.status = "Degraded"
+  #                 health_status.message = obj.status.currentState
+  #                 return health_status
+  #             end
+  #             if obj.status.currentState == "Another MinIO Tenant already exists in the namespace" then
+  #                 health_status.status = "Degraded"
+  #                 health_status.message = obj.status.currentState
+  #                 return health_status
+  #             end
+  #             if obj.status.currentState == "Tenant credentials are not set properly" then
+  #                 health_status.status = "Degraded"
+  #                 health_status.message = obj.status.currentState
+  #                 return health_status
+  #             end
+  #             if obj.status.currentState == "Different versions across MinIO Pools" then
+  #                 health_status.status = "Degraded"
+  #                 health_status.message = obj.status.currentState
+  #                 return health_status
+  #             end
+  #             if obj.status.currentState == "Pool Decommissioning Not Allowed" then
+  #                 health_status.status = "Degraded"
+  #                 health_status.message = obj.status.currentState
+  #                 return health_status
+  #             end
+  #             health_status.status = "Progressing"
+  #             health_status.message = obj.status.currentState
+  #             return health_status
+  #         end
+  #     end
+  #     health_status.status = "Progressing"
+  #     health_status.message = "No status info available"
+  #     return health_status                          
+  - group: route.openshift.io
+    kind: Route
+    check: |
+      local health_status = {}
+      if obj.status ~= nil then
+        if obj.status.ingress ~= nil then
+          local numIngressRules = 0
+          local numTrue = 0
+          local numFalse = 0
+          for _, ingressRules in pairs(obj.status.ingress) do
+              numIngressRules = numIngressRules + 1
+              if obj.status.ingress ~= nil then
+                for _, condition in pairs(ingressRules.conditions) do
+                    if condition.type == "Admitted" and condition.status == "True" then
+                        numTrue = numTrue + 1
+                    elseif condition.type == "Admitted" and condition.status == "False" then
+                        numFalse = numFalse + 1
+                    end
+                end
+              end
+              health_status.status = 'Test'
+          end
+          if numTrue == numIngressRules then
+            health_status.status = "Healthy"
+            health_status.message = "Route is healthy"
+            return health_status
+          elseif numFalse > 0 then
+            health_status.status = "Degraded"
+            health_status.message = "Route is degraded"
+            return health_status
+          else
+            health_status.status = "Progressing"
+            health_status.message = "Route is still getting admitted"
+            return health_status
+          end
+        end
+      end
+      health_status.status = "Progressing"
+      health_status.message = "Route is still getting admitted"
+      return health_status
+  - group: operators.coreos.com
+    kind: Subscription
+    check: |
+      local health_status = {}
+      if obj.status ~= nil then
+        if obj.status.conditions ~= nil then
+          local numDegraded = 0
+          local numPending = 0
+          local msg = ""
+          for i, condition in pairs(obj.status.conditions) do
+            msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. "\n"
+            if condition.type == "InstallPlanPending" and condition.status == "True" then
+              numPending = numPending + 1
+            elseif (condition.type == "InstallPlanMissing" and condition.reason ~= "ReferencedInstallPlanNotFound") then
+              numDegraded = numDegraded + 1
+            elseif (condition.type == "CatalogSourcesUnhealthy" or condition.type == "InstallPlanFailed" or condition.type == "ResolutionFailed") and condition.status == "True" then
+              numDegraded = numDegraded + 1
+            end
+          end
+          if numDegraded == 0 and numPending == 0 then
+            health_status.status = "Healthy"
+            health_status.message = msg
+            return health_status
+          elseif numPending > 0 and numDegraded == 0 then
+            health_status.status = "Progressing"
+            health_status.message = "An install plan for a subscription is pending installation"
+            return health_status
+          else
+            health_status.status = "Degraded"
+            health_status.message = msg
+            return health_status
+          end
+        end
+      end
+      health_status.status = "Progressing"
+      health_status.message = "An install plan for a subscription is pending installation"
+      return health_status
+  - group: operators.coreos.com
+    kind: InstallPlan
+    check: |   
+      hs = {}
+      if obj.status ~= nil then
+        if obj.status.phase ~= nil then
+          if obj.status.phase == "Complete" then
+            hs.status = "Healthy"
+            hs.message = obj.status.phase
+            return hs
+          end
+        end
+      end
+      hs.status = "Progressing"
+      hs.message = "Waiting for InstallPlan to complete"
+      return hs
+  - group: operators.knative.dev
+    kind: KnativeEventing
+    check: |
+      local health_status = {}
+      if obj.status ~= nil then
+        if obj.status.conditions ~= nil then
+          local numTrue = 0
+          local numFalse = 0
+          local msg = ""
+          for i, condition in pairs(obj.status.conditions) do
+            msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. "\n"
+            if condition.type == "Ready" and condition.status == "True" then
+              numTrue = numTrue + 1
+            elseif condition.type == "InstallSucceeded" and condition.status == "True" then
+              numTrue = numTrue + 1
+            elseif condition.type == "Ready" and condition.status == "False" then
+              numFalse = numFalse + 1
+            elseif condition.status == "Unknown" then
+              numFalse = numFalse + 1
+            end
+          end
+          if(numFalse > 0) then
+            health_status.message = msg
+            health_status.status = "Progressing"
+            return health_status
+          elseif(numTrue == 2) then
+            health_status.message = "KnativeEventing is healthy."
+            health_status.status = "Healthy"
+            return health_status
+          else
+            health_status.message = msg
+            health_status.status = "Degraded"
+            return health_status
+          end
+        end
+      end
+      health_status.status = "Progressing"
+      health_status.message = "Waiting for KnativeEventing"
+      return health_status
+  - group: operators.knative.dev
+    kind: KnativeServing
+    check: |
+      local health_status = {}
+      if obj.status ~= nil then
+        if obj.status.conditions ~= nil then
+          local numTrue = 0
+          local numFalse = 0
+          local msg = ""
+          for i, condition in pairs(obj.status.conditions) do
+            msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. "\n"
+            if condition.type == "Ready" and condition.status == "True" then
+              numTrue = numTrue + 1
+            elseif condition.type == "InstallSucceeded" and condition.status == "True" then
+              numTrue = numTrue + 1
+            elseif condition.type == "DependenciesInstalled" and condition.status == "True" then
+              numTrue = numTrue + 1
+            elseif condition.type == "DeploymentsAvailable" and condition.status == "True" then
+              numTrue = numTrue + 1
+            elseif condition.type == "Ready" and condition.status == "False" then
+              numFalse = numFalse + 1
+            elseif condition.type == "DeploymentsAvailable" and condition.status == "False" then
+              numFalse = numFalse + 1
+            elseif condition.status == "Unknown" then
+              numFalse = numFalse + 1
+            end
+          end
+          if(numFalse > 0) then
+            health_status.message = msg
+            health_status.status = "Progressing"
+            return health_status
+          elseif(numTrue == 4) then
+            health_status.message = "KnativeServing is healthy."
+            health_status.status = "Healthy"
+            return health_status
+          else
+            health_status.message = msg
+            health_status.status = "Degraded"
+            return health_status
+          end
+        end
+      end
+      health_status.status = "Progressing"
+      health_status.message = "Waiting for KnativeServing"
+      return health_status
+  - group: serving.kserve.io
+    kind: InferenceService
+    check: |
+      local health_status = {}
+      health_status.status = "Progressing"
+      health_status.message = "Waiting for status update."
+      if obj.status ~= nil and obj.status.conditions ~= nil then
+        local status_true = 0
+        local status_false = 0
+        local status_unknown = 0
+        health_status.message = ""
+        for i, condition in pairs(obj.status.conditions) do
+          if condition.status == "True" and (condition.type == "IngressReady" or condition.type == "PredictorConfigurationReady" or condition.type == "PredictorReady" or condition.type == "PredictorRouteReady" or condition.type == "Ready") then
+            status_true = status_true + 1
+          elseif condition.status == "False" or condition.status == "Unknown" then
+            msg = condition.type .. " is " .. condition.status
+            if condition.reason ~= nil and condition.reason ~= "" then
+              msg = msg .. ", since " .. condition.reason .. "."
+            end
+            if condition.message ~= nil and condition.message ~= "" then
+              msg = msg .. " " .. condition.message
+            end
+            health_status.message = health_status.message .. msg .. "\n"
+            if condition.status == "False" then
+              status_false = status_false + 1
+            else
+              status_unknown = status_unknown + 1
+            end
+          end
+        end
+        if status_true == 5 and status_false == 0 and status_unknown == 0 then
+          health_status.message = "Inference Service is healthy."
+          health_status.status = "Healthy"
+          return health_status
+        elseif status_false > 0 then
+          health_status.status = "Degraded"
+          return health_status
+        else
+          health_status.status = "Progressing"
+          return health_status
+        end
+      end
+      return health_status                          
+  grafana:
+    enabled: false
+    ingress:
+      enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+    route:
+      enabled: false
+  prometheus:
+    enabled: false
+    ingress:
+      enabled: false
+    route:
+      enabled: false
+  initialSSHKnownHosts: {}
+  applicationSet:
+    #extraCommandArgs:
+    #  - --enable-progressive-syncs
+    resources:
+      limits:
+        cpu: "2"
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+  rbac:
+    defaultPolicy: 'role:admin'
+    policy: |
+      p, role:none, *, *, */*, deny
+      g, system:cluster-admins, role:admin
+      g, cluster-admins, role:admin
+      g, admin, role:admin
+    scopes: "[groups]"
+  repo:
+    sidecarContainers:
+      - name: setenv-plugin
+        command: [/var/run/argocd/argocd-cmp-server]
+        env:
+          - name: KUSTOMIZE_PLUGIN_HOME
+            value: /etc/kustomize/plugin
+          - name: CLUSTER_NAME
+            value: '${cluster_name}'
+          - name: CLUSTER_BASE_DOMAIN
+            value: '${cluster_base_domain}'
+          # all created clusters base domain should be <cluster-name>.<PLATFORM_BASE_DOMAIN> 
+          - name: PLATFORM_BASE_DOMAIN
+            value: '${platform_base_domain}'
+          - name: HUB_BASE_DOMAIN
+            value: '${cluster_base_domain}'
+          - name: INFRA_GITOPS_REPO
+            value: '${gitops_repo}'
+          - name: infrastructure_id
+            value: '${infrastructure_id}'                                                           
+        # image: quay.io/gnunn/tools:latest
+        image: quay.io/raffaelespazzoli/raffa-envsub:latest
+        imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+        volumeMounts:
+          - mountPath: /var/run/argocd
+            name: var-files
+          - mountPath: /home/argocd/cmp-server/plugins
+            name: plugins
+          - mountPath: /tmp
+            name: tmp
+          - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+            subPath: plugin.yaml
+            name: setenv-cmp-plugin        
+    volumes:
+      - configMap:
+          name: setenv-cmp-plugin
+        name: setenv-cmp-plugin
+    resources:
+      limits:
+        cpu: "1"
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 256Mi
+  resourceExclusions: |
+    - apiGroups:
+      - internal.open-cluster-management.io
+      kinds:
+      - ManagedClusterInfo
+      clusters:
+      - "*"
+    - apiGroups:
+      - tekton.dev
+      clusters:
+      - '*'
+      kinds:
+      - TaskRun
+      - PipelineRun
+  sso:
+    dex:
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 250m
+          memory: 128Mi
+      openShiftOAuth: true
+    provider: dex
+  ha:
+    enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+  tls:
+    ca: {}
+  redis:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+  controller:
+    processors: {}
+    resources:
+      limits:
+        cpu: "2"
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 1Gi
+    sharding: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: setenv-cmp-plugin
+  namespace: openshift-gitops
+data:
+  plugin.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: setenv-cmp-plugin
+    spec:
+      version: v1.0
+      init:
+        command: [sh, -c, 'echo "Initializing setenv-plugin-cmp..."']
+      generate:
+        command:
+          - sh
+          - "-c"
+          - "set -o pipefail && kustomize build --load-restrictor LoadRestrictionsNone --enable-helm --enable-alpha-plugins . | envsub"
+      discover:
+        find:
+          command: [sh, -c, 'find . -maxdepth 1 -name kustomization.yaml']      

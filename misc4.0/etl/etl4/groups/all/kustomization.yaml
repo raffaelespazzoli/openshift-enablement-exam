@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+helmGlobals:
+  chartHome: ../../.helm/charts
+
+helmCharts:
+- name: argocd-app-of-app
+  valuesFile: values.yaml
+  namespace: openshift-gitops

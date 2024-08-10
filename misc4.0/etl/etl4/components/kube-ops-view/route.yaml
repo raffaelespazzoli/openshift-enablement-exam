@@ -1,0 +1,15 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: kube-ops-view
+spec:
+  to:
+    kind: Service
+    name: kube-ops-view
+    weight: 100
+  port:
+    targetPort: 8080
+  wildcardPolicy: None
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect  

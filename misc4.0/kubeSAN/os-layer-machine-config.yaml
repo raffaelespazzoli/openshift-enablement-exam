@@ -1,0 +1,8 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: worker 
+  name: kubesan-os-layer
+spec:
+  osImageURL: quay.io/raffaelespazzoli/ocp-kubesan@sha256:ba4dc5a8a70dbbf199209006691be6bd8e244f3b097d3669a7d0bfe4b2240946

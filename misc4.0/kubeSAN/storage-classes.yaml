@@ -1,0 +1,25 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: san-vg-5gb
+provisioner: kubesan.gitlab.io
+parameters:
+  backingVolumeGroup: vg-3600a098038303361652b492d4e344275
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: san-vg-50gb
+provisioner: kubesan.gitlab.io
+parameters:
+  backingVolumeGroup: vg-3600a098038303361652b492d4e344276
+---  
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: san-vg-100gb
+  annotations:
+    storageclass.kubernetes.io/is-default-class: 'true'
+provisioner: kubesan.gitlab.io
+parameters:
+  backingVolumeGroup: vg-3600a098038303361652b492d4e344277
