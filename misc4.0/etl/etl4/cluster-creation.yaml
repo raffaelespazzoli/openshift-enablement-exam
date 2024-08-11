@@ -1,0 +1,100 @@
+---
+apiVersion: hypershift.openshift.io/v1beta1
+kind: HostedCluster
+metadata:
+  name: 'etl4'
+  namespace: 'etl4'
+  labels:
+    "cluster.open-cluster-management.io/clusterset": 'default'
+spec:
+  release:
+    image: quay.io/openshift-release-dev/ocp-release:4.16.6-multi
+  pullSecret:
+    name: pullsecret-cluster-etl4
+  sshKey:
+    name: sshkey-cluster-etl4
+  networking:
+    clusterNetwork:
+      - cidr: 10.132.0.0/14
+    serviceNetwork:
+      - cidr: 172.31.0.0/16
+    networkType: OVNKubernetes
+  controllerAvailabilityPolicy: HighlyAvailable
+  infrastructureAvailabilityPolicy: HighlyAvailable
+  olmCatalogPlacement: management
+  platform:
+    type: Agent
+    agent:
+      agentNamespace: 'etl4'
+  infraID: 'etl4'
+  dns:
+    baseDomain: 'ocp.rht-labs.com'
+  services:
+  - service: APIServer
+    servicePublishingStrategy:
+      type: LoadBalancer
+  - service: OAuthServer
+    servicePublishingStrategy:
+      type: Route
+  - service: OIDC
+    servicePublishingStrategy:
+      type: Route
+  - service: Konnectivity
+    servicePublishingStrategy:
+      type: Route
+  - service: Ignition
+    servicePublishingStrategy:
+      type: Route
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pullsecret-cluster-etl4
+  namespace: etl4
+data:
+  '.dockerconfigjson': ""
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sshkey-cluster-etl4
+  namespace: 'etl4'
+stringData:
+  id_rsa.pub: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCWVnOEYFaN6tp/CXn5aBgD5YZbbwJHhUYbAahoGz3IbP8YZZwyBvJvgy9CujKTaIpZHweYRwMEtvPaX65g8AQDd8t6Gqc+JVJue6HTqrawH2wvq8Qdhip9L09fK2WqtP7UbVF+fgiwm9kebajkAqtlOttcdHipeRy5TGVE2hbV1zqc6UjTo6lKzxflm2Jd5EMc4TZCleSFApBod+jgFZoke/8Q/GHWyQs7YaoE3h/JND7z6aye5HoAPQBT18y/4Amwj7h2hIcIsSJ8JAHsOZ0NB4gz1qwpkG/dYAYV1iARM/+qnZ7EJAt4DofqUAS1/0BdXK+1RL8uI0db4r8U3pTe+oFGORQHRNa+ehDoX1PdOU+o59OmjEaJpcq0YRB3NqOwfZzATUfOqcZswH0xC6WKi/UknBFPgJv6JfD0+dee/kWTmgFrzT6Ie9hRql2bA+qjSoPfWzPk+Gv1Wuf6UGdC2DpKPO+vOhVzRtog/cvwjGSJv5p2X6biRGiYy8a0bX0= rspazzol@rspazzol
+---
+apiVersion: hypershift.openshift.io/v1beta1
+kind: NodePool
+metadata:
+  name: 'nodepool-etl4-1'
+  namespace: 'etl4'
+spec:
+  clusterName: 'etl4'
+  replicas: 3
+  management:
+    autoRepair: false
+    upgradeType: InPlace
+  platform:
+    type: Agent
+    agent:
+      agentLabelSelector:
+        matchLabels: {}
+  release:
+    image: quay.io/openshift-release-dev/ocp-release:4.16.6-multi
+---
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  annotations:
+    import.open-cluster-management.io/hosting-cluster-name: local-cluster 
+    import.open-cluster-management.io/klusterlet-deploy-mode: Hosted
+    open-cluster-management/created-via: hypershift
+  labels:
+    cloud: BareMetal
+    vendor: OpenShift
+    name: 'etl4'
+    cluster.open-cluster-management.io/clusterset: 'default'
+  name: 'etl4'
+spec:
+  hubAcceptsClient: true
+---
