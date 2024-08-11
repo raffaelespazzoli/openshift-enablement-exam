@@ -5,7 +5,7 @@ namespace: netapp-trident
 
 helmCharts:
 
-  - name: netapp-trident
+  - name: trident-operator
     releaseName: netapp-trident
     namespace: netapp-trident
     repo: https://netapp.github.io/trident-helm-chart
