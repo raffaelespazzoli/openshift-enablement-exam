@@ -5,6 +5,7 @@ namespace: netapp-trident
 
 resources:
   - namespace.yaml
+  - trident.netapp.io_tridentorchestrators_crd_post1.16.yaml
 
 helmCharts:
 
