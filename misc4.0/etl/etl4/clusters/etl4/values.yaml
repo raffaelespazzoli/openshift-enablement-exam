@@ -37,14 +37,14 @@ applications:
     source:
       path: misc4.0/etl/etl4/components/trident-configuration      
 
-  # hyperconverged-instance:
-  #   annotations:
-  #     argocd.argoproj.io/compare-options: IgnoreExtraneous
-  #     argocd.argoproj.io/sync-wave: '15'
-  #   destination:
-  #     namespace: openshift-cnv
-  #   source:
-  #     path: misc4.0/etl/etl4/components/hyperconverged-instance  
+  hyperconverged-instance:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15'
+    destination:
+      namespace: openshift-cnv
+    source:
+      path: misc4.0/etl/etl4/components/hyperconverged-instance  
 
   kube-ops-view:
     annotations:
