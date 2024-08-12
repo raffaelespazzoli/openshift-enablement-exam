@@ -25,6 +25,9 @@ kind: StorageClass
 metadata:
   name: ontap-san
 provisioner: csi.trident.netapp.io
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+volumeBindingMode: Immediate
 parameters:
   backendType: "ontap-san"
   provisioningType: "thin"

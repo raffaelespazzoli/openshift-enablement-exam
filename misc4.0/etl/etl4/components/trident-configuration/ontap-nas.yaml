@@ -29,6 +29,9 @@ metadata:
   annotations: 
     storageclass.kubernetes.io/is-default-class: "true"
 provisioner: csi.trident.netapp.io
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+volumeBindingMode: Immediate
 parameters:
   backendType: "ontap-nas"
   provisioningType: "thin"
