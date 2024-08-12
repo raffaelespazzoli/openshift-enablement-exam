@@ -8,7 +8,7 @@ applications:
     destination:
       namespace: openshift-config
     source:
-      path: components/openshift-config
+      path: misc4.0/etl/etl4/components/openshift-config
 
   openshift-virtualization:
     annotations:
@@ -56,7 +56,7 @@ applications:
     destination:
       namespace: openshift-servicemesh-operator
     source:
-      path: components/openshift-servicemesh
+      path: misc4.0/etl/etl4/components/openshift-servicemesh
 
   servicemesh-control-plane:
     annotations:
@@ -65,7 +65,7 @@ applications:
     destination:
       namespace: istio-system
     source:
-      path: components/servicemesh-control-plane
+      path: misc4.0/etl/etl4/components/servicemesh-control-plane
 
   # servicemesh-configuration:
   #   annotations:
@@ -74,7 +74,7 @@ applications:
   #   destination:
   #     namespace: istio-system
   #   source:
-  #     path: components/servicemesh-configuration          
+  #     path: misc4.0/etl/etl4/components/servicemesh-configuration          
 
 
                           
