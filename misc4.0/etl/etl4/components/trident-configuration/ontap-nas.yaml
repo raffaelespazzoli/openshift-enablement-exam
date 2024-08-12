@@ -4,8 +4,8 @@ metadata:
   name: ontap-nas-secret
 type: Opaque
 stringData:
-  username: cluster-admin
-  password: password
+  username: labadmin
+  password: ocpvirt01!
 ---
 apiVersion: trident.netapp.io/v1
 kind: TridentBackendConfig
