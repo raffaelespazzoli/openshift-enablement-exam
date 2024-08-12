@@ -19,6 +19,15 @@ applications:
     source:
       path: misc4.0/etl/etl4/components/openshift-virtualization
 
+  web-terminal-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-operators
+    source:
+      path: misc4.0/etl/etl4/components/web-terminal-operator
+
   trident-operator:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
