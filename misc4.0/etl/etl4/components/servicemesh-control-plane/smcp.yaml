@@ -1,0 +1,60 @@
+apiVersion: maistra.io/v2
+kind: ServiceMeshControlPlane
+metadata:
+  name: main
+spec:
+  version: v2.5
+  mode: ClusterWide
+  # Configuring the distributed tracing platform (Tempo)
+  meshConfig:
+    discoverySelectors:
+      - matchLabels:
+          servicemesh: "true"  
+    extensionProviders:
+      - name: tempo
+        # zipkin:
+        #   service: tempo-tempo-distributor.openshift-tempo-instance.svc.cluster.local
+        #   port: 9411
+        opentelemetry:
+          service: tempo-tempo-distributor.openshift-tempo-instance.svc.cluster.local
+          port: 4317          
+  tracing:
+    sampling: 10000
+    type: None
+  security:
+    dataPlane:
+      mtls: true
+      automtls: true
+    controlPlane:
+      mtls: true      
+  proxy:
+    accessLogging:
+      file:
+        name: /dev/stdout
+    networking:
+      trafficControl:
+        outbound:
+          #policy: REGISTRY_ONLY
+          policy: ALLOW_ANY
+        inbound:
+          excludedPorts:
+            - 8444
+            - 8022          
+  gateways:
+    enabled: false
+    egress:
+      enabled: false
+    ingress:   
+      enabled: false
+    openshiftRoute:
+      enabled: false
+  addons:
+    grafana:
+      enabled: false
+    kiali:
+      name: kiali
+      enabled: false
+    prometheus:
+      enabled: false
+    jaeger:
+      name: jaeger

@@ -1,6 +1,15 @@
       
 applications: 
 
+  openshift-config:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-config
+    source:
+      path: components/openshift-config
+
   openshift-virtualization:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
@@ -35,7 +44,37 @@ applications:
     destination:
       namespace: kube-ops-view
     source:
-      path: misc4.0/etl/etl4/components/kube-ops-view       
+      path: misc4.0/etl/etl4/components/kube-ops-view   
+
+
+# OpenShift ServiceMesh
+
+  openshift-servicemesh:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-servicemesh-operator
+    source:
+      path: components/openshift-servicemesh
+
+  servicemesh-control-plane:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15'
+    destination:
+      namespace: istio-system
+    source:
+      path: components/servicemesh-control-plane
+
+  # servicemesh-configuration:
+  #   annotations:
+  #     argocd.argoproj.io/compare-options: IgnoreExtraneous
+  #     argocd.argoproj.io/sync-wave: '25'
+  #   destination:
+  #     namespace: istio-system
+  #   source:
+  #     path: components/servicemesh-configuration          
 
 
                           

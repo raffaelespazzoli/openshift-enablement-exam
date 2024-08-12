@@ -1,0 +1,22 @@
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  argocd.argoproj.io/compare-options: IgnoreExtraneous
+
+secretGenerator:
+- name: htpass-secret
+  files:
+  - htpasswd
+
+resources:
+  - ./oauth.yaml
+  - ./admin-role-binding.yaml
+  - ./olm-patch.yaml
+#  - ./console-patch.yaml
+  - ./admin-group.yaml
+#  - ./default-router.yaml
+
+generatorOptions:
+ disableNameSuffixHash: true  

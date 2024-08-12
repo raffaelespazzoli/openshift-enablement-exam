@@ -1,0 +1,13 @@
+apiVersion: operator.openshift.io/v1
+kind: Console
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Delete=false,ServerSideApply=true
+  name: cluster
+spec:
+  plugins:
+  - logging-view-plugin
+  - monitoring-plugin
+  - gitops-plugin
+  - pipelines-console-plugin
+  - netobserv-plugin

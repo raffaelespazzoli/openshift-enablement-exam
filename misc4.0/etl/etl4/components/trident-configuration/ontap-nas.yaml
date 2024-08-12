@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ontap-nas-secret
+type: Opaque
+stringData:
+  username: cluster-admin
+  password: password
+---
+apiVersion: trident.netapp.io/v1
+kind: TridentBackendConfig
+metadata:
+  name: ontap-nas
+spec:
+  version: 1
+  storageDriverName: ontap-nas
+  managementLIF: netapp.etl.rht-labs.com
+  dataLIF: netapp.etl.rht-labs.com
+  backendName: tbc-ontap-nas
+  svm: trident_svm
+  credentials: 
+    name: ontap-nas-secret
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ontap-nas
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: "ontap-nas"
+  media: "ssd"
+  provisioningType: "thin"
+  snapshots: "true"    

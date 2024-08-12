@@ -1,0 +1,15 @@
+apiVersion: maistra.io/v1
+kind: ServiceMeshMemberRoll
+metadata:
+  name: default
+spec:
+  members:
+    - istio-test
+    - knative-eventing
+    - knative-serving
+    - serverless-test
+    - inference-service-test
+# I have to configure the members this way because of: https://issues.redhat.com/browse/RHOAIENG-6711      
+  # memberSelectors: 
+  #   - matchLabels:
+  #       servicemesh: "true"

@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ontap-san-secret
+type: Opaque
+stringData:
+  username: cluster-admin
+  password: password
+---
+apiVersion: trident.netapp.io/v1
+kind: TridentBackendConfig
+metadata:
+  name: ontap-san
+spec:
+  version: 1
+  storageDriverName: ontap-san
+  managementLIF: netapp.etl.rht-labs.com
+  dataLIF: netapp.etl.rht-labs.com
+  svm: trident_svm
+  credentials: 
+    name: ontap-san-secret
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ontap-san
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: "ontap-san"
+  media: "ssd"
+  provisioningType: "thin"
+  snapshots: "true"     
