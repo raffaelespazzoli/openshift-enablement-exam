@@ -15,9 +15,10 @@ spec:
   version: 1
   storageDriverName: ontap-nas
   managementLIF: netapp.etl.rht-labs.com
-  dataLIF: netapp.etl.rht-labs.com
-  backendName: tbc-ontap-nas
-  svm: trident_svm
+  dataLIF: nfs1.etl.rht-labs.com
+  backendName: ontap-nas
+  svm: nfs_02
+  autoExportPolicy: true
   credentials: 
     name: ontap-nas-secret
 ---
