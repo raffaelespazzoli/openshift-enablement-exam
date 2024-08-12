@@ -29,6 +29,6 @@ metadata:
 provisioner: csi.trident.netapp.io
 parameters:
   backendType: "ontap-nas"
-  media: "ssd"
   provisioningType: "thin"
-  snapshots: "true"    
+  snapshots: "true"  
+  clones: "true"  

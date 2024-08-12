@@ -27,6 +27,6 @@ metadata:
 provisioner: csi.trident.netapp.io
 parameters:
   backendType: "ontap-san"
-  media: "ssd"
   provisioningType: "thin"
   snapshots: "true"     
+  clones: "true"
