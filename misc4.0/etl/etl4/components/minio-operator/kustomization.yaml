@@ -5,3 +5,4 @@ resources:
   #- ./namespace.yaml
   - ./minio-operator.yaml
   - ./route.yaml
+  - ./rbac.yaml
