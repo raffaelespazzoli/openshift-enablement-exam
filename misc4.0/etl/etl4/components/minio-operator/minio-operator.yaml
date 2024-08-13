@@ -7346,23 +7346,3 @@ spec:
           seccompProfile:
             type: RuntimeDefault
       serviceAccountName: minio-operator
----
-apiVersion: route.openshift.io/v1
-kind: Route
-metadata:
-  labels:
-    app.kubernetes.io/instance: minio-operator
-    app.kubernetes.io/name: operator
-    name: console
-    operators.coreos.com/minio-operator.openshift-operators: ""
-  name: minio
-  namespace: minio-operator
-spec:
-  port:
-    targetPort: https
-  tls:
-    insecureEdgeTerminationPolicy: Redirect
-    termination: reencrypt
-  to:
-    kind: Service
-    name: console
