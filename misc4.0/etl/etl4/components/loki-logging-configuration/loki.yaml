@@ -12,7 +12,7 @@ spec:
       name: logging-loki-s3 
       type: s3 
       credentialMode: static
-  storageClassName: gp3-csi
+  storageClassName: ontap-nas
   tenants:
     mode: openshift-logging
   limits:

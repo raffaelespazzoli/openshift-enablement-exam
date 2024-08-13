@@ -9,7 +9,7 @@ tenant:
   pools:
     - name: pool-0
       servers: 1
-      storageClassName: gp3-csi
+      storageClassName: ontap-nas
   buckets:
     - name: tempo
       objectLock: false

@@ -9,7 +9,7 @@ tenant:
   pools:
     - name: pool-0
       servers: 1
-      storageClassName: gp3-csi
+      storageClassName: ontap-nas
       # these values are not recommended in production. They are here just to keep the costs constrained.
       volumesPerServer: 1
       size: 240Gi      
