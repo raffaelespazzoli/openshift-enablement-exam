@@ -1,0 +1,14 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: loki-tenant
+spec:
+  to:
+    kind: Service
+    name: loki-console
+    weight: 100
+  port:
+    targetPort: http-console
+  tls:
+    termination: edge
+  wildcardPolicy: None

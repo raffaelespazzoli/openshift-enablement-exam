@@ -1,0 +1,12 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: grafana-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: grafana-instance
+  ingress:
+    - {}
+  policyTypes:
+    - Ingress

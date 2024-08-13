@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: istio-system
+
+resources:
+  - ./network-policy.yaml
+  - ./kiali.yaml
+  - ./rbac.yaml
+  - ./link.yaml
+  #- ./ossm-console.yaml

@@ -10,6 +10,8 @@ applications:
     source:
       path: misc4.0/etl/etl4/components/openshift-config
 
+## Virtualization
+
   openshift-virtualization:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
@@ -27,6 +29,17 @@ applications:
       namespace: openshift-operators
     source:
       path: misc4.0/etl/etl4/components/web-terminal-operator
+
+  hyperconverged-instance:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15'
+    destination:
+      namespace: openshift-cnv
+    source:
+      path: misc4.0/etl/etl4/components/hyperconverged-instance      
+
+### Storage
 
   trident-operator:
     annotations:
@@ -46,14 +59,7 @@ applications:
     source:
       path: misc4.0/etl/etl4/components/trident-configuration      
 
-  hyperconverged-instance:
-    annotations:
-      argocd.argoproj.io/compare-options: IgnoreExtraneous
-      argocd.argoproj.io/sync-wave: '15'
-    destination:
-      namespace: openshift-cnv
-    source:
-      path: misc4.0/etl/etl4/components/hyperconverged-instance  
+## Observability
 
   kube-ops-view:
     annotations:
@@ -63,6 +69,94 @@ applications:
       namespace: kube-ops-view
     source:
       path: misc4.0/etl/etl4/components/kube-ops-view   
+
+  openshift-tempo-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-tempo-operator
+    source:
+      path: misc4.0/etl/etl4/components/openshift-tempo-operator
+
+  openshift-tempo-instance:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15'
+    destination:
+      namespace: openshift-tempo-instance
+    source:
+      path: misc4.0/etl/etl4/components/openshift-tempo-instance
+
+  user-workload-monitoring:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    source:
+      path: misc4.0/etl/etl4/components/user-workload-monitoring
+
+  openshift-grafana-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-grafana-operator
+    source:
+      path: misc4.0/etl/etl4/components/openshift-grafana-operator
+
+  user-workload-grafana-instance:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15'
+    destination:
+      namespace: openshift-user-workload-grafana-instance     
+    source:
+      path: misc4.0/etl/etl4/components/user-workload-grafana-instance
+
+  minio-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5' 
+    destination:
+      namespace: openshift-minio-operator           
+    source:
+      path: misc4.0/etl/etl4/components/minio-operator  
+
+  loki-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5' 
+    destination:
+      namespace: openshift-loki-operator           
+    source:
+      path: misc4.0/etl/etl4/components/loki-operator
+
+  loki-logging-configuration:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15' 
+    destination:
+      namespace: openshift-logging           
+    source:
+      path: misc4.0/etl/etl4/components/loki-logging-configuration
+
+  openshift-logging-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5' 
+    destination:
+      namespace: openshift-logging           
+    source:
+      path: misc4.0/etl/etl4/components/openshift-logging-operator              
+
+  openshift-logging-configuration:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15' 
+    destination:
+      namespace: openshift-logging           
+    source:
+      path: misc4.0/etl/etl4/components/openshift-logging-configuration  
 
 
 # OpenShift ServiceMesh
@@ -85,14 +179,32 @@ applications:
     source:
       path: misc4.0/etl/etl4/components/servicemesh-control-plane
 
-  # servicemesh-configuration:
-  #   annotations:
-  #     argocd.argoproj.io/compare-options: IgnoreExtraneous
-  #     argocd.argoproj.io/sync-wave: '25'
-  #   destination:
-  #     namespace: istio-system
-  #   source:
-  #     path: misc4.0/etl/etl4/components/servicemesh-configuration          
+  servicemesh-configuration:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '25'
+    destination:
+      namespace: istio-system
+    source:
+      path: misc4.0/etl/etl4/components/servicemesh-configuration  
+
+  kiali-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-kiali-operator
+    source:
+      path: misc4.0/etl/etl4/components/kiali-operator
+
+  kiali:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15'
+    destination:
+      namespace: istio-system
+    source:
+      path: misc4.0/etl/etl4/components/kiali           
 
 
                           

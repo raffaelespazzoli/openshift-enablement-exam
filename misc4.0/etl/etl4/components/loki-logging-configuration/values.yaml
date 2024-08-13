@@ -1,0 +1,22 @@
+secrets:
+  name: loki-env-configuration
+  accessKey: loki 
+  secretKey: lokiloki
+tenant:
+  configuration:
+    name: loki-env-configuration
+  name: loki  
+  pools:
+    - name: pool-0
+      servers: 1
+      storageClassName: gp3-csi
+      # these values are not recommended in production. They are here just to keep the costs constrained.
+      volumesPerServer: 1
+      size: 240Gi      
+  buckets:
+    - name: loki
+      objectLock: false
+  certificate:    
+    requestAutoCert: false         
+
+                        

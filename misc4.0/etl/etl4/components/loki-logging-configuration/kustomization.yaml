@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: openshift-logging
+
+resources:
+  - ./secret.yaml
+  - ./loki.yaml  
+  - ./loki-tenant-route.yaml
+  - ./rbac.yaml
+
+
+helmCharts:
+  - name: tenant
+    repo: https://operator.min.io
+    releaseName: loki
+    namespace: openshift-logging
+    valuesFile: values.yaml      

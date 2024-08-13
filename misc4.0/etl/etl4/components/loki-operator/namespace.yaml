@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-loki-operator
+  labels:
+    openshift.io/cluster-monitoring: 'true'
+    argocd.argoproj.io/managed-by: openshift-gitops

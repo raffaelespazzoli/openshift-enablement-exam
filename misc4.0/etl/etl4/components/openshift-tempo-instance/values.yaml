@@ -1,0 +1,19 @@
+secrets:
+  name: tempo-env-configuration
+  accessKey: tempo 
+  secretKey: tempotempo
+tenant:
+  configuration:
+    name: tempo-env-configuration
+  name: tempo  
+  pools:
+    - name: pool-0
+      servers: 1
+      storageClassName: gp3-csi
+  buckets:
+    - name: tempo
+      objectLock: false
+  certificate:    
+    requestAutoCert: false         
+
+                        

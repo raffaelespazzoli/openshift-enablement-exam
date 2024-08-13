@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: openshift-tempo-instance
+
+resources:
+  - ./namespace.yaml
+  - ./tempo-stack.yaml
+  - ./link.yaml
+  - ./rbac.yaml  
+  - ./tempo-tenant-route.yaml  
+  - ./tempo-tenant-secret.yaml
+
+helmGlobals:
+  chartHome: ../../.helm/charts
+
+helmCharts:
+  - name: tenant
+    repo: https://operator.min.io
+    releaseName: tempo
+    namespace: openshift-tempo-instance
+    valuesFile: values.yaml
+  - name: oauth-proxy
+    releaseName: oauth-proxy
+    namespace: openshift-tempo-instance
+    valuesInline:
+      tempo:
+        url: http://tempo-tempo-query-frontend.openshift-tempo-instance.svc.cluster.local:16686
+      ingress:
+        route:
+          host: tempo.apps.${CLUSTER_BASE_DOMAIN}            

@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "oauth-proxy.fullname" . }}
+  labels:
+    {{- include "oauth-proxy.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "oauth-proxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "oauth-proxy.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "oauth-proxy.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - '-provider=openshift'
+            - '-pass-basic-auth=false'
+            - '-https-address=:9091'
+            - '-http-address='
+            - '-email-domain=*'
+            - '-upstream={{ .Values.tempo.url }}'
+            - '-openshift-sar={"resource": "namespaces", "verb": "get"}'
+            - '-openshift-delegate-urls={"/": {"resource": "namespaces", "verb": "get"}}'
+            - '-tls-cert=/etc/tls/private/tls.crt'
+            - '-tls-key=/etc/tls/private/tls.key'
+            - '-client-secret-file=/var/run/secrets/kubernetes.io/serviceaccount/token'
+            - '-cookie-secret-file=/etc/proxy/secrets/session_secret'
+            - '-openshift-service-account={{ include "oauth-proxy.serviceAccountName" . }}'
+            - '-openshift-ca=/etc/pki/tls/cert.pem'
+            - '-openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
+            - '-openshift-ca=/etc/proxy/certs/ca-bundle.crt'
+            - '-skip-auth-regex=^/metrics'
+          ports:
+            - name: https
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /etc/tls/private
+              name: {{ include "oauth-proxy.fullname" . }}-tls
+              readOnly: false
+            - mountPath: /etc/proxy/certs
+              name: {{ include "oauth-proxy.fullname" . }}-ocp-injected-certs
+              readOnly: false
+            - mountPath: /etc/proxy/secrets
+              name: {{ include "oauth-proxy.fullname" . }}-session-secret
+              readOnly: false
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: {{ include "oauth-proxy.fullname" . }}-tls
+          secret:
+            secretName: {{ include "oauth-proxy.fullname" . }}-tls
+        - name: {{ include "oauth-proxy.fullname" . }}-ocp-injected-certs
+          configMap:
+            name: {{ include "oauth-proxy.fullname" . }}-ocp-injected-certs
+        - name: {{ include "oauth-proxy.fullname" . }}-session-secret
+          secret:
+            secretName: {{ include "oauth-proxy.fullname" . }}-session-secret

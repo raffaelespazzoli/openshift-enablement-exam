@@ -1,0 +1,25 @@
+apiVersion: loki.grafana.com/v1
+kind: LokiStack
+metadata:
+  name: logging-loki 
+spec:
+  size: 1x.small 
+  storage:
+    schemas:
+      - effectiveDate: '2023-10-15'
+        version: v13
+    secret:
+      name: logging-loki-s3 
+      type: s3 
+      credentialMode: static
+  storageClassName: gp3-csi
+  tenants:
+    mode: openshift-logging
+  limits:
+    global: 
+      retention: 
+        days: 2 
+  hashRing:
+    type: memberlist
+    memberlist:
+      instanceAddrType: podIP           

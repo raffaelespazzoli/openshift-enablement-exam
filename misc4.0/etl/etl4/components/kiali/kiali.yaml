@@ -1,0 +1,79 @@
+apiVersion: kiali.io/v1alpha1
+kind: Kiali
+metadata:
+  name: kiali
+  labels:
+    app.kubernetes.io/part-of: istio
+    app.kubernetes.io/instance: istio-system
+    # maistra.io/owner-name: full-install
+    app.kubernetes.io/version: 2.4.1-1-7
+    app.kubernetes.io/component: kiali
+    # maistra-version: 2.4.1
+    # app.kubernetes.io/managed-by: maistra-istio-operator
+    # maistra.io/owner: istio-system
+    app.kubernetes.io/name: kiali
+spec:
+  # api:
+  #   namespaces:
+  #     exclude: []
+  auth:
+    strategy: openshift
+  # deployment:
+
+  #   image_pull_policy: ''
+  #   ingress:
+  #     enabled: true
+  #   namespace: istio-system
+  #   pod_labels:
+  #     sidecar.istio.io/inject: 'false'
+  #   resources:
+  #     requests:
+  #       cpu: 100m
+  #       memory: 256Mi
+  #   logger:
+  #     log_level: debug
+  external_services:
+    custom_dashboards:
+      namespace_label: kubernetes_namespace
+    grafana:
+      auth:
+        password: ciao
+        type: none
+        use_kiali_token: false
+        username: internal
+      enabled: true
+      in_cluster_url: 'http://grafana-instance-service.openshift-user-workload-grafana-instance.svc:3000'
+      url: https://user-workload-grafana.apps.${CLUSTER_BASE_DOMAIN}
+    istio:
+      config_map_name: istio-main
+      istio_sidecar_injector_config_map_name: istio-sidecar-injector-main
+      istiod_deployment_name: istiod-main
+      url_service_version: 'http://istiod-main.istio-system:15014/version'
+    prometheus:
+      auth:
+        insecure_skip_verify: true
+        type: bearer
+        use_kiali_token: true
+      query_scope:
+        mesh_id: istio-system/main
+      url: 'https://thanos-querier.openshift-monitoring.svc.cluster.local:9091'
+    tracing:
+      query_timeout: 30
+      enabled: true
+      in_cluster_url: 'http://tempo-tempo-query-frontend.openshift-tempo-instance.svc.cluster.local:16685'
+      url: https://tempo.apps.${CLUSTER_BASE_DOMAIN}
+      use_grpc: true
+      # auth:
+      #   password: {{ .Values.htpasswd }}
+      #   type: basic
+      #   use_kiali_token: false
+      #   username: internal
+      # enabled: true
+      # in_cluster_url: http://jaeger-query-internal.istio-system.svc.cluster.local
+      # namespace: istio-system
+      # service: ''
+      # url: {{ .Values.kiali.jaeger.url }}
+      # use_grpc: false
+  installation_tag: 'Kiali [istio-system]'
+  istio_namespace: istio-system
+  #version: v1.65

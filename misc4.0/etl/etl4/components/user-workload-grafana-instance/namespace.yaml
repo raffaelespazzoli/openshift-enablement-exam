@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kubernetes.io/metadata.name: openshift-user-workload-grafana-instance
+    argocd.argoproj.io/managed-by: openshift-gitops
+  name: openshift-user-workload-grafana-instance

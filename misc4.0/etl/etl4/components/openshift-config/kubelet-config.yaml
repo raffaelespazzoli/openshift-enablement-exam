@@ -1,0 +1,19 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  name: set-virt-values
+spec:
+  machineConfigPoolSelector:
+    matchLabels:
+      pools.operator.machineconfiguration.openshift.io/worker: ""
+  kubeletConfig:
+    autoSizingReserved: true
+    maxPods: 500
+    nodeStatusMaxImages: -1
+    kubeAPIBurst: 200
+    kubeAPIQPS: 100
+    evictionSoft:
+      memory.available: "50Gi"
+    evictionSoftGracePeriod:
+      memory.available: "5m"
+    evictionPressureTransitionPeriod: 0s

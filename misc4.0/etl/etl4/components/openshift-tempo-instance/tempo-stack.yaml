@@ -1,0 +1,27 @@
+apiVersion: tempo.grafana.com/v1alpha1
+kind: TempoStack
+metadata:
+  name: tempo
+spec:
+  storageSize: 35Gi
+  storage: 
+    secret:
+      name: tempo-tenant
+      type: s3
+  observability:
+    metrics:
+      createServiceMonitors: true
+      createPrometheusRules: true
+  template:
+    queryFrontend:
+      jaegerQuery: 
+        enabled: true
+        #we comment this because of the oauth-proxy in front of it.
+        # ingress:
+        #   route:
+        #     termination: edge
+        #   type: route
+        #   host: tempo.apps.${CLUSTER_BASE_DOMAIN}
+        monitorTab:
+          enabled: true
+          prometheusEndpoint: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091                  
