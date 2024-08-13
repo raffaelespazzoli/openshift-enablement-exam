@@ -1,0 +1,19 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: minio
+  namespace: openshift-operators
+  labels:
+    app.kubernetes.io/instance: minio-operator
+    app.kubernetes.io/name: operator
+    name: console
+    operators.coreos.com/minio-operator.openshift-operators: ''
+spec:
+  to:
+    kind: Service
+    name: console
+  tls:
+    termination: reencrypt
+    insecureEdgeTerminationPolicy: Redirect
+  port:
+    targetPort: https
