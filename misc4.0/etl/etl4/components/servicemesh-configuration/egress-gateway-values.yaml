@@ -1,0 +1,27 @@
+securityContext: 
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+containerSecurityContext: 
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+
+
+service:
+  # Type of service. Set to "None" to disable the service entirely
+  type: ClusterIP
+  ports:
+  - name: http2
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: 8443
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: ""
+  externalIPs: []

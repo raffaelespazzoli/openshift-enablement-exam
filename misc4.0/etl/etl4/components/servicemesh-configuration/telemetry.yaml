@@ -1,0 +1,12 @@
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: default
+spec:
+  tracing:
+  - providers:
+    - name: tempo
+    randomSamplingPercentage: 100
+  metrics:
+  - providers:
+    - name: prometheus  

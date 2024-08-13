@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: tempo-oltp-http
+spec:
+  hosts:
+  - tempo-tempo-distributor.openshift-tempo-instance.svc.cluster.local
+  location: MESH_EXTERNAL
+  ports:
+  - number: 4317
+    # number: 9411
+    name: otlp-grpc
+    protocol: GRPC
+  resolution: DNS

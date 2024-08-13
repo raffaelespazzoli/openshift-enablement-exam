@@ -1,0 +1,9 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: disable-mtls-for-tempo
+spec:
+  host: tempo-tempo-distributor.openshift-tempo-instance.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE

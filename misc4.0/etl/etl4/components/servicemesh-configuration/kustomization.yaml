@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: istio-system
+
+resources:
+  - ./telemetry.yaml  
+  - ./tempo-destination-rule.yaml
+  - ./tempo-service-entry.yaml
+
+helmGlobals:
+  chartHome: ../../.helm/charts
+
+helmCharts:
+  - name: gateway
+    releaseName: istio-ingressgateway
+    namespace: istio-system
+    valuesFile: ingress-gateway-values.yaml
+
+  - name: gateway
+    releaseName: istio-egressgateway
+    namespace: istio-system
+    valuesFile: egress-gateway-values.yaml    
