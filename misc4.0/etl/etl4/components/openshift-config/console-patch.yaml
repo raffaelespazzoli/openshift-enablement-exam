@@ -9,5 +9,5 @@ spec:
   - logging-view-plugin
   - monitoring-plugin
   - gitops-plugin
-  - pipelines-console-plugin
-  - netobserv-plugin
+  # - pipelines-console-plugin
+  # - netobserv-plugin

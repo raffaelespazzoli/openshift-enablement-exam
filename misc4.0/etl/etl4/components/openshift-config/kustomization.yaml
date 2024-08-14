@@ -14,7 +14,7 @@ resources:
 #  - ./oauth.yaml
   - ./admin-role-binding.yaml
   - ./olm-patch.yaml
-#  - ./console-patch.yaml
+  - ./console-patch.yaml
   - ./admin-group.yaml
 #  - ./default-router.yaml
 
