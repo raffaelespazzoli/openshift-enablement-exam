@@ -3,7 +3,7 @@ kind: ServiceMeshControlPlane
 metadata:
   name: main
 spec:
-  version: v2.5
+  version: v2.6
   mode: ClusterWide
   # Configuring the distributed tracing platform (Tempo)
   meshConfig:

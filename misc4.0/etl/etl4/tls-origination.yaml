@@ -24,12 +24,18 @@ spec:
   servers:
   - port:
       number: 8080
+      name: http-port-for-tls-origination
+      protocol: HTTP2
+    hosts:
+    - edition.cnn.com
+  - port:
+      number: 8443
       name: https-port-for-tls-origination
       protocol: HTTPS
     hosts:
     - edition.cnn.com
     tls:
-      mode: ISTIO_MUTUAL
+      mode: ISTIO_MUTUAL      
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -44,7 +50,7 @@ spec:
         simple: ROUND_ROBIN
       portLevelSettings:
       - port:
-          number: 80
+          number: 443
         tls:
           mode: ISTIO_MUTUAL
           sni: edition.cnn.com
@@ -69,12 +75,12 @@ spec:
         host: istio-egressgateway.istio-system.svc.cluster.local
         subset: cnn
         port:
-          number: 80
+          number: 443
       weight: 100
   - match:
     - gateways:
       - mesh-egress
-      port: 80
+      port: 443
     route:
     - destination:
         host: edition.cnn.com
