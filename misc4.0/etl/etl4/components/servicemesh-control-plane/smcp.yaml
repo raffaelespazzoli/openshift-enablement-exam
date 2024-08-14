@@ -23,7 +23,7 @@ spec:
     type: None
   security:
     dataPlane:
-      mtls: true
+      mtls: false
       automtls: true
     controlPlane:
       mtls: true      
