@@ -29,7 +29,8 @@ spec:
     hosts:
     - edition.cnn.com
     tls:
-      mode: ISTIO_MUTUAL     
+      mode: ISTIO_MUTUAL
+           
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -69,12 +70,12 @@ spec:
         host: istio-egressgateway.istio-system.svc.cluster.local
         subset: cnn
         port:
-          number: 443
+          number: 80
       weight: 100
   - match:
     - gateways:
       - mesh-egress
-      port: 443
+      port: 80
     route:
     - destination:
         host: edition.cnn.com
