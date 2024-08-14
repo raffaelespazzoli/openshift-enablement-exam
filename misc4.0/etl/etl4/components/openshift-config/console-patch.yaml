@@ -9,5 +9,6 @@ spec:
   - logging-view-plugin
   - monitoring-plugin
   - gitops-plugin
+  - kubevirt-plugin
   # - pipelines-console-plugin
   # - netobserv-plugin
