@@ -1,6 +1,24 @@
       
 applications: 
 
+# basic
+
+  namespace-configuration-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: namespace-configuration-operator
+    source:
+      path: components/namespace-configuration-operator
+
+  namespace-configurations:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15'
+    source:
+      path: components/namespace-configurations
+
   openshift-config:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous

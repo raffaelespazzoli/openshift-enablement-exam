@@ -1,0 +1,13 @@
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: namespace-configuration-operator 
+  namespace: namespace-configuration-operator 
+spec:
+  channel: alpha
+  installPlanApproval: Automatic
+  name: namespace-configuration-operator 
+  source: community-operators
+  sourceNamespace: openshift-marketplace
+

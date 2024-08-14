@@ -1,0 +1,28 @@
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: NamespaceConfig
+metadata:
+  name: ai-datasources
+spec:
+  labelSelector:
+    matchLabels:
+      opendatahub.io/dashboard: "true"
+  templates:  
+    - objectTemplate: |
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: dsc-tenant-s3
+          namespace: {{ .Name }}
+          labels:
+            opendatahub.io/dashboard: 'true'
+            opendatahub.io/managed: 'true'
+          annotations:
+            reflector.v1.k8s.emberstack.com/reflects: "redhat-ods-applications/dsc-tenant-s3"  
+            opendatahub.io/connection-type: s3
+            openshift.io/display-name: dsc-shared
+        data: {}
+      excludedPaths:	
+        - .metadata	
+        - .status	
+        - .spec.replicas
+        - .data           
