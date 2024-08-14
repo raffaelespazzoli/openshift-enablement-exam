@@ -9,7 +9,7 @@ spec:
   meshConfig:
     discoverySelectors:
       - matchLabels:
-          servicemesh: "true"  
+          maistra.io/member-of: istio-system
     extensionProviders:
       - name: tempo
         # zipkin:
