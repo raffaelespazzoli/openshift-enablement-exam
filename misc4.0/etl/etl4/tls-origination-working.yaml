@@ -23,7 +23,7 @@ spec:
     istio: egressgateway
   servers:
   - port:
-      number: 8443
+      number: 80
       name: https-port-for-tls-origination
       protocol: HTTPS
     hosts:
@@ -45,7 +45,7 @@ spec:
         simple: ROUND_ROBIN
       portLevelSettings:
       - port:
-          number: 8443
+          number: 80
         tls:
           mode: ISTIO_MUTUAL
           sni: edition.cnn.com
@@ -70,12 +70,12 @@ spec:
         host: istio-egressgateway.istio-system.svc.cluster.local
         subset: cnn
         port:
-          number: 8443
+          number: 80
       weight: 100
   - match:
     - gateways:
       - mesh-egress
-      port: 8443
+      port: 80
     route:
     - destination:
         host: edition.cnn.com
