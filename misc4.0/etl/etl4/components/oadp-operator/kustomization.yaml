@@ -6,3 +6,5 @@ namespace: openshift-adp
 resources:
   - namespace.yaml
   - operator.yaml
+
+

@@ -1,0 +1,55 @@
+apiVersion: oadp.openshift.io/v1alpha1
+kind: DataProtectionApplication
+metadata:
+  name: dpa
+  namespace: openshift-adp
+spec:
+  configuration:
+    velero:
+      podConfig:
+        resourceAllocations: 
+          limits:
+            cpu: "1"
+            memory: 1024Mi
+          requests:
+            cpu: 200m
+            memory: 256Mi
+      defaultPlugins:
+        - openshift 
+        - csi
+        - kubevirt
+      resourceTimeout: 10m 
+    nodeAgent: 
+      enable: true 
+      uploaderType: kopia            
+  backupLocations:
+    - name: default
+      velero:
+        provider: aws
+        default: true
+        objectStorage:
+          bucket: oadp
+          prefix: "velero-backup"
+        config:
+          region: ""
+          profile: "backupStorage"
+          s3ForcePathStyle: "true"
+          insecureSkipTLSVerify: "false" 
+          s3Url: http://minio.openshift-logging.svc.cluster.local
+        credential:
+          key: cloud
+          name: cloud-credentials
+  snapshotLocations:
+    - velero:
+        provider: aws
+        default: true
+        objectStorage:
+          bucket: oadp
+          prefix: "velero-snapshot"        
+        config:
+          region: ""
+          profile: "volumeSnapshot"
+          insecureSkipTLSVerify: "false"
+        credential:
+          key: cloud
+          name: cloud-credentials          
