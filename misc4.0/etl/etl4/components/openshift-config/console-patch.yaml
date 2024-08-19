@@ -10,5 +10,6 @@ spec:
   - monitoring-plugin
   - gitops-plugin
   - kubevirt-plugin
+  - nmstate-console-plugin
   # - pipelines-console-plugin
   # - netobserv-plugin
