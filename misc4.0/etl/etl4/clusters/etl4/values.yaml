@@ -55,7 +55,16 @@ applications:
     destination:
       namespace: openshift-cnv
     source:
-      path: misc4.0/etl/etl4/components/hyperconverged-instance      
+      path: misc4.0/etl/etl4/components/hyperconverged-instance 
+
+  nmstate-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-nmstate
+    source:
+      path: misc4.0/etl/etl4/components/nmstate-operator          
 
 ### Storage
 
