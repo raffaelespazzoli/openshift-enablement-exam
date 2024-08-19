@@ -17,6 +17,7 @@ resources:
   - ./console-patch.yaml
   - ./admin-group.yaml
 #  - ./default-router.yaml
+  - network.yaml
 
 # generatorOptions:
 #  disableNameSuffixHash: true  

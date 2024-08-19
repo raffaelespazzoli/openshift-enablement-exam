@@ -1,0 +1,20 @@
+apiVersion: operator.openshift.io/v1
+kind: Network
+metadata:
+  name: cluster
+  annotations:
+    argocd.argoproj.io/sync-options: Delete=false,ServerSideApply=true  
+spec:
+  additionalNetworks:
+  - name: whereabouts-shim
+    namespace: default
+    rawCNIConfig: |-
+      {
+       "name": "whereabouts-shim",
+       "cniVersion": "0.3.1",
+       "type": "bridge",
+       "ipam": {
+         "type": "whereabouts"
+       }
+      }
+    type: Raw
