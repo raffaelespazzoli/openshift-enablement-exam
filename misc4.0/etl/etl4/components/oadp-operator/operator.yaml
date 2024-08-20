@@ -3,7 +3,7 @@ kind: Subscription
 metadata:
   name: openshift-oadp
 spec:
-  channel: stable
+  channel: stable-1.4
   installPlanApproval: Automatic
   name: redhat-oadp-operator
   source: redhat-operators
