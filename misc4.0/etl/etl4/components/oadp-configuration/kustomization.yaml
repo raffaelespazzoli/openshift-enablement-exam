@@ -8,6 +8,7 @@ resources:
   - rbac.yaml
   - credentials-velero-secret.yaml
   - data-protection.yaml
+  - backup-schedule.yaml
 
 helmCharts:
   - name: tenant
