@@ -10,5 +10,6 @@ spec:
     includedNamespaces:
     - vm-tests
     storageLocation: dpa-1 
-    defaultVolumesToFsBackup: true 
+    defaultVolumesToFsBackup: false 
     ttl: 720h0m0s
+    snapshotMoveData: true
