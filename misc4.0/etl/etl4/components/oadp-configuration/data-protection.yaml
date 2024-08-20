@@ -35,7 +35,7 @@ spec:
           profile: "backupStorage"
           s3ForcePathStyle: "true"
           insecureSkipTLSVerify: "false" 
-          s3Url: http://minio.openshift-adp.svc:9000
+          s3Url: http://minio.openshift-adp.svc:80
         credential:
           key: cloud
           name: cloud-credentials       
