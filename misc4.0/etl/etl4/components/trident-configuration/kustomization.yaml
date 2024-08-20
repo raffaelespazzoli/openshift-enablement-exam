@@ -4,5 +4,5 @@ namespace: netapp-trident
 
 resources:
   - ontap-nas.yaml
-  #- ontap-san.yaml
+  - ontap-san.yaml
   - snapshot-class.yaml
