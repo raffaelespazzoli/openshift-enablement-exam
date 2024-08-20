@@ -4,7 +4,7 @@ metadata:
   name: <schedule>
   namespace: openshift-adp
 spec:
-  schedule: "*/60 * * * *"
+  schedule: 0 * * * *
   template:
     hooks: {}
     includedNamespaces:
