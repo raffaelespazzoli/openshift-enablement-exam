@@ -1,7 +1,7 @@
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
-  name: <schedule>
+  name: vm-backup-schedule
   namespace: openshift-adp
 spec:
   schedule: 0 * * * *
