@@ -21,9 +21,6 @@ spec:
         - aws
       resourceTimeout: 10m
       defaultSnapshotMoveData: true
-      defaultVolumesToFSBackup: 
-        featureFlags:
-        - EnableCSI       
     nodeAgent: 
       enable: true 
       uploaderType: kopia            
