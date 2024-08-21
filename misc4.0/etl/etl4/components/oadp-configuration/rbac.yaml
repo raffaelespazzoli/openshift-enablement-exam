@@ -10,3 +10,18 @@ subjects:
 - kind: ServiceAccount
   name: oadp-sa
   namespace: openshift-adp
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: oadp-velero-ui-nonroot-v2-scc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:nonroot-v2
+subjects:
+- kind: ServiceAccount
+  name: velero-ui-vui-api-sa
+  namespace: openshift-adp
+
+  
