@@ -38,7 +38,7 @@ uiNp:
 #
 uiIngress:
   enabled: true
-  # ingressClassName: nginx
+  ingressClassName: openshift-default
   # metadata:
   #   annotations:
   #     cert-manager.io/cluster-issuer: "letsencrypt-prod" 
