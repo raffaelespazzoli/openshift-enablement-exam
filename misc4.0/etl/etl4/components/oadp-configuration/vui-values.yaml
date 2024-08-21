@@ -1,0 +1,98 @@
+#
+# Global
+#
+global:
+  veleroNamespace: openshift-adp
+  # kubernetesClusterDomain: my-cluster
+  # agentMode: false
+  # clusterName: <your-cluster-name>
+
+#
+# API Config
+#
+apiConfig:
+  #
+  awsAccessKeyId: <awsAccessKeyId>
+  awsSecretAccessKey: <awsSecretAccessKey>
+  # debugLevel: debug
+  veleroCliVersion: v1.12.2
+  # apiTokenExpirationMin: "30"
+  # apiTokenRefreshExpirationDays: "7"
+  storage:
+    enabled: false
+    storageClassName: ontap-san
+
+#
+# You can use nodeport or ingress according to your needs
+#
+#
+# Nodeport
+#
+uiNp:
+  enabled: false
+  ip: "10.10.0.100"  # any ip address of your cluster
+  apiPort: "30001"
+  uiPort: "30002"
+#
+# Ingress
+#
+uiIngress:
+  enabled: true
+  # ingressClassName: nginx
+  # metadata:
+  #   annotations:
+  #     cert-manager.io/cluster-issuer: "letsencrypt-prod" 
+  spec:
+    tls:
+    - hosts:
+      - velero.apps.${CLUSTER_BASE_DOMAIN}
+  #    secretName: velero-ui-tls
+
+#
+# Watchdog Cron
+#
+report:
+  schedule: 0 8 * * *
+
+#
+# Watchdog Daemon
+#
+watchdogConfig:
+  # config
+  k8SInclusterMode: "True"
+  # k8sVeleroNamespace: "velero"
+  processClusterName: <your-cluster-name>
+  # processCycleSec: 300
+  # expiresDaysWarning: 29
+  notificationSkipCompleted: "False"
+  # notificationSkipInProgress: "True"
+  # notificationSkipRemoved: "True"
+  # notificationSkipDeleting: "True"
+   
+  # email
+  emailEnable: "False"
+  emailAccount: <your-email>
+  emailPassword: <your-password>
+  emailRecipients: <email-recipents-comma-saparted>
+  emailSmtpPort: <smtp-port>
+  emailSmtpServer: <smtp-server>
+  
+  # slack
+  slackEnable: "False"
+  slackChannel: <channel-id>  
+  slackToken: <token>
+  
+  # telegram
+  telegramEnable: "False"
+  telegramChatId: "<telegram-chat-id>"
+  telegramToken: "<telegram-token>"
+
+#
+# uiConfig
+# you can enable an experimental function to add a second cluster to the login screen
+#
+# uiConfig:
+  # experimental: true
+  # exNextPublicVeleroApiName2: "your-cluster-name-2"
+  # exNextPublicVeleroApiUrl2: "https://your-url-api-2/api"
+  # exNextPublicVeleroApiWs2: "wss://your-url-api-2"

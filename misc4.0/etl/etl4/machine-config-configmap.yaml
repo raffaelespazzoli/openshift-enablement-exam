@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: multipath-machine-config
+  namespace: clusters
+data:
+  config: |
+    apiVersion: machineconfiguration.openshift.io/v1
+    kind: MachineConfig
+    metadata:
+      name: multipath-worker
+      labels:
+        machineconfiguration.openshift.io/role: worker
+    spec:    
+      config:
+        ignition:
+          version: 3.4.0                                       
+        storage:
+          files:
+            - contents:
+              # defaults {
+              # user_friendly_names no
+              # max_fds max
+              # flush_on_last_del yes
+              # queue_without_daemon no
+              # dev_loss_tmo infinity
+              # fast_io_fail_tmo 5
+              # }
+              # # All data in the following section must be specific to your system.
+              # blacklist {
+              # wwid "SAdaptec*"
+              # devnode "^hd[a-z]"
+              # devnode "^(ram|raw|loop|fd|md|dm-|sr|scd|st)[0-9]*"
+              # devnode "^cciss.*"
+              # }
+              # devices {
+              # device {
+              # vendor "NETAPP"
+              # product "LUN"
+              # path_grouping_policy group_by_prio
+              # features "2 pg_init_retries 50"
+              # no_path_retry queue
+              # prio "alua"
+              # path_checker tur
+              # failback immediate
+              # path_selector "round-robin 0"
+              # hardware_handler "1 alua"
+              # rr_weight uniform
+              # rr_min_io 128
+              # }
+              # }
+                source: 'data:text/plain;charset=utf-8;base64,ZGVmYXVsdHMgewp1c2VyX2ZyaWVuZGx5X25hbWVzIG5vCm1heF9mZHMgbWF4CmZsdXNoX29uX2xhc3RfZGVsIHllcwpxdWV1ZV93aXRob3V0X2RhZW1vbiBubwpkZXZfbG9zc190bW8gaW5maW5pdHkKZmFzdF9pb19mYWlsX3RtbyA1Cn0KIyBBbGwgZGF0YSBpbiB0aGUgZm9sbG93aW5nIHNlY3Rpb24gbXVzdCBiZSBzcGVjaWZpYyB0byB5b3VyIHN5c3RlbS4KYmxhY2tsaXN0IHsKd3dpZCAiU0FkYXB0ZWMqIgpkZXZub2RlICJeaGRbYS16XSIKZGV2bm9kZSAiXihyYW18cmF3fGxvb3B8ZmR8bWR8ZG0tfHNyfHNjZHxzdClbMC05XSoiCmRldm5vZGUgIl5jY2lzcy4qIgp9CmRldmljZXMgewpkZXZpY2Ugewp2ZW5kb3IgIk5FVEFQUCIKcHJvZHVjdCAiTFVOIgpwYXRoX2dyb3VwaW5nX3BvbGljeSBncm91cF9ieV9wcmlvCmZlYXR1cmVzICIyIHBnX2luaXRfcmV0cmllcyA1MCIKbm9fcGF0aF9yZXRyeSBxdWV1ZQpwcmlvICJhbHVhIgpwYXRoX2NoZWNrZXIgdHVyCmZhaWxiYWNrIGltbWVkaWF0ZQpwYXRoX3NlbGVjdG9yICJyb3VuZC1yb2JpbiAwIgpoYXJkd2FyZV9oYW5kbGVyICIxIGFsdWEiCnJyX3dlaWdodCB1bmlmb3JtCnJyX21pbl9pbyAxMjgKfQp9Cgo='
+              mode: 420
+              overwrite: true
+              path: /etc/multipath.conf

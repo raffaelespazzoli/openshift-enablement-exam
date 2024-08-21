@@ -7,3 +7,4 @@ resources:
   - namespace.yaml
   - nad-ovs-l2.yaml
   - vm1-rhel9.yaml
+  - vm2-rhel9.yaml  

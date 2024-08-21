@@ -9,10 +9,18 @@ resources:
   - credentials-velero-secret.yaml
   - data-protection.yaml
   - backup-schedule.yaml
+  - service-monitor.yaml
+  - prometheus-rule.yaml
 
 helmCharts:
   - name: tenant
     repo: https://operator.min.io
     releaseName: oadp
     namespace: openshift-adp
-    valuesFile: values.yaml    
+    valuesFile: values.yaml
+
+  - name: velero-ui
+    repo: https://seriohub.github.io/velero-helm/
+    releaseName: vui
+    namespace: openshift-adp
+    valuesFile: vui-values.yaml        
