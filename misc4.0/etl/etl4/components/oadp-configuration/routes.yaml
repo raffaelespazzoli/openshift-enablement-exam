@@ -10,7 +10,7 @@ spec:
     name: velero-ui-vui-ui
     weight: 100
   port:
-    targetPort: 80
+    targetPort: 3000
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
@@ -28,7 +28,7 @@ spec:
     name: velero-ui-vui-api
     weight: 100
   port:
-    targetPort: 80
+    targetPort: 8001
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
@@ -46,7 +46,7 @@ spec:
     name: velero-ui-vui-api
     weight: 100
   port:
-    targetPort: 80
+    targetPort: 8001
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
