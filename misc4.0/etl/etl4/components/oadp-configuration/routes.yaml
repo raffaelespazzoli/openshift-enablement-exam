@@ -4,7 +4,7 @@ metadata:
   name: velero-ui
 spec:
   host: velero-ui.apps.${CLUSTER_BASE_DOMAIN}
-  path: /
+  path: /ciao
   to:
     kind: Service
     name: velero-ui-vui-ui
@@ -28,7 +28,7 @@ spec:
     name: velero-ui-vui-api
     weight: 100
   port:
-    targetPort: velero-ui
+    targetPort: 8001
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
@@ -46,7 +46,7 @@ spec:
     name: velero-ui-vui-api
     weight: 100
   port:
-    targetPort: velero-ui
+    targetPort: 8001
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
