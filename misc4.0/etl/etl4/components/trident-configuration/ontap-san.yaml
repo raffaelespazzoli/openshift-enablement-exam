@@ -23,6 +23,8 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: ontap-san
+  annotations:
+    storageclass.kubevirt.io/is-default-virt-class: "true"
 provisioner: csi.trident.netapp.io
 reclaimPolicy: Delete
 allowVolumeExpansion: true

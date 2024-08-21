@@ -1,0 +1,14 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: network-ovs-l2
+spec:
+  config: |
+    {
+      "name": "network-ovs-l2",
+      "type": "ovn-k8s-cni-overlay",
+      "cniVersion": "0.3.1",
+      "topology": "layer2",
+      "netAttachDefName": "vm-tests/network-ovs-l2",
+      "subnets": "10.100.200.0/24"
+    }
