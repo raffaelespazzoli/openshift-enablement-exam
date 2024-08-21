@@ -38,10 +38,12 @@ uiNp:
 #
 uiIngress:
   enabled: true
-  ingressClassName: null
-  # metadata:
+  ingressClassName: openshift-default
+  metadata:
   #   annotations:
   #     cert-manager.io/cluster-issuer: "letsencrypt-prod" 
+    annotations:
+      route.openshift.io/termination: edge  
   spec:
     tls:
     - hosts:
