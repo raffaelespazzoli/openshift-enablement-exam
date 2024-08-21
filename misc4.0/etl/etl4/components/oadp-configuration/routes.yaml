@@ -28,7 +28,7 @@ spec:
     name: velero-ui-vui-api
     weight: 100
   port:
-    targetPort: velero-api
+    targetPort: api
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
