@@ -3,7 +3,7 @@ apiVersion: route.openshift.io/v1
 metadata:
   name: velero-ui
 spec:
-  host: velero-ui.apps.${CLUSTER_BASE_DOMAIN}
+  host: velero.apps.${CLUSTER_BASE_DOMAIN}
   path: /
   to:
     kind: Service
@@ -21,7 +21,7 @@ apiVersion: route.openshift.io/v1
 metadata:
   name: velero-api
 spec:
-  host: velero-ui.apps.${CLUSTER_BASE_DOMAIN}
+  host: velero.apps.${CLUSTER_BASE_DOMAIN}
   path: /api
   to:
     kind: Service
@@ -39,7 +39,7 @@ apiVersion: route.openshift.io/v1
 metadata:
   name: velero-ws
 spec:
-  host: velero-ui.apps.${CLUSTER_BASE_DOMAIN}
+  host: velero.apps.${CLUSTER_BASE_DOMAIN}
   path: /ws
   to:
     kind: Service
