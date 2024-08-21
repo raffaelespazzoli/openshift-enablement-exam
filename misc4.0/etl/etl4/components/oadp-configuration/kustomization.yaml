@@ -19,8 +19,8 @@ helmCharts:
     namespace: openshift-adp
     valuesFile: values.yaml
 
-  - name: velero-ui
+  - name: vui
     repo: https://seriohub.github.io/velero-helm/
-    releaseName: vui
+    releaseName: velero-ui
     namespace: openshift-adp
     valuesFile: vui-values.yaml        
