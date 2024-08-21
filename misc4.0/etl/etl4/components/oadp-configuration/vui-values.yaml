@@ -5,7 +5,7 @@ global:
   veleroNamespace: openshift-adp
   # kubernetesClusterDomain: my-cluster
   # agentMode: false
-  # clusterName: <your-cluster-name>
+  clusterName: etl4
 
 #
 # API Config
@@ -63,7 +63,7 @@ watchdogConfig:
   # config
   k8SInclusterMode: "True"
   # k8sVeleroNamespace: "velero"
-  processClusterName: <your-cluster-name>
+  processClusterName: etl4
   # processCycleSec: 300
   # expiresDaysWarning: 29
   notificationSkipCompleted: "False"
