@@ -4,7 +4,7 @@ metadata:
   name: velero-ui
 spec:
   host: velero-ui.apps.${CLUSTER_BASE_DOMAIN}
-  path: /ciao
+  path: /
   to:
     kind: Service
     name: velero-ui-vui-ui
