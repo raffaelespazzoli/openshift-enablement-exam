@@ -1,0 +1,53 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: velero-ui
+spec:
+  host: velero-ui.apps.etl4.ocp.rht-labs.com
+  path: /
+  to:
+    kind: Service
+    name: velero-ui-vui-ui
+    weight: 100
+  port:
+    targetPort: 80
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: velero-api
+spec:
+  host: velero-ui.apps.etl4.ocp.rht-labs.com
+  path: /api
+  to:
+    kind: Service
+    name: velero-ui-vui-api
+    weight: 100
+  port:
+    targetPort: 80
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None  
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: velero-ws
+spec:
+  host: velero-ui.apps.etl4.ocp.rht-labs.com
+  path: /ws
+  to:
+    kind: Service
+    name: velero-ui-vui-api
+    weight: 100
+  port:
+    targetPort: 80
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

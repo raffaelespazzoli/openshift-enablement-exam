@@ -11,6 +11,7 @@ resources:
   - backup-schedule.yaml
   - service-monitor.yaml
   - prometheus-rule.yaml
+  - routes.yaml
 
 helmCharts:
   - name: tenant
