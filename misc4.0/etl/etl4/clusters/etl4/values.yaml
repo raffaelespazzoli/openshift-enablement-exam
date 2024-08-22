@@ -102,7 +102,16 @@ applications:
     destination:
       namespace: trilio-system
     source:
-      path: misc4.0/etl/etl4/components/trilio-operator                               
+      path: misc4.0/etl/etl4/components/trilio-operator
+
+  trilio-instance:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15'
+    destination:
+      namespace: trilio-system
+    source:
+      path: misc4.0/etl/etl4/components/trilio-instance                              
 
 ### Storage
 
