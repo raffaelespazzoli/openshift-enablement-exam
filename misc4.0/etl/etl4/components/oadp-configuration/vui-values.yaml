@@ -15,7 +15,7 @@ apiConfig:
   awsAccessKeyId: ciao
   awsSecretAccessKey: ciaociao
   # debugLevel: debug
-  veleroCliVersion: v1.12.2
+  veleroCliVersion: v1.14.0
   # apiTokenExpirationMin: "30"
   # apiTokenRefreshExpirationDays: "7"
   storage:

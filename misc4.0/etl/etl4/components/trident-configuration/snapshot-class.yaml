@@ -5,6 +5,6 @@ metadata:
   labels:
     velero.io/csi-volumesnapshot-class: "true" 
   annotations:
-    snapshot.storage.kubernetes.io/is-default-class: true  
+    snapshot.storage.kubernetes.io/is-default-class: "true"  
 driver: csi.trident.netapp.io
 deletionPolicy: Delete
