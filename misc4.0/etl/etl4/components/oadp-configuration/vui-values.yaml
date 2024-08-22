@@ -11,9 +11,9 @@ global:
 # API Config
 #
 apiConfig:
-  #
-  awsAccessKeyId: <awsAccessKeyId>
-  awsSecretAccessKey: <awsSecretAccessKey>
+  securityTokenKey: ciaociao
+  awsAccessKeyId: ciao
+  awsSecretAccessKey: ciaociao
   # debugLevel: debug
   veleroCliVersion: v1.12.2
   # apiTokenExpirationMin: "30"
