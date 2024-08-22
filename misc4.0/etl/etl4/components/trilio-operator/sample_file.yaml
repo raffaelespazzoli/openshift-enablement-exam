@@ -1,6 +1,7 @@
 run:
   namespace: default
-  storageClass: default
+  storageClass: ontap-san
+  snapshotClass: trident-snapshotclass
   cleanupOnFailure: true
   pvcStorageRequest: 1Gi
   resources:

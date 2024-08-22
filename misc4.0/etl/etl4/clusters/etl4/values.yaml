@@ -75,6 +75,8 @@ applications:
     source:
       path: misc4.0/etl/etl4/components/nmstate-instance
 
+## Backup and DR
+
   oadp-operator:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
@@ -91,7 +93,16 @@ applications:
     destination:
       namespace: openshift-adp
     source:
-      path: misc4.0/etl/etl4/components/oadp-configuration                           
+      path: misc4.0/etl/etl4/components/oadp-configuration  
+
+  trilio-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-nmstate
+    source:
+      path: misc4.0/etl/etl4/components/nmstate-operator                               
 
 ### Storage
 
