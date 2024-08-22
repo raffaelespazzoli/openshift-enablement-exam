@@ -3,6 +3,7 @@ kind: Target
 metadata:
   name: trilio-s3-target
 spec:
+  enableBrowsing: true
   type: ObjectStore
   vendor: AWS
   objectStoreCredentials:

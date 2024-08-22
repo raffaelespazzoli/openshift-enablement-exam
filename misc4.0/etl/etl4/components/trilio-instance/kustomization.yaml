@@ -10,6 +10,7 @@ resources:
   - backup-plan.yaml
   - retention-policy.yaml
   - schedule-policy.yaml
+  - rbac.yaml
 
 
 helmCharts:
