@@ -100,9 +100,9 @@ applications:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
       argocd.argoproj.io/sync-wave: '5'
     destination:
-      namespace: openshift-nmstate
+      namespace: trilio-system
     source:
-      path: misc4.0/etl/etl4/components/nmstate-operator                               
+      path: misc4.0/etl/etl4/components/trilio-operator                               
 
 ### Storage
 
