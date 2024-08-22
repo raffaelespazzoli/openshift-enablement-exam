@@ -37,7 +37,7 @@ uiNp:
 # Ingress
 #
 uiIngress:
-  enabled: true
+  enabled: false
   ingressClassName: openshift-default
   metadata:
   #   annotations:
