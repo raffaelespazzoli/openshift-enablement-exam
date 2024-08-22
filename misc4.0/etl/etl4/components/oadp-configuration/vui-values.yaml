@@ -11,7 +11,7 @@ global:
 # API Config
 #
 apiConfig:
-  securityTokenKey: ciaociao
+  securityTokenKey: 6e03187e035d8f6e9768f574f92fcddd4cfee41b0b3f793152c5b10013cc2859
   awsAccessKeyId: ciao
   awsSecretAccessKey: ciaociao
   # debugLevel: debug
