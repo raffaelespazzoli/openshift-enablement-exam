@@ -1,0 +1,13 @@
+kind: "Policy"
+apiVersion: "triliovault.trilio.io/v1"
+metadata:
+  name: "trilio-schedule"
+spec:
+  type: "Schedule"
+  scheduleConfig:
+    schedule:
+      - "0 0 * * *"
+      - "0 */1 * * *"
+      - "0 0 * * 0"
+      - "0 0 1 * *"
+      - "0 0 1 1 *"

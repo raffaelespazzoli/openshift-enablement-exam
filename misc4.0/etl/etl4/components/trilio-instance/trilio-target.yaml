@@ -1,0 +1,15 @@
+apiVersion: triliovault.trilio.io/v1
+kind: Target
+metadata:
+  name: trilio-s3-target
+spec:
+  type: ObjectStore
+  vendor: AWS
+  objectStoreCredentials:
+    url: "http://minio.trilio-system.svc"
+    region: minio
+    bucketName: trilio
+    credentialSecret:
+      name: trilio-target
+      namespace: trilio-system
+  thresholdCapacity: 5Gi

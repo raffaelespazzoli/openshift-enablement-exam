@@ -1,0 +1,15 @@
+apiVersion: triliovault.trilio.io/v1
+kind: Policy
+metadata:
+  name: trilio-retention
+spec:
+  type: Retention
+  default: false
+  retentionConfig:
+    latest: 2
+    weekly: 1
+    dayOfWeek: Wednesday
+    monthly: 1
+    dateOfMonth: 15
+    monthOfYear: March
+    yearly: 1

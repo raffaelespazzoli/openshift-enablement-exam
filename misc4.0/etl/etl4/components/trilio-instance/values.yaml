@@ -1,0 +1,22 @@
+secrets:
+  name: trilio-env-configuration
+  accessKey: trilio 
+  secretKey: triliotrilio
+tenant:
+  configuration:
+    name: trilio-env-configuration
+  name: trilio  
+  pools:
+    - name: pool-0
+      servers: 1
+      storageClassName: ontap-nas
+      # these values are not recommended in production. They are here just to keep the costs constrained.
+      volumesPerServer: 1
+      size: 500Gi      
+  buckets:
+    - name: trilio
+      objectLock: false
+  certificate:    
+    requestAutoCert: false         
+
+                        

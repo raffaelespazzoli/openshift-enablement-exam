@@ -12,6 +12,7 @@ resources:
   - service-monitor.yaml
   - prometheus-rule.yaml
   - routes.yaml
+  - link.yaml
 
 helmCharts:
   - name: tenant

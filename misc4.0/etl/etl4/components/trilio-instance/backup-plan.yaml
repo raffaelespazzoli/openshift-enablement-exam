@@ -1,0 +1,9 @@
+apiVersion: triliovault.trilio.io/v1
+kind: BackupPlan
+metadata:
+  name: ns-backupplan
+spec:
+  backupConfig:
+    target:
+      namespace: trilio-system
+      name: trilio-s3-target
