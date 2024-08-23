@@ -1,0 +1,7 @@
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: main-ad
+spec:
+  ipAddressPools:
+   - main-pool
