@@ -1,0 +1,41 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: knative-ingress-gateway
+  namespace: knative-serving
+spec:
+  # The selector matches the ingress gateway pod labels.
+  # If you installed Istio using Helm following the standard documentation, this would be "istio=ingress"
+  selector:
+    istio: knative-ingress-gateway # use istio default controller
+  servers: 
+  - port:
+      #number: 8443
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "*"
+    tls:
+      mode: SIMPLE # enables HTTPS on this port
+      credentialName: ingress-gateway-tls # fetches certs from Kubernetes secret
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: knative-local-gateway
+  namespace: knative-serving
+spec:
+  # The selector matches the ingress gateway pod labels.
+  # If you installed Istio using Helm following the standard documentation, this would be "istio=ingress"
+  selector:
+    istio: knative-ingress-gateway # use istio default controller 
+  servers:
+    - port:
+        number: 80
+        name: https
+        protocol: HTTPS 
+      tls:
+        mode: ISTIO_MUTUAL 
+      hosts:
+        - "*"

@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./namespace.yaml
+  - ./knative-serving.yaml
+  - ./knative-eventing.yaml
+  - ./gateways.yaml
+  - ./tracing-configmap.yaml
+  - ./domain-configmap.yaml
+
+
+helmGlobals:
+  chartHome: ../../.helm/charts
+
+helmCharts:
+  - name: gateway
+    releaseName: knative-ingress-gateway
+    namespace: knative-serving
+    valuesFile: ingress-gateway-values.yaml  

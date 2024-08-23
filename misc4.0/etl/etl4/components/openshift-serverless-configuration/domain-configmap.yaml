@@ -1,0 +1,11 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Delete=false,ServerSideApply=true
+  name: config-domain
+  namespace: knative-serving
+data:
+  servls.${CLUSTER_BASE_DOMAIN}: | 
+    selector:
+      serverless-serving-ingress: "true"

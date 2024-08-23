@@ -111,7 +111,14 @@ applications:
     destination:
       namespace: trilio-system
     source:
-      path: misc4.0/etl/etl4/components/trilio-instance 
+      path: misc4.0/etl/etl4/components/trilio-instance
+    extraFields: |
+      ignoreDifferences:
+        - group: 'triliovault.trilio.io'
+          jsonPointers:
+            - /spec/objectStoreCredentials/credentialSecret/resourceVersion
+            - /spec/objectStoreCredentials/credentialSecret/uid
+          kind: Target       
 
   trilio-configuration:
     annotations:
@@ -120,7 +127,14 @@ applications:
     destination:
       namespace: trilio-system
     source:
-      path: misc4.0/etl/etl4/components/trilio-configuration                                    
+      path: misc4.0/etl/etl4/components/trilio-configuration
+    extraFields: |
+      ignoreDifferences:
+        - group: 'triliovault.trilio.io'
+          jsonPointers:
+            - /spec/backupConfig/target/resourceVersion
+            - /spec/backupConfig/target/uid
+          kind: BackupPlan                                          
 
 ### Storage
 
@@ -140,7 +154,8 @@ applications:
     destination:
       namespace: netapp-trident
     source:
-      path: misc4.0/etl/etl4/components/trident-configuration      
+      path: misc4.0/etl/etl4/components/trident-configuration
+             
 
 ## Observability
 
@@ -287,7 +302,26 @@ applications:
     destination:
       namespace: istio-system
     source:
-      path: misc4.0/etl/etl4/components/kiali           
+      path: misc4.0/etl/etl4/components/kiali 
+
+  ## OpenShift Serverless  
+
+
+  openshift-serverless:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-serverless
+    source:
+      path: misc4.0/etl/etl4/components/openshift-serverless
+
+  openshift-serverless-configuration:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '25'
+    source:
+      path: misc4.0/etl/etl4/components/openshift-configuration                    
 
 
                           

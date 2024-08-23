@@ -1,0 +1,30 @@
+securityContext: 
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+containerSecurityContext: 
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+
+maistraExpose: "false"
+
+service:
+  # Type of service. Set to "None" to disable the service entirely
+  type: LoadBalancer
+  ports:
+  - name: http2
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: 8443
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: ""
+  externalIPs: []
+  annotations:
+    service.beta.openshift.io/serving-cert-secret-name: ingress-gateway-tls

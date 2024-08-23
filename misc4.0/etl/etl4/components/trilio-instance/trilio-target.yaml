@@ -11,6 +11,8 @@ spec:
     region: minio
     bucketName: trilio
     credentialSecret:
+      apiVersion: v1	
+      kind: Secret      
       name: trilio-target
       namespace: trilio-system
   thresholdCapacity: 500Gi

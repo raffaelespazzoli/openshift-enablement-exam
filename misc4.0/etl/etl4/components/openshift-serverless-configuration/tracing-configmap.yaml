@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Delete=false,ServerSideApply=true
+  name: config-tracing
+  namespace: knative-serving
+data:
+  backend: "zipkin"
+  zipkin-endpoint: "http://tempo-tempo-distributor.openshift-tempo-instance.svc.cluster.local:9411/api/v2/spans"

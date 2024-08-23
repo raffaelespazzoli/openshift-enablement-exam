@@ -1,0 +1,26 @@
+apiVersion: operator.knative.dev/v1beta1
+kind: KnativeEventing
+metadata:
+    name: knative-eventing
+    namespace: knative-eventing
+spec:    
+  config:
+    features:
+      istio: enabled 
+  workloads: 
+  - name: pingsource-mt-adapter
+    annotations:
+      "sidecar.istio.io/inject": "true"
+      "sidecar.istio.io/rewriteAppHTTPProbers": "true"
+  - name: imc-dispatcher
+    annotations:
+      "sidecar.istio.io/inject": "true"
+      "sidecar.istio.io/rewriteAppHTTPProbers": "true"
+  - name: mt-broker-ingress
+    annotations:
+      "sidecar.istio.io/inject": "true"
+      "sidecar.istio.io/rewriteAppHTTPProbers": "true"
+  - name: mt-broker-filter
+    annotations:
+      "sidecar.istio.io/inject": "true"
+      "sidecar.istio.io/rewriteAppHTTPProbers": "true"    

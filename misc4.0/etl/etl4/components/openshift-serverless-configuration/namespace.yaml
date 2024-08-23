@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kubernetes.io/metadata.name: knative-serving
+    servicemesh: "true"
+  name: knative-serving
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kubernetes.io/metadata.name: knative-eventing
+    servicemesh: "true"
+  name: knative-eventing

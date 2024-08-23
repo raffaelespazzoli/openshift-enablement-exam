@@ -1,0 +1,33 @@
+apiVersion: operator.knative.dev/v1beta1
+kind: KnativeServing
+metadata:
+  name: knative-serving
+  namespace: knative-serving
+  annotations:
+    serverless.openshift.io/default-enable-http2: "true"
+spec:
+  workloads:
+    - name: net-istio-controller
+      env:
+        - container: controller
+          envVars:
+            - name: ENABLE_SECRET_INFORMER_FILTERING_BY_CERT_UID
+              value: 'true'
+    - annotations:
+        sidecar.istio.io/inject: "true"
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
+      name: activator
+    - annotations:
+        sidecar.istio.io/inject: "true"
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
+      name: autoscaler
+  ingress:
+    istio:
+      enabled: true
+  config:
+    features:
+      kubernetes.podspec-affinity: enabled
+      kubernetes.podspec-nodeselector: enabled
+    istio: 
+      gateway.knative-serving.knative-ingress-gateway: knative-ingress-gateway.knative-serving.svc.cluster.local
+      local-gateway.knative-serving.knative-local-gateway: knative-ingress-gateway.knative-serving.svc.cluster.local
