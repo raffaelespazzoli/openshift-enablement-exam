@@ -5,7 +5,6 @@ namespace: trilio-system
 resources:
   - namespace.yaml
   - operator.yaml
-  - rbac.yaml
 
 
  
