@@ -28,17 +28,6 @@ applications:
     source:
       path: misc4.0/etl/etl4/components/openshift-config
 
-## Virtualization
-
-  openshift-virtualization:
-    annotations:
-      argocd.argoproj.io/compare-options: IgnoreExtraneous
-      argocd.argoproj.io/sync-wave: '5'
-    destination:
-      namespace: openshift-cnv
-    source:
-      path: misc4.0/etl/etl4/components/openshift-virtualization
-
   web-terminal-operator:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
@@ -46,16 +35,56 @@ applications:
     destination:
       namespace: openshift-operators
     source:
-      path: misc4.0/etl/etl4/components/web-terminal-operator
+      path: misc4.0/etl/etl4/components/web-terminal-operator      
 
-  hyperconverged-instance:
+### Storage
+
+  trident-operator:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
-      argocd.argoproj.io/sync-wave: '15'
+      argocd.argoproj.io/sync-wave: '5'
     destination:
-      namespace: openshift-cnv
+      namespace: netapp-trident
     source:
-      path: misc4.0/etl/etl4/components/hyperconverged-instance 
+      path: misc4.0/etl/etl4/components/trident-operator
+
+  trident-configuration:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '6'
+    destination:
+      namespace: netapp-trident
+    source:
+      path: misc4.0/etl/etl4/components/trident-configuration
+
+  minio-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5' 
+    destination:
+      namespace: minio-operator           
+    source:
+      path: misc4.0/etl/etl4/components/minio-operator            
+
+## Networking    
+
+  metallb-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: metallb-system
+    source:
+      path: misc4.0/etl/etl4/components/metallb-operator
+
+  metallb-configuration:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '6'
+    destination:
+      namespace: metallb-system
+    source:
+      path: misc4.0/etl/etl4/components/metallb-configuration      
 
   nmstate-operator:
     annotations:
@@ -69,11 +98,35 @@ applications:
   nmstate-instance:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
-      argocd.argoproj.io/sync-wave: '15'
+      argocd.argoproj.io/sync-wave: '6'
     destination:
       namespace: openshift-nmstate
     source:
       path: misc4.0/etl/etl4/components/nmstate-instance
+
+## Virtualization
+
+  openshift-virtualization:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: openshift-cnv
+    source:
+      path: misc4.0/etl/etl4/components/openshift-virtualization
+
+
+
+  hyperconverged-instance:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '15'
+    destination:
+      namespace: openshift-cnv
+    source:
+      path: misc4.0/etl/etl4/components/hyperconverged-instance 
+
+
 
 ## Backup and DR
 
@@ -136,25 +189,7 @@ applications:
             - /spec/backupConfig/target/uid
           kind: BackupPlan                                          
 
-### Storage
 
-  trident-operator:
-    annotations:
-      argocd.argoproj.io/compare-options: IgnoreExtraneous
-      argocd.argoproj.io/sync-wave: '5'
-    destination:
-      namespace: netapp-trident
-    source:
-      path: misc4.0/etl/etl4/components/trident-operator
-
-  trident-configuration:
-    annotations:
-      argocd.argoproj.io/compare-options: IgnoreExtraneous
-      argocd.argoproj.io/sync-wave: '6'
-    destination:
-      namespace: netapp-trident
-    source:
-      path: misc4.0/etl/etl4/components/trident-configuration
              
 
 ## Observability
@@ -209,16 +244,7 @@ applications:
     destination:
       namespace: openshift-user-workload-grafana-instance     
     source:
-      path: misc4.0/etl/etl4/components/user-workload-grafana-instance
-
-  minio-operator:
-    annotations:
-      argocd.argoproj.io/compare-options: IgnoreExtraneous
-      argocd.argoproj.io/sync-wave: '5' 
-    destination:
-      namespace: minio-operator           
-    source:
-      path: misc4.0/etl/etl4/components/minio-operator  
+      path: misc4.0/etl/etl4/components/user-workload-grafana-instance  
 
   loki-operator:
     annotations:
