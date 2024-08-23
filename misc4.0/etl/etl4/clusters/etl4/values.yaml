@@ -321,7 +321,7 @@ applications:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
       argocd.argoproj.io/sync-wave: '25'
     source:
-      path: misc4.0/etl/etl4/components/openshift-configuration                    
+      path: misc4.0/etl/etl4/components/openshift-serverless-configuration                    
 
 
                           
