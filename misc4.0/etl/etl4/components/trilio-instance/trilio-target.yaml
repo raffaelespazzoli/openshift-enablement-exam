@@ -13,4 +13,4 @@ spec:
     credentialSecret:
       name: trilio-target
       namespace: trilio-system
-  thresholdCapacity: 5Gi
+  thresholdCapacity: 500Gi

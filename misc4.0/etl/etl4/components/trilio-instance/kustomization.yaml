@@ -13,9 +13,4 @@ resources:
   - rbac.yaml
 
 
-helmCharts:
-  - name: tenant
-    repo: https://operator.min.io
-    releaseName: trilio
-    namespace: trilio-system
-    valuesFile: values.yaml  
+  

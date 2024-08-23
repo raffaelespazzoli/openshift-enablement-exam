@@ -5,3 +5,11 @@ namespace: trilio-system
 resources:
   - namespace.yaml
   - operator.yaml
+
+
+helmCharts:
+  - name: tenant
+    repo: https://operator.min.io
+    releaseName: trilio
+    namespace: trilio-system
+    valuesFile: values.yaml  
