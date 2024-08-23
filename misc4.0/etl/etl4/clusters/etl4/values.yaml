@@ -115,8 +115,6 @@ applications:
     source:
       path: misc4.0/etl/etl4/components/openshift-virtualization
 
-
-
   hyperconverged-instance:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
@@ -188,9 +186,6 @@ applications:
             - /spec/backupConfig/target/resourceVersion
             - /spec/backupConfig/target/uid
           kind: BackupPlan                                          
-
-
-             
 
 ## Observability
 
@@ -331,7 +326,6 @@ applications:
       path: misc4.0/etl/etl4/components/kiali 
 
   ## OpenShift Serverless  
-
 
   openshift-serverless:
     annotations:

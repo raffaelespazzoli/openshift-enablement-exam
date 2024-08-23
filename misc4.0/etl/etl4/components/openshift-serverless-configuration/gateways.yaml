@@ -39,3 +39,19 @@ spec:
         mode: ISTIO_MUTUAL 
       hosts:
         - "*"
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: knative-local-gateway
+ namespace: knative-serving
+ labels:
+   experimental.istio.io/disable-gateway-port-translation: "true"
+spec:
+ type: ClusterIP
+ selector:
+   istio: knative-ingress-gateway
+ ports:
+   - name: http2
+     port: 80
+     targetPort: 8081        

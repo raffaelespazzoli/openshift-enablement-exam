@@ -6,7 +6,9 @@ metadata:
 spec:    
   config:
     features:
-      istio: enabled 
+      istio: enabled
+    observability:
+      metrics.backend-destination: "prometheus"       
   workloads: 
   - name: pingsource-mt-adapter
     annotations:
