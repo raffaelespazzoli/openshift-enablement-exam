@@ -12,5 +12,6 @@ spec:
   - kubevirt-plugin
   - nmstate-console-plugin
   - tvk-console-plugin
+  - ossmconsole
   # - pipelines-console-plugin
   # - netobserv-plugin
