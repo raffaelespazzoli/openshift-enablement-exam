@@ -7,9 +7,12 @@ resources:
   - link.yaml
   - trilio-target-secret.yaml
   - trilio-target.yaml
-  - backup-plan.yaml
-  - retention-policy.yaml
-  - schedule-policy.yaml
+  - rbac.yaml
 
 
-  
+helmCharts:
+- name: tenant
+  repo: https://operator.min.io
+  releaseName: trilio
+  namespace: trilio-system
+  valuesFile: values.yaml 
