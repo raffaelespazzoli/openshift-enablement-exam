@@ -5,5 +5,7 @@ metadata:
 spec:
   backupConfig:
     target:
+      apiVersion: triliovault.trilio.io/v1	
+      kind: Target    
       namespace: trilio-system
       name: trilio-s3-target
