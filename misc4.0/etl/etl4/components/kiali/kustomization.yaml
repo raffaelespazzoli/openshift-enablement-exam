@@ -7,4 +7,4 @@ resources:
   - ./kiali.yaml
   - ./rbac.yaml
   - ./link.yaml
-  #- ./ossm-console.yaml
+  - ./ossm-console.yaml
