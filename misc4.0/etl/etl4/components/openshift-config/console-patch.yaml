@@ -11,5 +11,6 @@ spec:
   - gitops-plugin
   - kubevirt-plugin
   - nmstate-console-plugin
+  - tvk-console-plugin
   # - pipelines-console-plugin
   # - netobserv-plugin
