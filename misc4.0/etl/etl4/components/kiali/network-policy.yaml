@@ -10,3 +10,19 @@ spec:
     - {}
   policyTypes:
     - Ingress
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: kiali-console-plugin-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: ossmconsole
+  ingress:
+    - {}
+  policyTypes:
+    - Ingress
+
+
+    
