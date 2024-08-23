@@ -1,0 +1,13 @@
+apiVersion: console.openshift.io/v1
+kind: ConsolePlugin
+metadata:
+  name: tvk-console-plugin
+spec:
+  backend:
+    service:
+      basePath: /
+      name: tvk-console-plugin
+      namespace: trilio-system
+      port: 9443
+    type: Service
+  displayName: tvk-console-plugin Plugin

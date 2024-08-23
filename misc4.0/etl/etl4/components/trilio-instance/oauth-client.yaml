@@ -1,0 +1,8 @@
+kind: OAuthClient
+apiVersion: oauth.openshift.io/v1
+metadata:
+ name: trilioclient
+secret: ciaociao
+redirectURIs:
+ - "https://trilio-system.apps.${CLUSTER_BASE_DOMAIN}/dex/callback"
+grantMethod: prompt

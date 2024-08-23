@@ -1,0 +1,7 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: serverless-tests
+  labels:
+    kubernetes.io/metadata.name: serverless-tests
+    servicemesh: "true"  

@@ -1,0 +1,18 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: test-istio-integration 
+  annotations:
+    serving.knative.openshift.io/enablePassthrough: "true"
+    serving.knative.openshift.io/disableRoute: "true"
+  labels:
+    serverless-serving-ingress: "true"     
+spec:
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true" 
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
+    spec:
+      containers:
+      - image: quay.io/redhattraining/kbe-knative-echo:v1

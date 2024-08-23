@@ -8,6 +8,12 @@ resources:
   - trilio-target-secret.yaml
   - trilio-target.yaml
   - rbac.yaml
+  - console-plugin-configmap.yaml
+  - console-plugin-deployment.yaml
+  - console-plugin-service.yaml
+  - console-plugin.yaml
+  - dex-secret.yaml
+  - oauth-client.yaml
 
 
 helmCharts:
