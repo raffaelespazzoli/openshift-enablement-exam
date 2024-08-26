@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: racnodepc1-cman
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: racnodepc1-cman
+  template:
+    metadata:
+      labels:
+        app: racnodepc1-cman
+      annotations:
+        k8s.v1.cni.cncf.io/networks: rac-pub1-nw
+    spec:
+      dnsConfig: 
+        searches:
+          - example.com  
+      enableServiceLinks: false
+      automountServiceAccountToken: false                   
+      hostname: racnodepc1-cman
+      containers:
+      - name: rac-dnsserver
+        image: oracle/client-cman:21.3.0
+        env:
+        - name: DOMAIN
+          value: example.com
+        - name: PUBLIC_HOSTNAME
+          value: racnodepc1-cman
+        - name: SCAN_NAME
+          value: racnodepc1-scan
+        - name: SCAN_IP
+          value: "172.16.1.236"
+        - name: PUBLIC_IP
+          value: "172.16.1.166"
+        ports:
+        - containerPort: 1521
+          name: oracle
+        livenessProbe:
+          exec:
+            command: 
+            - CMD-SHELL
+            - /bin/bash -c "export ORACLE_HOME=/u01/app/oracle/product/cman && export LD_LIBRARY_PATH=${ORACLE_HOME}/lib && /u01/app/oracle/product/cman/bin/cmctl show service -c ${CMAN_HOST_NAME}.${DNS_DOMAIN} | grep -q 'Instance \"cman\", status READY'"
+          periodSeconds: 30
+          timeoutSeconds: 3 
+          failureThreshold: 240

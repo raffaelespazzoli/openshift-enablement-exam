@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oracle-rac
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oracle-rac
+  template:
+    metadata:
+      labels:
+        app: oracle-rac
+        oracle-rac: "true"
+      annotations:
+        k8s.v1.cni.cncf.io/networks: rac-pub1-nw,rac-priv1-nw
+    spec:
+      dnsPolicy: None
+      dnsConfig: 
+        nameservers:
+          - "172.16.1.25"
+        searches:
+          - example.com  
+      enableServiceLinks: false
+      automountServiceAccountToken: false
+      volumes:
+      - name: boot
+        hostPath:
+          path: /boot
+      - name: secrets
+        secret:
+          secretName: oracle-rac-secrets
+      - name: asm-disk1
+        persistentVolumeClaim:
+          claimName: oracle-rac-disk1
+      - name: asm-disk2
+        persistentVolumeClaim:
+          claimName: oracle-rac-disk2
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 5Gi                    
+      hostname: racnodep1
+      containers:
+      - name: oracle-rac
+        image: quay.io/raffaelespazzoli/oracle/database-rac@sha256:1e8181e2d1a2f8f1ed6d2d626c5bbbe123ea581c34392143aba33c631282f6ea
+        env:
+        - name: DNS_SERVERS 
+          value: ${DNS_PUBLIC_IP}
+        - name: NODE_VIP
+          value: "172.16.1.130"
+        - name: VIP_HOSTNAME
+          value: "racnoded1-vip"
+        - name: PRIV_IP
+          value: "192.168.17.100"
+        - name: PRIV_HOSTNAME
+          value: racnoded1-priv
+        - name: OP_TYPE
+          value: INSTALL
+        - name: PUBLIC_IP 
+          value: "172.16.1.100"
+        - name: PUBLIC_HOSTNAME
+          value: racnoded1
+        - name: SCAN_NAME
+          value: racnodedc1-scan
+        - name: DOMAIN
+          value: example.com
+        - name: ASM_DEVICE_LIST
+          value: /dev/asm-disk1,/dev/asm-disk2
+        - name: ASM_DISCOVERY_DIR
+          value: /dev/
+        - name: CMAN_HOSTNAME
+          value: racnodedc1-cman
+        - name: CMAN_PUBLIC_IP
+          value: "172.16.1.164"
+        - name: COMMON_OS_PWD_FILE
+          value: /var/run/secret/oracle/common_os_pwdfile.enc
+        - name: PWD_KEY
+          value: /var/run/secret/oracle/pwd.key
+        - name: ORACLE_SID
+          value: "ORCLCDB"
+        - name: RESET_FAILED_SYSTEMD
+          value: "true"
+        - name: DEFAULT_GATEWAY
+          value: "172.16.1.1"
+        - name: TMPDIR
+          value: /var/tmp        
+        ports:
+        - containerPort: 1521
+          name: oracle
+        volumeMounts:
+        - name: boot
+          mountPath: /boot
+          readOnly: true
+        - name: secrets
+          mountPath: /var/run/secrets/oracle
+          readOnly: true                 
+        - mountPath: /dev/shm
+          name: dshm          
+        volumeDevices:
+        - name: asm-disk1
+          devicePath: /dev/asm-disk1
+        - name: asm-disk2
+          devicePath: /dev/asm-disk2
+        securityContext:
+          capabilities:
+            add:
+            - SYS_RESOURCE
+            - NET_ADMIN
+            - SYS_NICE
+            - AUDIT_WRITE
+            - AUDIT_CONTROL
+          sysctls:
+          - name: kernel.shmall
+            value: "2097152"
+          - name: kernel.shmmax
+            value: "8589934592"
+          - name: kernel.shmmni
+            value: "4096"
+          - name: kernel.sem
+            value: "250 32000 100 128"
+        livenessProbe:
+          exec:
+            command: ["CMD-SHELL", "su - grid -c 'srvctl status database -d ORCLCDB'| grep -q 'is running on node'"]
+          periodSeconds: 30
+          timeoutSeconds: 3 
+          failureThreshold: 240

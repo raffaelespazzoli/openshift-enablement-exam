@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rac-dnsserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rac-dnsserver
+  template:
+    metadata:
+      labels:
+        app: rac-dnsserver
+      annotations:
+        k8s.v1.cni.cncf.io/networks: rac-pub1-nw,rac-priv1-nw
+    spec:
+      dnsConfig: 
+        searches:
+          - example.com  
+      enableServiceLinks: false
+      automountServiceAccountToken: false                   
+      hostname: rac-dns
+      containers:
+      - name: rac-dnsserver
+        image: oracle/rac-dnsserver:latest
+        env:
+        - name: SETUP_DNS_CONFIG_FILES
+          value: "setup_true"
+        - name: DOMAIN_NAME
+          value: example.com
+        - name: RAC_NODE_NAME_PREFIXP
+          value: racnodep
+        - name: WEBMIN_ENABLED
+          value: "false"        
+        ports:
+        - containerPort: 53
+          name: dns
+        securityContext:
+          capabilities:
+            add:
+            - AUDIT_WRITE
+        livenessProbe:
+          exec:
+            command: ["CMD-SHELL", "if nslookup $SCAN_NAME; then exit 0; else exit 1; fi"]
+          periodSeconds: 30
+          timeoutSeconds: 3 
+          failureThreshold: 240

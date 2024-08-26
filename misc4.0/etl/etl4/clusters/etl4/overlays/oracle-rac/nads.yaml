@@ -1,0 +1,72 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: rac-pub1-nw
+  namespace: oracle-rac
+spec:
+  config: |
+    {
+      "name": "rac-pub1-nw",
+      "type": "ovn-k8s-cni-overlay",
+      "cniVersion": "0.3.1",
+      "topology": "layer2",
+      "netAttachDefName": "oracle-rac/rac-pub1-nw",
+      "subnets": "172.16.1.0/24"
+    }
+--- 
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: rac-priv1-nw
+  namespace: oracle-rac
+spec:
+  config: |
+    {
+      "name": "rac-priv1-nw",
+      "type": "ovn-k8s-cni-overlay",
+      "cniVersion": "0.3.1",
+      "topology": "layer2",
+      "netAttachDefName": "oracle-rac/rac-priv1-nw",
+      "subnets": "192.168.17.0/24"
+    }   
+
+
+# apiVersion: k8s.cni.cncf.io/v1
+# kind: NetworkAttachmentDefinition
+# metadata:
+#   name: rac-priv1-nw
+#   namespace: oracle-rac
+# spec:
+#   config: |- 
+#     {
+#       "cniVersion": "0.3.1",
+#       "name": "rac-pub1-nw",
+#       "type": "macvlan",
+#       "master": "eth0",
+#       "linkInContainer": false,
+#       "mode": "bridge",
+#       "ipam": {
+#         "type": "whereabouts",
+#         "range": "172.16.1.0/24"
+#         }
+#     }
+# ---
+# apiVersion: k8s.cni.cncf.io/v1
+# kind: NetworkAttachmentDefinition
+# metadata:
+#   name: rac-priv1-nw
+#   namespace: oracle-rac
+# spec:
+#   config: |- 
+#     {
+#       "cniVersion": "0.3.1",
+#       "name": "rac-priv1-nw",
+#       "type": "macvlan",
+#       "master": "eth1",
+#       "linkInContainer": false,
+#       "mode": "bridge",
+#       "ipam": {
+#         "type": "whereabouts",
+#         "range": "192.168.17.0/24"
+#         }
+#     }    
