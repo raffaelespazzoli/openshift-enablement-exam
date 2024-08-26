@@ -35,4 +35,4 @@ spec:
       servls.${CLUSTER_BASE_DOMAIN}: ''          
     istio: 
       gateway.knative-serving.knative-ingress-gateway: knative-ingress-gateway.knative-serving.svc.cluster.local
-      local-gateway.knative-serving.knative-local-gateway: knative-ingress-gateway.knative-serving.svc.cluster.local
+      local-gateway.knative-serving.knative-local-gateway: knative-local-gateway.knative-serving.svc.cluster.local
