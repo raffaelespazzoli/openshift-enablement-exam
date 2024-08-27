@@ -54,7 +54,7 @@ spec:
         volumeMounts:
         - name: shells
           mountPath: /opt/scripts/startup/shells
-          defaultMode: 0777            
+          defaultMode: 493            
         livenessProbe:
           exec:
             command: ["/bin/bash",-c, "if nslookup racnodepc1-scan; then exit 0; else exit 1; fi"]
