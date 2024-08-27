@@ -1,0 +1,19 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-knative-ingress-fateway-lb
+spec:
+  podSelector:
+    matchLabels:
+      app: knative-ingress-gateway
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 8443
+        - protocol: TCP
+          port: 8080
+      from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+  policyTypes:
+    - Ingress

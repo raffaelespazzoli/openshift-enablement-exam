@@ -41,8 +41,10 @@ spec:
           medium: Memory
           sizeLimit: 5Gi                    
       hostname: racnodep1
+      imagePullSecrets:
+      - name: raffa-quay      
       containers:
-      - name: oracle-rac
+      - name: oracle-rac      
         image: quay.io/raffaelespazzoli/oracle/database-rac@sha256:1e8181e2d1a2f8f1ed6d2d626c5bbbe123ea581c34392143aba33c631282f6ea
         env:
         - name: DNS_SERVERS 
@@ -110,6 +112,7 @@ spec:
             - SYS_NICE
             - AUDIT_WRITE
             - AUDIT_CONTROL
+          runAsUser: 0  
           sysctls:
           - name: kernel.shmall
             value: "2097152"

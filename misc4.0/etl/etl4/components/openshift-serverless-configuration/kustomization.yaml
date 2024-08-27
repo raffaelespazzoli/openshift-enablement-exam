@@ -8,6 +8,7 @@ resources:
   - ./gateways.yaml
   - ./tracing-configmap.yaml
   #- ./domain-configmap.yaml
+  - ./lb-network-policy.yaml
 
 
 helmGlobals:

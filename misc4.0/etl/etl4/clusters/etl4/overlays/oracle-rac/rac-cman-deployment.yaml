@@ -20,9 +20,11 @@ spec:
       enableServiceLinks: false
       automountServiceAccountToken: false                   
       hostname: racnodepc1-cman
+      imagePullSecrets:
+      - name: raffa-quay      
       containers:
-      - name: rac-dnsserver
-        image: oracle/client-cman:21.3.0
+      - name: rac-dnsserver     
+        image: quay.io/raffaelespazzoli/oracle/client-cman@sha256:0b8f0fe68527ae4279bb906a2b3abbb4b0db8321cee63343ff6f9bde7e122fad
         env:
         - name: DOMAIN
           value: example.com
@@ -37,6 +39,11 @@ spec:
         ports:
         - containerPort: 1521
           name: oracle
+        securityContext:
+          runAsUser: 0
+          capabilities:
+            add:
+            - AUDIT_WRITE                    
         livenessProbe:
           exec:
             command: 
