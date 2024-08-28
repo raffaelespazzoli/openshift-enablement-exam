@@ -4,3 +4,4 @@ namespace: openshift-security-profiles
 
 resources:
   - namespace.yaml
+  - operator.yaml
