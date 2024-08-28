@@ -10,9 +10,9 @@ spec:
       "type": "ovn-k8s-cni-overlay",
       "cniVersion": "0.3.1",
       "topology": "layer2",
-      "netAttachDefName": "oracle-rac/rac-pub1-nw",
-      "subnets": "172.16.1.0/24"
+      "netAttachDefName": "oracle-rac/rac-pub1-nw"
     }
+#"subnets": "172.16.1.0/24"
 --- 
 apiVersion: k8s.cni.cncf.io/v1
 kind: NetworkAttachmentDefinition
@@ -26,9 +26,9 @@ spec:
       "type": "ovn-k8s-cni-overlay",
       "cniVersion": "0.3.1",
       "topology": "layer2",
-      "netAttachDefName": "oracle-rac/rac-priv1-nw",
-      "subnets": "192.168.17.0/24"
-    }   
+      "netAttachDefName": "oracle-rac/rac-priv1-nw"
+    }
+#"subnets": "192.168.17.0/24"       
 
 
 # apiVersion: k8s.cni.cncf.io/v1

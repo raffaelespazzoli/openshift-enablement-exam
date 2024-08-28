@@ -13,7 +13,16 @@ spec:
         app: oracle-rac
         oracle-rac: "true"
       annotations:
-        k8s.v1.cni.cncf.io/networks: rac-pub1-nw,rac-priv1-nw
+        k8s.v1.cni.cncf.io/networks: | 
+         [{
+            "name": "rac-pub1-nw",
+            "ips": ["172.16.1.100/32"],
+            "interface": "eth1"
+          },{
+            "name": "rac-priv1-nw",
+            "ips": ["192.168.17.100/32"],
+            "interface": "eth2"
+          }]        
     spec:
       dnsPolicy: None
       dnsConfig: 

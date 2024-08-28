@@ -9,6 +9,7 @@ spec:
   resources:
     requests:
       storage: 30Gi
+  storageClassName: ontap-san
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -20,4 +21,5 @@ spec:
   volumeMode: Block
   resources:
     requests:
-      storage: 30Gi      
+      storage: 30Gi
+  storageClassName: ontap-san            

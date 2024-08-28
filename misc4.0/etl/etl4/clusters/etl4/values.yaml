@@ -277,6 +277,14 @@ applications:
     source:
       path: misc4.0/etl/etl4/components/openshift-logging-configuration  
 
+  security-profiles-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5' 
+    destination:
+      namespace: openshift-security-profiles        
+    source:
+      path: misc4.0/etl/etl4/components/security-profiles-operator
 
 # OpenShift ServiceMesh
 

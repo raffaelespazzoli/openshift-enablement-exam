@@ -31,6 +31,7 @@ allowedCapabilities:
 - SYS_NICE
 - AUDIT_WRITE
 - AUDIT_CONTROL
+- CAP_SYS_CHROOT
 defaultAddCapabilities: null
 fsGroup:
   type: RunAsAny

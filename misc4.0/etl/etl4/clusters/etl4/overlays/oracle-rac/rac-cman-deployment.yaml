@@ -12,7 +12,12 @@ spec:
       labels:
         app: racnodepc1-cman
       annotations:
-        k8s.v1.cni.cncf.io/networks: rac-pub1-nw
+        k8s.v1.cni.cncf.io/networks: |
+         [{
+            "name": "rac-pub1-nw",
+            "ips": ["172.16.1.15/32"],
+            "interface": "eth1"
+          }]        
     spec:
       dnsConfig: 
         searches:
@@ -35,7 +40,7 @@ spec:
         - name: SCAN_IP
           value: "172.16.1.236"
         - name: PUBLIC_IP
-          value: "172.16.1.166"
+          value: "172.16.1.15"
         ports:
         - containerPort: 1521
           name: oracle

@@ -12,12 +12,22 @@ spec:
       labels:
         app: rac-dnsserver
       annotations:
-        k8s.v1.cni.cncf.io/networks: rac-pub1-nw,rac-priv1-nw
+        k8s.v1.cni.cncf.io/networks: | 
+         [{
+            "name": "rac-pub1-nw",
+            "ips": ["172.16.1.25/32"],
+            "interface": "eth1"
+          },{
+            "name": "rac-priv1-nw",
+            "ips": ["192.168.17.25/32"],
+            "interface": "eth2"
+          }]
     spec:
       volumes:
       - name: shells
         configMap:
-          name: oracle-rac-shells      
+          name: oracle-rac-shells
+          defaultMode: 0777      
       dnsConfig: 
         searches:
           - example.com  
@@ -29,9 +39,9 @@ spec:
       containers:
       - name: rac-dnsserver      
         image: quay.io/raffaelespazzoli/oracle/rac-dnsserver@sha256:f3406655b3a51442b7ba26e4d80ab016a0bd126d472c6308245aaf4bec3ebb39
-        command:
-          - /usr/bin/sleep
-          - 24h 
+        # command:
+        #   - /usr/bin/sleep
+        #   - 24h 
         env:
         - name: CONFIG_DNS_SERVER_FILE
           value: shells/setupDNSServer.sh
@@ -51,10 +61,10 @@ spec:
           capabilities:
             add:
             - AUDIT_WRITE
+            - CAP_SYS_CHROOT
         volumeMounts:
         - name: shells
           mountPath: /opt/scripts/startup/shells
-          defaultMode: 493            
         livenessProbe:
           exec:
             command: ["/bin/bash",-c, "if nslookup racnodepc1-scan; then exit 0; else exit 1; fi"]
