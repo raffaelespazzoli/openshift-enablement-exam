@@ -5,3 +5,4 @@ namespace: external-dns
 resources:
   - manually-installed-external-dns.yaml
   - namespace.yaml
+  - rfc2136-tsig-secret.yaml
