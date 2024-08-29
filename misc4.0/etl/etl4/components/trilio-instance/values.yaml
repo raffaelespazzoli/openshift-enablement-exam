@@ -1,8 +1,8 @@
-secrets:
-  name: trilio-env-configuration
-  accessKey: trilio 
-  secretKey: triliotrilio
 tenant:
+  configSecret:
+    name: trilio-env-configuration
+    accessKey: trilio 
+    secretKey: triliotrilio   
   configuration:
     name: trilio-env-configuration
   name: trilio  

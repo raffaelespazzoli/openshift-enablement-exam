@@ -1,8 +1,8 @@
-secrets:
-  name: loki-env-configuration
-  accessKey: loki 
-  secretKey: lokiloki
 tenant:
+  configSecret:
+    name: loki-env-configuration
+    accessKey: loki 
+    secretKey: lokiloki  
   configuration:
     name: loki-env-configuration
   name: loki  
