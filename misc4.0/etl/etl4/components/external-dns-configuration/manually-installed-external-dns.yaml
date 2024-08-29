@@ -64,7 +64,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: tsig-secret
-              name: rfc2136-tsig-secret 
+              name: rfc2136-tsig-secret
         args:
         - --registry=txt
         - --txt-prefix=external-dns-

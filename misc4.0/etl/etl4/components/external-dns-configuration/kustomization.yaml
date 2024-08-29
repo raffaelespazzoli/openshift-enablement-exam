@@ -6,3 +6,4 @@ resources:
   - manually-installed-external-dns.yaml
   - namespace.yaml
   - rfc2136-tsig-secret.yaml
+  - dns-endpoint-crd.yaml
