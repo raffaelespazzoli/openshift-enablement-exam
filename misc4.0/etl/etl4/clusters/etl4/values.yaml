@@ -66,7 +66,25 @@ applications:
     source:
       path: misc4.0/etl/etl4/components/minio-operator            
 
-## Networking 
+## Networking
+
+  cert-manager-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: cert-manager
+    source:
+      path: misc4.0/etl/etl4/components/cert-manager-operator
+
+  cert-manager-configuration:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '6'
+    destination:
+      namespace: cert-manager
+    source:
+      path: misc4.0/etl/etl4/components/cert-manager-configuration
 
   external-dns-operator:
     annotations:
