@@ -18,6 +18,7 @@ spec:
       ipv6:
         enabled: false      
       bridge:
+        allow-extra-patch-ports: true
         options:
           stp: false
         port:
@@ -27,6 +28,6 @@ spec:
       - localnet: ovs-localnet 
         bridge: ovs-br1 
         state: present
-        
+
 
 
