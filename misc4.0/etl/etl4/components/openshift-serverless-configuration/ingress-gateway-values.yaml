@@ -28,3 +28,4 @@ service:
   externalIPs: []
   annotations:
     service.beta.openshift.io/serving-cert-secret-name: ingress-gateway-tls
+    external-dns.alpha.kubernetes.io/hostname: '*.servls.${CLUSTER_BASE_DOMAIN}'
