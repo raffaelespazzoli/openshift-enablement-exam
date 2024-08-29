@@ -82,7 +82,7 @@ applications:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
       argocd.argoproj.io/sync-wave: '6'
     destination:
-      namespace: external-dns-operator
+      namespace: external-dns
     source:
       path: misc4.0/etl/etl4/components/external-dns-configuration      
 
