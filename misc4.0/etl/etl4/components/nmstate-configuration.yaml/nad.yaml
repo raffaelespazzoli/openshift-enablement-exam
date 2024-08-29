@@ -1,0 +1,19 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  annotations:
+    description: Network 1512 via OVS Bridge
+  name: vlan-1512
+  namespace: vlans
+spec:
+  config: |-
+    {
+      "cniVersion": "0.3.1",
+      "name": "vlan-1512",
+      "type": "ovn-k8s-cni-overlay",
+      "topology": "localnet",
+      "netAttachDefName": "vlans/vlan-1512",
+      "vlanID": 1512,
+      "mtu": 1500,
+      "ipam": {}
+    }
