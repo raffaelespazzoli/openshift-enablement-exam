@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-dns-operator
+  labels:
+    kubernetes.io/metadata.name: external-dns-operator
+    openshift.io/cluster-monitoring: "true"
+    argocd.argoproj.io/managed-by: openshift-gitops  

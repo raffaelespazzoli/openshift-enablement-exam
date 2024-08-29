@@ -19,6 +19,39 @@ spec:
             "interface": "eth1"
           }]        
     spec:
+      hostAliases:
+      - ip: "172.16.1.170"
+        hostnames:
+        - "racnodep1.example.com"
+        - "racnodep1"
+      - ip: "192.168.17.170"
+        hostnames:
+        - "racnodep1-priv.example.com"
+        - "racnodep1-priv"
+      - ip: "172.16.1.200"
+        hostnames:
+        - "racnodep1-vip.example.com"
+        - "racnodep1-vip"
+      - ip: "172.16.1.171"
+        hostnames:
+        - "racnodep2.example.com"
+        - "racnodep2"
+      - ip: "192.168.17.171"
+        hostnames:
+        - "racnodep2-priv.example.com"
+        - "racnodep2-priv"
+      - ip: "172.16.1.201"
+        hostnames:
+        - "racnodep2-vip.example.com"
+        - "racnodep2-vip"        
+      - ip: "172.16.1.236"
+        hostnames:
+        - "racnodepc1-scan.example.com"
+        - "racnodepc1-scan"
+      - ip: "172.16.1.15"
+        hostnames:
+        - "racnodepc1-cman.example.com"
+        - "racnodepc1-cman"    
       dnsConfig: 
         searches:
           - example.com  

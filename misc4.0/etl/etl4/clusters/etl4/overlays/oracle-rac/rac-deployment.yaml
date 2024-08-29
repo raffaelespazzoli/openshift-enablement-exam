@@ -24,12 +24,45 @@ spec:
             "interface": "eth2"
           }]        
     spec:
-      dnsPolicy: None
-      dnsConfig: 
-        nameservers:
-          - "172.16.1.25"
-        searches:
-          - example.com  
+      # dnsPolicy: None
+      # dnsConfig: 
+      #   nameservers:
+      #     - "172.16.1.25"
+      #   searches:
+      #     - example.com
+      hostAliases:
+      - ip: "172.16.1.170"
+        hostnames:
+        - "racnodep1.example.com"
+        - "racnodep1"
+      - ip: "192.168.17.170"
+        hostnames:
+        - "racnodep1-priv.example.com"
+        - "racnodep1-priv"
+      - ip: "172.16.1.200"
+        hostnames:
+        - "racnodep1-vip.example.com"
+        - "racnodep1-vip"
+      - ip: "172.16.1.171"
+        hostnames:
+        - "racnodep2.example.com"
+        - "racnodep2"
+      - ip: "192.168.17.171"
+        hostnames:
+        - "racnodep2-priv.example.com"
+        - "racnodep2-priv"
+      - ip: "172.16.1.201"
+        hostnames:
+        - "racnodep2-vip.example.com"
+        - "racnodep2-vip"        
+      - ip: "172.16.1.236"
+        hostnames:
+        - "racnodepc1-scan.example.com"
+        - "racnodepc1-scan"
+      - ip: "172.16.1.15"
+        hostnames:
+        - "racnodepc1-cman.example.com"
+        - "racnodepc1-cman"                                    
       enableServiceLinks: false
       automountServiceAccountToken: false
       volumes:
@@ -48,16 +81,26 @@ spec:
       - name: dshm
         emptyDir:
           medium: Memory
-          sizeLimit: 5Gi                    
+          sizeLimit: 5Gi
+      - name: response-files
+        configMap:
+          name: response-files
+          defaultMode: 0775                              
       hostname: racnodep1
       imagePullSecrets:
       - name: raffa-quay      
       containers:
       - name: oracle-rac      
         image: quay.io/raffaelespazzoli/oracle/database-rac@sha256:1e8181e2d1a2f8f1ed6d2d626c5bbbe123ea581c34392143aba33c631282f6ea
+        resources:
+          limits:
+            memory: 32Gi
+          requests:
+            memory: 32Gi
+            cpu: 4000m  
         env:
         - name: DNS_SERVERS 
-          value: ${DNS_PUBLIC_IP}
+          value: "172.16.1.25"
         - name: NODE_VIP
           value: "172.16.1.130"
         - name: VIP_HOSTNAME
@@ -95,7 +138,7 @@ spec:
         - name: DEFAULT_GATEWAY
           value: "172.16.1.1"
         - name: TMPDIR
-          value: /var/tmp        
+          value: /var/tmp
         ports:
         - containerPort: 1521
           name: oracle
@@ -107,13 +150,16 @@ spec:
           mountPath: /var/run/secrets/oracle
           readOnly: true                 
         - mountPath: /dev/shm
-          name: dshm          
+          name: dshm
+        - mountPath: /common_scripts
+          name: response-files                    
         volumeDevices:
         - name: asm-disk1
           devicePath: /dev/asm-disk1
         - name: asm-disk2
           devicePath: /dev/asm-disk2
         securityContext:
+          privileged: true
           capabilities:
             add:
             - SYS_RESOURCE

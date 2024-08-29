@@ -66,7 +66,25 @@ applications:
     source:
       path: misc4.0/etl/etl4/components/minio-operator            
 
-## Networking    
+## Networking 
+
+  external-dns-operator:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: external-dns-operator
+    source:
+      path: misc4.0/etl/etl4/components/external-dns-operator
+
+  external-dns-configuration:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '6'
+    destination:
+      namespace: external-dns-operator
+    source:
+      path: misc4.0/etl/etl4/components/external-dns-configuration      
 
   metallb-operator:
     annotations:
