@@ -20,5 +20,5 @@ spec:
           secretAccessKeySecretRef:
             name: cert-manager-dns-credentials
             key: aws_secret_access_key
-          region: dummy
-          hostedZoneID: dummy         
+          region: us-east-1
+          hostedZoneID: Z0244679K5IT10T4RPI1         
