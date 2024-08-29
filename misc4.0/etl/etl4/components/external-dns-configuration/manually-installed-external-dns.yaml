@@ -63,7 +63,8 @@ spec:
         - name: EXTERNAL_DNS_RFC2136_TSIG_SECRET
           valueFrom:
             secretKeyRef:
-              key: rfc2136-tsig-secret
+              key: tsig-secret
+              name: rfc2136-tsig-secret 
         args:
         - --registry=txt
         - --txt-prefix=external-dns-
