@@ -1,8 +1,8 @@
-secrets:
-  name: oadp-env-configuration
-  accessKey: oadp 
-  secretKey: oadpoadp
 tenant:
+  configSecret:
+    name: oadp-env-configuration
+    accessKey: oadp 
+    secretKey: oadpoadp  
   configuration:
     name: oadp-env-configuration
   name: oadp  
