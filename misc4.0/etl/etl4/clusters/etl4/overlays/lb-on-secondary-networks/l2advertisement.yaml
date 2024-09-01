@@ -1,0 +1,9 @@
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: vlan-1512-ad
+spec:
+  ipAddressPools:
+  - vlan-1512-pool
+  interfaces:
+  - ovs-br1 

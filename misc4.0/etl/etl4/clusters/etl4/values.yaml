@@ -144,8 +144,6 @@ applications:
     annotations:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
       argocd.argoproj.io/sync-wave: '7'
-    destination:
-      namespace: vlans
     source:
       path: misc4.0/etl/etl4/components/nmstate-configuration      
 

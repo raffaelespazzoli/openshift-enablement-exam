@@ -1,0 +1,13 @@
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: vms-web
+  namespace: lb-on-secondary-networks
+subsets:
+  - addresses:
+      - ip: 10.129.0.145
+      - ip: 10.129.0.146        
+    ports:
+      - name: web
+        port: 8080
+        protocol: TCP

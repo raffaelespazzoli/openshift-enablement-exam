@@ -4,7 +4,7 @@ metadata:
   annotations:
     description: Network 1512 via OVS Bridge
   name: vlan-1512
-  namespace: vlans
+  namespace: default
 spec:
   config: |-
     {
@@ -12,7 +12,7 @@ spec:
       "name": "vlan-1512",
       "type": "ovn-k8s-cni-overlay",
       "topology": "localnet",
-      "netAttachDefName": "vlans/vlan-1512",
+      "netAttachDefName": "default/vlan-1512",
       "vlanID": 1512,
       "mtu": 1500,
       "ipam": {}
