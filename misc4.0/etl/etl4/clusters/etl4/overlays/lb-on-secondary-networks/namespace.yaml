@@ -2,3 +2,13 @@ kind: Namespace
 apiVersion: v1
 metadata:
   name: lb-on-secondary-networks
+---  
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: dhcp
+---  
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: loxilb  

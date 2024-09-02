@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: next-dhcp
+  namespace: dhcp
+  labels:
+    app: next-dhcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: next-dhcp
+  template:
+    metadata:
+      labels:
+        app: next-dhcp
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+         [{
+            "name": "vlan-1512",
+            "namespace": "default",
+            "interface": "eth1"
+          }]        
+    spec:
+      containers:
+      - name: next-dhcp
+        image: quay.io/raffaelespazzoli/nextdhcp:latest
+        command:
+          - /bin/bash
+          - -c
+          - sleep infinity
+        args:
+        - --conf
+        - /etc/nextdhcp/config/Dhcpfile
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nextdhcp/config
+        securityContext:
+          runAsUser: 0
+          privileged: true
+      volumes:
+      - name: config
+        configMap:
+          name: dhcp-config
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dhcp-privileged-scc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: dhcp

@@ -2,6 +2,7 @@ apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
   name: vlan-1512-pool
+  namespace: metallb-system
 spec:
   addresses:
-  - 10.9.51.160/28
+  - 10.10.1.128/25

@@ -1,0 +1,184 @@
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: multus-service
+rules:
+  - apiGroups:
+      - "k8s.cni.cncf.io"
+    resources:
+      - '*'
+    verbs:
+      - '*'
+  - apiGroups:
+      - "discovery.k8s.io"
+    resources:
+      - endpointslices
+    verbs:
+      - create
+      - get
+      - list
+      - update
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - namespaces
+      - nodes
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+      - update
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - '*'
+  - apiGroups:
+      - events.k8s.io
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+      - update
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: multus-service
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: multus-service
+subjects:
+- kind: ServiceAccount
+  name: multus-service
+  namespace: openshift-multus
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: multus-service
+  namespace: openshift-multus
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multus-service-controller
+  namespace: openshift-multus
+  labels:
+    app: multus-service-controller
+    name: multus-service-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multus-service-controller
+      name: multus-service-controller
+  template:
+    metadata:
+      labels:
+        app: multus-service-controller
+        name: multus-service-controller
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      tolerations:
+      - operator: Exists
+        effect: NoSchedule
+      serviceAccountName: multus-service
+      containers:
+      - name: multus-service-controller
+        image: ghcr.io/k8snetworkplumbingwg/multus-service:latest-nft
+        imagePullPolicy: Always
+        command: ["/usr/bin/multus-service-controller"]
+#        args:
+#        - "--logtostderr"
+#        - "-v=1"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "80Mi"
+          limits:
+            cpu: "100m"
+            memory: "150Mi"
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: multus-proxy-ds-amd64
+  namespace: openshift-multus
+  labels:
+    tier: node
+    app: multus-proxy
+    name: multus-proxy
+spec:
+  selector:
+    matchLabels:
+      name: multus-proxy
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        tier: node
+        app: multus-proxy
+        name: multus-proxy
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      tolerations:
+      - operator: Exists
+        effect: NoSchedule
+      serviceAccountName: multus-service
+      containers:
+      - name: multus-proxy
+        image: ghcr.io/k8snetworkplumbingwg/multus-service:latest-nft
+        imagePullPolicy: Always
+        command: ["/usr/bin/multus-proxy"]
+        args:
+        - "--host-prefix=/host"
+        # uncomment this if runtime is docker
+        - "--container-runtime=cri"
+        # change this if runtime is different that crio default
+        - "--container-runtime-endpoint=/run/crio/crio.sock"
+        # uncomment this if you want to store iptables rules
+        - "--pod-iptables=/var/lib/multus-proxy/iptables"
+#        - "--logtostderr"
+#        - "-v=1"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "80Mi"
+          limits:
+            cpu: "100m"
+            memory: "150Mi"
+        securityContext:
+          privileged: true
+          capabilities:
+            add: ["SYS_ADMIN", "NET_ADMIN"]
+        volumeMounts:
+        - name: host
+          mountPath: /host
+        - name: var-lib-multusproxy
+          mountPath: /var/lib/multus-proxy
+      volumes:
+        - name: host
+          hostPath:
+            path: /
+        - name: var-lib-multusproxy
+          hostPath:
+            path: /var/lib/multus-proxy

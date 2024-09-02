@@ -2,8 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: vms-web
+  namespace: lb-on-secondary-networks
   annotations:
-    metallb.universe.tf/address-pool: production-public-ips  
+    metallb.universe.tf/address-pool: vlan-1512-pool 
 spec:
   ports:
     - port: 80

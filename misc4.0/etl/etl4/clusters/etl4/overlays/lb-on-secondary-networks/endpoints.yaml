@@ -5,8 +5,8 @@ metadata:
   namespace: lb-on-secondary-networks
 subsets:
   - addresses:
-      - ip: 10.129.0.145
-      - ip: 10.129.0.146        
+      - ip: 10.10.1.2
+      - ip: 10.10.1.3
     ports:
       - name: web
         port: 8080
