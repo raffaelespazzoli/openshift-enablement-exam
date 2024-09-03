@@ -45,3 +45,4 @@ misc4.0/multicluster-api-server/kcp.kubeconfig
 
 misc4.0/etl/etl4/components/trilio-operator/preflight*
 misc4.0/etl/etl4/components/cert-manager-configuration/aws-secret.yaml
+misc4.0/etl/etl4/components/spire/charts

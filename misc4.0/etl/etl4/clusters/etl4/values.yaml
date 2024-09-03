@@ -401,7 +401,7 @@ applications:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
       argocd.argoproj.io/sync-wave: '5'
     destination:
-      namespace: spire-system
+      namespace: spire-server
     source:
       path: misc4.0/etl/etl4/components/spire
 

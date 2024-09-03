@@ -8,7 +8,7 @@ global:
     ingressControllerType: "" # If not openshift, and want to expose services, set to a supported option [ingress-nginx]
     # Update these
     clusterName: ${CLUSTER_BASE_DOMAIN}
-    trustDomain: ${CLUSTER_BASE_DOMAIN}
+    trustDomain: ocp.rht-labs.com
     caSubject:
       country: US
       organization: ETL
