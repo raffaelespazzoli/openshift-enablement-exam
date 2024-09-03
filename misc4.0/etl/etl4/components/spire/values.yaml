@@ -7,7 +7,7 @@ global:
       create: true
     ingressControllerType: "" # If not openshift, and want to expose services, set to a supported option [ingress-nginx]
     # Update these
-    clusterName: ${CLUSTER_BASE_DOMAIN}
+    clusterName: etl4
     trustDomain: ocp.rht-labs.com
     caSubject:
       country: US
@@ -37,6 +37,7 @@ tornjak-frontend:
   enabled: true
   ingress:
     enabled: true  
+    host: tornjak.apps.${CLUSTER_BASE_DOMAIN}
   service:
     type: ClusterIP
     port: 3000

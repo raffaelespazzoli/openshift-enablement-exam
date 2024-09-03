@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: spire-server
-  labels:
-    openshift.io/cluster-monitoring: "true"
-    argocd.argoproj.io/managed-by: openshift-gitops 
