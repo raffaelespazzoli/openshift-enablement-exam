@@ -10,7 +10,7 @@ spec:
     name: spire-server
     weight: 100
   port:
-    targetPort: grpc
+    targetPort: 10000
   # tls:
   #   termination: edge
   #   insecureEdgeTerminationPolicy: Redirect
