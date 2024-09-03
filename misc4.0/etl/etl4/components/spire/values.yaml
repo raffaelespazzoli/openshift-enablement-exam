@@ -8,7 +8,7 @@ global:
     ingressControllerType: "" # If not openshift, and want to expose services, set to a supported option [ingress-nginx]
     # Update these
     clusterName: etl4
-    #trustDomain: ocp.rht-labs.com
+    trustDomain: ocp.rht-labs.com
     caSubject:
       country: US
       organization: ETL
@@ -16,9 +16,6 @@ global:
     tools:
       kubectl:
         tag: "v1.23.3"      
-
-
-        
 
 spire-server:
   tornjak:
