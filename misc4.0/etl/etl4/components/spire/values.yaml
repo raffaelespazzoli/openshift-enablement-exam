@@ -29,10 +29,10 @@ spire-server:
   tornjak:
     enabled: true
   ingress:
-    enabled: false
+    enabled: true
     host: spire-server.apps.${CLUSTER_BASE_DOMAIN}
-    annotations:
-      route.openshift.io/termination: edge
+    # annotations:
+    #   route.openshift.io/termination: edge
   ca_subject:
     common_name: ${CLUSTER_BASE_DOMAIN}     
 
