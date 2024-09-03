@@ -11,7 +11,7 @@ spec:
     weight: 100
   port:
     targetPort: grpc
-  tls:
-    termination: edge
-    insecureEdgeTerminationPolicy: Redirect
+  # tls:
+  #   termination: edge
+  #   insecureEdgeTerminationPolicy: Redirect
   wildcardPolicy: None
