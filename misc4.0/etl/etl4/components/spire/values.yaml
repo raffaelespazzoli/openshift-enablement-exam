@@ -1,0 +1,49 @@
+global:
+  openshift: true # If running on openshift, set to true
+  spire:
+    recommendations:
+      enabled: true
+    namespaces:
+      create: true
+    ingressControllerType: "" # If not openshift, and want to expose services, set to a supported option [ingress-nginx]
+    # Update these
+    clusterName: ${CLUSTER_BASE_DOMAIN}
+    trustDomain: ${CLUSTER_BASE_DOMAIN}
+    caSubject:
+      country: US
+      organization: ETL
+      commonName: ${CLUSTER_BASE_DOMAIN}
+  spiffe-oidc-discovery-provider:
+    enable: true
+    # SPIRE Root CA is currently set to rotate every 2h
+    # this means the thumbprint for OIDC needs to be updated frequently
+    # the quick fix is to disable the TLS on SPIRE:
+    tls:
+      spire:
+        enabled: false
+    ingress:
+      enabled: true
+      # tlsSecret: tls-cert
+
+spire-server:
+  tornjak:
+    enabled: true
+  ingress:
+    host: spire-server.apps.${CLUSTER_BASE_DOMAIN}
+  ca_subject:
+    common_name: ${CLUSTER_BASE_DOMAIN}     
+
+tornjak-frontend:
+  enabled: true
+  ingress:
+    enabled: true  
+  service:
+    type: ClusterIP
+    port: 3000
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 512Mi      

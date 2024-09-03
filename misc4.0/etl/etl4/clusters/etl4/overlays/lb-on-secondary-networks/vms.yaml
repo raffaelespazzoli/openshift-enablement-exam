@@ -86,15 +86,15 @@ spec:
               user: cloud-user
               password: fro7-6huk-thdl
               chpasswd: { expire: False }
-              network:
-                version: 1
-                config:
-                  - type: physical
-                    name: eth0
-                    subnets:
-                      - type: static
-                        address: 10.10.1.2/24
-                        gateway: 10.10.1.254             
+              # network:
+              #   version: 1
+              #   config:
+              #     - type: physical
+              #       name: eth0
+              #       subnets:
+              #         - type: static
+              #           address: 10.10.1.2/24
+              #           gateway: 10.10.1.254             
           name: cloudinitdisk
 ---
 apiVersion: kubevirt.io/v1
@@ -185,13 +185,13 @@ spec:
               user: cloud-user
               password: fro7-6huk-thdl
               chpasswd: { expire: False }
-              network:
-                version: 1
-                config:
-                  - type: physical
-                    name: eth0
-                    subnets:
-                      - type: static
-                        address: 10.10.1.3/24
-                        gateway: 10.10.1.254              
+              # network:
+              #   version: 1
+              #   config:
+              #     - type: physical
+              #       name: eth0
+              #       subnets:
+              #         - type: static
+              #           address: 10.10.1.3/24
+              #           gateway: 10.10.1.254              
           name: cloudinitdisk          

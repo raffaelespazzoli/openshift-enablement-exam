@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gravity-dhcp
+  namespace: dhcp
+  labels:
+    app: gravity-dhcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gravity-dhcp
+  template:
+    metadata:
+      labels:
+        app: gravity-dhcp
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+         [{
+            "name": "vlan-1512",
+            "namespace": "default",
+            "ips": ["10.10.1.4/24"],
+            "interface": "eth1"
+          }]        
+    spec:
+      containers:
+      - name: gravity-dhcp
+        image: ghcr.io/beryju/gravity:stable
+        ports:
+        - name: web-ui
+          containerPort: 8008
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        securityContext:
+          runAsUser: 0
+          privileged: true
+          capabilities:
+            add:
+            - NET_ADMIN
+            - NET_RAW
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: gravity-dhcp
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gravity-dhcp
+  namespace: dhcp
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: ontap-san          
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dhcp-privileged-scc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: dhcp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gravity-dhcp
+  namespace: dhcp 
+spec:
+  ports:
+    - port: 80
+      targetPort: 8008
+  type: ClusterIP
+  selector:
+    app: gravity-dhcp
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: gravity-dhcp
+  namespace: dhcp
+spec:
+  to:
+    kind: Service
+    name: gravity-dhcp
+    weight: 100
+  port:
+    targetPort: 8008
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None    

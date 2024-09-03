@@ -30,36 +30,36 @@ spec:
       #           operator: Exists
       #         - key: "node-role.kubernetes.io/control-plane"
       #           operator: Exists
-      initContainers:
-      - name: mkllb-cgroup
-        command:
-          - sh
-          - -ec
-          - |
-            ls /usr/local/sbin/mkllb_cgroup && chmod 777 /usr/local/sbin/mkllb_cgroup;
-            cp -f /usr/local/sbin/mkllb_cgroup /hbin/mkllb_cgroup;
-            nsenter --cgroup=/hproc/1/ns/cgroup --mount=/hproc/1/ns/mnt /bin/mkllb_cgroup;
-            echo done;
-            rm /hbin/mkllb_cgroup;
-        image: "ghcr.io/loxilb-io/loxilb:latest"
-        imagePullPolicy: Always
-        volumeMounts:
-          - name: hproc
-            mountPath: /hproc
-          - name: hbin
-            mountPath: /hbin
-        terminationMessagePolicy: FallbackToLogsOnError
-        securityContext:
-          privileged: true
-          runAsUser: 0
-          capabilities:
-            add:
-              - SYS_ADMIN
+      # initContainers:
+      # - name: mkllb-cgroup
+      #   command:
+      #     - sh
+      #     - -ec
+      #     - |
+      #       ls /usr/local/sbin/mkllb_cgroup && chmod 777 /usr/local/sbin/mkllb_cgroup;
+      #       cp -f /usr/local/sbin/mkllb_cgroup /hbin/mkllb_cgroup;
+      #       nsenter --cgroup=/hproc/1/ns/cgroup --mount=/hproc/1/ns/mnt /bin/mkllb_cgroup;
+      #       echo done;
+      #       rm /hbin/mkllb_cgroup;
+      #   image: "ghcr.io/loxilb-io/loxilb:latest"
+      #   imagePullPolicy: Always
+      #   volumeMounts:
+      #     - name: hproc
+      #       mountPath: /hproc
+      #     - name: hbin
+      #       mountPath: /hbin
+      #   terminationMessagePolicy: FallbackToLogsOnError
+      #   securityContext:
+      #     privileged: true
+      #     runAsUser: 0
+      #     capabilities:
+      #       add:
+      #         - SYS_ADMIN
       containers:
       - name: loxilb-app
         image: "ghcr.io/loxilb-io/loxilb:latest"
         imagePullPolicy: IfNotPresent
-        command: [ "/root/loxilb-io/loxilb/loxilb", "--egr-hooks", "--blacklist=cni[0-9a-z]|veth.|flannel.|cali.|tunl.|vxlan[.]calico", "--localsockpolicy" ]
+        command: [ "/root/loxilb-io/loxilb/loxilb", "--egr-hooks", "--blacklist=ovs.|br.|vxlan.|tun.|veth." ]
         ports:
         - containerPort: 11111
         - containerPort: 179
@@ -121,4 +121,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: loxilb    
+  namespace: loxilb
+- kind: ServiceAccount
+  name: kube-loxilb
+  namespace: loxilb      

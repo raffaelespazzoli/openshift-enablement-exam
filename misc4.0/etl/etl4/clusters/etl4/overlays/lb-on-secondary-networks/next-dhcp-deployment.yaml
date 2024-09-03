@@ -19,16 +19,17 @@ spec:
          [{
             "name": "vlan-1512",
             "namespace": "default",
+            "ips": ["10.10.1.4/24"],
             "interface": "eth1"
           }]        
     spec:
       containers:
       - name: next-dhcp
-        image: quay.io/raffaelespazzoli/nextdhcp:latest
-        command:
-          - /bin/bash
-          - -c
-          - sleep infinity
+        image: quay.io/raffaelespazzoli/nextdhcp@sha256:70c1e5b241eaffac8f45067ddaad7be393d4aa644a18716e008a70b3a7877cd2
+        # command:
+        #   - /bin/bash
+        #   - -c
+        #   - sleep infinity
         args:
         - --conf
         - /etc/nextdhcp/config/Dhcpfile
@@ -38,6 +39,10 @@ spec:
         securityContext:
           runAsUser: 0
           privileged: true
+          capabilities:
+            add:
+            - NET_ADMIN
+            - NET_RAW
       volumes:
       - name: config
         configMap:

@@ -1,0 +1,22 @@
+I0903 10:41:04.739699       1 logLevel.go:40] Set log level to 0
+I0903 10:41:04.740021       1 agent.go:59] Starting kube-loxilb:
+I0903 10:41:04.740025       1 agent.go:60]   Version: 
+I0903 10:41:04.740032       1 agent.go:61]   Build: 2024_08_28-main-96894f1
+I0903 10:41:04.740047       1 client.go:39] No kubeconfig file was specified. Falling back to in-cluster config
+I0903 10:41:04.740897       1 agent.go:85] URLs: []
+I0903 10:41:04.740909       1 agent.go:86] LB Class: loxilb.io/loxilb
+I0903 10:41:04.740927       1 agent.go:87] CIDR: 192.168.82.100/32
+I0903 10:41:04.740931       1 agent.go:88] SetBGP: 0
+I0903 10:41:04.740937       1 agent.go:89] ListenBGPPort: 179
+I0903 10:41:04.740941       1 agent.go:90] eBGPMultiHop: false
+I0903 10:41:04.740946       1 agent.go:91] SetLBMode: 0
+I0903 10:41:04.740951       1 agent.go:92] ExclIPAM: false
+I0903 10:41:04.740956       1 agent.go:93] Monitor: false
+I0903 10:41:04.740960       1 agent.go:94] SecondaryCIDRs: []
+I0903 10:41:04.740965       1 agent.go:95] ExtBGPPeers: []
+I0903 10:41:04.740970       1 agent.go:96] SetRoles: 0.0.0.0
+I0903 10:41:04.740976       1 agent.go:97] Zone: llb
+I0903 10:41:04.740981       1 agent.go:98] AppendEPs: false
+I0903 10:41:04.741668       1 loadbalancer.go:277] Starting LoxilbLoadBalancerManager
+I0903 10:41:04.741708       1 shared_informer.go:311] Waiting for caches to sync for LoxilbLoadBalancerManager
+I0903 10:41:05.244062       1 shared_informer.go:318] Caches are synced for LoxilbLoadBalancerManager

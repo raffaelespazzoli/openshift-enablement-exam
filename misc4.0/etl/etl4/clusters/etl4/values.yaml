@@ -392,7 +392,18 @@ applications:
       argocd.argoproj.io/compare-options: IgnoreExtraneous
       argocd.argoproj.io/sync-wave: '25'
     source:
-      path: misc4.0/etl/etl4/components/openshift-serverless-configuration                    
+      path: misc4.0/etl/etl4/components/openshift-serverless-configuration  
+
+  ## workload identity
+
+  spire:
+    annotations:
+      argocd.argoproj.io/compare-options: IgnoreExtraneous
+      argocd.argoproj.io/sync-wave: '5'
+    destination:
+      namespace: spire-system
+    source:
+      path: misc4.0/etl/etl4/components/spire
 
 
                           

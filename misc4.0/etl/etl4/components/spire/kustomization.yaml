@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: spire-system
+
+
+helmCharts:
+- name: spire-crds
+  repo: https://spiffe.github.io/helm-charts-hardened/
+  releaseName: spire-crds
+  namespace: spire-system
+
+- name: spire
+  repo: https://spiffe.github.io/helm-charts-hardened/
+  releaseName: spire
+  namespace: spire-system
+  valuesFile: values.yaml  
