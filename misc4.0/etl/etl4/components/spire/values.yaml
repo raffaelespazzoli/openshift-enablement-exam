@@ -8,22 +8,17 @@ global:
     ingressControllerType: "" # If not openshift, and want to expose services, set to a supported option [ingress-nginx]
     # Update these
     clusterName: etl4
-    trustDomain: ocp.rht-labs.com
+    #trustDomain: ocp.rht-labs.com
     caSubject:
       country: US
       organization: ETL
       commonName: ${CLUSTER_BASE_DOMAIN}
-  spiffe-oidc-discovery-provider:
-    enable: true
-    # SPIRE Root CA is currently set to rotate every 2h
-    # this means the thumbprint for OIDC needs to be updated frequently
-    # the quick fix is to disable the TLS on SPIRE:
-    tls:
-      spire:
-        enabled: false
-    ingress:
-      enabled: true
-      # tlsSecret: tls-cert
+    tools:
+      kubectl:
+        tag: "v1.23.3"      
+
+
+        
 
 spire-server:
   tornjak:
@@ -31,10 +26,30 @@ spire-server:
   ingress:
     enabled: true
     host: tornjak-backend.apps.${CLUSTER_BASE_DOMAIN}
-    # annotations:
-    #   route.openshift.io/termination: edge
-  ca_subject:
-    common_name: ${CLUSTER_BASE_DOMAIN}     
+  # ca_subject:
+  #   common_name: ${CLUSTER_BASE_DOMAIN}
+  controllerManager:      
+    ignoreNamespaces:
+      - kube-system
+      - kube-public
+      - local-path-storage
+      - openshift-.*    
+         
+spire-frontend:
+  logsDir: "/opt/app-root/src/.npm/_cacache/"
+
+spiffe-oidc-discovery-provider:
+  enable: true
+  # SPIRE Root CA is currently set to rotate every 2h
+  # this means the thumbprint for OIDC needs to be updated frequently
+  # the quick fix is to disable the TLS on SPIRE:
+  tls:
+    spire:
+      enabled: enabled
+  ingress:
+    enabled: true
+    # tlsSecret: tls-cert
+
 
 tornjak-frontend:
   apiServerURL: https://tornjak-backend.apps.${CLUSTER_BASE_DOMAIN}
