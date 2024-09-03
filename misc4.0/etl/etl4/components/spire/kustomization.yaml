@@ -5,14 +5,14 @@ resources:
   #- spire-server-route.yaml
 
 
-helmCharts:
-- name: spire-crds
-  repo: https://spiffe.github.io/helm-charts-hardened/
-  releaseName: spire-crds
-  namespace: spire-system
+# helmCharts:
+# - name: spire-crds
+#   repo: https://spiffe.github.io/helm-charts-hardened/
+#   releaseName: spire-crds
+#   namespace: spire-system
 
-- name: spire
-  repo: https://spiffe.github.io/helm-charts-hardened/
-  releaseName: spire
-  namespace: spire-system
-  valuesFile: values.yaml  
+# - name: spire
+#   repo: https://spiffe.github.io/helm-charts-hardened/
+#   releaseName: spire
+#   namespace: spire-system
+#   valuesFile: values.yaml  
