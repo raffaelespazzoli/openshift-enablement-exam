@@ -29,11 +29,13 @@ spire-server:
   tornjak:
     enabled: true
   ingress:
+    enabled: true
     host: spire-server.apps.${CLUSTER_BASE_DOMAIN}
   ca_subject:
     common_name: ${CLUSTER_BASE_DOMAIN}     
 
 tornjak-frontend:
+  apiServerURL: spire-server.apps.${CLUSTER_BASE_DOMAIN}
   enabled: true
   ingress:
     enabled: true  
