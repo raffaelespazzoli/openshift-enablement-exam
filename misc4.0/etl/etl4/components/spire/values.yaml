@@ -31,6 +31,9 @@ spire-server:
   ingress:
     enabled: true
     host: spire-server.apps.${CLUSTER_BASE_DOMAIN}
+    ingress:
+      annotations:
+        route.openshift.io/termination: edge
   ca_subject:
     common_name: ${CLUSTER_BASE_DOMAIN}     
 
