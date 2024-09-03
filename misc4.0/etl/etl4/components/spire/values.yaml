@@ -29,7 +29,7 @@ spire-server:
   tornjak:
     enabled: true
   ingress:
-    enabled: true
+    enabled: false
     host: spire-server.apps.${CLUSTER_BASE_DOMAIN}
     # annotations:
     #   route.openshift.io/termination: edge
@@ -37,7 +37,7 @@ spire-server:
     common_name: ${CLUSTER_BASE_DOMAIN}     
 
 tornjak-frontend:
-  apiServerURL: https://spire-server.apps.${CLUSTER_BASE_DOMAIN}
+  #apiServerURL: https://spire-server.apps.${CLUSTER_BASE_DOMAIN}
   enabled: true
   ingress:
     enabled: true  
