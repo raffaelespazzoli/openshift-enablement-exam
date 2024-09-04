@@ -1,5 +1,5 @@
 global:
-  openshift: true # If running on openshift, set to true
+  openshift: true
   spire:
     recommendations:
       enabled: true
@@ -7,35 +7,33 @@ global:
       create: true
     ingressControllerType: "" # If not openshift, and want to expose services, set to a supported option [ingress-nginx]
     # Update these
-    clusterName: etl4
-    trustDomain: ocp.rht-labs.com
+    clusterName: demo-1
+    trustDomain: apps.etl4.ocp.rht-labs.com
     caSubject:
       country: US
-      organization: ETL
-      commonName: ${CLUSTER_BASE_DOMAIN}
+      organization: Red Hat
+      commonName: common-name
     tools:
       kubectl:
-        tag: "v1.23.3"      
-
+        tag: "v1.23.3"  
 spire-server:
+  ingress:
+    enabled: true
   tornjak:
     enabled: true
     ingress:
-      enabled: true    
-  ingress:
-    enabled: true
+      enabled: true        
   controllerManager:      
     ignoreNamespaces:
       - kube-system
       - kube-public
       - local-path-storage
-      - openshift-.*    
-         
+      - openshift-.*
 spire-frontend:
   logsDir: "/opt/app-root/src/.npm/_cacache/"
-
+  
 spiffe-oidc-discovery-provider:
-  enable: true
+  enabled: true
   # SPIRE Root CA is currently set to rotate every 2h
   # this means the thumbprint for OIDC needs to be updated frequently
   # the quick fix is to disable the TLS on SPIRE:
@@ -46,11 +44,10 @@ spiffe-oidc-discovery-provider:
     enabled: true
     # tlsSecret: tls-cert
 
-
 tornjak-frontend:
-  enabled: true
   ingress:
-    enabled: true  
+    enabled: true
+  enabled: true
   service:
     type: ClusterIP
     port: 3000
@@ -60,4 +57,6 @@ tornjak-frontend:
       memory: 128Mi
     limits:
       cpu: 100m
-      memory: 512Mi      
+      memory: 512Mi
+        
+    

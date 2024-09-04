@@ -58,7 +58,7 @@ spec:
       containers:
       - name: loxilb-app
         image: "ghcr.io/loxilb-io/loxilb:latest"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         command: [ "/root/loxilb-io/loxilb/loxilb", "--egr-hooks", "--whitelist=ens1f0" ]
         ports:
         - containerPort: 11111
