@@ -76,4 +76,4 @@ spec:
       # use_grpc: false
   installation_tag: 'Kiali [istio-system]'
   istio_namespace: istio-system
-  #version: v1.65
+  version: v1.73
