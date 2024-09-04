@@ -25,7 +25,7 @@ spec:
         - name: ens1f0
     ovn:
       bridge-mappings:
-      - localnet: ovs-localnet 
+      - localnet: vlan-1512 
         bridge: ovs-br1 
         state: present
 

@@ -11,6 +11,6 @@ resources:
   - next-dhcp-configmap.yaml
   - next-dhcp-deployment.yaml
   - multus-service.yaml
-  #- loxilb.yaml
-  #- kube-loxilb.yaml
+  - loxilb.yaml
+  - kube-loxilb.yaml
   #- gravity-dhcp-deployment.yaml
