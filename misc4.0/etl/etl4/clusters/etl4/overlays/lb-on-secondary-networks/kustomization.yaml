@@ -2,15 +2,27 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - endpoints.yaml
+  #- endpoints.yaml
   - ippool.yaml
   - l2advertisement.yaml
-  - lb-service.yaml
+  #- lb-service.yaml
   - namespace.yaml
-  - vms.yaml
+  #- vms.yaml
   - next-dhcp-configmap.yaml
   - next-dhcp-deployment.yaml
-  - multus-service.yaml
-  - loxilb.yaml
-  - kube-loxilb.yaml
+  #- multus-service.yaml
+  #- loxilb.yaml
+  #- kube-loxilb.yaml
   #- gravity-dhcp-deployment.yaml
+  - egressip.yaml
+  - gateway.yaml
+  - fedora-vms.yaml
+
+helmGlobals:
+  chartHome: ../../../../.helm/charts
+
+helmCharts:
+  - name: gateway
+    releaseName: vlan-1512-ingress-gateway
+    namespace: istio-system
+    valuesFile: vlan-1512-ingress-gateway-values.yaml  

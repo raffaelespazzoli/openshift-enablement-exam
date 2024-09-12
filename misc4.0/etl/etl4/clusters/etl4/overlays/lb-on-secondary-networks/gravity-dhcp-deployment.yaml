@@ -27,8 +27,23 @@ spec:
       - name: gravity-dhcp
         image: ghcr.io/beryju/gravity:stable
         ports:
+        - containerPort: 53
+          name: dns-tcp
+        - containerPort: 53
+          protocol: UDP
+          name: dns-udp
+        - containerPort: 67
+          protocol: UDP
+          name: dhcp
+        - containerPort: 68
+          protocol: UDP
+          name: dhcp-alt        
         - name: web-ui
           containerPort: 8008
+        - name: metrics
+          containerPort: 8009
+        - name: debug
+          containerPort: 8010                    
         volumeMounts:
         - name: data
           mountPath: /data
@@ -55,13 +70,12 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 10Gi
-  storageClassName: ontap-san          
+      storage: 10Gi         
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: dhcp-privileged-scc
+  name: gravity-dhcp-privileged-scc
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

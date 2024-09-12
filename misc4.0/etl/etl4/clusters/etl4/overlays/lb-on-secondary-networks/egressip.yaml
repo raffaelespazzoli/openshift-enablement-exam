@@ -1,0 +1,13 @@
+apiVersion: k8s.ovn.org/v1
+kind: EgressIP
+metadata:
+  name: vlan-1512-ingress-gateway 
+spec:
+  egressIPs: 
+  - "10.10.1.126"
+  namespaceSelector: 
+    matchLabels:
+      kubernetes.io/metadata.name: istio-system
+  podSelector:
+    matchLabels: 
+      istio: vlan-1512-ingress-gateway

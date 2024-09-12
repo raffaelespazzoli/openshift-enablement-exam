@@ -1,0 +1,83 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: vlan-1512-ingress-gateway
+  namespace: istio-system
+spec:
+  selector:
+    istio: vlan-1512-ingress-gateway
+  servers:
+  - port:
+      number: 8080
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"        
+  - port:
+      number: 8443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: vlan-1512-ingress-gateway-tls
+    hosts:
+    - "*"
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-vlan-1512-ingress-gateway-lb
+  namespace: istio-system
+spec:
+  podSelector:
+    matchLabels:
+      istio: vlan-1512-ingress-gateway
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 8443
+        - protocol: TCP
+          port: 8080
+      from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+  policyTypes:
+    - Ingress
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: vms
+  namespace: istio-system
+spec:
+  hosts:
+  - vms.vlan-1512.org
+  ports:
+  - number: 443
+    name: https
+    protocol: HTTPS
+  - number: 80
+    name: http
+    protocol: HTTP    
+  resolution: STATIC
+  location: MESH_EXTERNAL
+  endpoints:
+  - address: "10.10.1.2"
+  - address: "10.10.1.3"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: vms
+  namespace: istio-system
+spec:
+  gateways:
+  - istio-system/vlan-1512-ingress-gateway
+  hosts:
+  - "vms.vlan-1512.org"
+  http:
+  - route:
+    - destination:
+        host: vms.vlan-1512.org
+        port:
+          number: 80   

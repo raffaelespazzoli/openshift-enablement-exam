@@ -1,26 +1,21 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: rhel9-1
+  name: fedora-vm1
   namespace: lb-on-secondary-networks
   labels:
-    app: rhel9-1
-    kubevirt.io/dynamic-credentials-support: 'true'
-    vm.kubevirt.io/template: rhel9-server-small
-    vm.kubevirt.io/template.namespace: openshift
-    vm.kubevirt.io/template.revision: '1'
-    vm.kubevirt.io/template.version: v0.29.1
+    app: fedora-vm1
 spec:
   dataVolumeTemplates:
     - apiVersion: cdi.kubevirt.io/v1beta1
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: rhel9-1
+        name: fedora-vm1
       spec:
         sourceRef:
           kind: DataSource
-          name: rhel9
+          name: fedora
           namespace: openshift-virtualization-os-images
         storage:
           resources:
@@ -31,11 +26,11 @@ spec:
     metadata:
       annotations:
         vm.kubevirt.io/flavor: small
-        vm.kubevirt.io/os: rhel9
+        vm.kubevirt.io/os: fedora
         vm.kubevirt.io/workload: server
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: rhel9-1
+        kubevirt.io/domain: fedora-vm1
         kubevirt.io/size: small
         network.kubevirt.io/headlessService: headless
     spec:
@@ -54,10 +49,14 @@ spec:
                 bus: virtio
               name: cloudinitdisk
           interfaces:
+            - macAddress: '02:a5:cf:00:00:08'
+              masquerade: {}
+              model: virtio
+              name: default
             - bridge: {}
               macAddress: '02:a5:cf:00:00:06'
               model: virtio
-              name: nic-gray-pig-81
+              name: nic-sapphire-roadrunner-92
           rng: {}
         features:
           acpi: {}
@@ -72,9 +71,11 @@ spec:
           guest: 2Gi
         resources: {}
       networks:
+        - name: default
+          pod: {}
         - multus:
             networkName: default/vlan-1512
-          name: nic-gray-pig-81
+          name: nic-sapphire-roadrunner-92
       terminationGracePeriodSeconds: 180
       accessCredentials:
       - sshPublicKey:
@@ -85,48 +86,34 @@ spec:
             noCloud: {}      
       volumes:
         - dataVolume:
-            name: rhel9-1
+            name: fedora-vm1
           name: rootdisk
         - cloudInitNoCloud:
             userData: |-
               #cloud-config
-              user: cloud-user
-              password: fro7-6huk-thdl
+              user: fedora
+              password: j7q5-vkj6-5pcr
               chpasswd: { expire: False }
-              # network:
-              #   version: 1
-              #   config:
-              #     - type: physical
-              #       name: eth0
-              #       subnets:
-              #         - type: static
-              #           address: 10.10.1.2/24
-              #           gateway: 10.10.1.254             
           name: cloudinitdisk
 ---
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: rhel9-2
+  name: fedora-vm2
   namespace: lb-on-secondary-networks
   labels:
-    app: rhel9-2
-    kubevirt.io/dynamic-credentials-support: 'true'
-    vm.kubevirt.io/template: rhel9-server-small
-    vm.kubevirt.io/template.namespace: openshift
-    vm.kubevirt.io/template.revision: '1'
-    vm.kubevirt.io/template.version: v0.29.1
+    app: fedora-vm2
 spec:
   dataVolumeTemplates:
     - apiVersion: cdi.kubevirt.io/v1beta1
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: rhel9-2
+        name: fedora-vm2
       spec:
         sourceRef:
           kind: DataSource
-          name: rhel9
+          name: fedora
           namespace: openshift-virtualization-os-images
         storage:
           resources:
@@ -137,11 +124,11 @@ spec:
     metadata:
       annotations:
         vm.kubevirt.io/flavor: small
-        vm.kubevirt.io/os: rhel9
+        vm.kubevirt.io/os: fedora
         vm.kubevirt.io/workload: server
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: rhel9-2
+        kubevirt.io/domain: fedora-vm2
         kubevirt.io/size: small
         network.kubevirt.io/headlessService: headless
     spec:
@@ -160,10 +147,14 @@ spec:
                 bus: virtio
               name: cloudinitdisk
           interfaces:
+            - macAddress: '02:a5:cf:00:00:09'
+              masquerade: {}
+              model: virtio
+              name: default
             - bridge: {}
               macAddress: '02:a5:cf:00:00:07'
               model: virtio
-              name: nic-gray-pig-81
+              name: nic-sapphire-roadrunner-92
           rng: {}
         features:
           acpi: {}
@@ -178,9 +169,11 @@ spec:
           guest: 2Gi
         resources: {}
       networks:
+        - name: default
+          pod: {}
         - multus:
             networkName: default/vlan-1512
-          name: nic-gray-pig-81
+          name: nic-sapphire-roadrunner-92
       terminationGracePeriodSeconds: 180
       accessCredentials:
       - sshPublicKey:
@@ -191,21 +184,12 @@ spec:
             noCloud: {}      
       volumes:
         - dataVolume:
-            name: rhel9-2
+            name: fedora-vm2
           name: rootdisk
         - cloudInitNoCloud:
             userData: |-
               #cloud-config
-              user: cloud-user
-              password: fro7-6huk-thdl
+              user: fedora
+              password: j7q5-vkj6-5pcr
               chpasswd: { expire: False }
-              # network:
-              #   version: 1
-              #   config:
-              #     - type: physical
-              #       name: eth0
-              #       subnets:
-              #         - type: static
-              #           address: 10.10.1.3/24
-              #           gateway: 10.10.1.254              
           name: cloudinitdisk          

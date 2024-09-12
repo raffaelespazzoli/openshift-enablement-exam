@@ -20,7 +20,8 @@ spec:
       bridge:
         allow-extra-patch-ports: true
         options:
-          stp: false
+          stp: 
+            enabled: false
         port:
         - name: ens1f0
     ovn:
